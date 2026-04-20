@@ -2,22 +2,17 @@ import { NextResponse } from 'next/server'
 import { sendEmail } from '@/lib/mailer'
 import { safeEqual } from '@/lib/secrets'
 import { escapeHtml } from '@/lib/html'
+import { reminderEmailHtml, reminderSubject } from '@/lib/email-templates'
 
 /**
  * POST /api/reminder
  *
- * Triggered 48h BEFORE a tour starts. Sends the guest a friendly reminder
- * email with: directions, what to wear/bring, weather link, WhatsApp contact.
- * Reduces no-shows (industry baseline 15-20%).
- *
- * Expected payload:
- *   {
- *     customer_name: string,
- *     customer_email: string,
- *     tour_name?: string,
- *     start_at?: ISO 8601 string,
- *     locale?: string,
- *   }
+ * Manual / fallback path for the 48h pre-tour reminder email. The primary flow
+ * is /api/fareharbor-webhook which schedules the send via Resend scheduledAt.
+ * This route is kept for:
+ *  - owner-initiated tests
+ *  - ad-hoc re-sends when a guest misses the original
+ *  - integrations that can't speak to the webhook endpoint
  */
 export async function POST(request: Request) {
     const expected = process.env.FAREHARBOR_WEBHOOK_SECRET
@@ -45,9 +40,6 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: 'Invalid email' }, { status: 400 })
     }
 
-    const name = escapeHtml(rawName)
-    const tourName = escapeHtml(rawTourName)
-
     const dateStr = startAt
         ? startAt.toLocaleString(locale, {
               weekday: 'long',
@@ -59,47 +51,16 @@ export async function POST(request: Request) {
           })
         : 'your scheduled time'
 
-    const subject =
-        locale === 'es'
-            ? `¡Nos vemos pronto! Tu visita a los alpacas 🦙`
-            : locale === 'de'
-              ? `Wir freuen uns auf dich! Dein Alpaka-Besuch 🦙`
-              : `See you soon! Your alpaca visit 🦙`
-
-    const whatsapp = 'https://wa.me/32475586544'
-    const mapsLink =
-        'https://maps.google.com/?q=Alpacas+Ibiza,+San+Carlos,+Ibiza,+Spain'
-    const weatherLink = 'https://www.google.com/search?q=weather+san+carlos+ibiza'
-
-    const html = `
-<div style="font-family:sans-serif;max-width:600px;margin:0 auto;color:#2d2d2d">
-  <h2 style="color:#556B2F">Hi ${name} 👋</h2>
-  <p>We're getting excited for <strong>${tourName}</strong> on <strong>${dateStr}</strong>!</p>
-
-  <h3 style="margin-top:24px">Before you arrive</h3>
-  <ul style="line-height:1.6">
-    <li>👕 <strong>Wear:</strong> comfortable closed shoes (the paddocks can be dusty/muddy)</li>
-    <li>🧢 <strong>Bring:</strong> sun hat, sunscreen, water bottle — it gets warm</li>
-    <li>📸 <strong>Cameras:</strong> welcome and encouraged! Tag us @alpacasibiza on Instagram</li>
-    <li>🌦️ <strong>Weather:</strong> <a href="${weatherLink}" style="color:#556B2F">check the forecast for San Carlos</a></li>
-  </ul>
-
-  <h3 style="margin-top:24px">How to find us</h3>
-  <p>We're in the rural north of Ibiza, near San Carlos. <a href="${mapsLink}" style="color:#556B2F">Open in Google Maps</a>.</p>
-  <p>Parking is free on-site.</p>
-
-  <h3 style="margin-top:24px">Need to change anything?</h3>
-  <p>Free cancellation up to 24 hours before. Message us on WhatsApp: <a href="${whatsapp}">+32 475 58 65 44</a></p>
-
-  <p style="margin-top:32px">See you and the alpacas soon 🦙<br/>— The Alpacas Ibiza team</p>
-</div>
-`
-
     try {
         await sendEmail({
             to: email,
-            subject,
-            html,
+            subject: reminderSubject(locale),
+            html: reminderEmailHtml({
+                escapedName: escapeHtml(rawName),
+                escapedTourName: escapeHtml(rawTourName),
+                dateStr,
+                locale,
+            }),
             replyTo: process.env.CONTACT_EMAIL || 'info@alpacasibiza.com',
         })
         return NextResponse.json({ success: true })

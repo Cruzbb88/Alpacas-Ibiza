@@ -13,6 +13,7 @@ import { FareHarborCalendar } from '@/components/fareharbor-calendar'
 import { CancellationBadge } from '@/components/cancellation-badge'
 import { AvailabilityUrgency } from '@/components/availability-urgency'
 import { GoogleReviewsBadge } from '@/components/google-reviews-badge'
+import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
 import type { Locale } from '@/i18n.config'
 import { touristTripSchema, faqPageSchema, toJsonLd } from '@/lib/structured-data'
 
@@ -124,6 +125,11 @@ export default async function ToursPage({ params }: { params: Promise<{ locale: 
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: toJsonLd(faqPageSchema(faqItems)) }}
+      />
+      <PageBreadcrumbs
+        locale={locale}
+        homeLabel={translate('nav.home') || 'Home'}
+        crumbs={[{ name: translate('nav.tours') || 'Tours', path: 'tours' }]}
       />
       <Hero
         title={translate('tours.heroTitle')}

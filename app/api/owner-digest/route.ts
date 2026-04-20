@@ -16,7 +16,12 @@ import { escapeHtml } from '@/lib/html'
  */
 export async function GET(request: Request) {
     const expected = process.env.CRON_SECRET
-    const got = new URL(request.url).searchParams.get('secret')
+    // Accept either Vercel Cron's "Authorization: Bearer <CRON_SECRET>" header
+    // (auto-added by Vercel when CRON_SECRET env is set) OR ?secret= for external
+    // cron services like UptimeRobot.
+    const authHeader = request.headers.get('authorization') || ''
+    const bearer = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null
+    const got = bearer ?? new URL(request.url).searchParams.get('secret')
     if (!expected || !safeEqual(got, expected)) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }

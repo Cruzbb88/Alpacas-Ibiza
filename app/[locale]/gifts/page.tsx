@@ -3,6 +3,7 @@ import { t } from '@/lib/translations'
 import { Hero } from '@/components/hero'
 import { FareHarborCalendar } from '@/components/fareharbor-calendar'
 import { CancellationBadge } from '@/components/cancellation-badge'
+import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
 import type { Metadata } from 'next'
 
 export async function generateMetadata({
@@ -33,6 +34,11 @@ export default async function GiftsPage({
 
     return (
         <div className="flex flex-col min-h-screen">
+            <PageBreadcrumbs
+                locale={locale}
+                homeLabel={translate('nav.home') || 'Home'}
+                crumbs={[{ name: translate('nav.gifts') || 'Gift vouchers', path: 'gifts' }]}
+            />
             <Hero
                 title={translate('gifts.hero.title') || 'Give the gift of alpacas'}
                 subtitle={

@@ -147,24 +147,83 @@ The `/api/owner-digest` endpoint sends a weekly email. Needs to be triggered by:
 
 ---
 
-## 🟢 Optional expansion / revenue ideas (no rush)
+## 🟢 Optional ideas — decide YES / NO + provide answers
 
-These came out of my brainstorm. Owner should pick which to pursue — each has a small build cost + ongoing effort trade-off.
+Same format as the launch section — each idea is a short block. Owner answers questions → we build.
 
-| Idea | Owner decision | Effort once decided |
-|---|---|---|
-| **"Adopt an Alpaca" subscription** (€15/mo, recurring revenue, works off-season) | Pricing, which alpacas, what the monthly update contains (photo? video? newsletter?), how many sponsors per alpaca | 1 page + Stripe subscription (~1 day build) |
-| **Photography package (golden hour)** | Pricing, duration, what's included, booked as a separate FareHarbor item? | Just add as a FareHarbor item |
-| **Online weaving masterclass** (recorded video, sell globally year-round) | Who teaches it, duration, price, video production | Owner-driven content production |
-| **Corporate team-building package** | Day-rate pricing, what's included (lunch? Transport?), min/max group size | Page exists — needs pricing + visuals |
-| **School field trips** (off-season revenue) | Per-student pricing, group minimum, date availability | New FareHarbor item + school outreach |
-| **Winter weaving workshops** (off-season) | Indoor vs outdoor, schedule, min attendees | Recurring FareHarbor slot |
-| **Loyalty program** (visit 3x, get 4th free) | Implement as discount code or stamp card? | FareHarbor discount codes |
-| **Instagram UGC campaign** ("Tag us for a chance to win") | Prize, duration, rules | Just a social post |
-| **Referral code system** ("Send a friend, both get 10% off") | Tracking mechanism (code per referrer?) | FareHarbor discount codes |
-| **Video hero on home page** | Where to source 15-sec clip | ~1 day clip sourcing/editing |
-| **Press logos / "Featured in" section** | Which press outlets have covered you? | Owner provides logos with permission |
-| **Off-season holiday gift push** | Calendar of Christmas market pop-ups, discount codes, email campaigns | Seasonal content + email sends |
+### "Adopt an Alpaca" monthly subscription
+- Yes / No?
+- Price per month? (suggested: €15)
+- Which alpacas can be sponsored?
+- What does a sponsor get each month? (photo? video? email update? plaque on-site?)
+- Max sponsors per alpaca?
+- Cancellation policy?
+
+### Photography package (golden-hour shoots with alpacas)
+- Yes / No?
+- Price per session?
+- Duration?
+- How many guests per session?
+- Does owner provide the photographer, or is it BYO?
+- Photos delivered how? (digital download? prints?)
+
+### Online weaving masterclass (recorded video, sold globally year-round)
+- Yes / No?
+- Price per access?
+- Who teaches it?
+- One-time access or subscription?
+
+### Corporate team-building packages
+- Yes / No?
+- Day-rate pricing? Per-person pricing?
+- What's included (lunch? transport? weaving workshop? farm tour?)
+- Min / max group size?
+- Off-peak discount for corporate?
+
+### School field trips
+- Yes / No?
+- Per-student price?
+- Minimum group size?
+- Which months available?
+- Any curriculum/educational tie-in?
+
+### Winter weaving workshops (indoor, off-season)
+- Yes / No?
+- Price?
+- Typical schedule (which months, which days)?
+- Indoor only, or weather-permitting outdoor option?
+
+### Loyalty program (visit X, get Y free)
+- Yes / No?
+- Structure: visit 3×, get 4th free? Other?
+- Applies per person, or transferable between people in a group?
+
+### Referral program ("friend gets 10%, you get 10%")
+- Yes / No?
+- Discount percentage?
+- Valid on which tours?
+- One-time or unlimited referrals?
+
+### Instagram UGC campaign ("tag us for a chance to win")
+- Yes / No?
+- Prize? (free tour? product? voucher?)
+- How often does it run? (monthly? seasonal?)
+- Hashtag to use?
+
+### Video hero on home page
+- Yes / No?
+- Who shoots the 15-30 sec clip?
+- Budget for a videographer, or phone footage OK?
+
+### "Featured in" / press logos section
+- Any press coverage so far? (outlet names)
+- Got written permission to use their logos?
+
+### Off-season holiday gift push (Nov-Dec)
+- Yes / No?
+- Which Ibiza markets / pop-ups to attend?
+- Send a dedicated gift-voucher email campaign?
+- Special discount code for holiday gifting?
 
 ---
 
