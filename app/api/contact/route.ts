@@ -1,15 +1,25 @@
 import { NextResponse } from 'next/server'
 import { sendEmail } from '@/lib/mailer'
+import { verifyTurnstile } from '@/lib/turnstile'
 
 const TO_EMAIL = process.env.CONTACT_EMAIL ?? 'info@alpacasibiza.com'
 
 export async function POST(request: Request) {
     try {
         const body = await request.json()
-        const { name, email, subject, message } = body
+        const { name, email, subject, message, 'cf-turnstile-response': captchaToken } = body
 
         if (!name || !email || !message) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+        }
+
+        const ip = request.headers.get('cf-connecting-ip') || request.headers.get('x-forwarded-for')
+        const captcha = await verifyTurnstile(captchaToken, ip)
+        if (!captcha.ok) {
+            return NextResponse.json(
+                { error: 'Captcha verification failed', reason: captcha.reason },
+                { status: 400 }
+            )
         }
 
         await sendEmail({

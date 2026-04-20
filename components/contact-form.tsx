@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { TurnstileWidget } from '@/components/turnstile-widget'
 
 interface ContactFormProps {
     labels: {
@@ -18,6 +19,7 @@ interface ContactFormProps {
 export function ContactForm({ labels }: ContactFormProps) {
     const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
     const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' })
+    const [captchaToken, setCaptchaToken] = useState<string>('')
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
@@ -30,7 +32,7 @@ export function ContactForm({ labels }: ContactFormProps) {
             const res = await fetch('/api/contact', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(form),
+                body: JSON.stringify({ ...form, 'cf-turnstile-response': captchaToken }),
             })
             if (res.ok) {
                 setStatus('success')
@@ -97,6 +99,7 @@ export function ContactForm({ labels }: ContactFormProps) {
                     className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                 />
             </div>
+            <TurnstileWidget onToken={setCaptchaToken} className="pt-2" />
             {status === 'error' && (
                 <p className="text-sm text-red-600">{labels.error}</p>
             )}

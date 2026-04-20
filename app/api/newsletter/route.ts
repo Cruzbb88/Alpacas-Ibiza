@@ -1,12 +1,23 @@
 import { NextResponse } from 'next/server'
 import { sendEmail } from '@/lib/mailer'
 import { subscribe } from '@/lib/newsletter'
+import { verifyTurnstile } from '@/lib/turnstile'
 
 export async function POST(request: Request) {
   try {
-    const { email } = await request.json()
+    const body = await request.json()
+    const { email, 'cf-turnstile-response': captchaToken } = body
     if (!email) {
       return NextResponse.json({ error: 'Email address is required' }, { status: 400 })
+    }
+
+    const ip = request.headers.get('cf-connecting-ip') || request.headers.get('x-forwarded-for')
+    const captcha = await verifyTurnstile(captchaToken, ip)
+    if (!captcha.ok) {
+      return NextResponse.json(
+        { error: 'Captcha verification failed', reason: captcha.reason },
+        { status: 400 }
+      )
     }
 
     // attempt to subscribe to SendGrid list

@@ -6,6 +6,7 @@ import { ArrowRight, Calendar } from 'lucide-react'
 import type { Locale } from '@/i18n.config'
 import { t } from '@/lib/translations'
 import { FAREHARBOR_BOOKING_URL } from '@/lib/config'
+import { CancellationBadge } from '@/components/cancellation-badge'
 
 interface AvailableDate {
     date: string
@@ -105,7 +106,10 @@ export function BookingSection() {
                     {availableDates.length > 0 ? tr('bookingSection.bookNow') : tr('bookingSection.viewAndBook')}
                     <ArrowRight className="ml-2 h-5 w-5" />
                 </a>
-                <p className="mt-4 text-sm text-foreground/60">
+                <div className="mt-3">
+                    <CancellationBadge variant="full" />
+                </div>
+                <p className="mt-2 text-sm text-foreground/60">
                     {tr('bookingSection.poweredBy')}
                 </p>
 

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { TurnstileWidget } from '@/components/turnstile-widget'
 
 interface CommissionFormProps {
     labels: {
@@ -17,6 +18,7 @@ interface CommissionFormProps {
 export function CommissionForm({ labels }: CommissionFormProps) {
     const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
     const [form, setForm] = useState({ name: '', email: '', description: '' })
+    const [captchaToken, setCaptchaToken] = useState<string>('')
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
@@ -29,7 +31,7 @@ export function CommissionForm({ labels }: CommissionFormProps) {
             const res = await fetch('/api/commission', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(form),
+                body: JSON.stringify({ ...form, 'cf-turnstile-response': captchaToken }),
             })
             if (res.ok) {
                 setStatus('success')
@@ -86,6 +88,7 @@ export function CommissionForm({ labels }: CommissionFormProps) {
                     className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary"
                 />
             </div>
+            <TurnstileWidget onToken={setCaptchaToken} className="pt-2" />
             {status === 'error' && (
                 <p className="text-sm text-red-600">{labels.error}</p>
             )}

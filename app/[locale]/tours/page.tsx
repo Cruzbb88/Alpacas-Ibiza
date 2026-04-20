@@ -10,6 +10,9 @@ import Link from 'next/link'
 import { t } from '@/lib/translations'
 import { FAREHARBOR_BOOKING_URL } from '@/lib/config'
 import { FareHarborCalendar } from '@/components/fareharbor-calendar'
+import { CancellationBadge } from '@/components/cancellation-badge'
+import { AvailabilityUrgency } from '@/components/availability-urgency'
+import { GoogleReviewsBadge } from '@/components/google-reviews-badge'
 import type { Locale } from '@/i18n.config'
 import { touristTripSchema, faqPageSchema, toJsonLd } from '@/lib/structured-data'
 
@@ -238,9 +241,13 @@ export default async function ToursPage({ params }: { params: Promise<{ locale: 
           {/* FareHarbor Integration */}
           <div className="p-6 md:p-8 border border-border bg-background rounded-lg shadow-sm">
             <h3 className="text-2xl font-semibold mb-2 text-center">{translate('tours.bookingSection.cardTitle')}</h3>
-            <p className="text-foreground/70 mb-6 text-center max-w-md mx-auto">
+            <p className="text-foreground/70 mb-4 text-center max-w-md mx-auto">
               {translate('tours.bookingSection.cardSubtitle')}
             </p>
+            <div className="flex justify-center mb-4">
+              <GoogleReviewsBadge />
+            </div>
+            <AvailabilityUrgency className="mb-4 max-w-md mx-auto" />
             <FareHarborCalendar />
             <div className="mt-6 text-center">
               <a
@@ -251,6 +258,9 @@ export default async function ToursPage({ params }: { params: Promise<{ locale: 
               >
                 {translate('tours.bookingSection.bookNow')}
               </a>
+              <div className="mt-3">
+                <CancellationBadge variant="full" />
+              </div>
               <p className="text-xs text-foreground/50 mt-2">
                 {translate('tours.bookingSection.poweredBy')}
               </p>
