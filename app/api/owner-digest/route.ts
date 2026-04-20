@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server'
 import { sendEmail } from '@/lib/mailer'
+import { fetchWithTimeout } from '@/lib/fetch'
+import { safeEqual } from '@/lib/secrets'
+import { escapeHtml } from '@/lib/html'
 
 /**
  * GET /api/owner-digest?secret=<CRON_SECRET>
@@ -11,20 +14,10 @@ import { sendEmail } from '@/lib/mailer'
  * Trigger: Vercel Cron, GitHub Actions scheduled job, or UptimeRobot.
  * Example Vercel cron:  * * * * Mon -> GET /api/owner-digest?secret=...
  */
-async function fetchWithTimeout(url: string, init: RequestInit, ms = 5000) {
-    const ctrl = new AbortController()
-    const t = setTimeout(() => ctrl.abort(), ms)
-    try {
-        return await fetch(url, { ...init, signal: ctrl.signal })
-    } finally {
-        clearTimeout(t)
-    }
-}
-
 export async function GET(request: Request) {
     const expected = process.env.CRON_SECRET
     const got = new URL(request.url).searchParams.get('secret')
-    if (!expected || got !== expected) {
+    if (!expected || !safeEqual(got, expected)) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -105,9 +98,9 @@ export async function GET(request: Request) {
                           minute: '2-digit',
                       })
                     : '?'
-                const name = b.contact?.name || '(no name)'
-                const guests = b.customer_count || '?'
-                const item = b.availability?.item?.name || '—'
+                const name = escapeHtml(b.contact?.name || '(no name)')
+                const guests = escapeHtml(b.customer_count ?? '?')
+                const item = escapeHtml(b.availability?.item?.name || '—')
                 return `<tr><td style="padding:8px;border-bottom:1px solid #eee">${when}</td><td style="padding:8px;border-bottom:1px solid #eee">${item}</td><td style="padding:8px;border-bottom:1px solid #eee">${name}</td><td style="padding:8px;border-bottom:1px solid #eee">${guests}</td></tr>`
             })
             .join('')

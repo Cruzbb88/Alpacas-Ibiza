@@ -1,14 +1,5 @@
 import { NextResponse } from 'next/server'
-
-async function fetchWithTimeout(url: string, init: RequestInit, ms = 5000) {
-    const ctrl = new AbortController()
-    const t = setTimeout(() => ctrl.abort(), ms)
-    try {
-        return await fetch(url, { ...init, signal: ctrl.signal })
-    } finally {
-        clearTimeout(t)
-    }
-}
+import { fetchWithTimeout } from '@/lib/fetch'
 
 export async function GET() {
     const appKey = process.env.FAREHARBOR_APP_KEY

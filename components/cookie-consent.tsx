@@ -65,10 +65,11 @@ export function CookieConsent() {
             role="dialog"
             aria-live="polite"
             aria-label={tr('cookieConsent.ariaLabel') || 'Cookie consent'}
+            aria-describedby="cookie-consent-message"
             className="fixed bottom-0 inset-x-0 z-[1000] p-4 md:p-5 bg-background border-t border-border shadow-2xl"
         >
             <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-start md:items-center gap-4">
-                <p className="flex-1 text-sm text-foreground/80">
+                <p id="cookie-consent-message" className="flex-1 text-sm text-foreground/80">
                     {tr('cookieConsent.message') ||
                         'We use cookies for analytics and to make the booking experience smoother. You can accept all or reject non-essential cookies. See our '}
                     <Link

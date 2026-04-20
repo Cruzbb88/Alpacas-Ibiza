@@ -6,6 +6,8 @@
  * Docs: https://developers.cloudflare.com/turnstile/get-started/server-side-validation/
  */
 
+import { fetchWithTimeout } from '@/lib/fetch'
+
 const VERIFY_URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify'
 
 interface TurnstileResult {
@@ -38,14 +40,7 @@ export async function verifyTurnstile(
     if (remoteIp) body.set('remoteip', remoteIp)
 
     try {
-        const ctrl = new AbortController()
-        const timer = setTimeout(() => ctrl.abort(), 5000)
-        const res = await fetch(VERIFY_URL, {
-            method: 'POST',
-            body,
-            signal: ctrl.signal,
-        })
-        clearTimeout(timer)
+        const res = await fetchWithTimeout(VERIFY_URL, { method: 'POST', body }, 5000)
         const data = (await res.json()) as TurnstileResult
         if (data.success) return { ok: true }
         return { ok: false, reason: (data['error-codes'] ?? ['unknown']).join(',') }

@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server'
 import { sendEmail } from '@/lib/mailer'
+import { safeEqual } from '@/lib/secrets'
+import { escapeHtml } from '@/lib/html'
 
 /**
  * POST /api/review-request
@@ -24,28 +26,33 @@ export async function POST(request: Request) {
     const expected = process.env.FAREHARBOR_WEBHOOK_SECRET
     if (expected) {
         const got = request.headers.get('x-webhook-secret')
-        if (got !== expected) {
+        if (!safeEqual(got, expected)) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
         }
     }
 
-    let body: any
+    let body: Record<string, unknown>
     try {
-        body = await request.json()
+        body = (await request.json()) as Record<string, unknown>
     } catch {
         return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 })
     }
 
-    const name =
-        body.customer_name || body.name || body.guest_name || 'there'
+    const rawName =
+        (body.customer_name as string) || (body.name as string) || (body.guest_name as string) || 'there'
     const email =
-        body.customer_email || body.email || body.guest_email
-    const tourName = body.tour_name || body.item_name || 'your recent visit'
-    const locale = (body.locale || 'en') as string
+        (body.customer_email as string) || (body.email as string) || (body.guest_email as string)
+    const rawTourName = (body.tour_name as string) || (body.item_name as string) || 'your recent visit'
+    const locale = ((body.locale as string) || 'en')
 
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    // RFC 5322-ish: require a dot in the domain with 2+ TLD chars
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
         return NextResponse.json({ error: 'Invalid email' }, { status: 400 })
     }
+
+    // XSS guard — webhook sender is untrusted; escape before injecting into HTML
+    const name = escapeHtml(rawName)
+    const tourName = escapeHtml(rawTourName)
 
     // Localized copy — keep English as default, extend here as needed
     const subject =
