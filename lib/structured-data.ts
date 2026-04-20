@@ -160,6 +160,32 @@ export function productSchema({
     }
 }
 
+// ─── BreadcrumbList schema ───────────────────────────────────────────────────
+
+/**
+ * Build a BreadcrumbList schema for a page.
+ *
+ * @example
+ *   breadcrumbSchema([
+ *     { name: 'Home', url: 'https://alpacasibiza.com/en' },
+ *     { name: 'Tours', url: 'https://alpacasibiza.com/en/tours' },
+ *   ])
+ */
+export function breadcrumbSchema(
+    crumbs: ReadonlyArray<{ name: string; url: string }>
+) {
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: crumbs.map((c, i) => ({
+            '@type': 'ListItem',
+            position: i + 1,
+            name: c.name,
+            item: c.url,
+        })),
+    }
+}
+
 // ─── Helper: inject as <script> tag string ────────────────────────────────────
 
 export function toJsonLd(schema: object) {

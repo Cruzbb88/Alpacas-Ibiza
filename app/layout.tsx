@@ -46,6 +46,24 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="font-sans antialiased">
+        {/* GDPR Consent Mode v2 default — must load BEFORE any GA/GTM script */}
+        <Script id="consent-default" strategy="beforeInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          // Read stored consent (set by CookieConsent component)
+          var stored = null;
+          try { stored = localStorage.getItem('ai_cookie_consent_v1'); } catch (e) {}
+          var mode = stored === 'accepted' ? 'granted' : 'denied';
+          gtag('consent', 'default', {
+            ad_storage: mode,
+            analytics_storage: mode,
+            ad_user_data: mode,
+            ad_personalization: mode,
+            functionality_storage: 'granted',
+            security_storage: 'granted',
+            wait_for_update: 500,
+          });`}
+        </Script>
         {/* Google tag (gtag.js) */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-Y946QDVVQV"
@@ -57,18 +75,18 @@ export default function RootLayout({
           gtag('js', new Date());
           gtag('config', 'G-Y946QDVVQV');`}
         </Script>
-        {/* Google Tag Manager */}
-        <Script id="gtm-head" strategy="beforeInteractive">
+        {/* Google Tag Manager — FareHarbor container (booking conversion tracking) */}
+        <Script id="gtm-fareharbor" strategy="beforeInteractive">
           {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
           new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
           j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-          })(window,document,'script','dataLayer','GTM-NJRGZPGS');`}
+          })(window,document,'script','dataLayer','GTM-KR3CGLS6');`}
         </Script>
         {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe
-            src="https://www.googletagmanager.com/ns.html?id=GTM-NJRGZPGS"
+            src="https://www.googletagmanager.com/ns.html?id=GTM-KR3CGLS6"
             height="0"
             width="0"
             style={{ display: 'none', visibility: 'hidden' }}

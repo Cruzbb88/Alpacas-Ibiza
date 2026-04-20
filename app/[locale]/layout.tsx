@@ -3,6 +3,7 @@ import { i18nConfig } from '@/i18n.config'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { StickyBookingBar } from '@/components/sticky-booking-bar'
+import { CookieConsent } from '@/components/cookie-consent'
 import { localBusinessSchema, organizationSchema, toJsonLd } from '@/lib/structured-data'
 
 const BASE_URL = 'https://alpacasibiza.com'
@@ -65,10 +66,17 @@ export default async function LocaleLayout({
                     dangerouslySetInnerHTML={{ __html: toJsonLd(schema) }}
                 />
             ))}
+            <a
+                href="#main-content"
+                className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[1001] focus:px-4 focus:py-2 focus:rounded-md focus:bg-primary focus:text-primary-foreground focus:shadow-lg"
+            >
+                Skip to main content
+            </a>
             <Header />
-            <main className="flex-1">{children}</main>
+            <main id="main-content" className="flex-1">{children}</main>
             <Footer />
             <StickyBookingBar />
+            <CookieConsent />
         </div>
     )
 }

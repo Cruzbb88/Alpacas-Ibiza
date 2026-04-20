@@ -1,6 +1,13 @@
 
 // central config helpers for environment-driven constants
 
+// Production sanity check — warn on server if FareHarbor shortname isn't
+// explicitly set, so prod with a misconfigured env falls back to a demo account
+// silently instead of visibly failing.
+if (typeof window === 'undefined' && process.env.NODE_ENV === 'production' && !process.env.NEXT_PUBLIC_FAREHARBOR_SHORTNAME) {
+    console.warn('[fareharbor] NEXT_PUBLIC_FAREHARBOR_SHORTNAME unset in production — falling back to hardcoded default. Check your deploy env vars.')
+}
+
 /**
  * FareHarbor booking embed URL generator.
  *

@@ -1,5 +1,15 @@
 import { NextResponse } from 'next/server'
 
+async function fetchWithTimeout(url: string, init: RequestInit, ms = 5000) {
+    const ctrl = new AbortController()
+    const t = setTimeout(() => ctrl.abort(), ms)
+    try {
+        return await fetch(url, { ...init, signal: ctrl.signal })
+    } finally {
+        clearTimeout(t)
+    }
+}
+
 export async function GET() {
     const appKey = process.env.FAREHARBOR_APP_KEY
     const userKey = process.env.FAREHARBOR_USER_KEY
@@ -36,7 +46,7 @@ export async function GET() {
             itemsToCheck = [itemId]
         } else {
             // Fetch all items
-            const itemsResponse = await fetch(
+            const itemsResponse = await fetchWithTimeout(
                 `https://fareharbor.com/api/external/v1/companies/${shortname}/items/`,
                 {
                     headers: {
@@ -54,34 +64,36 @@ export async function GET() {
             itemsToCheck = itemsData.items?.map((item: any) => item.pk) || []
         }
 
-        // Fetch availabilities for each item
-        const availabilities = []
+        // Fetch availabilities for each item — parallel with per-item failure tolerance
+        const availabilities: { date: string; capacity: number; startTime: string }[] = []
 
-        for (const itemPk of itemsToCheck.slice(0, 3)) { // Limit to first 3 items to avoid rate limits
-            const availResponse = await fetch(
-                `https://fareharbor.com/api/external/v1/companies/${shortname}/items/${itemPk}/minimal/availabilities/date-range/${startDateStr}/${endDateStr}/`,
-                {
-                    headers: {
-                        'X-FareHarbor-API-App': appKey,
-                        'X-FareHarbor-API-User': userKey,
-                    },
-                }
+        const results = await Promise.allSettled(
+            itemsToCheck.slice(0, 3).map((itemPk: any) =>
+                fetchWithTimeout(
+                    `https://fareharbor.com/api/external/v1/companies/${shortname}/items/${itemPk}/minimal/availabilities/date-range/${startDateStr}/${endDateStr}/`,
+                    {
+                        headers: {
+                            'X-FareHarbor-API-App': appKey,
+                            'X-FareHarbor-API-User': userKey,
+                        },
+                    }
+                ).then(r => r.ok ? r.json() : null)
             )
+        )
 
-            if (availResponse.ok) {
-                const availData = await availResponse.json()
-                if (availData.availabilities && availData.availabilities.length > 0) {
-                    // Get unique dates with availability
-                    const dates = availData.availabilities
-                        .filter((avail: any) => avail.capacity > 0) // Only show dates with capacity
+        for (const r of results) {
+            if (r.status === 'fulfilled' && r.value?.availabilities?.length) {
+                availabilities.push(
+                    ...r.value.availabilities
+                        .filter((avail: any) => avail.capacity > 0)
                         .map((avail: any) => ({
                             date: avail.start_at.split('T')[0],
                             capacity: avail.capacity,
                             startTime: avail.start_at,
                         }))
-
-                    availabilities.push(...dates)
-                }
+                )
+            } else if (r.status === 'rejected') {
+                console.error('FareHarbor item availability fetch failed:', r.reason)
             }
         }
 

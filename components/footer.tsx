@@ -82,6 +82,17 @@ export function Footer() {
                 </a>
               </li>
               <li>
+                <a
+                  href="https://wa.me/32475586544"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-foreground inline-flex items-center gap-1"
+                  aria-label="Chat on WhatsApp"
+                >
+                  <span aria-hidden="true">💬</span> WhatsApp
+                </a>
+              </li>
+              <li>
                 <a href="mailto:info@alpacasibiza.com" className="hover:text-foreground">
                   info@alpacasibiza.com
                 </a>
