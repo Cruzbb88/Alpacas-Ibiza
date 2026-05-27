@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
 
 /**
  * GET /api/google-reviews
@@ -34,14 +35,20 @@ interface ReviewSummary {
     }>
 }
 
-export async function GET() {
+export async function GET(request: Request) {
+    const reqId = getRequestId(request)
+    const log = makeRequestLogger('google-reviews', reqId)
+
     const apiKey = process.env.GOOGLE_PLACES_API_KEY
     const placeId = process.env.GOOGLE_PLACES_PLACE_ID
 
     if (!apiKey || !placeId) {
-        return NextResponse.json(
-            { configured: false },
-            { status: 200, headers: { 'cache-control': 'public, max-age=300' } }
+        return attachRequestId(
+            NextResponse.json(
+                { configured: false },
+                { status: 200, headers: { 'cache-control': 'public, max-age=300' } }
+            ),
+            reqId
         )
     }
 
@@ -75,20 +82,26 @@ export async function GET() {
                 })),
         }
 
-        return NextResponse.json(
-            { configured: true, ...summary },
-            {
-                headers: {
-                    // 6h browser cache + 24h CDN
-                    'cache-control': 'public, max-age=21600, s-maxage=86400',
-                },
-            }
+        return attachRequestId(
+            NextResponse.json(
+                { configured: true, ...summary },
+                {
+                    headers: {
+                        // 6h browser cache + 24h CDN
+                        'cache-control': 'public, max-age=21600, s-maxage=86400',
+                    },
+                }
+            ),
+            reqId
         )
     } catch (err) {
-        console.error('[google-reviews] fetch failed:', err)
-        return NextResponse.json(
-            { configured: true, error: 'fetch_failed' },
-            { status: 502 }
+        log.error('fetch failed', { err: String(err) })
+        return attachRequestId(
+            NextResponse.json(
+                { configured: true, error: 'fetch_failed' },
+                { status: 502 }
+            ),
+            reqId
         )
     }
 }

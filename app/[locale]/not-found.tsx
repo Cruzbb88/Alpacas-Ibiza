@@ -32,6 +32,8 @@ export default async function LocaleNotFound() {
         <p className="text-sm text-foreground/50 mb-4">Or jump straight to booking a tour</p>
         <a
           href="https://fareharbor.com/embeds/book/alpacasibiza/?full-items=yes"
+          target="_blank"
+          rel="noopener noreferrer"
           className="inline-flex items-center gap-2 px-6 py-3 bg-accent hover:bg-accent/90 text-accent-foreground rounded-xl font-medium transition-colors"
         >
           Book a tour

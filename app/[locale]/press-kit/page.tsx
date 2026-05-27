@@ -91,8 +91,7 @@ function AssetCard({ title, body, cta, asset, comingSoonLabel }: AssetCardProps)
         <span className="text-sm font-semibold text-primary">{cta} →</span>
       ) : (
         <span className="text-xs text-muted-foreground italic">
-          {/* File not yet uploaded — UNMAPPED */}
-          UNMAPPED — awaiting owner upload to public/press/
+          {comingSoonLabel}
         </span>
       )}
     </div>

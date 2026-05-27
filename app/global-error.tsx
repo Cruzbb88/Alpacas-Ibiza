@@ -1,4 +1,5 @@
 'use client'
+import { useEffect } from 'react'
 
 /**
  * global-error.tsx — catches uncaught server errors that escape the root layout.
@@ -13,7 +14,20 @@ export default function GlobalError({
   error: Error & { digest?: string }
   reset: () => void
 }) {
-  console.error('[global-error]', error)
+  useEffect(() => {
+    fetch('/api/log-error', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        message: error.message,
+        stack: error.stack,
+        digest: error.digest,
+        pathname: typeof window !== 'undefined' ? window.location.pathname : '',
+        type: 'react-error-boundary',
+      }),
+      keepalive: true,
+    }).catch(() => { /* silent */ })
+  }, [error])
 
   return (
     <html lang="en">

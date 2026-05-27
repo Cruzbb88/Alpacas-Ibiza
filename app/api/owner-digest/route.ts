@@ -16,6 +16,9 @@ import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-
  * Example Vercel cron:  * * * * Mon -> GET /api/owner-digest?secret=...
  */
 export async function GET(request: Request) {
+    const reqId = getRequestId(request)
+    const log = makeRequestLogger('owner-digest', reqId)
+
     const expected = process.env.CRON_SECRET
     // Accept either Vercel Cron's "Authorization: Bearer <CRON_SECRET>" header
     // (auto-added by Vercel when CRON_SECRET env is set) OR ?secret= for external
@@ -24,7 +27,7 @@ export async function GET(request: Request) {
     const bearer = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null
     const got = bearer ?? new URL(request.url).searchParams.get('secret')
     if (!expected || !safeEqual(got, expected)) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+        return attachRequestId(NextResponse.json({ error: 'Unauthorized' }, { status: 401 }), reqId)
     }
 
     const ownerEmail = process.env.CONTACT_EMAIL || 'info@alpacasibiza.com'
@@ -46,11 +49,12 @@ export async function GET(request: Request) {
                       <p>Have a great week!</p>
                     </div>
                 `,
+                listUnsubscribeUrl: `mailto:${process.env.CONTACT_EMAIL ?? 'info@alpacasibiza.com'}?subject=unsubscribe`,
             })
-            return NextResponse.json({ sent: true, mode: 'fallback' })
+            return attachRequestId(NextResponse.json({ sent: true, mode: 'fallback' }), reqId)
         } catch (err) {
-            console.error('[owner-digest] fallback send failed:', err)
-            return NextResponse.json({ error: 'Send failed' }, { status: 500 })
+            log.error('fallback send failed', { err: String(err) })
+            return attachRequestId(NextResponse.json({ error: 'Send failed' }, { status: 500 }), reqId)
         }
     }
 
@@ -144,17 +148,21 @@ export async function GET(request: Request) {
             to: ownerEmail,
             subject: `[Alpacas Ibiza] Weekly digest — ${bookings.length} bookings, ${totalGuests} guests, €${totalRevenue.toFixed(0)}`,
             html,
+            listUnsubscribeUrl: `mailto:${process.env.CONTACT_EMAIL ?? 'info@alpacasibiza.com'}?subject=unsubscribe`,
         })
 
-        return NextResponse.json({
-            sent: true,
-            mode: 'live',
-            bookings: bookings.length,
-            guests: totalGuests,
-            revenue: totalRevenue,
-        })
+        return attachRequestId(
+            NextResponse.json({
+                sent: true,
+                mode: 'live',
+                bookings: bookings.length,
+                guests: totalGuests,
+                revenue: totalRevenue,
+            }),
+            reqId
+        )
     } catch (err) {
-        console.error('[owner-digest] error:', err)
-        return NextResponse.json({ error: 'Digest failed' }, { status: 500 })
+        log.error('digest failed', { err: String(err) })
+        return attachRequestId(NextResponse.json({ error: 'Digest failed' }, { status: 500 }), reqId)
     }
 }

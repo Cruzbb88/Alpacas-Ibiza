@@ -32,6 +32,8 @@ export function StickyBookingBar() {
         >
             <a
                 href="https://fareharbor.com/embeds/book/alpacasibiza/?full-items=yes"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="w-full block"
             >
                 <Button className="w-full bg-background text-primary hover:bg-background/90 font-bold text-lg h-12 rounded-full shadow-lg">

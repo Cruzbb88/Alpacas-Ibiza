@@ -1,11 +1,15 @@
 /**
  * Newsletter double opt-in token — HMAC-signed, stateless.
  *
- * Payload: { email, expiresAt, nonce } encoded as base64url JSON.
+ * Payload: { email, scope, expiresAt, nonce } encoded as base64url JSON.
  * Signature: HMAC-SHA256 of the payload using NEWSLETTER_SIGNING_KEY
  *            (falls back to NEXTAUTH_SECRET if unset — Tier 1 guarantee).
  *
  * Token format: <base64url-payload>.<base64url-hmac>
+ *
+ * Two scopes share the same signing key but verify guards prevent cross-use:
+ *   'confirm'     — double opt-in confirmation (7-day TTL)
+ *   'unsubscribe' — one-click unsubscribe per CAN-SPAM / EU PECR (90-day TTL)
  *
  * No JWT — overkill for this use case (CLAUDE.md constraint).
  * Server-stateless — all state lives in the signed token.
@@ -38,35 +42,24 @@ function fromBase64Url(s: string): Buffer | null {
   }
 }
 
+export type NewsletterTokenScope = 'confirm' | 'unsubscribe'
+
 export interface NewsletterTokenPayload {
   email: string
+  scope: NewsletterTokenScope
   expiresAt: string  // ISO 8601
   nonce: string
 }
 
-/**
- * Sign a newsletter confirmation token.
- * @param email  subscriber email
- * @param ttlMs  time-to-live in milliseconds (default 7 days)
- */
-export function signNewsletterToken(email: string, ttlMs = 7 * 24 * 60 * 60 * 1000): string {
-  const payload: NewsletterTokenPayload = {
-    email,
-    expiresAt: new Date(Date.now() + ttlMs).toISOString(),
-    nonce: randomBytes(12).toString('hex'),
-  }
+// ── Internal signing helper ───────────────────────────────────────────────────
+
+function signToken(payload: NewsletterTokenPayload): string {
   const payloadB64 = toBase64Url(JSON.stringify(payload))
   const sig = createHmac('sha256', getSigningKey()).update(payloadB64).digest()
-  const sigB64 = toBase64Url(sig)
-  return `${payloadB64}.${sigB64}`
+  return `${payloadB64}.${toBase64Url(sig)}`
 }
 
-/**
- * Verify a newsletter confirmation token.
- * Returns the payload on success, or null on any failure (invalid / expired / tampered).
- * Never throws — callers receive null and respond with 400/410.
- */
-export function verifyNewsletterToken(token: string): NewsletterTokenPayload | null {
+function verifyToken(token: string, expectedScope: NewsletterTokenScope): NewsletterTokenPayload | null {
   try {
     const dot = token.lastIndexOf('.')
     if (dot < 1) return null
@@ -87,6 +80,9 @@ export function verifyNewsletterToken(token: string): NewsletterTokenPayload | n
     if (!rawBuf) return null
     const payload: NewsletterTokenPayload = JSON.parse(rawBuf.toString('utf8'))
 
+    // Scope check — prevents cross-use between confirm and unsubscribe tokens
+    if (payload.scope !== expectedScope) return null
+
     // Check expiry
     if (!payload.expiresAt || new Date(payload.expiresAt).getTime() < Date.now()) return null
 
@@ -99,11 +95,7 @@ export function verifyNewsletterToken(token: string): NewsletterTokenPayload | n
   }
 }
 
-/**
- * Check whether a token is structurally valid but expired.
- * Used to return 410 Gone instead of 400 Bad Request.
- */
-export function isExpiredNewsletterToken(token: string): boolean {
+function isExpiredToken(token: string): boolean {
   try {
     const dot = token.lastIndexOf('.')
     if (dot < 1) return false
@@ -120,4 +112,74 @@ export function isExpiredNewsletterToken(token: string): boolean {
   } catch {
     return false
   }
+}
+
+// ── Confirm token (scope: 'confirm', 7-day TTL) ───────────────────────────────
+
+/**
+ * Sign a newsletter confirmation token.
+ * @param email  subscriber email
+ * @param ttlMs  time-to-live in milliseconds (default 7 days)
+ */
+export function signNewsletterToken(email: string, ttlMs = 7 * 24 * 60 * 60 * 1000): string {
+  return signToken({
+    email,
+    scope: 'confirm',
+    expiresAt: new Date(Date.now() + ttlMs).toISOString(),
+    nonce: randomBytes(12).toString('hex'),
+  })
+}
+
+/**
+ * Verify a newsletter confirmation token.
+ * Returns the payload on success, or null on any failure (invalid / expired / tampered / wrong scope).
+ * Never throws — callers receive null and respond with 400/410.
+ */
+export function verifyNewsletterToken(token: string): NewsletterTokenPayload | null {
+  return verifyToken(token, 'confirm')
+}
+
+/**
+ * Check whether a token is structurally valid but expired.
+ * Used to return 410 Gone instead of 400 Bad Request.
+ */
+export function isExpiredNewsletterToken(token: string): boolean {
+  return isExpiredToken(token)
+}
+
+// ── Unsubscribe token (scope: 'unsubscribe', 90-day TTL) ─────────────────────
+
+/**
+ * Sign a one-click unsubscribe token per CAN-SPAM / EU PECR.
+ * Longer TTL (90 days) so the link in an older email still works.
+ * Scope is 'unsubscribe' — a confirm token cannot be replayed here.
+ *
+ * @param email  subscriber email
+ * @param ttlMs  time-to-live in milliseconds (default 90 days)
+ */
+export function signUnsubscribeToken(email: string, ttlMs = 90 * 24 * 60 * 60 * 1000): string {
+  return signToken({
+    email,
+    scope: 'unsubscribe',
+    expiresAt: new Date(Date.now() + ttlMs).toISOString(),
+    nonce: randomBytes(12).toString('hex'),
+  })
+}
+
+/**
+ * Verify a one-click unsubscribe token.
+ * Returns the payload on success, or null on any failure.
+ * A confirm-scope token presented here returns null (scope mismatch).
+ * Never throws.
+ */
+export function verifyUnsubscribeToken(token: string): NewsletterTokenPayload | null {
+  return verifyToken(token, 'unsubscribe')
+}
+
+/**
+ * Check whether an unsubscribe token is structurally valid but expired.
+ * Used to render the 'link expired' state on the unsubscribe page.
+ */
+export function isExpiredUnsubscribeToken(token: string): boolean {
+  return isExpiredToken(token)
 }

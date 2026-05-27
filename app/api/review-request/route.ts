@@ -5,6 +5,7 @@ import { safeEqual } from '@/lib/secrets'
 import { reviewRequestEmailHtml, reviewRequestSubject } from '@/lib/email-templates'
 import { isValidEmail } from '@/lib/validate-email'
 import { requireOptionalWebhookSecret } from '@/lib/route-helpers'
+import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
 
 /**
  * POST /api/review-request
@@ -13,11 +14,14 @@ import { requireOptionalWebhookSecret } from '@/lib/route-helpers'
  * flow is /api/fareharbor-webhook which schedules via Resend scheduledAt.
  */
 export async function POST(request: Request) {
+    const reqId = getRequestId(request)
+    const log = makeRequestLogger('review-request', reqId)
+
     const expected = process.env.FAREHARBOR_WEBHOOK_SECRET
     if (expected) {
         const got = request.headers.get('x-webhook-secret')
         if (!safeEqual(got, expected)) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+            return attachRequestId(NextResponse.json({ error: 'Unauthorized' }, { status: 401 }), reqId)
         }
     }
 
@@ -25,7 +29,7 @@ export async function POST(request: Request) {
     try {
         body = (await request.json()) as Record<string, unknown>
     } catch {
-        return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 })
+        return attachRequestId(NextResponse.json({ error: 'Invalid JSON' }, { status: 400 }), reqId)
     }
 
     const rawName =
@@ -36,7 +40,7 @@ export async function POST(request: Request) {
     const locale = ((body.locale as string) || 'en')
 
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
-        return NextResponse.json({ error: 'Invalid email' }, { status: 400 })
+        return attachRequestId(NextResponse.json({ error: 'Invalid email' }, { status: 400 }), reqId)
     }
 
     try {
@@ -48,10 +52,11 @@ export async function POST(request: Request) {
                 escapedTourName: escapeHtml(rawTourName),
             }),
             replyTo: process.env.CONTACT_EMAIL || 'info@alpacasibiza.com',
+            listUnsubscribeUrl: `mailto:${process.env.CONTACT_EMAIL ?? 'info@alpacasibiza.com'}?subject=unsubscribe`,
         })
-        return NextResponse.json({ success: true })
+        return attachRequestId(NextResponse.json({ success: true }), reqId)
     } catch (err) {
-        console.error('[review-request] sendEmail failed:', err)
-        return NextResponse.json({ error: 'Send failed' }, { status: 500 })
+        log.error('sendEmail failed', { err: String(err) })
+        return attachRequestId(NextResponse.json({ error: 'Send failed' }, { status: 500 }), reqId)
     }
 }

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { isSet, TIER1_KEYS } from '@/lib/validate-env'
+import { getRequestId, attachRequestId } from '@/lib/request-id'
 
 /**
  * GET /api/health
@@ -10,7 +11,8 @@ import { isSet, TIER1_KEYS } from '@/lib/validate-env'
  *
  * No auth required — this is a public status endpoint.
  */
-export async function GET() {
+export async function GET(request: Request) {
+    const reqId = getRequestId(request)
     const version = process.env.npm_package_version ?? 'unknown'
     const env = process.env.NODE_ENV === 'production' ? 'production' : 'development'
 
@@ -25,8 +27,11 @@ export async function GET() {
         ...(healthy ? {} : { missing: missingTier1 }),
     }
 
-    return NextResponse.json(body, {
-        status: healthy ? 200 : 503,
-        headers: { 'Cache-Control': 'no-store' },
-    })
+    return attachRequestId(
+        NextResponse.json(body, {
+            status: healthy ? 200 : 503,
+            headers: { 'Cache-Control': 'no-store' },
+        }),
+        reqId
+    )
 }

@@ -86,7 +86,7 @@ export function ProductCard({
 
         <div className="flex items-center justify-between gap-3">
           <div className="text-lg font-bold text-primary">
-            €{product.price.toFixed(2)}
+            {new Intl.NumberFormat('en', { style: 'currency', currency: 'EUR' }).format(product.price)}
           </div>
           <div className="flex gap-2">
             {onWishlist && (

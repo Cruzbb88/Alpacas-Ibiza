@@ -4,7 +4,7 @@ import { Hero } from '@/components/hero'
 import { FAQ } from '@/components/faq'
 import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
 import { t } from '@/lib/translations'
-import { localBusinessSchema, toJsonLd } from '@/lib/structured-data'
+import { localBusinessSchema, workshopHowToSchema, toJsonLd } from '@/lib/structured-data'
 import { SITE_BASE_URL as BASE_URL } from '@/lib/config'
 import type { Locale } from '@/i18n.config'
 import { getTenant } from '@/lib/tenants/server'
@@ -104,6 +104,7 @@ export default async function WorkshopsPage({
     const schemas = [
         localBusinessSchema(),
         workshopCourseSchema(),
+        workshopHowToSchema(),
     ]
 
     // Verified-facts grid — sourced from REALITY_CHECK.md Tier 2 (line 62-65)
@@ -316,7 +317,7 @@ export default async function WorkshopsPage({
                         )}
                     </p>
                     <Link
-                        href={`/contact?subject=${encodeURIComponent('Workshop inquiry')}`}
+                        href={`/${locale}/contact?subject=${encodeURIComponent('Workshop inquiry')}`}
                         className="inline-flex items-center gap-2 px-8 py-3 bg-accent hover:bg-accent/90 text-accent-foreground rounded-lg font-medium transition-colors"
                     >
                         {translate(

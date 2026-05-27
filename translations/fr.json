@@ -191,6 +191,46 @@
       "apiNote": "La disponibilité en tempo réel nécessite une configuration API"
     },
     "questionsText": "Contactez-nous à hello@alpacasibiza.com ou par WhatsApp pour une assistance personnalisée.",
+    "compare": {
+      "title": "Comparer les types de visite",
+      "subtitle": "Trouvez l'expérience qui vous correspond",
+      "meetHerd": {
+        "duration": "Contactez-nous pour plus de détails",
+        "price": "Contactez-nous pour plus de détails",
+        "capacity": "Contactez-nous pour plus de détails",
+        "include1": "Promenade guidée avec les alpagas",
+        "include2": "Questions avec l'hôte",
+        "include3": "Séance photo",
+        "bestFor": "Premières visites, familles"
+      },
+      "weaving": {
+        "duration": "Contactez-nous pour plus de détails",
+        "price": "Contactez-nous pour plus de détails",
+        "capacity": "Contactez-nous pour plus de détails",
+        "include1": "Atelier pratique de fibres",
+        "include2": "Introduction à la teinture naturelle",
+        "include3": "Souvenir à emporter",
+        "bestFor": "Voyageurs créatifs, couples"
+      },
+      "farm": {
+        "duration": "Contactez-nous pour plus de détails",
+        "price": "Contactez-nous pour plus de détails",
+        "capacity": "Contactez-nous pour plus de détails",
+        "include1": "Visite complète de la ferme",
+        "include2": "Démonstration de pratiques durables",
+        "include3": "Nourrir et interagir avec les alpagas",
+        "bestFor": "Amoureux de la nature, groupes"
+      },
+      "photo": {
+        "duration": "Contactez-nous pour plus de détails",
+        "price": "Contactez-nous pour plus de détails",
+        "capacity": "Contactez-nous pour plus de détails",
+        "include1": "Séance photo avec alpagas",
+        "include2": "Décors pittoresques",
+        "include3": "Conseils de mise en scène",
+        "bestFor": "Photographes, réseaux sociaux, souvenirs"
+      }
+    },
     "backHome": "Retour à l'Accueil"
   },
   "guestStories": {

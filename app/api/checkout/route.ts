@@ -3,6 +3,7 @@ import { SITE_BASE_URL } from '@/lib/config'
 import { importStripe } from '@/lib/integrations/stripe-sdk'
 import { extractLocaleFromReferer, requireEnvOrReturn503 } from '@/lib/route-helpers'
 import { isAdoptTier, type AdoptTier } from '@/lib/payment-vendor'
+import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
 
 /**
  * POST /api/checkout
@@ -32,8 +33,11 @@ export async function POST(request: Request) {
 }
 
 async function handleCheckout(request: Request, method: 'GET' | 'POST') {
+  const reqId = getRequestId(request)
+  const log = makeRequestLogger('checkout', reqId)
+
   const secretGate = requireEnvOrReturn503('STRIPE_SECRET_KEY', 'Payment system not configured')
-  if (secretGate) return secretGate
+  if (secretGate) return attachRequestId(secretGate, reqId)
   const secretKey = process.env.STRIPE_SECRET_KEY!
 
   let tier: AdoptTier | null = null
@@ -45,16 +49,16 @@ async function handleCheckout(request: Request, method: 'GET' | 'POST') {
       const body = await request.json()
       if (isAdoptTier(body?.tier)) tier = body.tier
     } catch {
-      return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
+      return attachRequestId(NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 }), reqId)
     }
   }
   if (!tier) {
-    return NextResponse.json({ error: 'tier must be "monthly" or "yearly"' }, { status: 400 })
+    return attachRequestId(NextResponse.json({ error: 'tier must be "monthly" or "yearly"' }, { status: 400 }), reqId)
   }
 
   const priceKey = tier === 'monthly' ? 'STRIPE_ADOPT_PRICE_ID_MONTHLY' : 'STRIPE_ADOPT_PRICE_ID_YEARLY'
   const priceGate = requireEnvOrReturn503(priceKey, 'Payment price not configured for this tier')
-  if (priceGate) return priceGate
+  if (priceGate) return attachRequestId(priceGate, reqId)
   const priceId = process.env[priceKey]!
 
   // SECURITY: SITE_BASE_URL only — never request.headers.get('origin'). See
@@ -65,10 +69,13 @@ async function handleCheckout(request: Request, method: 'GET' | 'POST') {
 
   const stripeFactory = await importStripe()
   if (!stripeFactory) {
-    console.error('[checkout] stripe SDK not installed. Run: pnpm add stripe (owner-controlled deploy step).')
-    return NextResponse.json(
-      { error: 'Payment SDK not installed', code: 'STRIPE_SDK_MISSING' },
-      { status: 503 }
+    log.error('stripe SDK not installed. Run: pnpm add stripe (owner-controlled deploy step).')
+    return attachRequestId(
+      NextResponse.json(
+        { error: 'Payment SDK not installed', code: 'STRIPE_SDK_MISSING' },
+        { status: 503 }
+      ),
+      reqId
     )
   }
   const stripe = stripeFactory(secretKey, { apiVersion: '2024-06-20' })
@@ -84,17 +91,23 @@ async function handleCheckout(request: Request, method: 'GET' | 'POST') {
       metadata: { product: 'adopt-a-paca', tier },
     })
     if (!session.url) {
-      console.error('[checkout] Stripe returned a session with no URL', { id: session.id })
-      return NextResponse.json({ error: 'Checkout session created but no URL returned' }, { status: 502 })
+      log.error('Stripe returned a session with no URL', { id: session.id })
+      return attachRequestId(
+        NextResponse.json({ error: 'Checkout session created but no URL returned' }, { status: 502 }),
+        reqId
+      )
     }
-    if (method === 'GET') return NextResponse.redirect(session.url, 303)
-    return NextResponse.json({ url: session.url })
+    if (method === 'GET') return attachRequestId(NextResponse.redirect(session.url, 303), reqId)
+    return attachRequestId(NextResponse.json({ url: session.url }), reqId)
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
-    console.error('[checkout] Stripe session creation failed:', message)
-    return NextResponse.json(
-      { error: 'Failed to create checkout session', detail: message },
-      { status: 502 }
+    log.error('Stripe session creation failed', { message })
+    return attachRequestId(
+      NextResponse.json(
+        { error: 'Failed to create checkout session', detail: message },
+        { status: 502 }
+      ),
+      reqId
     )
   }
 }

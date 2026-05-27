@@ -3,6 +3,8 @@ import { sendEmail } from '@/lib/mailer'
 import { safeEqual } from '@/lib/secrets'
 import { escapeHtml } from '@/lib/html'
 import { reminderEmailHtml, reminderSubject } from '@/lib/email-templates'
+import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
+import { buildIcs, googleCalendarUrl } from '@/lib/ics'
 
 /**
  * POST /api/reminder
@@ -15,11 +17,14 @@ import { reminderEmailHtml, reminderSubject } from '@/lib/email-templates'
  *  - integrations that can't speak to the webhook endpoint
  */
 export async function POST(request: Request) {
+    const reqId = getRequestId(request)
+    const log = makeRequestLogger('reminder', reqId)
+
     const expected = process.env.FAREHARBOR_WEBHOOK_SECRET
     if (expected) {
         const got = request.headers.get('x-webhook-secret')
         if (!safeEqual(got, expected)) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+            return attachRequestId(NextResponse.json({ error: 'Unauthorized' }, { status: 401 }), reqId)
         }
     }
 
@@ -27,17 +32,19 @@ export async function POST(request: Request) {
     try {
         body = (await request.json()) as Record<string, unknown>
     } catch {
-        return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 })
+        return attachRequestId(NextResponse.json({ error: 'Invalid JSON' }, { status: 400 }), reqId)
     }
 
     const rawName = (body.customer_name as string) || (body.name as string) || 'there'
     const email = (body.customer_email as string) || (body.email as string)
     const rawTourName = (body.tour_name as string) || (body.item_name as string) || 'your visit'
     const startAt = body.start_at ? new Date(body.start_at as string) : null
+    const endAt = body.end_at ? new Date(body.end_at as string) : null
+    const bookingPk = body.pk ? String(body.pk) : null
     const locale = ((body.locale as string) || 'en')
 
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
-        return NextResponse.json({ error: 'Invalid email' }, { status: 400 })
+        return attachRequestId(NextResponse.json({ error: 'Invalid email' }, { status: 400 }), reqId)
     }
 
     const dateStr = startAt
@@ -51,6 +58,36 @@ export async function POST(request: Request) {
           })
         : 'your scheduled time'
 
+    // Build ICS attachment + Google Calendar link when start time is available.
+    // Falls back to no-ICS send if startAt is missing or date is invalid.
+    let icsAttachment: { filename: string; content: string; contentType: string } | undefined
+    let calendarUrl: string | undefined
+    if (startAt && !isNaN(startAt.getTime())) {
+        try {
+            const organizerEmail = process.env.CONTACT_EMAIL ?? 'info@alpacasibiza.com'
+            const uid = bookingPk ? `${bookingPk}@alpacasibiza.com` : `reminder-${Date.now()}@alpacasibiza.com`
+            const icsInput = {
+                uid,
+                summary: `Alpaca farm visit at Es Currals`,
+                description: `See you at Es Currals! Your visit: ${rawTourName} on ${dateStr}. Wear closed shoes, bring sun hat and water.`,
+                startIso: startAt.toISOString(),
+                endIso: endAt && !isNaN(endAt.getTime()) ? endAt.toISOString() : undefined,
+                location: 'Es Currals, San Carlos, Santa Eulària des Riu, Ibiza',
+                organizerName: 'Alpacas Ibiza',
+                organizerEmail,
+            }
+            const icsContent = buildIcs(icsInput)
+            icsAttachment = {
+                filename: 'alpaca-visit.ics',
+                content: Buffer.from(icsContent).toString('base64'),
+                contentType: 'text/calendar',
+            }
+            calendarUrl = googleCalendarUrl(icsInput)
+        } catch (icsErr) {
+            log.error('ICS build failed — sending reminder without attachment', { err: String(icsErr) })
+        }
+    }
+
     try {
         await sendEmail({
             to: email,
@@ -60,12 +97,15 @@ export async function POST(request: Request) {
                 escapedTourName: escapeHtml(rawTourName),
                 dateStr,
                 locale,
+                addToCalendarUrl: calendarUrl,
             }),
             replyTo: process.env.CONTACT_EMAIL || 'info@alpacasibiza.com',
+            listUnsubscribeUrl: `mailto:${process.env.CONTACT_EMAIL ?? 'info@alpacasibiza.com'}?subject=unsubscribe`,
+            ...(icsAttachment ? { attachments: [icsAttachment] } : {}),
         })
-        return NextResponse.json({ success: true })
+        return attachRequestId(NextResponse.json({ success: true }), reqId)
     } catch (err) {
-        console.error('[reminder] sendEmail failed:', err)
-        return NextResponse.json({ error: 'Send failed' }, { status: 500 })
+        log.error('sendEmail failed', { err: String(err) })
+        return attachRequestId(NextResponse.json({ error: 'Send failed' }, { status: 500 }), reqId)
     }
 }

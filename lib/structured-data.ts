@@ -13,17 +13,29 @@ const FAREHARBOR_BOOKING_URL =
 
 // ─── Organization ────────────────────────────────────────────────────────────
 
-export function organizationSchema() {
+/** Minimal tenant shape accepted by organizationSchema — avoids @/ path imports. */
+interface OrganizationSchemaTenant {
+    social?: { twitterHandle?: string | null } | null
+}
+
+export function organizationSchema(tenant?: OrganizationSchemaTenant) {
+    const sameAs: string[] = [
+        'https://www.facebook.com/alpacasibiza',
+        'https://www.instagram.com/alpacasibiza',
+    ]
+    const rawHandle = tenant?.social?.twitterHandle
+    if (rawHandle) {
+        const handle = rawHandle.replace(/^@/, '')
+        sameAs.push(`https://twitter.com/${handle}`)
+    }
+
     return {
         '@context': 'https://schema.org',
         '@type': 'Organization',
         name: 'Alpacas Ibiza',
         url: BASE_URL,
         logo: `${BASE_URL}/images/logo.webp`,
-        sameAs: [
-            'https://www.facebook.com/alpacasibiza',
-            'https://www.instagram.com/alpacasibiza',
-        ],
+        sameAs,
         contactPoint: {
             '@type': 'ContactPoint',
             telephone: '+32475586544',
@@ -82,7 +94,40 @@ export function localBusinessSchema() {
 
 // ─── TouristTrip (Tour page) ──────────────────────────────────────────────────
 
-export function touristTripSchema() {
+/** Default base price — mirrors TOUR_BASE_PRICE_EUR in lib/config.ts.
+ *  Inlined here to keep structured-data.ts free of @/ path-alias imports
+ *  (required for node:test compatibility). If price changes, update both. */
+const TOUR_BASE_PRICE_EUR_DEFAULT = 30
+
+export function touristTripSchema(opts?: {
+    /** Base / lowest tier price. Defaults to TOUR_BASE_PRICE_EUR (30). */
+    lowPriceEur?: number
+    /** Upper tier price. Omit when UNMAPPED — emits plain Offer instead of AggregateOffer. */
+    highPriceEur?: number
+    /** Number of distinct offers in the aggregate. Defaults to 1. */
+    offerCount?: number
+}) {
+    const low = opts?.lowPriceEur ?? TOUR_BASE_PRICE_EUR_DEFAULT
+    const high = opts?.highPriceEur
+    const offers =
+        high != null && high > low
+            ? {
+                  '@type': 'AggregateOffer',
+                  priceCurrency: 'EUR',
+                  lowPrice: String(low),
+                  highPrice: String(high),
+                  offerCount: opts?.offerCount ?? 1,
+                  availability: 'https://schema.org/InStock',
+                  url: FAREHARBOR_BOOKING_URL,
+              }
+            : {
+                  '@type': 'Offer',
+                  priceCurrency: 'EUR',
+                  price: String(low),
+                  availability: 'https://schema.org/InStock',
+                  url: FAREHARBOR_BOOKING_URL,
+              }
+
     return {
         '@context': 'https://schema.org',
         '@type': 'TouristTrip',
@@ -92,13 +137,7 @@ export function touristTripSchema() {
         url: `${BASE_URL}/en/tours`,
         image: `${BASE_URL}/images/tour-alpacas.webp`,
         touristType: ['Family', 'Solo', 'Couple', 'Group'],
-        offers: {
-            '@type': 'Offer',
-            priceCurrency: 'EUR',
-            price: '20',
-            availability: 'https://schema.org/InStock',
-            url: 'https://fareharbor.com/embeds/book/alpacasibiza/?full-items=yes',
-        },
+        offers,
         provider: {
             '@type': 'LocalBusiness',
             name: 'Alpacas Ibiza',
@@ -254,6 +293,131 @@ export function yogaWeeklyEventSchema(opts?: { now?: Date }): object {
         },
         // image: omitted — no yoga-event image confirmed
         // performer: omitted — instructor UNMAPPED
+    }
+}
+
+// ─── WebSite + SearchAction (sitelinks search box) ───────────────────────────
+
+/**
+ * WebSite schema with `potentialAction: SearchAction` — enables Google sitelinks
+ * search box for the brand (https://developers.google.com/search/docs/appearance/sitelinks-searchbox).
+ *
+ * The {search_term_string} placeholder is required by the spec. Site has no
+ * server-side /search route yet — the header search is client-side. For Google
+ * compliance we point at the journal index since that's the most search-relevant
+ * destination; a future server-side /search endpoint can replace this.
+ */
+export function websiteSearchSchema() {
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: 'Alpacas Ibiza',
+        url: BASE_URL,
+        potentialAction: {
+            '@type': 'SearchAction',
+            target: {
+                '@type': 'EntryPoint',
+                urlTemplate: `${BASE_URL}/en/journal?q={search_term_string}`,
+            },
+            'query-input': 'required name=search_term_string',
+        },
+    }
+}
+
+// ─── Person ──────────────────────────────────────────────────────────────────
+
+export interface PersonInput {
+    name: string
+    role?: string | null
+    url?: string | null
+    // image?: string | null  // omitted until owner provides photo per Rule 5
+}
+
+export function personSchema(p: PersonInput) {
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'Person',
+        name: p.name,
+        ...(p.role ? { jobTitle: p.role } : {}),
+        ...(p.url ? { url: p.url } : {}),
+    }
+}
+
+// ─── Service (Weddings / photoshoots) ────────────────────────────────────────
+
+export function weddingsServiceSchema() {
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'Service',
+        name: 'Alpacas at Your Wedding or Photoshoot',
+        description:
+            'Bring our gentle herd to your wedding ceremony, engagement shoot, or branded photoshoot. On-farm at Es Currals or travel anywhere on Ibiza.',
+        provider: {
+            '@type': 'LocalBusiness',
+            name: 'Alpacas Ibiza',
+            url: BASE_URL,
+        },
+        serviceType: 'Animal experience for events',
+        areaServed: {
+            '@type': 'Place',
+            name: 'Ibiza, Spain',
+        },
+        // offers omitted — pricing UNMAPPED per OWNER_INPUT_NEEDED.md
+    }
+}
+
+// ─── HowTo (2-day weaving + spinning workshop) ────────────────────────────────
+
+export function workshopHowToSchema() {
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'HowTo',
+        name: 'Two-day Weaving + Spinning Workshop with San',
+        description:
+            'Learn to wash, spin, and weave alpaca wool into a finished scarf over two days at Es Currals.',
+        totalTime: 'P2D', // ISO 8601 — 2 days
+        step: [
+            {
+                '@type': 'HowToStep',
+                name: 'Day 1 — Wash, card, and spin',
+                text: 'Learn to wash raw alpaca fleece, card it into rolags, and spin yarn on a traditional wheel.',
+            },
+            {
+                '@type': 'HowToStep',
+                name: 'Day 2 — Weave on the loom',
+                text: 'Set up a warp on the wooden loom, weave the yarn you spun, and take home your finished scarf.',
+            },
+        ],
+        // tool, supply, image, estimatedCost — all omitted per Rule 5 (UNMAPPED)
+    }
+}
+
+// ─── TouristAttraction (Herd / alpacas page) ─────────────────────────────────
+
+/**
+ * TouristAttraction schema for the /alpacas (meet the herd) page.
+ * Signals Google that Es Currals is a destination, not just a service.
+ * Appointment-based — isAccessibleForFree:false, publicAccess:false.
+ */
+export function herdAttractionSchema() {
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'TouristAttraction',
+        name: 'The Alpaca Herd of Es Currals',
+        description:
+            'Meet the 14 named alpacas of Es Currals — Barbarella, Avalon, Bardot, Chet, Dusty, Fela, Fonda, Lewis, Marron, Mojo, Moloko, Nelson, Suki, and Toots.',
+        url: `${BASE_URL}/en/alpacas`,
+        isAccessibleForFree: false,  // visits are appointment-based
+        publicAccess: false,          // by appointment only
+        address: {
+            '@type': 'PostalAddress',
+            streetAddress: 'San Carlos',
+            addressLocality: 'Santa Eulària des Riu',
+            addressRegion: 'Islas Baleares',
+            addressCountry: 'ES',
+            postalCode: '07819',
+        },
+        touristType: ['Family', 'Solo', 'Couple', 'Group', 'Animal lovers'],
     }
 }
 

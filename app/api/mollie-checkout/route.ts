@@ -4,6 +4,7 @@ import { SITE_BASE_URL } from '@/lib/config'
 import { isAdoptTier, type AdoptTier } from '@/lib/payment-vendor'
 import { extractLocaleFromReferer, requireEnvOrReturn503 } from '@/lib/route-helpers'
 import { isValidEmail } from '@/lib/validate-email'
+import { getRequestId, attachRequestId } from '@/lib/request-id'
 
 /**
  * GET  /api/mollie-checkout?tier=monthly|yearly
@@ -33,10 +34,12 @@ export async function POST(request: Request) {
 }
 
 async function handleCheckout(request: Request, method: 'GET' | 'POST') {
+  const reqId = getRequestId(request)
+
   const apiKeyGate = requireEnvOrReturn503('MOLLIE_API_KEY', 'Payment system not configured')
-  if (apiKeyGate) return apiKeyGate
+  if (apiKeyGate) return attachRequestId(apiKeyGate, reqId)
   const webhookSecretGate = requireEnvOrReturn503('MOLLIE_WEBHOOK_SECRET', 'Webhook secret not configured')
-  if (webhookSecretGate) return webhookSecretGate
+  if (webhookSecretGate) return attachRequestId(webhookSecretGate, reqId)
 
   let tier: AdoptTier | null = null
   let customerEmail: string | undefined
@@ -51,11 +54,11 @@ async function handleCheckout(request: Request, method: 'GET' | 'POST') {
         customerEmail = body.email
       }
     } catch {
-      return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
+      return attachRequestId(NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 }), reqId)
     }
   }
   if (!tier) {
-    return NextResponse.json({ error: 'tier must be "monthly" or "yearly"' }, { status: 400 })
+    return attachRequestId(NextResponse.json({ error: 'tier must be "monthly" or "yearly"' }, { status: 400 }), reqId)
   }
 
   // SECURITY: SITE_BASE_URL only — never request.headers.get('origin'). See
@@ -72,16 +75,19 @@ async function handleCheckout(request: Request, method: 'GET' | 'POST') {
   })
 
   if ('unconfigured' in result) {
-    return NextResponse.json(
-      {
-        error: 'Payment provider not configured',
-        code: 'MOLLIE_UNCONFIGURED',
-        fallbackUrl: result.fallbackUrl,
-      },
-      { status: 503 },
+    return attachRequestId(
+      NextResponse.json(
+        {
+          error: 'Payment provider not configured',
+          code: 'MOLLIE_UNCONFIGURED',
+          fallbackUrl: result.fallbackUrl,
+        },
+        { status: 503 },
+      ),
+      reqId
     )
   }
 
-  if (method === 'GET') return NextResponse.redirect(result.url, 303)
-  return NextResponse.json({ url: result.url })
+  if (method === 'GET') return attachRequestId(NextResponse.redirect(result.url, 303), reqId)
+  return attachRequestId(NextResponse.json({ url: result.url }), reqId)
 }

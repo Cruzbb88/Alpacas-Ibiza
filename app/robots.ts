@@ -1,13 +1,29 @@
 import type { MetadataRoute } from 'next'
-
-const BASE_URL = 'https://alpacasibiza.com'
+import { SITE_BASE_URL } from '@/lib/config'
+import { isProductionEnv } from '@/lib/robots-env'
 
 export default function robots(): MetadataRoute.Robots {
+  const isProd = isProductionEnv(SITE_BASE_URL, process.env.VERCEL_ENV)
+
+  if (!isProd) {
+    // Preview deploys, local dev, custom branches — block all crawlers
     return {
-        rules: {
-            userAgent: '*',
-            allow: '/',
-        },
-        sitemap: `${BASE_URL}/sitemap.xml`,
+      rules: [{ userAgent: '*', disallow: '/' }],
     }
+  }
+
+  // Production
+  return {
+    rules: [
+      {
+        userAgent: '*',
+        allow: '/',
+        disallow: ['/admin/', '/api/'],
+      },
+    ],
+    sitemap: [
+      `${SITE_BASE_URL}/sitemap.xml`,
+      `${SITE_BASE_URL}/sitemap-news.xml`,
+    ],
+  }
 }

@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { Hero } from '@/components/hero'
 import { AlpacaCard } from '@/components/alpaca-card'
 import { t } from '@/lib/translations'
-import { localBusinessSchema, toJsonLd } from '@/lib/structured-data'
+import { localBusinessSchema, herdAttractionSchema, toJsonLd } from '@/lib/structured-data'
 import type { Locale } from '@/i18n.config'
 import { getTenant } from '@/lib/tenants/server'
 import { getProviders } from '@/lib/integrations'
@@ -42,6 +42,7 @@ export default async function AlpacasPage({ params }: { params: Promise<{ locale
     const animals = providers.content.listAnimals()
 
     const schema = localBusinessSchema()
+    const attractionSchema = herdAttractionSchema()
 
     return (
         <main>
@@ -49,6 +50,11 @@ export default async function AlpacasPage({ params }: { params: Promise<{ locale
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: toJsonLd(schema) }}
+            />
+            {/* JSON-LD: TouristAttraction (herd page is a destination) */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: toJsonLd(attractionSchema) }}
             />
 
             <PageBreadcrumbs

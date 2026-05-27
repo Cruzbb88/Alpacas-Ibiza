@@ -13,6 +13,7 @@ import {
   type MolliePaymentLike,
 } from '@/lib/payment-handlers'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
+import { isAlreadyProcessed } from '@/lib/webhook-idempotency'
 
 /**
  * POST /api/mollie-webhook?secret=<MOLLIE_WEBHOOK_SECRET>
@@ -64,6 +65,16 @@ export async function POST(request: Request) {
   log.info(
     `${event.type} id=${payment.id} status=${payment.status} sequenceType=${payment.sequenceType ?? 'n/a'}`,
   )
+
+  // Idempotency guard — Mollie retries exponentially up to 18h.
+  // Key: payment ID (stable across retries for the same payment event).
+  if (isAlreadyProcessed(payment.id)) {
+    log.info('event already processed — skipping', { paymentId: payment.id })
+    return attachRequestId(
+      NextResponse.json({ ok: true, idempotent: true }, { status: 200 }),
+      reqId,
+    )
+  }
 
   // Construct one Mollie client for any post-verify SDK calls. Cached factory.
   const mollie = await getMollieClient(apiKey)

@@ -191,6 +191,46 @@
       "apiNote": "Echtzeit-Verfügbarkeit erfordert API-Einrichtung"
     },
     "questionsText": "Kontaktieren Sie uns unter hello@alpacasibiza.com oder per WhatsApp für persönliche Beratung.",
+    "compare": {
+      "title": "Touren vergleichen",
+      "subtitle": "Finden Sie das Erlebnis, das am besten zu Ihnen passt",
+      "meetHerd": {
+        "duration": "Auf Anfrage",
+        "price": "Auf Anfrage",
+        "capacity": "Auf Anfrage",
+        "include1": "Geführter Alpakagang",
+        "include2": "Q&A mit dem Gastgeber",
+        "include3": "Fotomöglichkeit",
+        "bestFor": "Erstbesucher, Familien"
+      },
+      "weaving": {
+        "duration": "Auf Anfrage",
+        "price": "Auf Anfrage",
+        "capacity": "Auf Anfrage",
+        "include1": "Praxisworkshop Faserkunst",
+        "include2": "Einführung Naturfärberei",
+        "include3": "Souvenir zum Mitnehmen",
+        "bestFor": "Kreative Reisende, Paare"
+      },
+      "farm": {
+        "duration": "Auf Anfrage",
+        "price": "Auf Anfrage",
+        "capacity": "Auf Anfrage",
+        "include1": "Komplette Hofführung",
+        "include2": "Vorführung nachhaltiger Praktiken",
+        "include3": "Alpaka füttern & streicheln",
+        "bestFor": "Naturliebhaber, Gruppen"
+      },
+      "photo": {
+        "duration": "Auf Anfrage",
+        "price": "Auf Anfrage",
+        "capacity": "Auf Anfrage",
+        "include1": "Inszenierte Alpaka-Fotosession",
+        "include2": "Malerische Kulissen",
+        "include3": "Positionierungsberatung",
+        "bestFor": "Fotografen, Erinnerungsfotos"
+      }
+    },
     "backHome": "Zurück zur Startseite"
   },
   "guestStories": {

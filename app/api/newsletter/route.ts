@@ -19,7 +19,7 @@ import { detectHoneypot } from '@/lib/honeypot'
 import { rateLimit, rateLimitByEmail } from '@/lib/rate-limit'
 import { getClientIp } from '@/lib/rate-limit'
 import { isValidEmail } from '@/lib/validate-email'
-import { signNewsletterToken } from '@/lib/newsletter-token'
+import { signNewsletterToken, signUnsubscribeToken } from '@/lib/newsletter-token'
 import { buildNewsletterConfirmEmail } from '@/lib/email-templates'
 import { SITE_BASE_URL } from '@/lib/config'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
@@ -78,13 +78,18 @@ export async function POST(request: Request) {
     }
 
     // Build double opt-in confirmation link (SITE_BASE_URL — never Origin)
-    const token = signNewsletterToken(email.toLowerCase().trim())
+    const normalizedEmail = email.toLowerCase().trim()
+    const token = signNewsletterToken(normalizedEmail)
     const confirmUrl = `${SITE_BASE_URL}/api/newsletter/confirm?token=${encodeURIComponent(token)}`
+
+    // Build per-recipient unsubscribe URL (CAN-SPAM / EU PECR — included in email footer)
+    const unsubToken = signUnsubscribeToken(normalizedEmail)
+    const unsubscribeUrl = `${SITE_BASE_URL}/api/newsletter/unsubscribe?token=${encodeURIComponent(unsubToken)}`
 
     // Send confirmation email to the subscriber
     try {
-      const { subject, html } = buildNewsletterConfirmEmail(confirmUrl)
-      await sendEmail({ to: email, subject, html })
+      const { subject, html } = buildNewsletterConfirmEmail(confirmUrl, unsubscribeUrl)
+      await sendEmail({ to: email, subject, html, listUnsubscribeUrl: unsubscribeUrl })
     } catch (mailErr) {
       log.warn('confirmation email send failed', { err: String(mailErr) })
       // Non-fatal — return success so we don't leak whether the address is in our list

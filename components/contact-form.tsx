@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { TurnstileWidget } from '@/components/turnstile-widget'
 import { HoneypotField } from '@/components/honeypot-field'
+import { useFormDraft } from '@/lib/hooks/use-form-draft'
 
 interface ContactFormProps {
     labels: {
@@ -19,12 +20,12 @@ interface ContactFormProps {
 
 export function ContactForm({ labels }: ContactFormProps) {
     const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
-    const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' })
+    const { draft: form, patch, clear } = useFormDraft('contact', { name: '', email: '', subject: '', message: '' })
     const [captchaToken, setCaptchaToken] = useState<string>('')
     const [honeypot, setHoneypot] = useState('')
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+        patch({ [e.target.name]: e.target.value })
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -38,7 +39,7 @@ export function ContactForm({ labels }: ContactFormProps) {
             })
             if (res.ok) {
                 setStatus('success')
-                setForm({ name: '', email: '', subject: '', message: '' })
+                clear()
             } else {
                 setStatus('error')
             }

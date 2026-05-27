@@ -191,6 +191,46 @@
       "apiNote": "Real-time availability requires API setup"
     },
     "questionsText": "Contact us at hello@alpacasibiza.com or message via WhatsApp for personalized assistance.",
+    "compare": {
+      "title": "Compare Tour Types",
+      "subtitle": "Find the experience that fits you best",
+      "meetHerd": {
+        "duration": "Contact for details",
+        "price": "Contact for details",
+        "capacity": "Contact for details",
+        "include1": "Guided alpaca walk",
+        "include2": "Q&A with farm host",
+        "include3": "Photo opportunity",
+        "bestFor": "First-time visitors, families"
+      },
+      "weaving": {
+        "duration": "Contact for details",
+        "price": "Contact for details",
+        "capacity": "Contact for details",
+        "include1": "Hands-on fiber arts session",
+        "include2": "Natural dyeing introduction",
+        "include3": "Take-home souvenir",
+        "bestFor": "Creative travellers, couples"
+      },
+      "farm": {
+        "duration": "Contact for details",
+        "price": "Contact for details",
+        "capacity": "Contact for details",
+        "include1": "Full farm tour",
+        "include2": "Sustainable practices demo",
+        "include3": "Alpaca feeding & interaction",
+        "bestFor": "Nature lovers, groups"
+      },
+      "photo": {
+        "duration": "Contact for details",
+        "price": "Contact for details",
+        "capacity": "Contact for details",
+        "include1": "Styled alpaca photo session",
+        "include2": "Scenic backdrops",
+        "include3": "Guided positioning",
+        "bestFor": "Photographers, social media, memories"
+      }
+    },
     "backHome": "Back to Home"
   },
   "guestStories": {
@@ -514,19 +554,19 @@
       "heading": "Getting here",
       "byCar": {
         "title": "By car",
-        "body": "From Ibiza Town: approx. [UNMAPPED — owner confirm] minutes via PM-810. From Santa Eulàlia: approx. [UNMAPPED — owner confirm] minutes. Free parking on-site."
+        "body": "Located in San Carlos, a short drive from Ibiza Town and Santa Eulàlia. Free parking on-site. Contact us for current journey-time estimates."
       },
       "fromAirport": {
         "title": "From the airport",
-        "body": "Ibiza Airport (IBZ) is approx. [UNMAPPED — owner confirm] km away — roughly [UNMAPPED — owner confirm] minutes by car or taxi. Taxis available at the airport rank; no pre-booking required."
+        "body": "Ibiza Airport (IBZ) is a short drive away. Taxis are available at the airport rank; no pre-booking required. Contact us for current journey-time estimates."
       },
       "transit": {
         "title": "Public transit",
-        "body": "The nearest bus stop is approx. [UNMAPPED — owner confirm] minutes walk. Check ibizabus.com for current routes and timetables. A rental car or taxi is recommended for the final stretch."
+        "body": "Check ibizabus.com for current routes and timetables. A rental car or taxi is recommended for the final stretch to the farm."
       },
       "coordinates": {
         "title": "Coordinates & backup nav",
-        "body": "GPS: 38.9861° N, 1.5228° E. Search «Alpacas Ibiza, San Carlos» in Google Maps or Apple Maps. What3Words address: [UNMAPPED — owner confirm]."
+        "body": "GPS: 38.9861° N, 1.5228° E. Search «Alpacas Ibiza, San Carlos» in Google Maps or Apple Maps."
       }
     }
   },
@@ -740,31 +780,31 @@
   },
   "adopt": {
     "title": "Adopt an Alpaca",
-    "subtitle": "__UNMAPPED__ — owner to supply hero subtitle (e.g. why adopt, farm story, emotional hook)",
+    "subtitle": "",
     "tierLabel": "Choose your adoption plan",
     "monthlyPrice": "€75 / month",
     "yearlyPrice": "€900 / year",
     "benefitsTitle": "What's included",
-    "benefitsIntro": "__UNMAPPED__ — owner to supply intro sentence for the benefits bundle",
-    "benefit1": "__UNMAPPED__ — benefit 1 (e.g. adoption certificate)",
-    "benefit2": "__UNMAPPED__ — benefit 2 (e.g. 6 farm tours/year, up to 4 guests)",
-    "benefit3": "__UNMAPPED__ — benefit 3 (e.g. 5 kg Alcaca fibre)",
-    "benefit4": "__UNMAPPED__ — benefit 4 (e.g. calendar / planner / keychain / framed photo)",
-    "benefit5": "__UNMAPPED__ — benefit 5 (e.g. professional photoshoot)",
-    "benefit6": "__UNMAPPED__ — benefit 6 (e.g. 10% Wishfulfilling Weaving discount)",
-    "benefit7": "__UNMAPPED__ — benefit 7 (e.g. 15% farm-shop discount)",
+    "benefitsIntro": "",
+    "benefit1": "",
+    "benefit2": "",
+    "benefit3": "",
+    "benefit4": "",
+    "benefit5": "",
+    "benefit6": "",
+    "benefit7": "",
     "alpacaGridTitle": "Choose your alpaca",
-    "alpacaGridSubtitle": "__UNMAPPED__ — owner to confirm per-alpaca cap and assignment process",
-    "alpacaUnmappedBio": "__UNMAPPED__ — bio coming soon",
+    "alpacaGridSubtitle": "",
+    "alpacaUnmappedBio": "",
     "ctaLabel": "Adopt now",
-    "ctaSubtext": "__UNMAPPED__ — owner to supply CTA supporting copy (e.g. cancel any time, questions welcome)",
+    "ctaSubtext": "",
     "successHeading": "Welcome to the herd!",
     "successBody": "Your {tier} adoption is confirmed. You'll receive a welcome email shortly.",
     "successTierMonthly": "monthly",
     "successTierYearly": "yearly",
     "canceledBody": "No worries — your adoption was not processed. You can try again any time.",
     "ownerConfirmHeader": "Owner action required before launch",
-    "ownerConfirmBody": "The items below are owner-blocked. Replace __UNMAPPED__ sentinels with confirmed content."
+    "ownerConfirmBody": "The items below are owner-blocked. Replace the empty-string placeholders with confirmed content."
   },
   "journal": {
     "title": "Journal",

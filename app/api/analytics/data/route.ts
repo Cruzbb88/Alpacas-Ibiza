@@ -2,6 +2,7 @@ import { BetaAnalyticsDataClient } from '@google-analytics/data'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth/next'
 import { auth } from '../../auth/[...nextauth]/route'
+import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
 
 const analyticsDataClient = new BetaAnalyticsDataClient({
   credentials: {
@@ -12,12 +13,14 @@ const analyticsDataClient = new BetaAnalyticsDataClient({
 
 const propertyId = process.env.GA4_PROPERTY_ID
 
-export async function GET() {
+export async function GET(request: Request) {
+  const reqId = getRequestId(request)
+  const log = makeRequestLogger('analytics/data', reqId)
   try {
     // Check authentication
     const session = await getServerSession(auth)
     if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return attachRequestId(NextResponse.json({ error: 'Unauthorized' }, { status: 401 }), reqId)
     }
 
     if (!propertyId) {
@@ -105,18 +108,24 @@ export async function GET() {
       }
     }
 
-    return NextResponse.json({
-      totalUsers: totals.totalUsers,
-      totalSessions: totals.totalSessions,
-      pageViews: totals.pageViews,
-      bounceRate: totals.bounceRate,
-      topPages: topPages.slice(0, 10),
-    })
+    return attachRequestId(
+      NextResponse.json({
+        totalUsers: totals.totalUsers,
+        totalSessions: totals.totalSessions,
+        pageViews: totals.pageViews,
+        bounceRate: totals.bounceRate,
+        topPages: topPages.slice(0, 10),
+      }),
+      reqId
+    )
   } catch (error) {
-    console.error('Analytics API error:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch analytics data' },
-      { status: 500 }
+    log.error('Analytics API error', { err: String(error) })
+    return attachRequestId(
+      NextResponse.json(
+        { error: 'Failed to fetch analytics data' },
+        { status: 500 }
+      ),
+      reqId
     )
   }
 }

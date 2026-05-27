@@ -261,7 +261,7 @@ export default function ContactPage() {
               size="lg"
               className="bg-accent hover:bg-accent/90 text-accent-foreground"
             >
-              <a href="/tours">Book a Tour</a>
+              <a href="/en/tours">Book a Tour</a>
             </Button>
             <Button
               asChild
@@ -269,7 +269,7 @@ export default function ContactPage() {
               variant="outline"
               className="border-primary text-primary hover:bg-primary/5 bg-transparent"
             >
-              <a href="/shop">Shop Now</a>
+              <a href="/en/shop">Shop Now</a>
             </Button>
           </div>
         </div>

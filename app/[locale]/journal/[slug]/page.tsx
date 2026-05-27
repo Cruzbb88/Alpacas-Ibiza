@@ -128,6 +128,7 @@ export default async function JournalPostPage({
     author: post.author
       ? { '@type': 'Person', name: post.author }
       : { '@type': 'Organization', name: 'Alpacas Ibiza' },
+    // Note: role/url omitted — author is a plain string in lib/data/journal.ts (Rule 5: no invented data)
     publisher: {
       '@type': 'Organization',
       name: 'Alpacas Ibiza',

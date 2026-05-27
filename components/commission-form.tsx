@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { TurnstileWidget } from '@/components/turnstile-widget'
 import { HoneypotField } from '@/components/honeypot-field'
+import { useFormDraft } from '@/lib/hooks/use-form-draft'
 
 interface CommissionFormProps {
     labels: {
@@ -18,12 +19,12 @@ interface CommissionFormProps {
 
 export function CommissionForm({ labels }: CommissionFormProps) {
     const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
-    const [form, setForm] = useState({ name: '', email: '', description: '' })
+    const { draft: form, patch, clear } = useFormDraft('commission', { name: '', email: '', description: '' })
     const [captchaToken, setCaptchaToken] = useState<string>('')
     const [honeypot, setHoneypot] = useState('')
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+        patch({ [e.target.name]: e.target.value })
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -37,7 +38,7 @@ export function CommissionForm({ labels }: CommissionFormProps) {
             })
             if (res.ok) {
                 setStatus('success')
-                setForm({ name: '', email: '', description: '' })
+                clear()
             } else {
                 setStatus('error')
             }

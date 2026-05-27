@@ -191,6 +191,46 @@
       "apiNote": "Real-time beschikbaarheid vereist API-configuratie"
     },
     "questionsText": "Neem contact op via hello@alpacasibiza.com of WhatsApp voor persoonlijke begeleiding.",
+    "compare": {
+      "title": "Tourtypen vergelijken",
+      "subtitle": "Vind de ervaring die het beste bij u past",
+      "meetHerd": {
+        "duration": "Neem contact op voor details",
+        "price": "Neem contact op voor details",
+        "capacity": "Neem contact op voor details",
+        "include1": "Begeleide alpacawandeling",
+        "include2": "Q&A met de gastheer",
+        "include3": "Fotomogelijkheid",
+        "bestFor": "Eerste bezoekers, gezinnen"
+      },
+      "weaving": {
+        "duration": "Neem contact op voor details",
+        "price": "Neem contact op voor details",
+        "capacity": "Neem contact op voor details",
+        "include1": "Praktische vezelkunstworkshop",
+        "include2": "Introductie natuurlijk verven",
+        "include3": "Souvenir om mee te nemen",
+        "bestFor": "Creatieve reizigers, koppels"
+      },
+      "farm": {
+        "duration": "Neem contact op voor details",
+        "price": "Neem contact op voor details",
+        "capacity": "Neem contact op voor details",
+        "include1": "Volledige boerderijrondleiding",
+        "include2": "Demo duurzame praktijken",
+        "include3": "Alpaca's voeren en aanraken",
+        "bestFor": "Natuurliefhebbers, groepen"
+      },
+      "photo": {
+        "duration": "Neem contact op voor details",
+        "price": "Neem contact op voor details",
+        "capacity": "Neem contact op voor details",
+        "include1": "Gestileerde alpacafotosessie",
+        "include2": "Schilderachtige achtergronden",
+        "include3": "Begeleide positionering",
+        "bestFor": "Fotografen, sociale media, herinneringen"
+      }
+    },
     "backHome": "Terug naar Home"
   },
   "guestStories": {

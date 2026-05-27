@@ -280,13 +280,13 @@ export default function AboutPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href="/tours"
+              href="/en/tours"
               className="inline-flex items-center justify-center px-6 py-3 bg-accent hover:bg-accent/90 text-accent-foreground rounded-lg font-medium transition-colors"
             >
               Book a Tour
             </a>
             <a
-              href="/shop"
+              href="/en/shop"
               className="inline-flex items-center justify-center px-6 py-3 border border-primary text-primary hover:bg-primary/5 rounded-lg font-medium transition-colors"
             >
               Shop Handcrafted Pieces

@@ -45,6 +45,7 @@ export type SendEmailFn = (opts: {
   html: string
   scheduledAt?: string
   replyTo?: string
+  listUnsubscribeUrl?: string
 }) => Promise<{ id: string | null }>
 
 export interface CheckoutCompletedDeps {
@@ -137,6 +138,8 @@ export async function handleStripeCheckoutCompleted(
   const nowMs = (deps.now ?? Date.now)()
   const codesScheduledAt = new Date(nowMs + delayMs).toISOString()
 
+  const unsubscribeUrl = `mailto:${process.env.CONTACT_EMAIL ?? 'info@alpacasibiza.com'}?subject=unsubscribe`
+
   const [welcomeResult, codesResult] = await Promise.allSettled([
     deps.sendEmail({
       to: email,
@@ -147,6 +150,7 @@ export async function handleStripeCheckoutCompleted(
         processor: 'Stripe',
         paymentRef: session.id,
       }),
+      listUnsubscribeUrl: unsubscribeUrl,
     }),
     deps.sendEmail({
       to: email,
@@ -472,6 +476,7 @@ async function sendMollieWelcomeQuiet(
         processor: 'Mollie',
         paymentRef: payment.id,
       }),
+      listUnsubscribeUrl: `mailto:${process.env.CONTACT_EMAIL ?? 'info@alpacasibiza.com'}?subject=unsubscribe`,
     })
     return true
   } catch {

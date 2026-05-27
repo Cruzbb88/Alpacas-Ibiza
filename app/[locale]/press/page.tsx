@@ -186,7 +186,7 @@ export default async function PressPage({ params }: { params: Promise<{ locale: 
                             'Journalists and media professionals are welcome to reach out for interviews, photography access, or editorial information.'}
                     </p>
                     <a
-                        href="/contact?subject=Press%20inquiry"
+                        href={`/${locale}/contact?subject=Press%20inquiry`}
                         className="inline-block bg-primary text-primary-foreground font-semibold px-8 py-3 rounded-[16px] hover:bg-primary/90 transition-colors"
                     >
                         {translate('press.inquiriesCta') || 'Contact for Press'}

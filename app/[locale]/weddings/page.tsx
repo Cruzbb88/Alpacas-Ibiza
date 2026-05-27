@@ -8,7 +8,7 @@ import type { Locale } from '@/i18n.config'
 import { SITE_BASE_URL as BASE_URL } from '@/lib/config'
 import { BookingButton } from '@/components/booking/button'
 import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
-import { localBusinessSchema, faqPageSchema, toJsonLd } from '@/lib/structured-data'
+import { localBusinessSchema, faqPageSchema, weddingsServiceSchema, toJsonLd } from '@/lib/structured-data'
 import { getTenant } from '@/lib/tenants/server'
 import { tenantMetadata } from '@/lib/tenants/metadata'
 
@@ -71,6 +71,7 @@ export default async function WeddingsPage({ params }: { params: Promise<{ local
     const schemas = [
         localBusinessSchema(),
         faqPageSchema(faqItems),
+        weddingsServiceSchema(),
     ]
 
     return (

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { SITE_BASE_URL } from '@/lib/config'
 import { importStripe } from '@/lib/integrations/stripe-sdk'
 import { extractLocaleFromReferer, requireEnvOrReturn503 } from '@/lib/route-helpers'
+import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
 
 /**
  * POST /api/billing-portal
@@ -21,30 +22,39 @@ import { extractLocaleFromReferer, requireEnvOrReturn503 } from '@/lib/route-hel
  */
 
 export async function POST(request: Request) {
+  const reqId = getRequestId(request)
+  const log = makeRequestLogger('billing-portal', reqId)
+
   const secretGate = requireEnvOrReturn503('STRIPE_SECRET_KEY', 'Subscription portal is unavailable — contact info@alpacasibiza.com to manage your subscription.', { code: 'STRIPE_NOT_CONFIGURED' })
-  if (secretGate) return secretGate
+  if (secretGate) return attachRequestId(secretGate, reqId)
   const secretKey = process.env.STRIPE_SECRET_KEY!
 
   let body: { email?: string; customer_id?: string; locale?: string } = {}
   try {
     body = await request.json()
   } catch {
-    return NextResponse.json({ error: 'INVALID_JSON', message: 'Invalid JSON body' }, { status: 400 })
+    return attachRequestId(NextResponse.json({ error: 'INVALID_JSON', message: 'Invalid JSON body' }, { status: 400 }), reqId)
   }
   const { email, customer_id, locale } = body
   if (!email && !customer_id) {
-    return NextResponse.json(
-      { error: 'MISSING_IDENTIFIER', message: 'Provide either email or customer_id.' },
-      { status: 400 }
+    return attachRequestId(
+      NextResponse.json(
+        { error: 'MISSING_IDENTIFIER', message: 'Provide either email or customer_id.' },
+        { status: 400 }
+      ),
+      reqId
     )
   }
 
   const stripeFactory = await importStripe()
   if (!stripeFactory) {
-    console.error('[billing-portal] stripe SDK not installed. Run: pnpm add stripe (owner-controlled deploy step).')
-    return NextResponse.json(
-      { error: 'STRIPE_SDK_MISSING', message: 'Server SDK not installed.' },
-      { status: 503 }
+    log.error('stripe SDK not installed. Run: pnpm add stripe (owner-controlled deploy step).')
+    return attachRequestId(
+      NextResponse.json(
+        { error: 'STRIPE_SDK_MISSING', message: 'Server SDK not installed.' },
+        { status: 503 }
+      ),
+      reqId
     )
   }
   const stripe = stripeFactory(secretKey, { apiVersion: '2024-06-20' })
@@ -56,20 +66,23 @@ export async function POST(request: Request) {
       const customers = await stripe.customers.list({ email, limit: 1 })
       const customer = customers.data[0]
       if (!customer) {
-        return NextResponse.json(
-          {
-            error: 'CUSTOMER_NOT_FOUND',
-            message:
-              'No subscription found for that email. Contact info@alpacasibiza.com if you think this is wrong.',
-          },
-          { status: 404 }
+        return attachRequestId(
+          NextResponse.json(
+            {
+              error: 'CUSTOMER_NOT_FOUND',
+              message:
+                'No subscription found for that email. Contact info@alpacasibiza.com if you think this is wrong.',
+            },
+            { status: 404 }
+          ),
+          reqId
         )
       }
       customerId = customer.id
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
-      console.error('[billing-portal] Stripe customers.list failed:', message)
-      return NextResponse.json({ error: 'STRIPE_LOOKUP_FAILED', message }, { status: 502 })
+      log.error('Stripe customers.list failed', { message })
+      return attachRequestId(NextResponse.json({ error: 'STRIPE_LOOKUP_FAILED', message }, { status: 502 }), reqId)
     }
   }
 
@@ -87,11 +100,11 @@ export async function POST(request: Request) {
       return_url: returnUrl,
     })
 
-    return NextResponse.json({ url: session.url })
+    return attachRequestId(NextResponse.json({ url: session.url }), reqId)
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
-    console.error('[billing-portal] billingPortal.sessions.create failed:', message)
-    return NextResponse.json({ error: 'PORTAL_SESSION_FAILED', message }, { status: 502 })
+    log.error('billingPortal.sessions.create failed', { message })
+    return attachRequestId(NextResponse.json({ error: 'PORTAL_SESSION_FAILED', message }, { status: 502 }), reqId)
   }
 }
 

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import { i18nConfig } from '@/i18n.config'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
@@ -6,10 +7,15 @@ import { StickyBookingBar } from '@/components/booking/sticky-booking-bar'
 import { CookieConsent } from '@/components/cookie-consent'
 import { ScrollTracker } from '@/components/scroll-tracker'
 import { OutboundLinkTracker } from '@/components/outbound-link-tracker'
-import { localBusinessSchema, organizationSchema, toJsonLd } from '@/lib/structured-data'
+import { WebVitals } from '@/components/web-vitals'
+import { localBusinessSchema, organizationSchema, websiteSearchSchema, toJsonLd } from '@/lib/structured-data'
 import { DEFAULT_OG_IMAGE } from '@/lib/og-images'
 import { getTenant } from '@/lib/tenant'
 import { FloatingWhatsApp } from '@/components/floating-whatsapp'
+import { BackToTop } from '@/components/back-to-top'
+import { ClientErrorReporter } from '@/components/client-error-reporter'
+import { ServiceWorkerRegister } from '@/components/sw-register'
+import { NavProgressBar } from '@/components/nav-progress-bar'
 
 const BASE_URL = 'https://alpacasibiza.com'
 
@@ -61,8 +67,8 @@ export default async function LocaleLayout({
     params: Promise<{ locale: string }>
 }) {
     const { locale } = await params
-    const schemas = [localBusinessSchema(), organizationSchema()]
     const tenant = await getTenant()
+    const schemas = [localBusinessSchema(), organizationSchema(tenant), websiteSearchSchema()]
 
     return (
         <div className="flex min-h-screen flex-col">
@@ -85,9 +91,16 @@ export default async function LocaleLayout({
             <Footer />
             <StickyBookingBar />
             <FloatingWhatsApp e164={tenant.whatsappE164} brandName={tenant.brandName} />
+            <BackToTop />
             <CookieConsent />
             <ScrollTracker />
             <OutboundLinkTracker />
+            <WebVitals />
+            <ClientErrorReporter />
+            <ServiceWorkerRegister />
+            <Suspense>
+                <NavProgressBar />
+            </Suspense>
         </div>
     )
 }

@@ -32,7 +32,7 @@ export default async function NewsletterConfirmedPage({
 }: {
   params: Promise<{ locale: Locale }>
 }) {
-  await params  // satisfy Next.js async-params requirement
+  const { locale } = await params
 
   return (
     <main>
@@ -48,7 +48,7 @@ export default async function NewsletterConfirmedPage({
             new arrivals, weaving seasons, and stories from Es Currals.
           </p>
           <a
-            href="/journal"
+            href={`/${locale}/journal`}
             className="inline-flex items-center justify-center px-6 py-3 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg font-medium transition-colors"
           >
             Browse the journal

@@ -4,6 +4,7 @@ import { handleStripeCheckoutCompleted } from '@/lib/payment-handlers'
 import { importStripe } from '@/lib/integrations/stripe-sdk'
 import { requireEnvOrReturn503 } from '@/lib/route-helpers'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
+import { isAlreadyProcessed } from '@/lib/webhook-idempotency'
 
 /**
  * POST /api/stripe-webhook
@@ -67,10 +68,19 @@ export async function POST(request: Request) {
     return attachRequestId(NextResponse.json({ error: 'Invalid signature' }, { status: 401 }), reqId)
   }
 
-  // ── 5. Log all events (no DB yet) ────────────────────────────────────────
+  // ── 5. Idempotency guard — Stripe retries for up to 3 days ──────────────
+  if (isAlreadyProcessed(event.id)) {
+    log.info('event already processed — skipping', { eventId: event.id })
+    return attachRequestId(
+      NextResponse.json({ ok: true, idempotent: true }, { status: 200 }),
+      reqId,
+    )
+  }
+
+  // ── 6. Log all events (no DB yet) ────────────────────────────────────────
   log.info(`Received event: ${event.type} id=${event.id}`)
 
-  // ── 6. Event dispatch ─────────────────────────────────────────────────────
+  // ── 7. Event dispatch ─────────────────────────────────────────────────────
   try {
     switch (event.type) {
       case 'checkout.session.completed': {

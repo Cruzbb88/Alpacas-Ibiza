@@ -8,6 +8,7 @@
  * unlike global-error.tsx which must be self-contained.
  */
 import { useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 
@@ -18,6 +19,11 @@ export default function Error({
   error: Error & { digest?: string }
   reset: () => void
 }) {
+  const pathname = usePathname()
+  // Extract locale from the URL segment so the home link stays in the same locale.
+  // Falls back to 'en' if the path is somehow missing a locale prefix.
+  const locale = pathname?.split('/')[1] || 'en'
+
   useEffect(() => {
     fetch('/api/log-error', {
       method: 'POST',
@@ -44,7 +50,7 @@ export default function Error({
       <div className="flex gap-3 justify-center">
         <Button onClick={reset}>Try again</Button>
         <Button variant="outline" asChild>
-          <Link href="/">Go home</Link>
+          <Link href={`/${locale}`}>Go home</Link>
         </Button>
       </div>
       {error.digest && (

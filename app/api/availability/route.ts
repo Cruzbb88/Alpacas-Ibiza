@@ -1,7 +1,11 @@
 import { NextResponse } from 'next/server'
 import { fetchWithTimeout } from '@/lib/fetch'
+import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
 
-export async function GET() {
+export async function GET(request: Request) {
+    const reqId = getRequestId(request)
+    const log = makeRequestLogger('availability', reqId)
+
     const appKey = process.env.FAREHARBOR_APP_KEY
     const userKey = process.env.FAREHARBOR_USER_KEY
     const shortname = process.env.FAREHARBOR_SHORTNAME || 'alpacasibiza'
@@ -9,12 +13,15 @@ export async function GET() {
 
     // Check if API credentials are configured
     if (!appKey || !userKey) {
-        return NextResponse.json(
-            {
-                error: 'FareHarbor API credentials not configured',
-                message: 'Contact support@fareharbor.com to request API access'
-            },
-            { status: 503 }
+        return attachRequestId(
+            NextResponse.json(
+                {
+                    error: 'FareHarbor API credentials not configured',
+                    message: 'Contact support@fareharbor.com to request API access'
+                },
+                { status: 503 }
+            ),
+            reqId
         )
     }
 
@@ -84,7 +91,7 @@ export async function GET() {
                         }))
                 )
             } else if (r.status === 'rejected') {
-                console.error('FareHarbor item availability fetch failed:', r.reason)
+                log.error('FareHarbor item availability fetch failed', { reason: String(r.reason) })
             }
         }
 
@@ -93,19 +100,25 @@ export async function GET() {
             new Map(availabilities.map(item => [item.date, item])).values()
         ).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
 
-        return NextResponse.json({
-            dates: uniqueDates.slice(0, 8), // Return up to 8 upcoming dates
-            lastUpdated: new Date().toISOString(),
-        })
+        return attachRequestId(
+            NextResponse.json({
+                dates: uniqueDates.slice(0, 8), // Return up to 8 upcoming dates
+                lastUpdated: new Date().toISOString(),
+            }),
+            reqId
+        )
 
     } catch (error) {
-        console.error('FareHarbor API Error:', error)
-        return NextResponse.json(
-            {
-                error: 'Failed to fetch availability',
-                message: error instanceof Error ? error.message : 'Unknown error'
-            },
-            { status: 500 }
+        log.error('FareHarbor API error', { err: String(error) })
+        return attachRequestId(
+            NextResponse.json(
+                {
+                    error: 'Failed to fetch availability',
+                    message: error instanceof Error ? error.message : 'Unknown error'
+                },
+                { status: 500 }
+            ),
+            reqId
         )
     }
 }

@@ -19,6 +19,8 @@ import type { Locale } from '@/i18n.config'
 import { touristTripSchema, faqPageSchema, toJsonLd } from '@/lib/structured-data'
 import { buildLocaleAlternates } from '@/lib/i18n-metadata'
 import { getOgImage } from '@/lib/og-images'
+import { TourComparison } from '@/components/tour-comparison'
+import type { TourSpec } from '@/components/tour-comparison'
 
 export async function generateMetadata({
   params,
@@ -71,6 +73,61 @@ export default async function ToursPage({ params }: { params: Promise<{ locale: 
       icon: '📸',
       title: translate('tours.tourTypes.photo.title'),
       description: translate('tours.tourTypes.photo.description'),
+    },
+  ]
+
+  const tourCompareSpecs: TourSpec[] = [
+    {
+      product: 'meet-herd',
+      name: translate('tours.tourTypes.meetHerd.title'),
+      duration: translate('tours.compare.meetHerd.duration', 'Contact for details'),
+      price: translate('tours.compare.meetHerd.price', 'Contact for details'),
+      capacity: translate('tours.compare.meetHerd.capacity', 'Contact for details'),
+      includes: [
+        translate('tours.compare.meetHerd.include1', 'Guided alpaca walk'),
+        translate('tours.compare.meetHerd.include2', 'Q&A with farm host'),
+        translate('tours.compare.meetHerd.include3', 'Photo opportunity'),
+      ],
+      bestFor: translate('tours.compare.meetHerd.bestFor', 'First-time visitors, families'),
+    },
+    {
+      product: 'weaving-workshop',
+      name: translate('tours.tourTypes.weaving.title'),
+      duration: translate('tours.compare.weaving.duration', 'Contact for details'),
+      price: translate('tours.compare.weaving.price', 'Contact for details'),
+      capacity: translate('tours.compare.weaving.capacity', 'Contact for details'),
+      includes: [
+        translate('tours.compare.weaving.include1', 'Hands-on fiber arts session'),
+        translate('tours.compare.weaving.include2', 'Natural dyeing introduction'),
+        translate('tours.compare.weaving.include3', 'Take-home souvenir'),
+      ],
+      bestFor: translate('tours.compare.weaving.bestFor', 'Creative travellers, couples'),
+    },
+    {
+      product: 'farm-experience',
+      name: translate('tours.tourTypes.farm.title'),
+      duration: translate('tours.compare.farm.duration', 'Contact for details'),
+      price: translate('tours.compare.farm.price', 'Contact for details'),
+      capacity: translate('tours.compare.farm.capacity', 'Contact for details'),
+      includes: [
+        translate('tours.compare.farm.include1', 'Full farm tour'),
+        translate('tours.compare.farm.include2', 'Sustainable practices demo'),
+        translate('tours.compare.farm.include3', 'Alpaca feeding & interaction'),
+      ],
+      bestFor: translate('tours.compare.farm.bestFor', 'Nature lovers, groups'),
+    },
+    {
+      product: 'photo-session',
+      name: translate('tours.tourTypes.photo.title'),
+      duration: translate('tours.compare.photo.duration', 'Contact for details'),
+      price: translate('tours.compare.photo.price', 'Contact for details'),
+      capacity: translate('tours.compare.photo.capacity', 'Contact for details'),
+      includes: [
+        translate('tours.compare.photo.include1', 'Styled alpaca photo session'),
+        translate('tours.compare.photo.include2', 'Scenic backdrops'),
+        translate('tours.compare.photo.include3', 'Guided positioning'),
+      ],
+      bestFor: translate('tours.compare.photo.bestFor', 'Photographers, social media, memories'),
     },
   ]
 
@@ -184,6 +241,13 @@ export default async function ToursPage({ params }: { params: Promise<{ locale: 
           <Features items={tourTypes} />
         </div>
       </section>
+
+      {/* Tour Comparison Table */}
+      <TourComparison
+        tours={tourCompareSpecs}
+        title={translate('tours.compare.title', 'Compare Tour Types')}
+        subtitle={translate('tours.compare.subtitle', 'Find the experience that fits you best')}
+      />
 
       {/* What to Expect */}
       <Timeline items={timelineItems} title={translate('tours.timelineTitle')} />

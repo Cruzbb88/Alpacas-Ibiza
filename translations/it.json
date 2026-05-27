@@ -191,6 +191,46 @@
       "apiNote": "La disponibilità in tempo reale richiede la configurazione dell'API"
     },
     "questionsText": "Contattaci a hello@alpacasibiza.com o su WhatsApp per assistenza personalizzata.",
+    "compare": {
+      "title": "Confronta i tour",
+      "subtitle": "Trova l'esperienza più adatta a te",
+      "meetHerd": {
+        "duration": "Contattaci per dettagli",
+        "price": "Contattaci per dettagli",
+        "capacity": "Contattaci per dettagli",
+        "include1": "Passeggiata guidata con gli alpaca",
+        "include2": "Q&A con l'host",
+        "include3": "Opportunità fotografica",
+        "bestFor": "Prime visite, famiglie"
+      },
+      "weaving": {
+        "duration": "Contattaci per dettagli",
+        "price": "Contattaci per dettagli",
+        "capacity": "Contattaci per dettagli",
+        "include1": "Workshop pratico sulle fibre",
+        "include2": "Introduzione alla tintura naturale",
+        "include3": "Souvenir da portare a casa",
+        "bestFor": "Viaggiatori creativi, coppie"
+      },
+      "farm": {
+        "duration": "Contattaci per dettagli",
+        "price": "Contattaci per dettagli",
+        "capacity": "Contattaci per dettagli",
+        "include1": "Tour completo della fattoria",
+        "include2": "Demo di pratiche sostenibili",
+        "include3": "Nutrire e interagire con gli alpaca",
+        "bestFor": "Amanti della natura, gruppi"
+      },
+      "photo": {
+        "duration": "Contattaci per dettagli",
+        "price": "Contattaci per dettagli",
+        "capacity": "Contattaci per dettagli",
+        "include1": "Sessione fotografica con alpaca",
+        "include2": "Scenari pittoreschi",
+        "include3": "Guida al posizionamento",
+        "bestFor": "Fotografi, social media, ricordi"
+      }
+    },
     "backHome": "Torna alla Home"
   },
   "guestStories": {

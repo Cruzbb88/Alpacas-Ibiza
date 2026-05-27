@@ -15,6 +15,21 @@ export interface SendEmailOptions {
      * Max ~30 days ahead per Resend docs.
      */
     scheduledAt?: string
+    /**
+     * Optional unsubscribe URL. When provided, adds RFC 8058 headers:
+     *   List-Unsubscribe: <url>, <mailto:...>
+     *   List-Unsubscribe-Post: List-Unsubscribe=One-Click
+     *
+     * Required by CAN-SPAM § 5(a)(3) and EU PECR for bulk/newsletter emails.
+     * Resend supports arbitrary headers via the `headers` field in the send payload.
+     */
+    listUnsubscribeUrl?: string
+    /**
+     * Optional file attachments. Each item maps to a Resend attachment object.
+     * `content` must be a base64-encoded string of the file data.
+     * `contentType` defaults to application/octet-stream if omitted.
+     */
+    attachments?: Array<{ filename: string; content: string; contentType?: string }>
 }
 
 /**
@@ -27,7 +42,25 @@ export async function sendEmail({
     to = DEFAULT_TO,
     replyTo,
     scheduledAt,
+    listUnsubscribeUrl,
+    attachments,
 }: SendEmailOptions): Promise<{ id: string | null }> {
+    // Build List-Unsubscribe headers when a per-recipient URL is supplied.
+    // Resend accepts `headers: Record<string, string>` on the email payload.
+    const listUnsubscribeHeaders: Record<string, string> = listUnsubscribeUrl
+        ? {
+            'List-Unsubscribe': `<${listUnsubscribeUrl}>, <mailto:unsubscribe@alpacasibiza.com>`,
+            'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+          }
+        : {}
+
+    // Map attachments to Resend's shape: { filename, content (base64), content_type }
+    const resendAttachments = attachments?.map(a => ({
+        filename: a.filename,
+        content: a.content,
+        content_type: a.contentType ?? 'application/octet-stream',
+    }))
+
     const { data, error } = await resend.emails.send({
         from: FROM_EMAIL,
         to,
@@ -35,6 +68,8 @@ export async function sendEmail({
         html,
         replyTo,
         ...(scheduledAt ? { scheduledAt } : {}),
+        ...(Object.keys(listUnsubscribeHeaders).length > 0 ? { headers: listUnsubscribeHeaders } : {}),
+        ...(resendAttachments && resendAttachments.length > 0 ? { attachments: resendAttachments } : {}),
     })
 
     if (error) {
