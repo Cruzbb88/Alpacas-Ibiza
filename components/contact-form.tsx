@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { TurnstileWidget } from '@/components/turnstile-widget'
+import { HoneypotField } from '@/components/honeypot-field'
 
 interface ContactFormProps {
     labels: {
@@ -20,6 +21,7 @@ export function ContactForm({ labels }: ContactFormProps) {
     const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
     const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' })
     const [captchaToken, setCaptchaToken] = useState<string>('')
+    const [honeypot, setHoneypot] = useState('')
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
@@ -32,7 +34,7 @@ export function ContactForm({ labels }: ContactFormProps) {
             const res = await fetch('/api/contact', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ...form, 'cf-turnstile-response': captchaToken }),
+                body: JSON.stringify({ ...form, 'cf-turnstile-response': captchaToken, company_url: honeypot }),
             })
             if (res.ok) {
                 setStatus('success')
@@ -56,6 +58,7 @@ export function ContactForm({ labels }: ContactFormProps) {
 
     return (
         <form className="space-y-4" onSubmit={handleSubmit}>
+            <HoneypotField name="company_url" value={honeypot} onChange={setHoneypot} />
             <div>
                 <label className="block text-sm font-medium text-foreground mb-2">{labels.name}</label>
                 <input

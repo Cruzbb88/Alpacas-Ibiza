@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { t } from '@/lib/translations'
 import { TurnstileWidget } from '@/components/turnstile-widget'
+import { HoneypotField } from '@/components/honeypot-field'
 
 interface NewsletterFormProps {
   locale: string
@@ -11,6 +12,7 @@ interface NewsletterFormProps {
 export function NewsletterForm({ locale }: NewsletterFormProps) {
   const [email, setEmail] = useState('')
   const [captchaToken, setCaptchaToken] = useState('')
+  const [honeypot, setHoneypot] = useState('')
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
   const [error, setError] = useState<string | null>(null)
 
@@ -26,7 +28,7 @@ export function NewsletterForm({ locale }: NewsletterFormProps) {
       const res = await fetch(`/${locale}/api/newsletter`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, 'cf-turnstile-response': captchaToken }),
+        body: JSON.stringify({ email, 'cf-turnstile-response': captchaToken, business_name: honeypot }),
       })
       if (!res.ok) {
         const body = await res.json()
@@ -42,6 +44,7 @@ export function NewsletterForm({ locale }: NewsletterFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+      <HoneypotField name="business_name" value={honeypot} onChange={setHoneypot} />
       <div className="flex gap-2">
         <input
           type="email"

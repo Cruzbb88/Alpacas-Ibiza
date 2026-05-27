@@ -6,7 +6,7 @@ import { ArrowRight, Calendar } from 'lucide-react'
 import type { Locale } from '@/i18n.config'
 import { t } from '@/lib/translations'
 import { FAREHARBOR_BOOKING_URL } from '@/lib/config'
-import { CancellationBadge } from '@/components/cancellation-badge'
+import { CancellationBadge } from '@/components/booking/cancellation-badge'
 
 interface AvailableDate {
     date: string

@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { TurnstileWidget } from '@/components/turnstile-widget'
+import { HoneypotField } from '@/components/honeypot-field'
 
 interface CommissionFormProps {
     labels: {
@@ -19,6 +20,7 @@ export function CommissionForm({ labels }: CommissionFormProps) {
     const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
     const [form, setForm] = useState({ name: '', email: '', description: '' })
     const [captchaToken, setCaptchaToken] = useState<string>('')
+    const [honeypot, setHoneypot] = useState('')
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
@@ -31,7 +33,7 @@ export function CommissionForm({ labels }: CommissionFormProps) {
             const res = await fetch('/api/commission', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ...form, 'cf-turnstile-response': captchaToken }),
+                body: JSON.stringify({ ...form, 'cf-turnstile-response': captchaToken, phone_extension: honeypot }),
             })
             if (res.ok) {
                 setStatus('success')
@@ -55,6 +57,7 @@ export function CommissionForm({ labels }: CommissionFormProps) {
 
     return (
         <form className="space-y-6" onSubmit={handleSubmit}>
+            <HoneypotField name="phone_extension" value={honeypot} onChange={setHoneypot} />
             <div>
                 <label className="block text-sm font-medium text-foreground mb-2">{labels.name}</label>
                 <input
