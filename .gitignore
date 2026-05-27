@@ -16,3 +16,5 @@ node_modules/
 .next/
 .env*.local
 .DS_Storedev_output.txt
+
+dev_output.txt
