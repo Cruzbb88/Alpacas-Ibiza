@@ -19,6 +19,7 @@ import { detectHoneypot } from '@/lib/honeypot'
 import { rateLimit, rateLimitByEmail } from '@/lib/rate-limit'
 import { getClientIp } from '@/lib/rate-limit'
 import { isValidEmail } from '@/lib/validate-email'
+import { escapeHtml, sanitizeHeader } from '@/lib/html'
 import { signNewsletterToken, signUnsubscribeToken } from '@/lib/newsletter-token'
 import { buildNewsletterConfirmEmail } from '@/lib/email-templates'
 import { SITE_BASE_URL } from '@/lib/config'
@@ -98,8 +99,8 @@ export async function POST(request: Request) {
     // Notify owner of new sign-up (informational — not yet subscribed)
     try {
       await sendEmail({
-        subject: `[Newsletter] Sign-up pending confirmation: ${email}`,
-        html: `<p>New newsletter sign-up (awaiting double opt-in confirmation): <strong>${email}</strong></p>`,
+        subject: `[Newsletter] Sign-up pending confirmation: ${sanitizeHeader(email)}`,
+        html: `<p>New newsletter sign-up (awaiting double opt-in confirmation): <strong>${escapeHtml(email)}</strong></p>`,
       })
     } catch (ownerErr) {
       log.warn('owner notification failed', { err: String(ownerErr) })
