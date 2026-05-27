@@ -202,3 +202,32 @@ export function buildAdoptDiscountCodesEmail(
         html,
     }
 }
+
+// ── Newsletter double opt-in confirmation ────────────────────────────────────
+
+/**
+ * Builds the double opt-in confirmation email sent to a newsletter sign-up.
+ * The subscriber is NOT yet subscribed — they confirm by clicking the link.
+ *
+ * @param confirmUrl  The full confirmation URL including the signed token.
+ *                    Must be pre-validated as a same-origin URL by the caller.
+ */
+export function buildNewsletterConfirmEmail(
+    confirmUrl: string,
+): { subject: string; html: string } {
+    const subject = 'Confirm your Alpacas Ibiza newsletter subscription 🦙'
+    const html = emailLayout(`
+<h2 style="color:${BRAND.primary}">One quick step</h2>
+<p>You signed up for farm news from <strong>${BRAND.name}</strong> — seasonal herd updates, weaving stories, and island life.</p>
+<p>Click the button below to confirm your subscription. This link is valid for 7 days.</p>
+<div style="text-align:center;margin:32px 0">
+  <a href="${confirmUrl}" style="display:inline-block;padding:14px 28px;background:${BRAND.primary};color:#fff;text-decoration:none;border-radius:8px;font-weight:600;font-size:16px">
+    Confirm subscription
+  </a>
+</div>
+<p style="color:#888;font-size:13px">If you didn't sign up for this newsletter, you can ignore this email — no action needed.</p>
+<p style="color:#888;font-size:12px;margin-top:8px">Or copy this link into your browser:<br/>${confirmUrl}</p>
+`)
+    return { subject, html }
+}
+

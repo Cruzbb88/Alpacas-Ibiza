@@ -687,6 +687,18 @@
     "noResults": "Geen resultaten",
     "openShortcut": "Druk op / om te zoeken",
     "browseJournal": "Alle journaalberichten bekijken"
+  },
+  "journal": {
+    "title": "Dagboek",
+    "backToJournal": "Terug naar het dagboek",
+    "relatedTitle": "Meer van"
+  },
+  "share": {
+    "label": "Delen",
+    "copyLink": "Link kopiëren",
+    "copied": "Gekopieerd!",
+    "whatsapp": "Delen via WhatsApp",
+    "twitter": "Delen op X",
+    "facebook": "Delen op Facebook"
   }
-}
 }

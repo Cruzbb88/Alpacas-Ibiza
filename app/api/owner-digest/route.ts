@@ -3,6 +3,7 @@ import { sendEmail } from '@/lib/mailer'
 import { fetchWithTimeout } from '@/lib/fetch'
 import { safeEqual } from '@/lib/secrets'
 import { escapeHtml } from '@/lib/html'
+import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
 
 /**
  * GET /api/owner-digest?secret=<CRON_SECRET>

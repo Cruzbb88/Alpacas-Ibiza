@@ -2,29 +2,35 @@ import { NextResponse } from 'next/server'
 import { sendEmail } from '@/lib/mailer'
 import { verifyTurnstile } from '@/lib/turnstile'
 import { detectHoneypot } from '@/lib/honeypot'
+import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
 
 const TO_EMAIL = process.env.CONTACT_EMAIL ?? 'info@alpacasibiza.com'
 
 export async function POST(request: Request) {
+    const reqId = getRequestId(request)
+    const log = makeRequestLogger('commission', reqId)
     try {
         const body = await request.json()
         const { name, email, description, 'cf-turnstile-response': captchaToken } = body
 
         if (detectHoneypot(body, 'phone_extension')) {
-            console.warn('[honeypot] Bot submission blocked', { route: '/api/commission' })
-            return NextResponse.json({ success: true }, { status: 200 })
+            log.warn('Bot submission blocked', { route: '/api/commission' })
+            return attachRequestId(NextResponse.json({ success: true }, { status: 200 }), reqId)
         }
 
         if (!name || !email || !description) {
-            return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+            return attachRequestId(NextResponse.json({ error: 'Missing required fields' }, { status: 400 }), reqId)
         }
 
         const ip = request.headers.get('cf-connecting-ip') || request.headers.get('x-forwarded-for')
         const captcha = await verifyTurnstile(captchaToken, ip)
         if (!captcha.ok) {
-            return NextResponse.json(
-                { error: 'Captcha verification failed', reason: captcha.reason },
-                { status: 400 }
+            return attachRequestId(
+                NextResponse.json(
+                    { error: 'Captcha verification failed', reason: captcha.reason },
+                    { status: 400 }
+                ),
+                reqId
             )
         }
 
@@ -50,9 +56,9 @@ export async function POST(request: Request) {
 
         // success if we get here
 
-        return NextResponse.json({ success: true })
+        return attachRequestId(NextResponse.json({ success: true }), reqId)
     } catch (err) {
-        console.error('[commission] Unexpected error:', err)
-        return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+        log.error('Unexpected error', { err: String(err) })
+        return attachRequestId(NextResponse.json({ error: 'Internal server error' }, { status: 500 }), reqId)
     }
 }

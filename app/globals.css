@@ -112,3 +112,47 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@media print {
+  /* Hide nav, footer, banners, interactive UI */
+  header, footer, nav,
+  [role="banner"], [role="navigation"], [role="complementary"],
+  .sticky-bar, .sticky-booking-bar,
+  button, a[role="button"],
+  [data-print="hide"] {
+    display: none !important;
+  }
+
+  /* Ink-friendly colors */
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 0%;
+  }
+
+  html, body {
+    background: white !important;
+    color: black !important;
+    font-size: 11pt;
+    line-height: 1.5;
+  }
+
+  /* Single column, full width */
+  main, article {
+    max-width: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Inline links — show href after anchor text */
+  a[href]:after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    color: #555;
+    word-wrap: break-word;
+  }
+
+  /* Avoid breaks inside headings and paragraphs */
+  h1, h2, h3 { break-after: avoid; }
+  p, li { break-inside: avoid; }
+}

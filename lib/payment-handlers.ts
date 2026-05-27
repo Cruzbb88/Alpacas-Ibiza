@@ -169,3 +169,312 @@ export async function handleStripeCheckoutCompleted(
   }
   return { welcomeSent, codesScheduled, reason: 'ok', codesScheduledAt, meta }
 }
+
+// ── Stripe invoice.payment_failed handler ────────────────────────────────────
+
+/** Minimal shape of a Stripe Invoice the handler reads. */
+export interface StripeInvoiceLike {
+  id: string
+  subscription?: string | null
+  customer?: string | null
+  customer_email?: string | null
+  customer_name?: string | null
+  amount_due?: number | null
+  currency?: string | null
+  attempt_count?: number | null
+  next_payment_attempt?: number | null
+  hosted_invoice_url?: string | null
+}
+
+export interface InvoicePaymentFailedDeps {
+  sendEmail: SendEmailFn
+  /** Owner email — receives a notification on every failed charge. */
+  ownerEmail?: string
+}
+
+export interface InvoicePaymentFailedResult {
+  /** Was the donor notified that their card failed? */
+  donorNotified: boolean
+  /** Was the owner notified about the failed renewal? */
+  ownerNotified: boolean
+  reason: 'ok' | 'missing-donor-email' | 'missing-owner-email' | 'send-failed'
+  meta: {
+    invoiceId: string
+    subscriptionId?: string | null
+    customerId?: string | null
+    attemptCount?: number | null
+    nextAttempt?: number | null
+    amountDue?: number | null
+  }
+}
+
+/**
+ * Handle Stripe's `invoice.payment_failed` event. Donor's recurring charge
+ * failed — silent loss of subscription unless we notify. Sends:
+ *
+ *   1. Donor email: "Your monthly support payment didn't go through" with a
+ *      link to Stripe's hosted invoice page (where they can update card +
+ *      retry). Stripe Smart Retries will also attempt automatically.
+ *   2. Owner email: structured notification so owner knows to follow up if
+ *      the donor doesn't update payment within Stripe's retry window.
+ *
+ * Both sends are fail-quiet — webhook returns 200 so Stripe doesn't retry
+ * the webhook (which would duplicate-notify on every retry).
+ */
+export async function handleStripeInvoicePaymentFailed(
+  invoice: StripeInvoiceLike,
+  deps: InvoicePaymentFailedDeps,
+): Promise<InvoicePaymentFailedResult> {
+  const meta = {
+    invoiceId: invoice.id,
+    subscriptionId: invoice.subscription,
+    customerId: invoice.customer,
+    attemptCount: invoice.attempt_count,
+    nextAttempt: invoice.next_payment_attempt,
+    amountDue: invoice.amount_due,
+  }
+  const donorEmail = invoice.customer_email ?? undefined
+
+  if (!donorEmail) {
+    return { donorNotified: false, ownerNotified: false, reason: 'missing-donor-email', meta }
+  }
+
+  const donorHtml = buildDonorPaymentFailedHtml(invoice)
+  const ownerHtml = buildOwnerPaymentFailedHtml(invoice)
+
+  const [donorResult, ownerResult] = await Promise.allSettled([
+    deps.sendEmail({
+      to: donorEmail,
+      subject: 'Action needed: your Adopt-a-Paca payment didn\'t go through',
+      html: donorHtml,
+    }),
+    deps.ownerEmail
+      ? deps.sendEmail({
+          to: deps.ownerEmail,
+          subject: `[Adopt-a-Paca] Payment failed — invoice ${invoice.id}`,
+          html: ownerHtml,
+        })
+      : Promise.resolve({ id: null }),
+  ])
+
+  const donorNotified = donorResult.status === 'fulfilled'
+  const ownerNotified = deps.ownerEmail ? ownerResult.status === 'fulfilled' : false
+
+  if (!deps.ownerEmail && !donorNotified) {
+    return { donorNotified, ownerNotified, reason: 'send-failed', meta }
+  }
+  if (!deps.ownerEmail) {
+    return { donorNotified, ownerNotified, reason: donorNotified ? 'ok' : 'send-failed', meta }
+  }
+  if (!donorNotified || !ownerNotified) {
+    return { donorNotified, ownerNotified, reason: 'send-failed', meta }
+  }
+  return { donorNotified, ownerNotified, reason: 'ok', meta }
+}
+
+function buildDonorPaymentFailedHtml(invoice: StripeInvoiceLike): string {
+  const escapedName = invoice.customer_name ? escapeHtml(invoice.customer_name) : null
+  const greeting = escapedName ? `Hi ${escapedName},` : 'Hi there,'
+  const updateUrl = invoice.hosted_invoice_url
+  const updateBlock = updateUrl
+    ? `<p style="margin-top:16px"><a href="${escapeHtml(updateUrl)}" style="display:inline-block;background:#556B2F;color:#fff;padding:12px 24px;border-radius:6px;text-decoration:none">Update payment method</a></p>`
+    : `<p style="margin-top:16px">Please contact <a href="mailto:info@alpacasibiza.com">info@alpacasibiza.com</a> to update your payment method.</p>`
+  return `
+    <div style="font-family:sans-serif;max-width:600px;margin:0 auto;color:#2d2d2d;padding:16px">
+      <p>${greeting}</p>
+      <p>Your monthly Adopt-a-Paca payment didn't go through this time. This often happens when a card expires or the bank flags an automatic charge.</p>
+      ${updateBlock}
+      <p style="margin-top:16px;color:#666;font-size:13px">If you don't update within a few days, your adoption will pause and we'll keep your alpaca's spot open while we get in touch.</p>
+      <hr style="border:none;border-top:1px solid #eee;margin:24px 0" />
+      <p style="color:#999;font-size:12px">Alpacas Ibiza · info@alpacasibiza.com</p>
+    </div>
+  `.trim()
+}
+
+function buildOwnerPaymentFailedHtml(invoice: StripeInvoiceLike): string {
+  const amount = invoice.amount_due != null ? (invoice.amount_due / 100).toFixed(2) : '—'
+  const currency = (invoice.currency ?? 'eur').toUpperCase()
+  return `
+    <div style="font-family:sans-serif;max-width:600px;margin:0 auto;color:#2d2d2d;padding:16px">
+      <h2 style="color:#a44">Adopt-a-Paca payment failed</h2>
+      <table style="width:100%;border-collapse:collapse;font-size:14px">
+        <tr><td style="padding:6px 0">Invoice:</td><td><code>${escapeHtml(invoice.id)}</code></td></tr>
+        <tr><td style="padding:6px 0">Subscription:</td><td><code>${escapeHtml(invoice.subscription ?? '—')}</code></td></tr>
+        <tr><td style="padding:6px 0">Customer:</td><td><code>${escapeHtml(invoice.customer ?? '—')}</code></td></tr>
+        <tr><td style="padding:6px 0">Donor email:</td><td>${escapeHtml(invoice.customer_email ?? '—')}</td></tr>
+        <tr><td style="padding:6px 0">Amount due:</td><td>${amount} ${escapeHtml(currency)}</td></tr>
+        <tr><td style="padding:6px 0">Attempt #:</td><td>${invoice.attempt_count ?? '—'}</td></tr>
+      </table>
+      <p style="margin-top:16px">Donor was emailed a link to update payment. Stripe Smart Retries will keep trying on its own schedule.</p>
+      <p>If donor doesn't update within Stripe's retry window (~3 weeks), the subscription will cancel automatically and you'll receive a <code>customer.subscription.deleted</code> notification.</p>
+    </div>
+  `.trim()
+}
+
+// ── Mollie payment.paid handler (parity with Stripe — see ADR 016) ──────────
+
+/**
+ * Minimal Mollie payment shape used by the handler. Avoids depending on
+ * @mollie/api-client types since the SDK is dynamically imported.
+ */
+export interface MolliePaymentLike {
+  id: string
+  status: string
+  sequenceType?: 'oneoff' | 'first' | 'recurring'
+  customerId?: string
+  metadata?: {
+    product?: string
+    tier?: 'monthly' | 'yearly' | string
+    tenantId?: string
+  } | null
+  /** Mollie one-off payments set billingEmail at create-time. */
+  billingEmail?: string | null
+}
+
+/** Resolver for customer email + name given a Mollie customer ID. */
+export type FetchMollieCustomerFn = (
+  customerId: string,
+) => Promise<{ email: string | null; name: string | null }>
+
+/** Subscription creator — called on first.paid to start auto-charge. */
+export type CreateMollieSubscriptionFn = (
+  payment: MolliePaymentLike,
+) => Promise<void>
+
+export interface MolliePaidDeps {
+  sendEmail: SendEmailFn
+  fetchCustomer: FetchMollieCustomerFn
+  createSubscription: CreateMollieSubscriptionFn
+}
+
+export interface MolliePaidResult {
+  flow: 'monthly-first' | 'yearly-oneoff' | 'recurring-renewal' | 'unmatched'
+  welcomeSent: boolean
+  subscriptionCreated: boolean
+  reason: 'ok' | 'missing-email' | 'welcome-send-failed' | 'subscription-failed' | 'unmatched'
+  meta: { paymentId: string; tier?: string; email?: string | null }
+}
+
+/**
+ * Handle Mollie's payment.paid event for Adopt-a-Paca.
+ *
+ * Three real flows + one no-op:
+ *   - monthly-first   → create subscription + send welcome email (parallel)
+ *   - yearly-oneoff   → send welcome email (billingEmail on payment)
+ *   - recurring-renewal → log only (renewal, not first payment)
+ *   - unmatched       → log only
+ *
+ * Subscription failure THROWS via createSubscription so the route returns 500
+ * and Mollie retries (deliberate — without the subscription we won't auto-charge).
+ * Email failure is fail-quiet — webhook returns 200 to avoid duplicate-send on retry.
+ */
+export async function handleMolliePaymentPaid(
+  payment: MolliePaymentLike,
+  deps: MolliePaidDeps,
+): Promise<MolliePaidResult> {
+  const tier = payment.metadata?.tier
+  const isAdopt = payment.metadata?.product === 'adopt-a-paca'
+
+  // ── Monthly first-of-mandate: create sub + welcome (parallel) ────────────
+  if (isAdopt && tier === 'monthly' && payment.sequenceType === 'first' && payment.customerId) {
+    const [, customer] = await Promise.all([
+      deps.createSubscription(payment), // throws → route 500 → Mollie retry
+      deps.fetchCustomer(payment.customerId),
+    ])
+
+    if (!customer.email) {
+      return {
+        flow: 'monthly-first',
+        welcomeSent: false,
+        subscriptionCreated: true,
+        reason: 'missing-email',
+        meta: { paymentId: payment.id, tier, email: null },
+      }
+    }
+
+    const welcomeSent = await sendMollieWelcomeQuiet(deps.sendEmail, payment, 'monthly', customer.email, customer.name)
+    return {
+      flow: 'monthly-first',
+      welcomeSent,
+      subscriptionCreated: true,
+      reason: welcomeSent ? 'ok' : 'welcome-send-failed',
+      meta: { paymentId: payment.id, tier, email: customer.email },
+    }
+  }
+
+  // ── Yearly one-off: welcome email only (no sub needed) ───────────────────
+  if (isAdopt && (tier === 'yearly' || tier === 'monthly') && payment.sequenceType !== 'recurring') {
+    // tier='monthly' here covers Stripe-style yearly where it's billed as a single
+    // monthly. Filter narrows: this branch only fires when monthly-first guard above
+    // didn't match (e.g. missing customerId).
+    if (tier !== 'yearly') {
+      return {
+        flow: 'unmatched',
+        welcomeSent: false,
+        subscriptionCreated: false,
+        reason: 'unmatched',
+        meta: { paymentId: payment.id, tier, email: payment.billingEmail ?? null },
+      }
+    }
+    if (!payment.billingEmail) {
+      return {
+        flow: 'yearly-oneoff',
+        welcomeSent: false,
+        subscriptionCreated: false,
+        reason: 'missing-email',
+        meta: { paymentId: payment.id, tier, email: null },
+      }
+    }
+    const welcomeSent = await sendMollieWelcomeQuiet(deps.sendEmail, payment, 'yearly', payment.billingEmail, null)
+    return {
+      flow: 'yearly-oneoff',
+      welcomeSent,
+      subscriptionCreated: false,
+      reason: welcomeSent ? 'ok' : 'welcome-send-failed',
+      meta: { paymentId: payment.id, tier, email: payment.billingEmail },
+    }
+  }
+
+  // ── Recurring renewal: log only, no welcome ──────────────────────────────
+  if (payment.sequenceType === 'recurring') {
+    return {
+      flow: 'recurring-renewal',
+      welcomeSent: false,
+      subscriptionCreated: false,
+      reason: 'ok',
+      meta: { paymentId: payment.id, tier },
+    }
+  }
+
+  return {
+    flow: 'unmatched',
+    welcomeSent: false,
+    subscriptionCreated: false,
+    reason: 'unmatched',
+    meta: { paymentId: payment.id, tier },
+  }
+}
+
+async function sendMollieWelcomeQuiet(
+  sendEmail: SendEmailFn,
+  payment: MolliePaymentLike,
+  tier: 'monthly' | 'yearly',
+  email: string,
+  name: string | null,
+): Promise<boolean> {
+  try {
+    await sendEmail({
+      to: email,
+      subject: welcomeAdoptionSubject(tier),
+      html: welcomeAdoptionEmailHtml({
+        escapedName: name ? escapeHtml(name) : undefined,
+        tier,
+        processor: 'Mollie',
+        paymentRef: payment.id,
+      }),
+    })
+    return true
+  } catch {
+    return false
+  }
+}

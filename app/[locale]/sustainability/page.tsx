@@ -26,6 +26,7 @@ import { tenantMetadata } from '@/lib/tenants/metadata'
 import { ALPACAS } from '@/lib/data/alpacas'
 import Link from 'next/link'
 import { GradientPageHero, PageSection, OwnerConfirmBanner } from '@/components/layout'
+import { getOgImage } from '@/lib/og-images'
 
 export async function generateMetadata({
     params,
@@ -34,13 +35,19 @@ export async function generateMetadata({
 }): Promise<Metadata> {
     const { locale } = await params
     const tenant = await getTenant()
-    return tenantMetadata(tenant, {
+    const base = tenantMetadata(tenant, {
         locale,
         route: '/sustainability',
         titleOverride: 'Sustainability | Alpacas Ibiza – Living Lightly on the Land',
         descriptionOverride:
             'How Es Currals alpaca farm works: animal welfare, natural dyes, traditional Ibiza weaving, and zero-waste practices.',
     })
+    const ogImage = getOgImage('sustainability', 'Sustainability at Es Currals – Alpacas Ibiza')
+    return {
+        ...base,
+        openGraph: { ...base.openGraph, images: [ogImage] },
+        twitter: { ...base.twitter, images: [ogImage.url] },
+    }
 }
 
 export default async function SustainabilityPage({ params }: { params: Promise<{ locale: Locale }> }) {

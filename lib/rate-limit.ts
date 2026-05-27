@@ -45,6 +45,64 @@ export function getClientIp(request: Request): string {
   )
 }
 
+// ---------------------------------------------------------------------------
+// Per-email rate-limit store (parallel to IP store — do not merge)
+//
+// Email rate-limit policy: 3 subscribes per 24 h per address.
+// Rationale: legitimate humans don't re-subscribe the same address; bot
+// rotation across IPs still hits the same email and gets blocked.
+// Hashed key: SHA-256 first 16 hex chars — protects email in memory dumps.
+// ---------------------------------------------------------------------------
+import { createHash } from 'crypto'
+
+const globalForEmailStore = globalThis as unknown as {
+  __emailRateLimitStore?: Map<string, number[]>
+}
+const _emailStore: Map<string, number[]> =
+  globalForEmailStore.__emailRateLimitStore ?? new Map()
+if (process.env.NODE_ENV !== 'production') {
+  globalForEmailStore.__emailRateLimitStore = _emailStore
+}
+
+export interface EmailRateLimitResult {
+  allowed: boolean
+  remaining: number
+  resetMs: number
+}
+
+export function rateLimitByEmail(opts: {
+  email: string
+  limit?: number      // default 3
+  windowMs?: number   // default 24 h
+}): EmailRateLimitResult {
+  const limit = opts.limit ?? 3
+  const windowMs = opts.windowMs ?? 24 * 60 * 60 * 1000
+  const normalized = opts.email.trim().toLowerCase()
+  const hash = createHash('sha256').update(normalized).digest('hex').slice(0, 16)
+  const key = `email:${hash}`
+  const now = Date.now()
+  const cutoff = now - windowMs
+
+  const existing = (_emailStore.get(key) ?? []).filter((ts) => ts > cutoff)
+  if (existing.length >= limit) {
+    const oldest = existing[0]
+    return { allowed: false, remaining: 0, resetMs: oldest + windowMs - now }
+  }
+
+  existing.push(now)
+  _emailStore.set(key, existing)
+  return {
+    allowed: true,
+    remaining: limit - existing.length,
+    resetMs: windowMs,
+  }
+}
+
+/** @internal — for tests only */
+export function __resetEmailRateLimit() {
+  _emailStore.clear()
+}
+
 export function rateLimit({ key, limit, windowMs }: RateLimitOptions): RateLimitResult {
   const now = Date.now()
   const windowStart = now - windowMs

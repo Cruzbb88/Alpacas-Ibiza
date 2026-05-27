@@ -681,5 +681,18 @@
       "contact": "Contact",
       "contactDesc": "Contactez-nous"
     }
+  },
+  "journal": {
+    "title": "Journal",
+    "backToJournal": "Retour au journal",
+    "relatedTitle": "Plus de"
+  },
+  "share": {
+    "label": "Partager",
+    "copyLink": "Copier le lien",
+    "copied": "Copié !",
+    "whatsapp": "Partager sur WhatsApp",
+    "twitter": "Partager sur X",
+    "facebook": "Partager sur Facebook"
   }
 }

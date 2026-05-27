@@ -3,6 +3,7 @@ import { sendEmail } from '@/lib/mailer'
 import { handleStripeCheckoutCompleted } from '@/lib/payment-handlers'
 import { importStripe } from '@/lib/integrations/stripe-sdk'
 import { requireEnvOrReturn503 } from '@/lib/route-helpers'
+import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
 
 /**
  * POST /api/stripe-webhook
@@ -24,11 +25,14 @@ import { requireEnvOrReturn503 } from '@/lib/route-helpers'
  */
 
 export async function POST(request: Request) {
+  const reqId = getRequestId(request)
+  const log = makeRequestLogger('stripe-webhook', reqId)
+
   // Fail-CLOSED on both env vars. Mirrors fareharbor-webhook pattern.
   const webhookSecretGate = requireEnvOrReturn503('STRIPE_WEBHOOK_SECRET', 'Webhook secret not configured')
-  if (webhookSecretGate) return webhookSecretGate
+  if (webhookSecretGate) return attachRequestId(webhookSecretGate, reqId)
   const secretGate = requireEnvOrReturn503('STRIPE_SECRET_KEY', 'Payment system not configured')
-  if (secretGate) return secretGate
+  if (secretGate) return attachRequestId(secretGate, reqId)
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
   const secretKey = process.env.STRIPE_SECRET_KEY!
 
@@ -36,15 +40,18 @@ export async function POST(request: Request) {
   const rawBody = await request.text()
   const signature = request.headers.get('stripe-signature')
   if (!signature) {
-    return NextResponse.json({ error: 'Missing stripe-signature header' }, { status: 400 })
+    return attachRequestId(NextResponse.json({ error: 'Missing stripe-signature header' }, { status: 400 }), reqId)
   }
 
   const stripeFactory = await importStripe()
   if (!stripeFactory) {
-    console.error('[stripe-webhook] stripe SDK not installed. Run: pnpm add stripe (owner-controlled deploy step).')
-    return NextResponse.json(
-      { error: 'Payment SDK not installed', code: 'STRIPE_SDK_MISSING' },
-      { status: 503 }
+    log.error('stripe SDK not installed. Run: pnpm add stripe (owner-controlled deploy step).')
+    return attachRequestId(
+      NextResponse.json(
+        { error: 'Payment SDK not installed', code: 'STRIPE_SDK_MISSING' },
+        { status: 503 }
+      ),
+      reqId
     )
   }
   const stripe = stripeFactory(secretKey, { apiVersion: '2024-06-20' })
@@ -56,19 +63,19 @@ export async function POST(request: Request) {
     event = stripe.webhooks.constructEvent(rawBody, signature, webhookSecret)
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
-    console.warn('[stripe-webhook] Signature verification failed:', message)
-    return NextResponse.json({ error: 'Invalid signature' }, { status: 401 })
+    log.warn('Signature verification failed', { message })
+    return attachRequestId(NextResponse.json({ error: 'Invalid signature' }, { status: 401 }), reqId)
   }
 
   // ── 5. Log all events (no DB yet) ────────────────────────────────────────
-  console.log(`[stripe-webhook] Received event: ${event.type} id=${event.id}`)
+  log.info(`Received event: ${event.type} id=${event.id}`)
 
   // ── 6. Event dispatch ─────────────────────────────────────────────────────
   try {
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object
-        console.log('[stripe-webhook] checkout.session.completed', {
+        log.info('checkout.session.completed', {
           id:           session.id,
           tier:         session.metadata?.tier,
           customer:     session.customer,
@@ -83,12 +90,12 @@ export async function POST(request: Request) {
         const handlerResult = await handleStripeCheckoutCompleted(session, { sendEmail })
         if (handlerResult.reason !== 'ok') {
           const level = handlerResult.reason === 'missing-email' || handlerResult.reason === 'invalid-tier' ? 'warn' : 'error'
-          const msg = `[stripe-webhook] checkout.session.completed handler result: ${handlerResult.reason}`
-          if (level === 'warn') console.warn(msg, handlerResult.meta)
-          else console.error(msg, handlerResult.meta)
+          const msg = `checkout.session.completed handler result: ${handlerResult.reason}`
+          if (level === 'warn') log.warn(msg, handlerResult.meta)
+          else log.error(msg, handlerResult.meta)
         } else {
-          console.log(
-            `[stripe-webhook] welcome sent + codes scheduled at ${handlerResult.codesScheduledAt}`,
+          log.info(
+            `welcome sent + codes scheduled at ${handlerResult.codesScheduledAt}`,
             handlerResult.meta,
           )
         }
@@ -99,7 +106,7 @@ export async function POST(request: Request) {
       case 'invoice.paid': {
         // Monthly subscription renewal
         const invoice = event.data.object
-        console.log('[stripe-webhook] invoice.paid (subscription renewal)', {
+        log.info('invoice.paid (subscription renewal)', {
           id:           invoice.id,
           subscription: invoice.subscription,
           customer:     invoice.customer,
@@ -112,7 +119,7 @@ export async function POST(request: Request) {
 
       case 'invoice.payment_failed': {
         const invoice = event.data.object
-        console.warn('[stripe-webhook] invoice.payment_failed', {
+        log.warn('invoice.payment_failed', {
           id:           invoice.id,
           subscription: invoice.subscription,
           customer:     invoice.customer,
@@ -123,7 +130,7 @@ export async function POST(request: Request) {
 
       case 'customer.subscription.deleted': {
         const subscription = event.data.object
-        console.log('[stripe-webhook] customer.subscription.deleted (cancellation)', {
+        log.info('customer.subscription.deleted (cancellation)', {
           id:       subscription.id,
           customer: subscription.customer,
           reason:   subscription.cancellation_details?.reason,
@@ -134,15 +141,15 @@ export async function POST(request: Request) {
 
       default:
         // Log unhandled events; do not error — Stripe will retry on non-2xx.
-        console.log(`[stripe-webhook] Unhandled event type: ${event.type}`)
+        log.info(`Unhandled event type: ${event.type}`)
     }
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
-    console.error(`[stripe-webhook] Error processing ${event.type}:`, message)
+    log.error(`Error processing ${event.type}`, { message })
     // Return 500 so Stripe retries — do not silently swallow processing errors.
-    return NextResponse.json({ error: 'Event processing failed' }, { status: 500 })
+    return attachRequestId(NextResponse.json({ error: 'Event processing failed' }, { status: 500 }), reqId)
   }
 
-  return NextResponse.json({ received: true })
+  return attachRequestId(NextResponse.json({ received: true }), reqId)
 }
 

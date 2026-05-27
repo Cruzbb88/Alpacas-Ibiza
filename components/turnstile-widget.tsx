@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 interface TurnstileWidgetProps {
     /** Hidden input name — include in form submission */
@@ -28,10 +28,32 @@ declare global {
     }
 }
 
+const SCRIPT_SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'
+
+let scriptInjected = false // module-scope guard: only one <script> tag globally
+
+function injectScriptOnce(): Promise<void> {
+    if (scriptInjected) return Promise.resolve()
+    scriptInjected = true
+    return new Promise((resolve) => {
+        const s = document.createElement('script')
+        s.src = SCRIPT_SRC
+        s.async = true
+        s.defer = true
+        s.onload = () => resolve()
+        s.onerror = () => resolve() // fail-open: form still usable without captcha
+        document.head.appendChild(s)
+    })
+}
+
 /**
  * Cloudflare Turnstile widget.
  * No-op if NEXT_PUBLIC_TURNSTILE_SITE_KEY is not set (local dev friendly).
  * Injects a hidden `cf-turnstile-response` input so standard forms work.
+ *
+ * Script injection is deferred until first form interaction (focusin/pointerdown)
+ * or a 4-second idle timeout — whichever comes first. This avoids ~17KB on first
+ * paint for users who never touch the form.
  */
 export function TurnstileWidget({
     fieldName = 'cf-turnstile-response',
@@ -41,13 +63,32 @@ export function TurnstileWidget({
     const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
     const containerRef = useRef<HTMLDivElement>(null)
     const inputRef = useRef<HTMLInputElement>(null)
+    const [shouldLoad, setShouldLoad] = useState(false)
 
+    // Defer script injection until first interaction OR 4s idle fallback.
     useEffect(() => {
-        if (!siteKey || !containerRef.current) return
+        if (!siteKey) return
+        const idle = window.setTimeout(() => setShouldLoad(true), 4000)
+        const form = containerRef.current?.closest('form')
+        function trigger() {
+            setShouldLoad(true)
+            cleanup()
+        }
+        function cleanup() {
+            window.clearTimeout(idle)
+            form?.removeEventListener('focusin', trigger)
+            form?.removeEventListener('pointerdown', trigger)
+        }
+        form?.addEventListener('focusin', trigger, { once: true })
+        form?.addEventListener('pointerdown', trigger, { once: true })
+        return cleanup
+    }, [siteKey])
 
+    // Once shouldLoad flips, inject script + render widget.
+    useEffect(() => {
+        if (!siteKey || !shouldLoad || !containerRef.current) return
         let widgetId: string | undefined
-
-        const render = () => {
+        void injectScriptOnce().then(() => {
             if (!window.turnstile || !containerRef.current) return
             widgetId = window.turnstile.render(containerRef.current, {
                 sitekey: siteKey,
@@ -57,27 +98,17 @@ export function TurnstileWidget({
                     onToken?.(token)
                 },
             })
-        }
-
-        if (window.turnstile) {
-            render()
-        } else {
-            const s = document.createElement('script')
-            s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'
-            s.async = true
-            s.defer = true
-            s.onload = render
-            document.head.appendChild(s)
-        }
-
+        })
         return () => {
             if (widgetId && window.turnstile) {
                 try {
                     window.turnstile.reset(widgetId)
-                } catch {}
+                } catch {
+                    /* widget already torn down */
+                }
             }
         }
-    }, [siteKey, onToken])
+    }, [siteKey, shouldLoad, onToken])
 
     if (!siteKey) {
         return null
@@ -86,7 +117,7 @@ export function TurnstileWidget({
     return (
         <div className={className}>
             <input ref={inputRef} type="hidden" name={fieldName} />
-            <div ref={containerRef} />
+            <div ref={containerRef} aria-live="polite" />
         </div>
     )
 }

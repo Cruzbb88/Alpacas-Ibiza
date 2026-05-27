@@ -681,5 +681,18 @@
       "contact": "Contatti",
       "contactDesc": "Mettiti in contatto con noi"
     }
+  },
+  "journal": {
+    "title": "Diario",
+    "backToJournal": "Torna al diario",
+    "relatedTitle": "Di più da"
+  },
+  "share": {
+    "label": "Condividi",
+    "copyLink": "Copia link",
+    "copied": "Copiato!",
+    "whatsapp": "Condividi su WhatsApp",
+    "twitter": "Condividi su X",
+    "facebook": "Condividi su Facebook"
   }
 }

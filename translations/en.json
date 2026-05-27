@@ -506,7 +506,29 @@
     "phone": "Phone",
     "emailLabel": "Email",
     "hours": "Hours",
-    "byAppointment": "By appointment only"
+    "byAppointment": "By appointment only",
+    "mapHeading": "How to find us",
+    "mapIframeTitle": "Map showing Alpacas Ibiza location",
+    "mapLargerLabel": "View larger map →",
+    "gettingHere": {
+      "heading": "Getting here",
+      "byCar": {
+        "title": "By car",
+        "body": "From Ibiza Town: approx. [UNMAPPED — owner confirm] minutes via PM-810. From Santa Eulàlia: approx. [UNMAPPED — owner confirm] minutes. Free parking on-site."
+      },
+      "fromAirport": {
+        "title": "From the airport",
+        "body": "Ibiza Airport (IBZ) is approx. [UNMAPPED — owner confirm] km away — roughly [UNMAPPED — owner confirm] minutes by car or taxi. Taxis available at the airport rank; no pre-booking required."
+      },
+      "transit": {
+        "title": "Public transit",
+        "body": "The nearest bus stop is approx. [UNMAPPED — owner confirm] minutes walk. Check ibizabus.com for current routes and timetables. A rental car or taxi is recommended for the final stretch."
+      },
+      "coordinates": {
+        "title": "Coordinates & backup nav",
+        "body": "GPS: 38.9861° N, 1.5228° E. Search «Alpacas Ibiza, San Carlos» in Google Maps or Apple Maps. What3Words address: [UNMAPPED — owner confirm]."
+      }
+    }
   },
   "footer": {
     "tagline": "Ibiza's first alpaca farm and artisanal weaving studio",
@@ -688,6 +710,34 @@
     "openShortcut": "Press / to search",
     "browseJournal": "Browse all journal posts"
   },
+  "pressKit": {
+    "meta.title": "Press Kit | Alpacas Ibiza",
+    "meta.description": "Download the official Alpacas Ibiza press kit — logo pack, hi-res photos, fact sheet, and founder bio for journalists and media partners.",
+    "title": "Press Kit",
+    "subtitle": "For journalists, photographers, and partners — assets, fact sheet, and founder bio.",
+    "assetsHeading": "Downloadable assets",
+    "assetsSubheading": "Files will be available for download once uploaded by the farm team.",
+    "logoPackTitle": "Logo Pack",
+    "logoPackBody": "SVG and PNG versions of the Alpacas Ibiza wordmark, icon, and combination mark. Colour and monochrome variants included.",
+    "logoPackCta": "Download logo pack",
+    "photosTitle": "Hi-res Photos",
+    "photosBody": "High-resolution farm and alpaca photography. Cleared for editorial and commercial use with attribution.",
+    "photosCta": "Download photo archive",
+    "factSheetTitle": "Fact Sheet",
+    "factSheetBody": "One-page PDF with key facts: founding date, herd size, farm location, activity categories, and contact details.",
+    "factSheetCta": "Download fact sheet",
+    "founderBioTitle": "Founder Bio",
+    "founderBioBody": "Short and long-form biography of the farm founders, suitable for article introductions and speaker profiles.",
+    "founderBioCta": "Download founder bio",
+    "inquiriesTitle": "Press Inquiries",
+    "inquiriesBody": "Journalists and media professionals are welcome to reach out for interviews, photography access, or editorial information.",
+    "inquiriesCta": "Email the press team",
+    "inquiriesContactLink": "Use the contact form",
+    "featuredTitle": "As featured in",
+    "ownerConfirmHeader": "Owner action required before launch",
+    "ownerConfirmBody": "Upload the following files to public/press/, then flip enabled: true in app/[locale]/press-kit/page.tsx PRESS_ASSETS.",
+    "comingSoonBadge": "Coming soon"
+  },
   "adopt": {
     "title": "Adopt an Alpaca",
     "subtitle": "__UNMAPPED__ — owner to supply hero subtitle (e.g. why adopt, farm story, emotional hook)",
@@ -715,5 +765,57 @@
     "canceledBody": "No worries — your adoption was not processed. You can try again any time.",
     "ownerConfirmHeader": "Owner action required before launch",
     "ownerConfirmBody": "The items below are owner-blocked. Replace __UNMAPPED__ sentinels with confirmed content."
+  },
+  "journal": {
+    "title": "Journal",
+    "backToJournal": "Back to Journal",
+    "relatedTitle": "More from"
+  },
+  "share": {
+    "label": "Share",
+    "copyLink": "Copy link",
+    "copied": "Copied!",
+    "whatsapp": "Share on WhatsApp",
+    "twitter": "Share on X",
+    "facebook": "Share on Facebook"
+  },
+  "sitemap": {
+    "metaTitle": "Site Map | Alpacas Ibiza",
+    "metaDescription": "Every page on alpacasibiza.com — tours, shop, experiences, and more.",
+    "title": "Site Map",
+    "subtitle": "Every page on alpacasibiza.com",
+    "breadcrumb": "Site Map",
+    "navAriaLabel": "Site map navigation",
+    "categoryVisit": "Visit & Experiences",
+    "categoryShop": "Shop",
+    "categoryAdopt": "Adopt",
+    "categoryAbout": "About",
+    "categoryMedia": "Media & Stories",
+    "categoryContact": "Contact",
+    "categoryLegal": "Legal",
+    "linkTours": "Tours & Farm Visits",
+    "linkYoga": "Alpaca Yoga",
+    "linkFamily": "Family Farm Days",
+    "linkRomantic": "Romantic Sunset Walks",
+    "linkCorporate": "Corporate & Team Building",
+    "linkWeddings": "Weddings",
+    "linkWorkshops": "Workshops",
+    "linkShop": "Shop Overview",
+    "linkWoven": "Woven Collection",
+    "linkCommission": "Custom Commission",
+    "linkAlcaca": "Alcaca – Alpaca Manure",
+    "linkGifts": "Gift Cards",
+    "linkAdopt": "Adopt an Alpaca",
+    "linkAbout": "About Us",
+    "linkAlpacas": "Our Alpacas",
+    "linkSustainability": "Sustainability",
+    "linkJournal": "Journal",
+    "linkMedia": "Media",
+    "linkPress": "Press",
+    "linkContact": "Contact Us",
+    "linkPrivacy": "Privacy Policy",
+    "linkTerms": "Terms of Service",
+    "linkCookies": "Cookie Policy",
+    "linkSitemap": "Site Map"
   }
 }

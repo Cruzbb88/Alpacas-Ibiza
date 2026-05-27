@@ -11,10 +11,11 @@ export interface Product {
   name: string
   price: number
   image: string
-  category: string
+  category: 'woven' | 'commission' | 'alcaca'
   description: string
   rating?: number
   reviews?: number
+  fareHarborItemId?: string
 }
 
 interface ProductCardProps {
@@ -30,7 +31,6 @@ export function ProductCard({
 }: ProductCardProps) {
   // determine booking link: use specific item (if product contains one) or category URL
   const bookingHref =
-    // @ts-ignore - ignore missing property if not provided
     product.fareHarborItemId
       ? getFareHarborCategoryUrl(product.category)?.replace(
           /items=[^&]+/,

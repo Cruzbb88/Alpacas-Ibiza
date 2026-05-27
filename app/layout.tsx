@@ -5,6 +5,7 @@ import { Geist, Playfair_Display } from 'next/font/google'
 
 import './globals.css'
 import packageJson from '../package.json'
+import { SpeculationRules } from '@/components/speculation-rules'
 
 const _geistSans = Geist({ subsets: ['latin'] })
 const _playfairDisplay = Playfair_Display({ subsets: ['latin'], variable: '--font-display' })
@@ -26,6 +27,9 @@ export const metadata: Metadata = {
       es: 'https://alpacasibiza.com/es',
       nl: 'https://alpacasibiza.com/nl',
       fr: 'https://alpacasibiza.com/fr',
+    },
+    types: {
+      'application/rss+xml': 'https://alpacasibiza.com/journal/rss.xml',
     },
   },
 }
@@ -92,6 +96,7 @@ export default function RootLayout({
             style={{ display: 'none', visibility: 'hidden' }}
           />
         </noscript>
+        <SpeculationRules />
         <div className="fixed top-1 left-1 z-[9999] text-[10px] text-foreground/40 select-none pointer-events-none">
           v{packageJson.version}
         </div>

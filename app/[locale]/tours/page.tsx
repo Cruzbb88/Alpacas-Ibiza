@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { Hero } from '@/components/hero'
 import { Features } from '@/components/features'
 import { Timeline } from '@/components/timeline'
@@ -16,6 +17,35 @@ import { GoogleReviewsBadge } from '@/components/google-reviews-badge'
 import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
 import type { Locale } from '@/i18n.config'
 import { touristTripSchema, faqPageSchema, toJsonLd } from '@/lib/structured-data'
+import { buildLocaleAlternates } from '@/lib/i18n-metadata'
+import { getOgImage } from '@/lib/og-images'
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  const { canonical, languages } = buildLocaleAlternates(locale, 'tours')
+  const ogImage = getOgImage('tours', 'Alpaca Trekking Tours – Alpacas Ibiza')
+  return {
+    title: 'Alpaca Trekking Tours | Alpacas Ibiza – Es Currals',
+    description:
+      'Book an alpaca trekking experience at Es Currals, Ibiza\'s first alpaca farm. Meet the herd, weave on a traditional loom, or enjoy a full farm experience.',
+    alternates: { canonical, languages },
+    openGraph: {
+      title: 'Alpaca Trekking Tours | Alpacas Ibiza – Es Currals',
+      description:
+        'Book an alpaca trekking experience at Es Currals, Ibiza\'s first alpaca farm. Meet the herd, weave on a traditional loom, or enjoy a full farm experience.',
+      url: canonical,
+      images: [ogImage],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      images: [ogImage.url],
+    },
+  }
+}
 
 export default async function ToursPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params

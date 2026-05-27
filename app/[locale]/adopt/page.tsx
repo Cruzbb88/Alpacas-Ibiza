@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import { t } from '@/lib/translations'
 import type { Locale } from '@/i18n.config'
 import { SITE_BASE_URL as BASE_URL } from '@/lib/config'
@@ -9,6 +10,9 @@ import { toJsonLd } from '@/lib/structured-data'
 import { GradientPageHero, PageSection, OwnerConfirmBanner } from '@/components/layout'
 import { BillingPortalLink } from '@/components/billing-portal-link'
 import { ALPACAS } from '@/lib/data/alpacas'
+import { AdoptThankYou } from '@/components/adopt-thank-you'
+import { getTenant } from '@/lib/tenants/server'
+import { getOgImage } from '@/lib/og-images'
 
 export async function generateMetadata({
     params,
@@ -17,6 +21,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
     const { locale } = await params
     const { canonical, languages } = buildLocaleAlternates(locale, 'adopt')
+    const ogImage = getOgImage('adopt', 'Adopt an Alpaca – Alpacas Ibiza')
     return {
         title: 'Adopt an Alpaca | Alpacas Ibiza – Es Currals',
         description:
@@ -27,6 +32,11 @@ export async function generateMetadata({
             description:
                 'Become part of the herd. Monthly or yearly adoption with farm tours, certificate, professional photoshoot and exclusive perks.',
             url: canonical,
+            images: [ogImage],
+        },
+        twitter: {
+            card: 'summary_large_image',
+            images: [ogImage.url],
         },
     }
 }
@@ -55,8 +65,9 @@ export default async function AdoptPage({
     searchParams: Promise<{ checkout?: string; tier?: string; portal?: string }>
 }) {
     const { locale } = await params
-    const { checkout, tier } = await searchParams
+    const { checkout } = await searchParams
     const translate = t(locale)
+    const tenant = await getTenant()
 
     const paymentAdapter = getPaymentAdapter()
     const monthlyUrl = paymentAdapter.buildAdoptCheckoutUrl('monthly') ?? `mailto:info@alpacasibiza.com?subject=Adopt%20an%20Alpaca%20enquiry`
@@ -114,10 +125,7 @@ export default async function AdoptPage({
         ],
     }
 
-    const tierLabel =
-        tier === 'yearly'
-            ? translate('adopt.successTierYearly')
-            : translate('adopt.successTierMonthly')
+    const isSuccess = checkout === 'success'
 
     return (
         <>
@@ -127,31 +135,20 @@ export default async function AdoptPage({
                 dangerouslySetInnerHTML={{ __html: toJsonLd(offerSchema) }}
             />
 
-            {/* Checkout result banners */}
-            {checkout === 'success' && (
-                <div
-                    role="status"
-                    aria-live="polite"
-                    className="bg-primary/10 border-l-4 border-primary px-4 py-6 my-4 max-w-3xl mx-auto rounded"
-                >
-                    <h2 className="text-xl font-semibold text-foreground">
-                        {translate('adopt.successHeading')}
-                    </h2>
-                    <p className="text-foreground mt-2">
-                        {translate('adopt.successBody').replace('{tier}', tierLabel)}
-                    </p>
-                </div>
-            )}
-            {checkout === 'cancelled' && (
-                <div
-                    role="status"
-                    aria-live="polite"
-                    className="bg-muted border-l-4 border-border px-4 py-6 my-4 max-w-3xl mx-auto rounded"
-                >
-                    <p className="text-foreground">{translate('adopt.canceledBody')}</p>
-                </div>
-            )}
+            {/* Thank-you screen (success) + cancelled banner — client component;
+                Suspense required by Next.js for useSearchParams in static build */}
+            <Suspense fallback={null}>
+                <AdoptThankYou
+                    locale={locale}
+                    contactEmail={tenant.contactEmail}
+                    whatsappE164={tenant.whatsappE164}
+                    siteUrl={tenant.siteUrl}
+                />
+            </Suspense>
 
+            {/* Marketing content — hidden when checkout=success (donor already converted) */}
+            {!isSuccess && (
+            <>
             <PageBreadcrumbs
                 locale={locale}
                 homeLabel={translate('nav.home') || 'Home'}
@@ -237,11 +234,9 @@ export default async function AdoptPage({
             </PageSection>
 
             {/* Billing portal — existing subscribers only; collapsed by default */}
-            {checkout !== 'success' && (
-                <PageSection width="narrow" className="pt-0 pb-2">
-                    <BillingPortalLink locale={locale} />
-                </PageSection>
-            )}
+            <PageSection width="narrow" className="pt-0 pb-2">
+                <BillingPortalLink locale={locale} />
+            </PageSection>
 
             {/* Owner-confirm banner — dev/staging only */}
             <OwnerConfirmBanner
@@ -256,6 +251,8 @@ export default async function AdoptPage({
                     '[UNMAPPED] Add to main nav? Under "Experiences" or standalone?',
                 ]}
             />
+            </>
+            )}
         </>
     )
 }

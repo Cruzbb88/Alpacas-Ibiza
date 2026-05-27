@@ -2,10 +2,13 @@ import { t } from '@/lib/translations'
 import type { Locale } from '@/i18n.config'
 import { ContactForm } from '@/components/contact-form'
 import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
+import { TenantMap } from '@/components/tenant-map'
+import { getDefaultTenant } from '@/lib/tenants/server'
 
 export default async function ContactPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params
   const translate = t(locale)
+  const tenant = getDefaultTenant()
 
   const formLabels = {
     name: translate('contact.name'),
@@ -105,6 +108,75 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Map — TenantMap pulls lat/lng from alpacasibiza.ts geo block.
+          Falls back to OSM iframe if no Google Maps embed key is configured (fail-open). */}
+      <TenantMap
+        tenant={tenant}
+        heading={translate('contact.mapHeading') || 'How to find us'}
+        iframeTitle={translate('contact.mapIframeTitle') || 'Map showing Alpacas Ibiza location'}
+        largerMapLabel={translate('contact.mapLargerLabel') || 'View larger map →'}
+      />
+
+      {/* Getting here — driving directions, parking, transit, coordinates */}
+      <section className="w-full py-16 md:py-24 px-4 bg-muted/40">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl font-bold text-foreground mb-10 text-center">
+            {translate('contact.gettingHere.heading') || 'Getting here'}
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+            {/* By car */}
+            <div className="rounded-2xl border border-border bg-card p-6 space-y-3">
+              <div className="text-3xl">🚗</div>
+              <h3 className="font-semibold text-foreground text-lg">
+                {translate('contact.gettingHere.byCar.title') || 'By car'}
+              </h3>
+              <p className="text-sm text-foreground/70 leading-relaxed">
+                {translate('contact.gettingHere.byCar.body') ||
+                  'From Ibiza Town: approx. [UNMAPPED] minutes via PM-810. From Santa Eulàlia: approx. [UNMAPPED] minutes. Free parking on-site.'}
+              </p>
+            </div>
+
+            {/* From the airport */}
+            <div className="rounded-2xl border border-border bg-card p-6 space-y-3">
+              <div className="text-3xl">✈️</div>
+              <h3 className="font-semibold text-foreground text-lg">
+                {translate('contact.gettingHere.fromAirport.title') || 'From the airport'}
+              </h3>
+              <p className="text-sm text-foreground/70 leading-relaxed">
+                {translate('contact.gettingHere.fromAirport.body') ||
+                  'Ibiza Airport (IBZ) is approx. [UNMAPPED] km — roughly [UNMAPPED] minutes by car or taxi. Taxis available at the airport rank; no pre-booking required.'}
+              </p>
+            </div>
+
+            {/* Public transit */}
+            <div className="rounded-2xl border border-border bg-card p-6 space-y-3">
+              <div className="text-3xl">🚌</div>
+              <h3 className="font-semibold text-foreground text-lg">
+                {translate('contact.gettingHere.transit.title') || 'Public transit'}
+              </h3>
+              <p className="text-sm text-foreground/70 leading-relaxed">
+                {translate('contact.gettingHere.transit.body') ||
+                  'Nearest bus stop approx. [UNMAPPED] minutes walk. Check ibizabus.com for routes. A car or taxi is recommended for the final stretch.'}
+              </p>
+            </div>
+
+            {/* Coordinates */}
+            <div className="rounded-2xl border border-border bg-card p-6 space-y-3">
+              <div className="text-3xl">📍</div>
+              <h3 className="font-semibold text-foreground text-lg">
+                {translate('contact.gettingHere.coordinates.title') || 'Coordinates & backup nav'}
+              </h3>
+              <p className="text-sm text-foreground/70 leading-relaxed">
+                {translate('contact.gettingHere.coordinates.body') ||
+                  'GPS: 38.9861° N, 1.5228° E. Search «Alpacas Ibiza, San Carlos» in Google Maps or Apple Maps. What3Words: [UNMAPPED — owner confirm].'}
+              </p>
+            </div>
+
           </div>
         </div>
       </section>

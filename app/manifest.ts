@@ -22,12 +22,25 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: BRAND_THEME_COLOR_HEX,
     orientation: 'portrait-primary',
     lang: tenant.defaultLocale,
-    // UNMAPPED — owner drops /public/icon-192.png, /public/icon-512.png
-    // and /app/apple-icon.png to auto-generate PWA icons via Next.js convention.
-    // Once those files exist, populate the icons array here:
-    //   icons: [
-    //     { src: '/icon-192.png', sizes: '192x192', type: 'image/png' },
-    //     { src: '/icon-512.png', sizes: '512x512', type: 'image/png' },
-    //   ],
+    icons: [
+      {
+        src: '/icon',
+        sizes: '32x32',
+        type: 'image/png',
+        purpose: 'any',
+      },
+      {
+        src: '/apple-icon',
+        sizes: '180x180',
+        type: 'image/png',
+        purpose: 'any',
+      },
+      {
+        src: '/icon-maskable',
+        sizes: '512x512',
+        type: 'image/png',
+        purpose: 'maskable',
+      },
+    ],
   }
 }

@@ -9,6 +9,7 @@ import { getProviders } from '@/lib/integrations'
 import { tenantMetadata } from '@/lib/tenants/metadata'
 import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
 import { PageSection } from '@/components/layout'
+import { getOgImage } from '@/lib/og-images'
 
 export async function generateMetadata({
     params,
@@ -17,13 +18,19 @@ export async function generateMetadata({
 }): Promise<Metadata> {
     const { locale } = await params
     const tenant = await getTenant()
-    return tenantMetadata(tenant, {
+    const base = tenantMetadata(tenant, {
         locale,
         route: '/alpacas',
         titleOverride: 'Meet Our Alpacas | Alpacas Ibiza – Es Currals Herd',
         descriptionOverride:
             'Get to know the 14 alpacas of Es Currals. Barbarella, Avalon, Bardot, Chet, Dusty, Fela, Fonda, Lewis, Marron, Mojo, Moloko, Nelson, Suki, and Toots — Ibiza\'s beloved herd.',
     })
+    const ogImage = getOgImage('alpacas', 'Meet the alpacas of Es Currals – Alpacas Ibiza')
+    return {
+        ...base,
+        openGraph: { ...base.openGraph, images: [ogImage] },
+        twitter: { ...base.twitter, images: [ogImage.url] },
+    }
 }
 
 export default async function AlpacasPage({ params }: { params: Promise<{ locale: Locale }> }) {

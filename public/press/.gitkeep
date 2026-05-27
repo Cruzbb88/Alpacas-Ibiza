@@ -1,0 +1,8 @@
+# Drop owner-supplied press assets here.
+# See app/[locale]/press-kit/page.tsx PRESS_ASSETS for the expected file names:
+#   logo-pack.zip    — SVG + PNG logo variants
+#   photos.zip       — hi-res editorial photography
+#   fact-sheet.pdf   — one-page fact sheet
+#   founder-bio.pdf  — short + long founder bio
+#
+# After uploading each file, flip its `enabled: true` in PRESS_ASSETS.

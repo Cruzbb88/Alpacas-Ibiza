@@ -19,8 +19,12 @@ import { verifyNewsletterToken, isExpiredNewsletterToken } from '@/lib/newslette
 import { escapeHtml } from '@/lib/html'
 import { SITE_BASE_URL } from '@/lib/config'
 import { sendEmail } from '@/lib/mailer'
+import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
 
 export async function GET(request: Request) {
+  const reqId = getRequestId(request)
+  const log = makeRequestLogger('newsletter/confirm', reqId)
+
   const url = new URL(request.url)
   const token = url.searchParams.get('token') ?? ''
 
@@ -31,21 +35,27 @@ export async function GET(request: Request) {
     // Distinguish expired (410) from tampered/invalid (400)
     const expired = token.length > 0 && isExpiredNewsletterToken(token)
     if (expired) {
-      return new NextResponse(
-        expiredHtml(),
-        { status: 410, headers: { 'Content-Type': 'text/html; charset=utf-8' } }
+      return attachRequestId(
+        new NextResponse(
+          expiredHtml(),
+          { status: 410, headers: { 'Content-Type': 'text/html; charset=utf-8' } }
+        ),
+        reqId
       )
     }
-    return new NextResponse(
-      invalidHtml(),
-      { status: 400, headers: { 'Content-Type': 'text/html; charset=utf-8' } }
+    return attachRequestId(
+      new NextResponse(
+        invalidHtml(),
+        { status: 400, headers: { 'Content-Type': 'text/html; charset=utf-8' } }
+      ),
+      reqId
     )
   }
 
   // Valid token — subscribe to SendGrid
   const result = await subscribe(payload.email)
   if (!result.success) {
-    console.warn('[newsletter/confirm] SendGrid subscribe failed:', result.message)
+    log.warn('SendGrid subscribe failed', { message: result.message })
     // Non-fatal — still confirm to user; operator can re-process
   }
 
@@ -56,14 +66,14 @@ export async function GET(request: Request) {
       html: `<p>Newsletter double opt-in confirmed for: <strong>${escapeHtml(payload.email)}</strong></p>`,
     })
   } catch (notifyErr) {
-    console.warn('[newsletter/confirm] owner notification failed:', notifyErr)
+    log.warn('owner notification failed', { err: String(notifyErr) })
   }
 
   // Redirect to confirmation landing page
   const confirmed = new URL(`${SITE_BASE_URL}/newsletter-confirmed`)
   confirmed.searchParams.set('email', payload.email)
 
-  return NextResponse.redirect(confirmed.toString(), { status: 303 })
+  return attachRequestId(NextResponse.redirect(confirmed.toString(), { status: 303 }), reqId)
 }
 
 function expiredHtml(): string {

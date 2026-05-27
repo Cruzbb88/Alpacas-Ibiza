@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 import { trackConversion } from '@/lib/analytics'
 
 interface FloatingWhatsAppProps {
@@ -9,6 +10,9 @@ interface FloatingWhatsAppProps {
   initialMessage?: string
 }
 
+/** Routes that must never show the floating button (legal / compliance pages). */
+const SUPPRESSED_SEGMENTS = ['/privacy', '/terms', '/cookies', '/admin']
+
 function stripPlus(e164: string): string {
   return e164.replace(/^\+/, '')
 }
@@ -16,8 +20,9 @@ function stripPlus(e164: string): string {
 export function FloatingWhatsApp({
   e164,
   brandName,
-  initialMessage = 'Hi! I have a question.',
+  initialMessage = `Hi! I have a question about ${brandName}.`,
 }: FloatingWhatsAppProps) {
+  const pathname = usePathname()
   const [isPulsing, setIsPulsing] = useState(true)
 
   useEffect(() => {
@@ -27,6 +32,9 @@ export function FloatingWhatsApp({
 
   // Fail-quiet: no number → no button
   if (!e164) return null
+
+  // Suppressed on legal and admin pages
+  if (SUPPRESSED_SEGMENTS.some(seg => pathname?.includes(seg))) return null
 
   const href = `https://wa.me/${stripPlus(e164)}?text=${encodeURIComponent(initialMessage)}`
 

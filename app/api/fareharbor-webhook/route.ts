@@ -9,6 +9,7 @@ import {
     reviewRequestEmailHtml,
     reviewRequestSubject,
 } from '@/lib/email-templates'
+import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
 
 /**
  * POST /api/fareharbor-webhook
@@ -62,31 +63,34 @@ function extractBooking(body: WebhookBody): FareHarborBooking | null {
 }
 
 export async function POST(request: Request) {
+    const reqId = getRequestId(request)
+    const log = makeRequestLogger('fareharbor-webhook', reqId)
+
     const expected = process.env.FAREHARBOR_WEBHOOK_SECRET
     if (!expected) {
         // Refuse traffic if operator hasn't set the secret — prevents accidental
         // open webhook in production.
-        return NextResponse.json(
-            { error: 'Webhook secret not configured' },
-            { status: 503 }
+        return attachRequestId(
+            NextResponse.json({ error: 'Webhook secret not configured' }, { status: 503 }),
+            reqId
         )
     }
     const got = request.headers.get('x-webhook-secret')
     if (!safeEqual(got, expected)) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+        return attachRequestId(NextResponse.json({ error: 'Unauthorized' }, { status: 401 }), reqId)
     }
 
     let body: WebhookBody
     try {
         body = (await request.json()) as WebhookBody
     } catch {
-        return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 })
+        return attachRequestId(NextResponse.json({ error: 'Invalid JSON' }, { status: 400 }), reqId)
     }
 
     const event = (body.event ?? 'booking.created').toLowerCase()
     const booking = extractBooking(body)
     if (!booking) {
-        return NextResponse.json({ error: 'Missing booking data' }, { status: 400 })
+        return attachRequestId(NextResponse.json({ error: 'Missing booking data' }, { status: 400 }), reqId)
     }
 
     const pk = booking.pk
@@ -105,15 +109,15 @@ export async function POST(request: Request) {
             if (existing.reviewEmailId) await cancelScheduledEmail(existing.reviewEmailId)
             await bookingScheduleStore.delete(pk)
         }
-        return NextResponse.json({ ok: true, action: 'cancelled' })
+        return attachRequestId(NextResponse.json({ ok: true, action: 'cancelled' }), reqId)
     }
 
     // For created / updated we need an email + start_at
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
-        return NextResponse.json({ error: 'Invalid or missing customer email' }, { status: 400 })
+        return attachRequestId(NextResponse.json({ error: 'Invalid or missing customer email' }, { status: 400 }), reqId)
     }
     if (!startAt) {
-        return NextResponse.json({ error: 'Missing availability.start_at' }, { status: 400 })
+        return attachRequestId(NextResponse.json({ error: 'Missing availability.start_at' }, { status: 400 }), reqId)
     }
 
     // ─── booking.updated: cancel any prior schedules before rescheduling ──
@@ -162,7 +166,7 @@ export async function POST(request: Request) {
             })
             reminderEmailId = id
         } catch (err) {
-            console.error('[fareharbor-webhook] schedule reminder failed:', err)
+            log.error('schedule reminder failed', { err: String(err) })
         }
     }
 
@@ -180,7 +184,7 @@ export async function POST(request: Request) {
             })
             reviewEmailId = id
         } catch (err) {
-            console.error('[fareharbor-webhook] schedule review-request failed:', err)
+            log.error('schedule review-request failed', { err: String(err) })
         }
     }
 
@@ -192,11 +196,14 @@ export async function POST(request: Request) {
         customerEmail: email,
     })
 
-    return NextResponse.json({
-        ok: true,
-        action: event,
-        bookingPk: pk,
-        reminder: { scheduledFor: reminderAt.toISOString(), id: reminderEmailId },
-        review: { scheduledFor: reviewAt.toISOString(), id: reviewEmailId },
-    })
+    return attachRequestId(
+        NextResponse.json({
+            ok: true,
+            action: event,
+            bookingPk: pk,
+            reminder: { scheduledFor: reminderAt.toISOString(), id: reminderEmailId },
+            review: { scheduledFor: reviewAt.toISOString(), id: reviewEmailId },
+        }),
+        reqId
+    )
 }

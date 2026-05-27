@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { Hero } from '@/components/hero'
 import { ChoicePaths } from '@/components/choice-paths'
 import { Features } from '@/components/features'
@@ -10,6 +11,35 @@ import { FAREHARBOR_BOOKING_URL } from '@/lib/config'
 import type { Locale } from '@/i18n.config'
 import Link from 'next/link'
 import { NewsletterForm } from '@/components/newsletter-form'
+import { buildLocaleAlternates } from '@/lib/i18n-metadata'
+import { getOgImage } from '@/lib/og-images'
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  const { canonical, languages } = buildLocaleAlternates(locale, '')
+  const ogImage = getOgImage('home', 'Alpacas Ibiza – Ibiza\'s first alpaca farm')
+  return {
+    title: 'Es Currals Alpacas Ibiza | First Alpaca Farm & Weaving Studio',
+    description:
+      'The very first alpaca farm in Ibiza. Home to Wishfulfilling Weaving — hand-woven scarves on traditional wooden looms using alpaca wool.',
+    alternates: { canonical, languages },
+    openGraph: {
+      title: 'Es Currals Alpacas Ibiza | First Alpaca Farm & Weaving Studio',
+      description:
+        'The very first alpaca farm in Ibiza. Home to Wishfulfilling Weaving — hand-woven scarves on traditional wooden looms using alpaca wool.',
+      url: canonical,
+      images: [ogImage],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      images: [ogImage.url],
+    },
+  }
+}
 
 export default async function Home({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params

@@ -5,6 +5,12 @@
 
 const BASE_URL = 'https://alpacasibiza.com'
 
+/** Default FareHarbor booking URL — mirrors FAREHARBOR_BOOKING_URL in lib/config.ts.
+ *  Inlined here to keep structured-data.ts free of @/ path-alias imports
+ *  (required for node:test compatibility). If shortname changes, update both. */
+const FAREHARBOR_BOOKING_URL =
+    `https://fareharbor.com/embeds/book/${process.env.NEXT_PUBLIC_FAREHARBOR_SHORTNAME ?? 'alpacasibiza'}/?full-items=yes`
+
 // ─── Organization ────────────────────────────────────────────────────────────
 
 export function organizationSchema() {
@@ -183,6 +189,71 @@ export function breadcrumbSchema(
             name: c.name,
             item: c.url,
         })),
+    }
+}
+
+// ─── Event (Yoga weekly sessions) ────────────────────────────────────────────
+
+/**
+ * Schema.org Event for the weekly yoga sessions.
+ *
+ * Verified live data (REALITY_CHECK Tier 2):
+ *   - Recurring weekly: Wednesdays + Saturdays
+ *   - 1 hour 15 minutes
+ *   - €30 per person, max 6 attendees
+ *   - Hatha style
+ *
+ * UNMAPPED (omitted to comply with Rule 5):
+ *   - eventSchedule.startTime (exact time of day not confirmed)
+ *   - eventSchedule.byMonth (which months — REALITY_CHECK doesn't confirm season)
+ *   - performer (instructor name)
+ *
+ * Google's event-rich-results need at least: @type, name, startDate, location.
+ * We use a forward-rolling startDate (next Wednesday) so the event is always "upcoming".
+ */
+export function yogaWeeklyEventSchema(opts?: { now?: Date }): object {
+    // Forward-roll the startDate to the next Wednesday so search engines see an
+    // upcoming event no matter when the page is crawled.
+    const now = opts?.now ?? new Date()
+    const day = now.getUTCDay() // 0=Sun, 3=Wed
+    const daysUntilWed = (3 - day + 7) % 7 || 7
+    const nextWed = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + daysUntilWed))
+
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'Event',
+        name: 'Alpaca Yoga — weekly session at Es Currals',
+        description:
+            '1 hour 15 minute Hatha yoga sessions held outdoors alongside our alpacas. Max 6 attendees. Every Wednesday and Saturday.',
+        startDate: nextWed.toISOString().split('T')[0], // ISO date — no time (Rule 5)
+        eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+        eventStatus: 'https://schema.org/EventScheduled',
+        location: {
+            '@type': 'Place',
+            name: 'Es Currals Alpacas Ibiza',
+            address: {
+                '@type': 'PostalAddress',
+                streetAddress: 'San Carlos',
+                addressLocality: 'Santa Eulària des Riu',
+                addressRegion: 'Balearic Islands',
+                addressCountry: 'ES',
+                postalCode: '07819',
+            },
+        },
+        organizer: {
+            '@type': 'Organization',
+            name: 'Alpacas Ibiza',
+            url: BASE_URL,
+        },
+        offers: {
+            '@type': 'Offer',
+            price: String(30),
+            priceCurrency: 'EUR',
+            availability: 'https://schema.org/InStock',
+            url: FAREHARBOR_BOOKING_URL,
+        },
+        // image: omitted — no yoga-event image confirmed
+        // performer: omitted — instructor UNMAPPED
     }
 }
 

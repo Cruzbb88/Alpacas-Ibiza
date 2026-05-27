@@ -7,6 +7,9 @@ import { CookieConsent } from '@/components/cookie-consent'
 import { ScrollTracker } from '@/components/scroll-tracker'
 import { OutboundLinkTracker } from '@/components/outbound-link-tracker'
 import { localBusinessSchema, organizationSchema, toJsonLd } from '@/lib/structured-data'
+import { DEFAULT_OG_IMAGE } from '@/lib/og-images'
+import { getTenant } from '@/lib/tenant'
+import { FloatingWhatsApp } from '@/components/floating-whatsapp'
 
 const BASE_URL = 'https://alpacasibiza.com'
 
@@ -32,9 +35,11 @@ export async function generateMetadata({
             siteName: 'Alpacas Ibiza',
             locale,
             type: 'website',
+            // DEFAULT_OG_IMAGE — points at public/images/og/default.webp
+            // Drop file there; no code change needed. See lib/og-images.ts.
             images: [
                 {
-                    url: '/images/og-default.webp',
+                    url: DEFAULT_OG_IMAGE,
                     width: 1200,
                     height: 630,
                     alt: 'Alpaca Trekking Santa Eulària – Ibiza Eco-Tourism',
@@ -43,7 +48,7 @@ export async function generateMetadata({
         },
         twitter: {
             card: 'summary_large_image',
-            images: ['/images/og-default.webp'],
+            images: [DEFAULT_OG_IMAGE],
         },
     }
 }
@@ -57,6 +62,7 @@ export default async function LocaleLayout({
 }) {
     const { locale } = await params
     const schemas = [localBusinessSchema(), organizationSchema()]
+    const tenant = await getTenant()
 
     return (
         <div className="flex min-h-screen flex-col">
@@ -78,6 +84,7 @@ export default async function LocaleLayout({
             <main id="main-content" className="flex-1">{children}</main>
             <Footer />
             <StickyBookingBar />
+            <FloatingWhatsApp e164={tenant.whatsappE164} brandName={tenant.brandName} />
             <CookieConsent />
             <ScrollTracker />
             <OutboundLinkTracker />

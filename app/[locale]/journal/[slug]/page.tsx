@@ -22,10 +22,11 @@ import { getTenant } from '@/lib/tenants/server'
 import { tenantMetadata } from '@/lib/tenants/metadata'
 import { breadcrumbSchema, toJsonLd } from '@/lib/structured-data'
 import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
-import { findPost } from '@/lib/data/journal'
+import { findPost, livePosts } from '@/lib/data/journal'
 import { ReadingProgress } from '@/components/reading-progress'
 import { ShareButtons } from '@/components/share-buttons'
 import { JournalToc, type TocItem } from '@/components/journal-toc'
+import { JournalCard } from '@/components/journal-card'
 
 const BASE_URL = 'https://alpacasibiza.com'
 
@@ -113,6 +114,9 @@ export default async function JournalPostPage({
 
   const tenant = await getTenant()
   const absoluteUrl = `${tenant.siteUrl}/${locale}/journal/${post.slug}`
+
+  // Related posts — same category, excluding current, max 3
+  const related = livePosts(post.category).filter((p) => p.slug !== post.slug).slice(0, 3)
 
   // Article JSON-LD
   const articleSchema = {
@@ -275,6 +279,23 @@ export default async function JournalPostPage({
           </Link>
         </div>
       </div>
+
+      {/* Related posts */}
+      {related.length > 0 && (
+        <section className="border-t border-border py-12 mt-4">
+          <div className="max-w-5xl mx-auto px-4">
+            <h2 className="text-2xl font-bold mb-6 text-foreground">
+              {translate('journal.relatedTitle') || 'More from'}{' '}
+              <span className="capitalize">{post.category.replace(/-/g, ' ')}</span>
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {related.map((p) => (
+                <JournalCard key={p.slug} post={p} locale={locale} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
     </main>
   )

@@ -24,7 +24,7 @@ import type { Locale } from '@/i18n.config'
 import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
 import { GradientPageHero, PageSection, OwnerConfirmBanner } from '@/components/layout'
 import { FAQ } from '@/components/faq'
-import { localBusinessSchema, toJsonLd } from '@/lib/structured-data'
+import { localBusinessSchema, yogaWeeklyEventSchema, toJsonLd } from '@/lib/structured-data'
 import {
     SITE_BASE_URL as BASE_URL,
     YOGA_PRICE_EUR,
@@ -107,6 +107,7 @@ export default async function YogaPage({ params }: { params: Promise<{ locale: s
     const schemas = [
         localBusinessSchema(),
         yogaActivitySchema(),
+        yogaWeeklyEventSchema(),
     ]
 
     // CTA booking URL — filtered to yoga item when set; falls back to main calendar (fail-open)
@@ -114,7 +115,7 @@ export default async function YogaPage({ params }: { params: Promise<{ locale: s
 
     return (
         <main>
-            {/* JSON-LD: LocalBusiness + FAQPage + SportsActivityLocation */}
+            {/* JSON-LD: LocalBusiness + SportsActivityLocation + Event */}
             {schemas.map((schema, i) => (
                 <script
                     key={`yoga-schema-${i}`}

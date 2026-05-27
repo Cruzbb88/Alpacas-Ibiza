@@ -1,7 +1,7 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert/strict'
 import { createHash } from 'crypto'
-import { rateLimit } from './rate-limit.ts'
+import { rateLimit, rateLimitByEmail, __resetEmailRateLimit } from './rate-limit.ts'
 
 // Reset the in-memory store between tests by exploiting the globalThis singleton.
 // Cast to any to access the private store key.
@@ -141,5 +141,40 @@ describe('newsletter per-email rate limiting (SHA-256 hashed keys)', () => {
     const keySpaced = emailRateLimitKey(`  norm-${ts}@example.com  `)
     assert.equal(keyLower, keyUpper, 'uppercase should normalize to same key')
     assert.equal(keyLower, keySpaced, 'whitespace should normalize to same key')
+  })
+})
+
+describe('rateLimitByEmail', () => {
+  it('allows up to the limit', () => {
+    __resetEmailRateLimit()
+    for (let i = 0; i < 3; i++) {
+      const r = rateLimitByEmail({ email: 'a@example.com' })
+      assert.equal(r.allowed, true)
+    }
+  })
+
+  it('rejects the 4th attempt within the window', () => {
+    __resetEmailRateLimit()
+    for (let i = 0; i < 3; i++) rateLimitByEmail({ email: 'b@example.com' })
+    const r = rateLimitByEmail({ email: 'b@example.com' })
+    assert.equal(r.allowed, false)
+    assert.equal(r.remaining, 0)
+    assert.ok(r.resetMs > 0)
+  })
+
+  it('lowercases + trims email before keying (case-insensitive)', () => {
+    __resetEmailRateLimit()
+    rateLimitByEmail({ email: 'C@example.com' })
+    rateLimitByEmail({ email: 'c@example.com' })
+    rateLimitByEmail({ email: '  C@EXAMPLE.com  ' })
+    const r = rateLimitByEmail({ email: 'c@example.com' })
+    assert.equal(r.allowed, false, 'should treat as 4th attempt of same email')
+  })
+
+  it('different emails do not interfere', () => {
+    __resetEmailRateLimit()
+    for (let i = 0; i < 3; i++) rateLimitByEmail({ email: 'd@example.com' })
+    const r = rateLimitByEmail({ email: 'e@example.com' })
+    assert.equal(r.allowed, true)
   })
 })
