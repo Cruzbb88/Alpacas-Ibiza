@@ -3,6 +3,7 @@ import { Hero } from '@/components/hero'
 import { t, ta } from '@/lib/translations'
 import type { Locale } from '@/i18n.config'
 import { buildLocaleAlternates } from '@/lib/i18n-metadata'
+import { LegalContentPendingNotice, isLegalContentLive } from '@/components/legal-content-pending-notice'
 
 export async function generateMetadata({
     params,
@@ -21,6 +22,15 @@ export default async function TermsPage({ params }: { params: Promise<{ locale: 
     const { locale } = await params
     const translate = t(locale)
     const translateArray = ta(locale)
+
+    if (!isLegalContentLive()) {
+        return (
+            <>
+                <Hero title={translate('terms.title')} subtitle={translate('terms.subtitle')} />
+                <LegalContentPendingNotice pageKind="terms" />
+            </>
+        )
+    }
 
     return (
         <>

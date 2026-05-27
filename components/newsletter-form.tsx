@@ -2,11 +2,12 @@
 
 import { useState } from 'react'
 import { t } from '@/lib/translations'
+import type { Locale } from '@/i18n.config'
 import { TurnstileWidget } from '@/components/turnstile-widget'
 import { HoneypotField } from '@/components/honeypot-field'
 
 interface NewsletterFormProps {
-  locale: string
+  locale: Locale
 }
 
 export function NewsletterForm({ locale }: NewsletterFormProps) {

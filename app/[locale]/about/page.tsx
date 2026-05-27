@@ -3,6 +3,7 @@ import { t } from '@/lib/translations'
 import type { Locale } from '@/i18n.config'
 import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
 import { buildLocaleAlternates } from '@/lib/i18n-metadata'
+import { AwardsBadges } from '@/components/awards-badges'
 
 export async function generateMetadata({
   params,
@@ -79,6 +80,8 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           </div>
         </div>
       </section>
+      {/* Awards & Recognition band — all categories, renders null until owner adds entries */}
+      <AwardsBadges title={translate('awards.awardsAndRecognition')} />
     </main>
   )
 }

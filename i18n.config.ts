@@ -9,8 +9,10 @@ export const i18nConfig = {
     nl: 'Nederlands',
     fr: 'Français',
   },
+  // Spec 005: dropped 🇬🇧 (UK flag for international English is misleading for a Spain-based
+   // business serving non-UK visitors). Text label "EN" is locale-neutral.
   localeFlagEmoji: {
-    en: '🇬🇧',
+    en: 'EN',
     de: '🇩🇪',
     it: '🇮🇹',
     es: '🇪🇸',

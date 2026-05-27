@@ -22,7 +22,7 @@ import {
   FAREHARBOR_ITEM_GIFT_CARD,
   FAREHARBOR_ITEM_ROMANTIC_SUNSET,
   FAREHARBOR_ITEM_FAMILY_FARM_DAYS,
-} from './config'
+} from './config.ts'
 
 /**
  * All bookable FareHarbor product slugs.

@@ -55,7 +55,7 @@ export function trackEvent(eventName: string, properties?: EventProperties) {
   // Example: fetch('/api/analytics', { method: 'POST', body: JSON.stringify({ eventName, properties }) })
 
   if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', eventName, properties)
+    window.gtag('event', eventName, properties ?? {})
   }
 }
 

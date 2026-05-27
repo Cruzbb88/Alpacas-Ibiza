@@ -26,6 +26,7 @@ import { tenantMetadata } from '@/lib/tenants/metadata'
 import { ALPACAS } from '@/lib/data/alpacas'
 import Link from 'next/link'
 import { GradientPageHero, PageSection, OwnerConfirmBanner } from '@/components/layout'
+import { AwardsBadges } from '@/components/awards-badges'
 import { getOgImage } from '@/lib/og-images'
 
 export async function generateMetadata({
@@ -154,6 +155,9 @@ export default async function SustainabilityPage({ params }: { params: Promise<{
                     ))}
                 </div>
             </PageSection>
+
+            {/* Sustainability / eco certifications band */}
+            <AwardsBadges category="sustainability" title={translate('awards.certified')} />
 
             {/* Owner-confirm banner — visible dev/staging, hidden in production */}
             <OwnerConfirmBanner

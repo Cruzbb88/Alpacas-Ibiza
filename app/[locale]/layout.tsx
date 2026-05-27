@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
-import { i18nConfig } from '@/i18n.config'
+import { i18nConfig, type Locale } from '@/i18n.config'
 import { buildLocaleAlternates } from '@/lib/i18n-metadata'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
@@ -17,6 +17,8 @@ import { BackToTop } from '@/components/back-to-top'
 import { ClientErrorReporter } from '@/components/client-error-reporter'
 import { ServiceWorkerRegister } from '@/components/sw-register'
 import { NavProgressBar } from '@/components/nav-progress-bar'
+import { MobileStickyBookingBar } from '@/components/mobile-sticky-booking-bar'
+import { VercelInstrumentation } from '@/components/vercel-instrumentation'
 
 const BASE_URL = 'https://alpacasibiza.com'
 
@@ -89,7 +91,16 @@ export default async function LocaleLayout({
             </a>
             <Header />
             <main id="main-content" className="flex-1">{children}</main>
-            <Footer />
+            <Footer
+                legalName={tenant.legalName}
+                cif={tenant.cif}
+                address={tenant.address}
+                phoneE164={tenant.phoneE164 ?? ''}
+                whatsappE164={tenant.whatsappE164 ?? ''}
+                contactEmail={tenant.contactEmail}
+                social={tenant.social}
+                brandName={tenant.brandName}
+            />
             <StickyBookingBar />
             <FloatingWhatsApp e164={tenant.whatsappE164} brandName={tenant.brandName} />
             <BackToTop />
@@ -99,9 +110,11 @@ export default async function LocaleLayout({
             <WebVitals />
             <ClientErrorReporter />
             <ServiceWorkerRegister />
+            <VercelInstrumentation />
             <Suspense>
                 <NavProgressBar />
             </Suspense>
+            <MobileStickyBookingBar locale={locale as Locale} />
         </div>
     )
 }

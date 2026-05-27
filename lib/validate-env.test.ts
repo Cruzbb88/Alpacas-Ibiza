@@ -136,7 +136,7 @@ describe('validateEnv', () => {
     }
     // Restore NODE_ENV (it's read-only in some runtimes, best-effort)
     try {
-      process.env.NODE_ENV = savedNodeEnv
+      ;(process.env as Record<string, string | undefined>).NODE_ENV = savedNodeEnv
     } catch {
       // ignore
     }
@@ -187,7 +187,7 @@ describe('validateEnv', () => {
   })
 
   it('Tier 1 missing in production → console.error (not console.warn)', (t) => {
-    try { process.env.NODE_ENV = 'production' } catch { /* read-only in some environments */ }
+    try { (process.env as Record<string, string>).NODE_ENV = 'production' } catch { /* read-only in some environments */ }
 
     const warnMock = t.mock.method(console, 'warn', () => {})
     const errorMock = t.mock.method(console, 'error', () => {})
@@ -209,7 +209,7 @@ describe('validateEnv', () => {
   })
 
   it('Tier 1 missing in development → console.warn (not console.error)', (t) => {
-    try { process.env.NODE_ENV = 'development' } catch { /* read-only */ }
+    try { (process.env as Record<string, string>).NODE_ENV = 'development' } catch { /* read-only */ }
 
     const warnMock = t.mock.method(console, 'warn', () => {})
     const errorMock = t.mock.method(console, 'error', () => {})

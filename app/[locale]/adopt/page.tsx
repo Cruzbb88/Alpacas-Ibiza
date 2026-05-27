@@ -13,6 +13,8 @@ import { AdoptTierCard } from '@/components/adopt/adopt-tier-card'
 import { AdoptBenefitsList } from '@/components/adopt/adopt-benefits-list'
 import { AdoptionTimeline } from '@/components/adopt/adoption-timeline'
 import { AdopterCounter } from '@/components/adopt/adopter-counter'
+import { AdoptStickyMobileBar } from '@/components/adopt/adopt-sticky-mobile-bar'
+import { AlpacaPersonalityMatch } from '@/components/adopt/alpaca-personality-match'
 import { AdoptionCertificatePreview } from '@/components/adopt/adoption-certificate-preview'
 import { TrustSignals } from '@/components/adopt/trust-signals'
 import { RepeatCta } from '@/components/adopt/repeat-cta'
@@ -188,6 +190,13 @@ export default async function AdoptPage({
                 <AdopterCounter locale={locale} total={ALPACAS.length} adopted={0} />
             </PageSection>
 
+            {/* Personality quiz — donors with no preference can answer 3 questions and
+                get a recommendation. Result links to /adopt?alpaca=<slug> which re-renders
+                with the picker pre-selected. */}
+            <PageSection bg="default" width="narrow" className="pt-12 pb-2">
+                <AlpacaPersonalityMatch locale={locale} animals={ALPACAS.map((a) => ({ ...a, kind: 'animal' as const, personality: null }))} />
+            </PageSection>
+
             {/* Alpaca picker — donor can pin a specific alpaca. Slug rides through Stripe/Mollie metadata
                 so the welcome email mentions which alpaca they adopted. "Pick for me" clears selection. */}
             <PageSection bg="default" width="narrow" className="pt-12 pb-2">
@@ -348,6 +357,16 @@ export default async function AdoptPage({
                 ]}
             />
             </>
+            )}
+
+            {/* Mobile-only sticky bottom CTA — hidden on success, hidden above fold,
+                hidden when donor is scrolling down (auto-shows on scroll up). */}
+            {!isSuccess && (
+                <AdoptStickyMobileBar
+                    locale={locale}
+                    monthlyUrl={monthlyUrl}
+                    yearlyUrl={yearlyUrl}
+                />
             )}
         </>
     )

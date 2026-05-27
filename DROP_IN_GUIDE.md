@@ -55,6 +55,10 @@ FAREHARBOR_ITEM_TOUR_PHOTO_SESSION=<numeric ID>
 ```
 Get IDs from FareHarbor admin → Items → numeric ID per tour. Plus optional: `FAREHARBOR_ITEM_YOGA`, `FAREHARBOR_ITEM_WOVEN`, `FAREHARBOR_ITEM_COMMISSION`, `FAREHARBOR_ITEM_ALCACA`.
 
+### Verify what's set — /admin/env-check
+
+After pasting values into `.env.local` (local dev) or Vercel Environment Variables (production), visit `/admin/env-check` to confirm. It's the source of truth for what's actually loaded at runtime — shows SET/UNSET per tier with masked previews, and generates a ready-to-paste template for any remaining UNSET vars.
+
 ### Tier 1 must-set before any prod deploy (already documented in CLAUDE.md failsafe map)
 ```
 RESEND_API_KEY=re_...                # Resend dashboard

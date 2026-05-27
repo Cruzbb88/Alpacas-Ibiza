@@ -11,6 +11,7 @@ import { FAREHARBOR_BOOKING_URL } from '@/lib/config'
 import type { Locale } from '@/i18n.config'
 import Link from 'next/link'
 import { NewsletterForm } from '@/components/newsletter-form'
+import { AwardsBadges } from '@/components/awards-badges'
 import { buildLocaleAlternates } from '@/lib/i18n-metadata'
 import { getOgImage } from '@/lib/og-images'
 
@@ -193,6 +194,9 @@ export default async function Home({ params }: { params: Promise<{ locale: Local
         href={`/${locale}/shop/woven`}
         badgeText={translate('about.handcraftedBadge')}
       />
+
+      {/* ── 3b. Travel Awards Band ── */}
+      <AwardsBadges category="travel-award" title={translate('awards.recognizedBy')} />
 
       {/* ── 4. Why Alpacas Ibiza ── */}
       <section className="w-full py-16 md:py-24 px-4 bg-background">

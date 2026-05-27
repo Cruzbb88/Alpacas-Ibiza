@@ -6,6 +6,42 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  async headers() {
+    // CSP Report-Only per ADR-010: GTM/GA4 use inline beforeInteractive scripts
+    // (ADR-006/014), so a strict CSP would break analytics. Report-Only mode
+    // collects violations without blocking. Move to enforcing once nonce-based
+    // CSP can replace 'unsafe-inline'.
+    const csp = [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://fareharbor.com https://*.fareharbor.com https://challenges.cloudflare.com https://js.stripe.com",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "img-src 'self' data: https:",
+      "font-src 'self' data: https://fonts.gstatic.com",
+      "connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://*.fareharbor.com https://api.resend.com https://places.googleapis.com https://challenges.cloudflare.com https://api.stripe.com https://api.mollie.com",
+      "frame-src 'self' https://www.googletagmanager.com https://fareharbor.com https://*.fareharbor.com https://challenges.cloudflare.com https://www.openstreetmap.org https://js.stripe.com",
+      "frame-ancestors 'self'",
+      "base-uri 'self'",
+      "form-action 'self' https://checkout.stripe.com",
+    ].join('; ')
+
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          // HSTS — 2 years, preload-eligible. Safe since site is HTTPS-only via Vercel.
+          { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          // SAMEORIGIN — FareHarbor + admin pages iframe within same origin.
+          { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+          // Deny sensor APIs; opt out of FLoC/Topics.
+          { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()' },
+          // Report-Only — logs violations to console without breaking the site.
+          { key: 'Content-Security-Policy-Report-Only', value: csp },
+        ],
+      },
+    ]
+  },
   async redirects() {
     // --- New site: locale-prefix redirects (bare paths → /en/) ---
     const pages = ['tours', 'about', 'contact', 'shop', 'privacy', 'terms', 'cookies']
@@ -73,7 +109,11 @@ const nextConfig = {
       })),
     ]
 
-    return [...localeRedirects, ...oldSiteRedirects]
+    const feedRedirect = [
+      { source: '/feed.xml', destination: '/journal/rss.xml', permanent: false },
+    ]
+
+    return [...feedRedirect, ...localeRedirects, ...oldSiteRedirects]
   },
 }
 
