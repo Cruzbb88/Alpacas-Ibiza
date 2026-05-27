@@ -1,10 +1,11 @@
 import type { Locale } from '@/i18n.config'
 import { t } from '@/lib/translations'
 import { Hero } from '@/components/hero'
-import { FareHarborCalendar } from '@/components/fareharbor-calendar'
-import { CancellationBadge } from '@/components/cancellation-badge'
+import { FareHarborCalendar } from '@/components/booking/fareharbor-calendar'
+import { CancellationBadge } from '@/components/booking/cancellation-badge'
 import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
 import type { Metadata } from 'next'
+import { buildLocaleAlternates } from '@/lib/i18n-metadata'
 
 export async function generateMetadata({
     params,
@@ -18,9 +19,7 @@ export async function generateMetadata({
         description:
             tr('gifts.meta.description') ||
             'Give someone a memorable day with our alpaca herd. Gift vouchers valid for any of our tours.',
-        alternates: {
-            canonical: `/${locale}/gifts`,
-        },
+        alternates: buildLocaleAlternates(locale, 'gifts'),
     }
 }
 

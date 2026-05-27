@@ -143,3 +143,7 @@ declare global {
     ) => void
   }
 }
+
+// Re-export engagement helpers (defined in a React-free module so they can be
+// unit-tested under Node without JSDOM or a 'use client' boundary).
+export { trackEngagement } from './analytics-engagement'

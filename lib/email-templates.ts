@@ -4,6 +4,8 @@
  * its inputs are either trusted or pre-escaped.
  */
 
+import { escapeHtml } from './html.ts'
+
 const BRAND = {
     name: 'Alpacas Ibiza',
     primary: '#556B2F',
@@ -98,5 +100,105 @@ export function reviewRequestSubject(locale: string): string {
         case 'es': return '¿Cómo fue tu visita a los alpacas? 🦙'
         case 'de': return 'Wie war dein Besuch bei den Alpakas? 🦙'
         default: return 'How were the alpacas? 🦙'
+    }
+}
+
+// ── Adopt-a-Paca welcome email ──────────────────────────────────────────────
+
+export type AdoptTier = 'monthly' | 'yearly'
+
+export interface WelcomeAdoptionInput {
+    /** HTML-escaped customer name (caller responsibility). undefined/empty → "Hi there" fallback. */
+    escapedName?: string
+    tier: AdoptTier
+    /** 'Stripe' | 'Mollie' — surfaced in receipt. */
+    processor: 'Stripe' | 'Mollie'
+    /** Stripe session id / Mollie payment id — for audit reference. Optional; absent → processor-only line. */
+    paymentRef?: string
+}
+
+export function welcomeAdoptionSubject(tier: AdoptTier): string {
+    return tier === 'yearly'
+        ? 'Welcome to the herd — your yearly adoption is active'
+        : 'Welcome to the herd — your monthly adoption is active'
+}
+
+export function welcomeAdoptionEmailHtml(opts: WelcomeAdoptionInput): string {
+    // Truthy check covers undefined, null, and empty string — falls back to "Hi there".
+    const greeting = opts.escapedName ? `Hi ${opts.escapedName},` : 'Hi there,'
+    const tierCopy = opts.tier === 'yearly'
+        ? 'Your €900 yearly adoption (12 months coverage) is active.'
+        : 'Your €75/month adoption is active.'
+    const paymentLine = opts.paymentRef
+        ? `Payment ref (${opts.processor}): ${opts.paymentRef}`
+        : `Payment processor: ${opts.processor}`
+    return emailLayout(`
+        <p>${greeting}</p>
+        <p>Thank you for joining the herd at Es Currals Alpacas Ibiza. ${tierCopy}</p>
+        <p>Here's what arrives over your adoption year:</p>
+        <ul>
+          <li>An adoption certificate with your sponsored alpaca's name</li>
+          <li>Two complimentary farm tours during your year</li>
+          <li>A welcome gift bundle (calendar, planner, herd photo)</li>
+          <li>One photoshoot session with your alpaca</li>
+          <li>A package of Alcaca natural fertilizer shipped each season</li>
+        </ul>
+        <p>Separately, we'll send a follow-up email with your returning-supporter discount codes — <strong>10%</strong> off Wishfulfilling Weaving textiles and <strong>15%</strong> off Farm Shop orders. Those codes are emailed within 48 hours so they don't get lost in this welcome message.</p>
+        <p style="color:#888;font-size:12px;margin-top:24px">${paymentLine}</p>
+    `)
+}
+
+// ── Adopt-a-Paca discount-codes follow-up ───────────────────────────────────
+
+export interface AdoptDiscountCodesInput {
+    /** Customer display name (raw — will be HTML-escaped by this helper). Empty → "Hi there". */
+    name: string
+}
+
+/**
+ * Builds the discount-codes follow-up email. Reads codes from env:
+ *   - ADOPT_DISCOUNT_CODE_WEAVING_10  (10% off Wishfulfilling Weaving)
+ *   - ADOPT_DISCOUNT_CODE_FARMSHOP_15 (15% off Farm Shop)
+ *
+ * Both set → renders codes verbatim + "Your Adopt-a-Paca discount codes" subject.
+ * Either unset → graceful "codes coming shortly" placeholder; never invents codes (Rule 5).
+ *
+ * Returns `{ subject, html }` so callers can spread it into sendEmail({ to, scheduledAt, ... }).
+ */
+export function buildAdoptDiscountCodesEmail(
+    input: AdoptDiscountCodesInput,
+): { subject: string; html: string } {
+    const weavingCode = process.env.ADOPT_DISCOUNT_CODE_WEAVING_10
+    const farmshopCode = process.env.ADOPT_DISCOUNT_CODE_FARMSHOP_15
+    const bothSet = !!weavingCode && !!farmshopCode
+
+    const safeName = input.name ? escapeHtml(input.name) : ''
+    const greeting = safeName ? `Hi ${safeName},` : 'Hi there,'
+
+    if (bothSet) {
+        const html = emailLayout(`
+            <p>${greeting}</p>
+            <p>Welcome again to the herd. As promised, here are your returning-supporter discount codes:</p>
+            <ul>
+              <li><strong>10% off Wishfulfilling Weaving:</strong> <code>${escapeHtml(weavingCode!)}</code></li>
+              <li><strong>15% off Farm Shop:</strong> <code>${escapeHtml(farmshopCode!)}</code></li>
+            </ul>
+            <p>These codes don't expire. Apply at checkout on the FareHarbor booking page or in the farm shop.</p>
+        `)
+        return {
+            subject: 'Your Adopt-a-Paca discount codes 🦙',
+            html,
+        }
+    }
+
+    // Codes unset (or partial — treat as unset). Never invent codes per Rule 5.
+    const html = emailLayout(`
+        <p>${greeting}</p>
+        <p>Welcome again to the herd. Your supporter discount codes will arrive shortly — we're finalising them and they'll reach you within 48 hours.</p>
+        <p>In the meantime, your adoption is fully active and you can already book tours, weaving sessions, and gift orders.</p>
+    `)
+    return {
+        subject: 'Welcome to the herd — discount codes on the way 🦙',
+        html,
     }
 }

@@ -1,0 +1,4 @@
+# Drop alpaca photos here.
+# Naming: <id>.webp (or .jpg) — id matches the `id` field in lib/tenants/alpacasibiza-content.ts
+# Example: barbarella.webp, avalon.webp, bardot.webp ...
+# After dropping the file, set image: '/images/alpacas/<id>.webp' for that entry.

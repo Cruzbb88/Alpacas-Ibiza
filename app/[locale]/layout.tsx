@@ -2,8 +2,10 @@ import type { Metadata } from 'next'
 import { i18nConfig } from '@/i18n.config'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
-import { StickyBookingBar } from '@/components/sticky-booking-bar'
+import { StickyBookingBar } from '@/components/booking/sticky-booking-bar'
 import { CookieConsent } from '@/components/cookie-consent'
+import { ScrollTracker } from '@/components/scroll-tracker'
+import { OutboundLinkTracker } from '@/components/outbound-link-tracker'
 import { localBusinessSchema, organizationSchema, toJsonLd } from '@/lib/structured-data'
 
 const BASE_URL = 'https://alpacasibiza.com'
@@ -77,6 +79,8 @@ export default async function LocaleLayout({
             <Footer />
             <StickyBookingBar />
             <CookieConsent />
+            <ScrollTracker />
+            <OutboundLinkTracker />
         </div>
     )
 }

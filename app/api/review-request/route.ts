@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server'
 import { sendEmail } from '@/lib/mailer'
-import { safeEqual } from '@/lib/secrets'
 import { escapeHtml } from '@/lib/html'
 import { reviewRequestEmailHtml, reviewRequestSubject } from '@/lib/email-templates'
+import { isValidEmail } from '@/lib/validate-email'
+import { requireOptionalWebhookSecret } from '@/lib/route-helpers'
 
 /**
  * POST /api/review-request

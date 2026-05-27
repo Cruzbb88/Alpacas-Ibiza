@@ -2,11 +2,18 @@ import { NextResponse } from 'next/server'
 import { sendEmail } from '@/lib/mailer'
 import { subscribe } from '@/lib/newsletter'
 import { verifyTurnstile } from '@/lib/turnstile'
+import { detectHoneypot } from '@/lib/honeypot'
 
 export async function POST(request: Request) {
   try {
     const body = await request.json()
     const { email, 'cf-turnstile-response': captchaToken } = body
+
+    if (detectHoneypot(body, 'business_name')) {
+      console.warn('[honeypot] Bot submission blocked', { route: '/api/newsletter' })
+      return NextResponse.json({ success: true }, { status: 200 })
+    }
+
     if (!email) {
       return NextResponse.json({ error: 'Email address is required' }, { status: 400 })
     }

@@ -1,8 +1,9 @@
 import type { Metadata } from 'next'
+import { buildLocaleAlternates } from '@/lib/i18n-metadata'
 import Image from 'next/image'
 import { Hero } from '@/components/hero'
 import { FAQ } from '@/components/faq'
-import { FareHarborCalendar } from '@/components/fareharbor-calendar'
+import { FareHarborCalendar } from '@/components/booking/fareharbor-calendar'
 import { t } from '@/lib/translations'
 import { localBusinessSchema, faqPageSchema, toJsonLd } from '@/lib/structured-data'
 import type { Locale } from '@/i18n.config'
@@ -19,9 +20,7 @@ export async function generateMetadata({
         title: 'Family Farm Days | Alpacas Ibiza - Kid-Friendly Alpaca Experience',
         description:
             'Safe, educational family fun at Ibiza\'s first alpaca farm. Kids feed alpacas, learn about sustainability, and enjoy nature in Santa Eularia. Ages 0+. Book now!',
-        alternates: {
-            canonical: `/${locale}/experiences/family-farm-days`,
-        },
+        alternates: buildLocaleAlternates(locale, 'experiences/family-farm-days'),
         openGraph: {
             title: 'Family Farm Days | Alpacas Ibiza',
             description:

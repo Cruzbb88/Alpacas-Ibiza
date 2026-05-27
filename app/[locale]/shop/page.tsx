@@ -1,6 +1,21 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import type { Locale } from '@/i18n.config'
 import { t } from '@/lib/translations'
+import { buildLocaleAlternates } from '@/lib/i18n-metadata'
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  const tr = t(locale)
+  return {
+    title: tr('shop.title'),
+    alternates: buildLocaleAlternates(locale, 'shop'),
+  }
+}
 
 export default async function ShopPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params

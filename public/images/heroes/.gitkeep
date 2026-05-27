@@ -1,0 +1,5 @@
+# Drop hero background images here.
+# Naming: <route>.webp — use the page route as the filename for clarity.
+# Example: alpacas.webp, sustainability.webp, tours.webp ...
+# After dropping the file, pass backgroundImage='/images/heroes/<route>.webp'
+# to the <GradientPageHero> (or <Hero>) component in that page file.

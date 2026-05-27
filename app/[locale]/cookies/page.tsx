@@ -1,6 +1,21 @@
+import type { Metadata } from 'next'
 import { Hero } from '@/components/hero'
 import { t, ta } from '@/lib/translations'
 import type { Locale } from '@/i18n.config'
+import { buildLocaleAlternates } from '@/lib/i18n-metadata'
+
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ locale: Locale }>
+}): Promise<Metadata> {
+    const { locale } = await params
+    const tr = t(locale)
+    return {
+        title: tr('cookies.title'),
+        alternates: buildLocaleAlternates(locale, 'cookies'),
+    }
+}
 
 export default async function CookiesPage({ params }: { params: Promise<{ locale: Locale }> }) {
     const { locale } = await params

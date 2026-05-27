@@ -1,0 +1,4 @@
+# Drop press outlet logos here.
+# Naming: <id>.svg (or .png) — id matches the `id` field in lib/data/press.ts
+# Example: hln.svg, diario.svg, tribes-and-nomads.svg ...
+# After dropping the file, set logoUrl: '/images/press/<id>.svg' for that entry.

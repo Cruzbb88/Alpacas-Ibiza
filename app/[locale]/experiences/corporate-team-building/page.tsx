@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
+import { buildLocaleAlternates } from '@/lib/i18n-metadata'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Hero } from '@/components/hero'
 import { Features } from '@/components/features'
 import { FAQ } from '@/components/faq'
-import { FareHarborCalendar } from '@/components/fareharbor-calendar'
+import { FareHarborCalendar } from '@/components/booking/fareharbor-calendar'
 import { Button } from '@/components/ui/button'
 import { t } from '@/lib/translations'
 import { localBusinessSchema, faqPageSchema, toJsonLd } from '@/lib/structured-data'
@@ -22,9 +23,7 @@ export async function generateMetadata({
         title: 'Corporate Team Building with Alpacas | Ibiza Retreats - Alpacas Ibiza',
         description:
             'Unique corporate retreats and team building experiences with alpacas in Ibiza. Stress reduction, communication workshops, and nature connection. Book your corporate event!',
-        alternates: {
-            canonical: `/${locale}/experiences/corporate-team-building`,
-        },
+        alternates: buildLocaleAlternates(locale, 'experiences/corporate-team-building'),
         openGraph: {
             title: 'Corporate Team Building | Alpacas Ibiza',
             description:

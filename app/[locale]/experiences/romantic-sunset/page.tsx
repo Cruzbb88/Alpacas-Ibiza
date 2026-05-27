@@ -1,6 +1,21 @@
+import type { Metadata } from 'next'
 import { Hero } from '@/components/hero'
 import { Button } from '@/components/ui/button'
 import { t } from '@/lib/translations'
+import { buildLocaleAlternates } from '@/lib/i18n-metadata'
+
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+    const { locale } = await params
+    const tr = t(locale as any)
+    return {
+        title: tr('romantic.title'),
+        alternates: buildLocaleAlternates(locale, 'experiences/romantic-sunset'),
+    }
+}
 
 export default async function RomanticPage({ params }: { params: Promise<{ locale: string }> }) {
     const { locale } = await params

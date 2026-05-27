@@ -1,7 +1,22 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import type { Locale } from '@/i18n.config'
 import { t } from '@/lib/translations'
 import { CommissionForm } from '@/components/commission-form'
+import { buildLocaleAlternates } from '@/lib/i18n-metadata'
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  const tr = t(locale)
+  return {
+    title: tr('commissionPage.title'),
+    alternates: buildLocaleAlternates(locale, 'shop/commission'),
+  }
+}
 
 export default async function CommissionPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params
