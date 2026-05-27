@@ -681,5 +681,12 @@
       "contact": "Contact",
       "contactDesc": "Neem contact met ons op"
     }
+  },
+  "search": {
+    "placeholder": "Zoeken...",
+    "noResults": "Geen resultaten",
+    "openShortcut": "Druk op / om te zoeken",
+    "browseJournal": "Alle journaalberichten bekijken"
   }
+}
 }
