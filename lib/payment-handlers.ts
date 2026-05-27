@@ -55,6 +55,14 @@ export interface CheckoutCompletedDeps {
   now?: () => number
   /** Override 5-minute discount-codes delay. Defaults to 5 * 60 * 1000 ms. */
   discountCodesDelayMs?: number
+  /**
+   * When set, also send an owner-facing notification on successful checkout
+   * so the owner knows they have a new adopter before checking the Stripe
+   * dashboard. Unset → no owner email (silent, no log noise). Fail-quiet
+   * mirrors the welcome path — owner-notification failure cannot trigger
+   * Stripe webhook retry (would duplicate-send to the donor).
+   */
+  ownerEmail?: string
 }
 
 export interface CheckoutCompletedResult {
@@ -62,6 +70,13 @@ export interface CheckoutCompletedResult {
   welcomeSent: boolean
   /** Did we attempt + succeed at scheduling the discount-codes email? */
   codesScheduled: boolean
+  /**
+   * Did we attempt + succeed at the owner-notification email?
+   * - `null` = deps.ownerEmail was unset; nothing to send.
+   * - `true` = sent successfully.
+   * - `false` = attempted but threw (fail-quiet; result still returns 200-shape).
+   */
+  ownerNotified: boolean | null
   /** When skipped or failed, what's the reason? */
   reason?:
     | 'missing-email'
@@ -116,6 +131,7 @@ export async function handleStripeCheckoutCompleted(
     return {
       welcomeSent: false,
       codesScheduled: false,
+      ownerNotified: deps.ownerEmail ? false : null,
       reason: 'missing-email',
       meta,
     }
@@ -125,6 +141,7 @@ export async function handleStripeCheckoutCompleted(
     return {
       welcomeSent: false,
       codesScheduled: false,
+      ownerNotified: deps.ownerEmail ? false : null,
       reason: 'invalid-tier',
       meta,
     }
@@ -147,7 +164,26 @@ export async function handleStripeCheckoutCompleted(
   // (e.g. buildAdoptDiscountCodesEmail) are caught by Promise.allSettled.
   // Without the lambda wrap, a synchronous throw bubbles past allSettled and
   // violates the "NEVER throws" contract documented at the top of the function.
-  const [welcomeResult, codesResult] = await Promise.allSettled([
+  // Three independent sends — donor welcome + donor discount-codes + owner notify.
+  // All fail-quiet. Owner notify only fires when ownerEmail is provided.
+  const ownerSendPromise = deps.ownerEmail
+    ? (async () =>
+        deps.sendEmail({
+          to: deps.ownerEmail,
+          subject: buildOwnerAdoptionSubject(tier, alpacaName ?? null),
+          html: buildOwnerAdoptionNotificationHtml({
+            tier,
+            sessionId: session.id,
+            donorEmail: email,
+            donorName: name ?? null,
+            alpacaName,
+            amountTotal: session.amount_total ?? null,
+            currency: session.currency ?? null,
+          }),
+        }))()
+    : Promise.resolve(null)
+
+  const [welcomeResult, codesResult, ownerResult] = await Promise.allSettled([
     (async () =>
       deps.sendEmail({
         to: email,
@@ -166,20 +202,63 @@ export async function handleStripeCheckoutCompleted(
         scheduledAt: codesScheduledAt,
         ...buildAdoptDiscountCodesEmail({ name: name ?? '' }),
       }))(),
+    ownerSendPromise,
   ])
 
   const welcomeSent = welcomeResult.status === 'fulfilled'
   const codesScheduled = codesResult.status === 'fulfilled'
+  const ownerNotified = deps.ownerEmail
+    ? ownerResult.status === 'fulfilled'
+    : null
 
   // Welcome failure dominates — codes alone is not enough since welcome carries
   // the primary confirmation. Both branches collapse to welcome-send-failed.
   if (!welcomeSent) {
-    return { welcomeSent, codesScheduled, reason: 'welcome-send-failed', codesScheduledAt, meta }
+    return { welcomeSent, codesScheduled, ownerNotified, reason: 'welcome-send-failed', codesScheduledAt, meta }
   }
   if (!codesScheduled) {
-    return { welcomeSent, codesScheduled, reason: 'codes-send-failed', codesScheduledAt, meta }
+    return { welcomeSent, codesScheduled, ownerNotified, reason: 'codes-send-failed', codesScheduledAt, meta }
   }
-  return { welcomeSent, codesScheduled, reason: 'ok', codesScheduledAt, meta }
+  return { welcomeSent, codesScheduled, ownerNotified, reason: 'ok', codesScheduledAt, meta }
+}
+
+function buildOwnerAdoptionSubject(tier: 'monthly' | 'yearly', alpacaName: string | null): string {
+  const tierLabel = tier === 'yearly' ? 'yearly €900' : 'monthly €75/mo'
+  return alpacaName
+    ? `[Adopt-a-Paca] New ${tierLabel} adoption — ${alpacaName}`
+    : `[Adopt-a-Paca] New ${tierLabel} adoption`
+}
+
+function buildOwnerAdoptionNotificationHtml(input: {
+  tier: 'monthly' | 'yearly'
+  sessionId: string
+  donorEmail: string
+  donorName: string | null
+  alpacaName: string | null
+  amountTotal: number | null
+  currency: string | null
+}): string {
+  const tierLine = input.tier === 'yearly' ? 'Yearly (€900 prepaid)' : 'Monthly (€75/month recurring)'
+  const amount = formatStripeAmount(input.amountTotal, input.currency)
+  const currency = (input.currency ?? 'eur').toUpperCase()
+  const alpacaRow = input.alpacaName
+    ? `<tr><td style="padding:6px 0"><strong>Adopted alpaca:</strong></td><td style="padding:6px 0">${escapeHtml(input.alpacaName)}</td></tr>`
+    : `<tr><td style="padding:6px 0"><strong>Adopted alpaca:</strong></td><td style="padding:6px 0;color:#a44">Pick for me — match within a few days</td></tr>`
+  return `
+    <div style="font-family:sans-serif;max-width:600px;margin:0 auto;color:#2d2d2d;padding:16px">
+      <h2 style="color:#556B2F">🦙 New Adopt-a-Paca subscriber</h2>
+      <p>Welcome the new adopter and queue up their certificate + welcome pack.</p>
+      <table style="width:100%;border-collapse:collapse;font-size:14px;margin-top:12px">
+        <tr><td style="padding:6px 0"><strong>Tier:</strong></td><td style="padding:6px 0">${escapeHtml(tierLine)}</td></tr>
+        <tr><td style="padding:6px 0"><strong>Amount:</strong></td><td style="padding:6px 0">${escapeHtml(amount)} ${escapeHtml(currency)}</td></tr>
+        ${alpacaRow}
+        <tr><td style="padding:6px 0"><strong>Donor email:</strong></td><td style="padding:6px 0">${escapeHtml(input.donorEmail)}</td></tr>
+        <tr><td style="padding:6px 0"><strong>Donor name:</strong></td><td style="padding:6px 0">${escapeHtml(input.donorName ?? '—')}</td></tr>
+        <tr><td style="padding:6px 0"><strong>Stripe session:</strong></td><td style="padding:6px 0"><code>${escapeHtml(input.sessionId)}</code></td></tr>
+      </table>
+      <p style="margin-top:16px;color:#666;font-size:13px">Donor has already received the welcome email and will get discount codes within ~5 minutes.</p>
+    </div>
+  `.trim()
 }
 
 // ── Stripe invoice.payment_failed handler ────────────────────────────────────

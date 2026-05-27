@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server'
 import { sendEmail } from '@/lib/mailer'
-import { handleStripeCheckoutCompleted, handleStripeInvoicePaymentFailed } from '@/lib/payment-handlers'
+import {
+  handleStripeCheckoutCompleted,
+  handleStripeInvoicePaymentFailed,
+  handleStripeSubscriptionDeleted,
+} from '@/lib/payment-handlers'
 import { importStripe } from '@/lib/integrations/stripe-sdk'
 import { requireEnvOrReturn503 } from '@/lib/route-helpers'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
@@ -97,7 +101,10 @@ export async function POST(request: Request) {
         // Pure handler covers welcome + discount-codes emails (fail-quiet both).
         // Never throws — webhook always returns 200 to prevent Stripe retry-spam.
         // Unit-tested in lib/payment-handlers.test.ts.
-        const handlerResult = await handleStripeCheckoutCompleted(session, { sendEmail })
+        const handlerResult = await handleStripeCheckoutCompleted(session, {
+          sendEmail,
+          ownerEmail: process.env.CONTACT_EMAIL,
+        })
         if (handlerResult.reason !== 'ok') {
           const level = handlerResult.reason === 'missing-email' || handlerResult.reason === 'invalid-tier' ? 'warn' : 'error'
           const msg = `checkout.session.completed handler result: ${handlerResult.reason}`
@@ -105,7 +112,7 @@ export async function POST(request: Request) {
           else log.error(msg, handlerResult.meta)
         } else {
           log.info(
-            `welcome sent + codes scheduled at ${handlerResult.codesScheduledAt}`,
+            `welcome sent + codes scheduled at ${handlerResult.codesScheduledAt}; owner notified=${handlerResult.ownerNotified}`,
             handlerResult.meta,
           )
         }
@@ -144,12 +151,19 @@ export async function POST(request: Request) {
 
       case 'customer.subscription.deleted': {
         const subscription = event.data.object
-        log.info('customer.subscription.deleted (cancellation)', {
-          id:       subscription.id,
-          customer: subscription.customer,
-          reason:   subscription.cancellation_details?.reason,
+        // Pure handler — notifies owner so they can follow up if cancellation
+        // reason is recoverable (payment_failed, cancellation_requested).
+        // Fail-quiet on send error.
+        const cancelResult = await handleStripeSubscriptionDeleted(subscription, {
+          sendEmail,
+          ownerEmail: process.env.CONTACT_EMAIL,
         })
-        // TODO: mark adoption as cancelled in DB; optionally notify owner.
+        const msg = `customer.subscription.deleted handler reason=${cancelResult.reason}`
+        if (cancelResult.reason === 'ok' || cancelResult.reason === 'not-adoption') {
+          log.info(msg, cancelResult.meta)
+        } else {
+          log.warn(msg, cancelResult.meta)
+        }
         break
       }
 

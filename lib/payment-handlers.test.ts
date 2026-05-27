@@ -306,6 +306,85 @@ describe('handleStripeCheckoutCompleted — XSS + content guarantees', () => {
   })
 })
 
+// ── Owner notification on new adoption ──────────────────────────────────────
+
+describe('handleStripeCheckoutCompleted — owner notification', () => {
+  it('sends 3 emails when ownerEmail is provided (welcome + codes + owner)', async () => {
+    const { sendEmail, calls } = makeSendEmailSpy()
+    const result = await handleStripeCheckoutCompleted(makeSession(), {
+      sendEmail,
+      ownerEmail: 'owner@alpacasibiza.com',
+    })
+    assert.equal(calls.length, 3, 'must send donor welcome + donor codes + owner notify')
+    assert.equal(result.ownerNotified, true)
+    assert.equal(result.reason, 'ok')
+
+    // Find the owner email by `to` field
+    const ownerCall = calls.find((c) => c.to === 'owner@alpacasibiza.com')
+    assert.ok(ownerCall, 'owner@alpacasibiza.com must be in the recipient list')
+    assert.match(ownerCall!.subject, /New monthly €75\/mo adoption/)
+    assert.match(ownerCall!.html, /New Adopt-a-Paca subscriber/)
+    assert.match(ownerCall!.html, /donor@example.com/)
+  })
+
+  it('names the chosen alpaca in the owner subject when picker was used', async () => {
+    const { sendEmail, calls } = makeSendEmailSpy()
+    await handleStripeCheckoutCompleted(
+      makeSession({ metadata: { tier: 'yearly', alpaca: 'fonda' } }),
+      { sendEmail, ownerEmail: 'owner@alpacasibiza.com' },
+    )
+    const ownerCall = calls.find((c) => c.to === 'owner@alpacasibiza.com')
+    assert.ok(ownerCall)
+    assert.match(ownerCall!.subject, /New yearly €900 adoption — Fonda/)
+    assert.match(ownerCall!.html, /Fonda/)
+  })
+
+  it('owner notification absent when ownerEmail is unset (no log spam)', async () => {
+    const { sendEmail, calls } = makeSendEmailSpy()
+    const result = await handleStripeCheckoutCompleted(makeSession(), { sendEmail })
+    assert.equal(calls.length, 2, 'only donor welcome + donor codes')
+    assert.equal(result.ownerNotified, null, 'null signals "did not attempt"')
+  })
+
+  it('owner notification escapes donor name (XSS guard for second recipient)', async () => {
+    const { sendEmail, calls } = makeSendEmailSpy()
+    await handleStripeCheckoutCompleted(
+      makeSession({
+        customer_details: {
+          email: 'attacker@evil.com',
+          name: '<img src=x onerror=alert(1)>',
+        },
+      }),
+      { sendEmail, ownerEmail: 'owner@alpacasibiza.com' },
+    )
+    const ownerCall = calls.find((c) => c.to === 'owner@alpacasibiza.com')
+    assert.ok(ownerCall)
+    assert.doesNotMatch(ownerCall!.html, /<img src=x/i, 'raw img tag must NOT appear')
+    assert.match(ownerCall!.html, /&lt;img/, 'donor name must be escaped')
+  })
+
+  it('owner notification failure does not bring down welcome reporting (fail-quiet)', async () => {
+    // Spy that throws ONLY on the owner-email call (3rd send via callIndex=3).
+    const calls: CapturedSend[] = []
+    let callIndex = 0
+    const sendEmail: SendEmailFn = async (opts) => {
+      calls.push({ to: opts.to, subject: opts.subject, html: opts.html, scheduledAt: opts.scheduledAt })
+      callIndex++
+      if (opts.to === 'owner@alpacasibiza.com') throw new Error('test: owner send failed')
+      return { id: `email_${callIndex}` }
+    }
+    const result = await handleStripeCheckoutCompleted(makeSession(), {
+      sendEmail,
+      ownerEmail: 'owner@alpacasibiza.com',
+    })
+    assert.equal(result.welcomeSent, true, 'donor welcome unaffected')
+    assert.equal(result.codesScheduled, true, 'donor codes unaffected')
+    assert.equal(result.ownerNotified, false, 'owner-notify result reflects throw')
+    // Reason should still be "ok" — owner failure is independent of donor flow.
+    assert.equal(result.reason, 'ok')
+  })
+})
+
 // ── Alpaca selector pass-through (donor pinned a specific alpaca) ────────────
 
 describe('handleStripeCheckoutCompleted — alpaca selector metadata', () => {
