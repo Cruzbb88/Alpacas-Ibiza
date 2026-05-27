@@ -1,0 +1,23 @@
+name: Lighthouse
+
+on:
+  # Vercel emits this event when a preview deploy succeeds (via GitHub Deployment API)
+  deployment_status:
+
+jobs:
+  lighthouse:
+    if: ${{ github.event.deployment_status.state == 'success' && github.event.deployment.environment != 'production' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v11
+        with:
+          urls: |
+            ${{ github.event.deployment_status.target_url }}
+            ${{ github.event.deployment_status.target_url }}/en/tours
+            ${{ github.event.deployment_status.target_url }}/en/alpacas
+            ${{ github.event.deployment_status.target_url }}/en/journal
+          uploadArtifacts: true
+          temporaryPublicStorage: true

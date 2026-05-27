@@ -58,7 +58,8 @@ export function AlpacaCard({ alpaca, locale, showAdoptCta = false }: AlpacaCardP
 
   return (
     <article
-      className="bg-white rounded-[16px] border border-secondary overflow-hidden shadow-sm flex flex-col"
+      id={alpaca.id}
+      className="alpaca-card scroll-mt-24 bg-white rounded-[16px] border border-secondary overflow-hidden shadow-sm flex flex-col"
       aria-label={alpaca.name}
     >
       {/* Image or placeholder — never render a broken src */}

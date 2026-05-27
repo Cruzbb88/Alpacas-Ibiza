@@ -3,6 +3,7 @@ import Link from 'next/link'
 import type { Locale } from '@/i18n.config'
 import { t } from '@/lib/translations'
 import { buildLocaleAlternates } from '@/lib/i18n-metadata'
+import { shopCategoryItemListSchema, toJsonLd } from '@/lib/structured-data'
 
 export async function generateMetadata({
   params,
@@ -54,8 +55,19 @@ export default async function WovenPage({ params }: { params: Promise<{ locale: 
     },
   ]
 
+  const baseUrl = `https://alpacasibiza.com/${locale}/shop/woven`
+  const itemListSchema = shopCategoryItemListSchema({
+    categoryName: 'Woven Collection',
+    baseUrl,
+    items: products.map((p) => ({ name: p.title, url: baseUrl })),
+  })
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: toJsonLd(itemListSchema) }}
+      />
       <section className="w-full py-20 px-4 bg-gradient-to-br from-primary/10 to-accent/10">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">

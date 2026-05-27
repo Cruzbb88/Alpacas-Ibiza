@@ -1,0 +1,35 @@
+name: Preflight
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Run preflight
+        run: bash scripts/preflight.sh
+        env:
+          # Fake values so checks like NEXTAUTH_URL existence don't fail.
+          # The preflight only verifies STRUCTURE not real connectivity.
+          NEXTAUTH_SECRET: ci-fake-secret-not-used
+          NEXTAUTH_URL: https://ci.local
+          ADMIN_USERNAME: ci
+          ADMIN_PASSWORD: ci-fake
+          RESEND_API_KEY: re_ci_fake
+          CONTACT_EMAIL: ci@example.com
+          FAREHARBOR_WEBHOOK_SECRET: ci-fake
+          CRON_SECRET: ci-fake

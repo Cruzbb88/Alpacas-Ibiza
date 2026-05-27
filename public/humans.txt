@@ -1,0 +1,21 @@
+/* TEAM */
+Owner: Es Currals Alpacas Ibiza, San Carlos, Ibiza
+Contact: info@alpacasibiza.com
+
+/* SITE */
+Last updated: 2026
+Standards: HTML5, CSS3, ES2022
+Languages: en, nl, de, es, fr, it
+
+/* TECHNOLOGY */
+Framework: Next.js 16 (App Router)
+Hosting: Vercel
+Email: Resend
+Booking: FareHarbor
+Maps: OpenStreetMap (with Google Maps fallback)
+Payments: Stripe + Mollie
+Analytics: GA4 + Vercel Speed Insights
+
+/* THANKS */
+The 14 alpacas of Es Currals — Barbarella, Avalon, Bardot, Chet, Dusty,
+Fela, Fonda, Lewis, Marron, Mojo, Moloko, Nelson, Suki, Toots.

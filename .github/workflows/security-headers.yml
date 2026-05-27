@@ -1,0 +1,33 @@
+name: Security headers check
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    # Daily at 06:00 UTC — catches header drift if someone edits next.config.mjs
+    - cron: '0 6 * * *'
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    continue-on-error: true
+    steps:
+      - name: Curl production
+        id: curl
+        run: |
+          set +e
+          HEADERS=$(curl -sI https://alpacasibiza.com 2>&1)
+          echo "$HEADERS"
+          echo "---"
+          MISSING=()
+          for h in "Strict-Transport-Security" "X-Frame-Options" "X-Content-Type-Options" "Referrer-Policy" "Permissions-Policy"; do
+            if ! echo "$HEADERS" | grep -qi "^$h:"; then
+              MISSING+=("$h")
+            fi
+          done
+          if [ ${#MISSING[@]} -gt 0 ]; then
+            echo "::warning::Missing security headers in production: ${MISSING[*]}"
+            exit 1
+          fi
+          echo "::notice::All security headers present"

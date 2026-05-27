@@ -6,7 +6,7 @@
 
 import { describe, it } from 'node:test'
 import assert from 'node:assert/strict'
-import { yogaWeeklyEventSchema, personSchema, websiteSearchSchema, touristTripSchema, weddingsServiceSchema, workshopHowToSchema, herdAttractionSchema } from './structured-data.ts'
+import { yogaWeeklyEventSchema, personSchema, websiteSearchSchema, touristTripSchema, weddingsServiceSchema, workshopHowToSchema, herdAttractionSchema, adoptAPacaServiceSchema, siteNavigationSchema, shopCategoryItemListSchema } from './structured-data.ts'
 
 describe('yogaWeeklyEventSchema', () => {
     it('startDate rolls forward to next Wednesday from a Tuesday', () => {
@@ -161,5 +161,65 @@ describe('touristTripSchema AggregateOffer fork', () => {
     it('honors custom lowPriceEur', () => {
         const s = touristTripSchema({ lowPriceEur: 25 }) as any
         assert.equal(s.offers.price, '25')
+    })
+})
+
+describe('adoptAPacaServiceSchema', () => {
+    it('emits 2 offers (monthly + yearly)', () => {
+        const s = adoptAPacaServiceSchema() as any
+        assert.equal(s.offers.length, 2)
+    })
+
+    it('monthly offer has €75 + P1M billing', () => {
+        const s = adoptAPacaServiceSchema() as any
+        assert.equal(s.offers[0].price, '75')
+        assert.equal(s.offers[0].priceSpecification.billingDuration, 'P1M')
+    })
+
+    it('yearly offer has €900 + P1Y billing', () => {
+        const s = adoptAPacaServiceSchema() as any
+        assert.equal(s.offers[1].price, '900')
+        assert.equal(s.offers[1].priceSpecification.billingDuration, 'P1Y')
+    })
+})
+
+describe('siteNavigationSchema', () => {
+    it('emits 10 items', () => {
+        const s = siteNavigationSchema('en') as any
+        assert.equal(s.name.length, 10)
+        assert.equal(s.url.length, 10)
+    })
+
+    it('honors locale param', () => {
+        const s = siteNavigationSchema('nl') as any
+        assert.ok(s.url[0].includes('/nl/'))
+    })
+})
+
+describe('shopCategoryItemListSchema', () => {
+    it('emits empty list when items are empty', () => {
+        const s = shopCategoryItemListSchema({ categoryName: 'Woven', baseUrl: 'https://x.com', items: [] }) as any
+        assert.equal(s.numberOfItems, 0)
+        assert.equal(s.itemListElement.length, 0)
+    })
+
+    it('emits Product entries with name + url', () => {
+        const s = shopCategoryItemListSchema({
+            categoryName: 'Woven',
+            baseUrl: 'https://x.com/shop/woven',
+            items: [{ name: 'Test scarf', url: 'https://x.com/scarf-1' }],
+        }) as any
+        assert.equal(s.numberOfItems, 1)
+        assert.equal(s.itemListElement[0].item.name, 'Test scarf')
+        assert.equal(s.itemListElement[0].position, 1)
+    })
+
+    it('omits image when null (Rule 5)', () => {
+        const s = shopCategoryItemListSchema({
+            categoryName: 'X',
+            baseUrl: 'https://x.com',
+            items: [{ name: 'A', url: 'https://x.com/a', image: null }],
+        }) as any
+        assert.equal(s.itemListElement[0].item.image, undefined)
     })
 })

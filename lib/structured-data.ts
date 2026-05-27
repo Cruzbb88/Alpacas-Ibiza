@@ -421,6 +421,122 @@ export function herdAttractionSchema() {
     }
 }
 
+// ─── Service + Offer (Adopt an Alpaca symbolic sponsorship) ──────────────────
+
+/**
+ * Schema.org Service with two Offers for the symbolic alpaca adoption program.
+ * Verified prices: €75/mo and €900/year (VERIFICATION_RESULTS.md #10).
+ */
+export function adoptAPacaServiceSchema() {
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'Service',
+        name: 'Adopt an Alpaca — symbolic sponsorship',
+        description:
+            'Sponsor one of our 14 named alpacas at Es Currals. Monthly photo updates, annual visit invitation, supporter discount codes, and a welcome bundle.',
+        provider: {
+            '@type': 'LocalBusiness',
+            name: 'Alpacas Ibiza',
+            url: BASE_URL,
+        },
+        serviceType: 'Animal sponsorship subscription',
+        areaServed: {
+            '@type': 'AdministrativeArea',
+            name: 'Worldwide (symbolic sponsorship; visits on Ibiza only)',
+        },
+        offers: [
+            {
+                '@type': 'Offer',
+                name: 'Monthly adoption',
+                price: '75',
+                priceCurrency: 'EUR',
+                priceSpecification: {
+                    '@type': 'UnitPriceSpecification',
+                    price: '75',
+                    priceCurrency: 'EUR',
+                    billingDuration: 'P1M',
+                    billingIncrement: 1,
+                },
+                availability: 'https://schema.org/InStock',
+            },
+            {
+                '@type': 'Offer',
+                name: 'Yearly adoption',
+                price: '900',
+                priceCurrency: 'EUR',
+                priceSpecification: {
+                    '@type': 'UnitPriceSpecification',
+                    price: '900',
+                    priceCurrency: 'EUR',
+                    billingDuration: 'P1Y',
+                    billingIncrement: 1,
+                },
+                availability: 'https://schema.org/InStock',
+            },
+        ],
+    }
+}
+
+// ─── SiteNavigationElement ────────────────────────────────────────────────────
+
+/**
+ * SiteNavigationElement schema — tells Google the canonical nav structure.
+ * Routes verified against app/sitemap.ts (all exist as pages on disk).
+ */
+export function siteNavigationSchema(locale: string) {
+    const items = [
+        { name: 'Tours', path: '/tours' },
+        { name: 'Alpaca Yoga', path: '/yoga' },
+        { name: 'Workshops', path: '/workshops' },
+        { name: 'Weddings', path: '/weddings' },
+        { name: 'Meet the Herd', path: '/alpacas' },
+        { name: 'Adopt', path: '/adopt' },
+        { name: 'Shop', path: '/shop' },
+        { name: 'About', path: '/about' },
+        { name: 'Journal', path: '/journal' },
+        { name: 'Contact', path: '/contact' },
+    ]
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'SiteNavigationElement',
+        name: items.map((i) => i.name),
+        url: items.map((i) => `${BASE_URL}/${locale}${i.path}`),
+    }
+}
+
+// ─── ItemList + Product (shop category pages) ────────────────────────────────
+
+/**
+ * Emits a Schema.org ItemList containing Product entries for shop category pages.
+ * Empty items array is valid — emits numberOfItems: 0.
+ * image is omitted when null (Rule 5).
+ */
+export function shopCategoryItemListSchema(opts: {
+    categoryName: string
+    baseUrl: string
+    items: ReadonlyArray<{ name: string; url: string; image?: string | null; description?: string }>
+}) {
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        name: opts.categoryName,
+        url: opts.baseUrl,
+        numberOfItems: opts.items.length,
+        itemListElement: opts.items.map((item, i) => ({
+            '@type': 'ListItem',
+            position: i + 1,
+            item: {
+                '@type': 'Product',
+                name: item.name,
+                url: item.url,
+                ...(item.description ? { description: item.description } : {}),
+                ...(item.image ? { image: item.image } : {}),
+                brand: { '@type': 'Brand', name: 'Alpacas Ibiza' },
+            },
+        })),
+    }
+}
+
 // ─── Helper: inject as <script> tag string ────────────────────────────────────
 
 export function toJsonLd(schema: object) {

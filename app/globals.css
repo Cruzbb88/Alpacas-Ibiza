@@ -144,6 +144,19 @@ body {
   }
 }
 
+@layer components {
+  .alpaca-card:target {
+    animation: alpaca-anchor-pulse 2s ease-out;
+  }
+  @keyframes alpaca-anchor-pulse {
+    0%   { box-shadow: 0 0 0 4px hsl(var(--primary) / 0.4); }
+    100% { box-shadow: 0 0 0 0 hsl(var(--primary) / 0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .alpaca-card:target { animation: none; box-shadow: 0 0 0 2px hsl(var(--primary)); }
+  }
+}
+
 @media print {
   /* Hide nav, footer, banners, interactive UI */
   header, footer, nav,

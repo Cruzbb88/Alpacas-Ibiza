@@ -6,7 +6,7 @@ import { SITE_BASE_URL as BASE_URL } from '@/lib/config'
 import { getPaymentAdapter } from '@/lib/payment-vendor'
 import { buildLocaleAlternates } from '@/lib/i18n-metadata'
 import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
-import { toJsonLd } from '@/lib/structured-data'
+import { toJsonLd, adoptAPacaServiceSchema } from '@/lib/structured-data'
 import { GradientPageHero, PageSection, OwnerConfirmBanner } from '@/components/layout'
 import { BillingPortalLink } from '@/components/billing-portal-link'
 import { AdoptTierCard } from '@/components/adopt/adopt-tier-card'
@@ -149,6 +149,11 @@ export default async function AdoptPage({
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: toJsonLd(offerSchema) }}
+            />
+            {/* JSON-LD: Service + Offer (symbolic sponsorship) */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: toJsonLd(adoptAPacaServiceSchema()) }}
             />
 
             {/* Thank-you screen (success) + cancelled banner — client component;

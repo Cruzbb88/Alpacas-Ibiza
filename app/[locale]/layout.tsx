@@ -9,7 +9,7 @@ import { CookieConsent } from '@/components/cookie-consent'
 import { ScrollTracker } from '@/components/scroll-tracker'
 import { OutboundLinkTracker } from '@/components/outbound-link-tracker'
 import { WebVitals } from '@/components/web-vitals'
-import { localBusinessSchema, organizationSchema, websiteSearchSchema, toJsonLd } from '@/lib/structured-data'
+import { localBusinessSchema, organizationSchema, websiteSearchSchema, siteNavigationSchema, toJsonLd } from '@/lib/structured-data'
 import { DEFAULT_OG_IMAGE } from '@/lib/og-images'
 import { getTenant } from '@/lib/tenant'
 import { FloatingWhatsApp } from '@/components/floating-whatsapp'
@@ -69,7 +69,7 @@ export default async function LocaleLayout({
 }) {
     const { locale } = await params
     const tenant = await getTenant()
-    const schemas = [localBusinessSchema(), organizationSchema(tenant), websiteSearchSchema()]
+    const schemas = [localBusinessSchema(), organizationSchema(tenant), websiteSearchSchema(), siteNavigationSchema(locale)]
 
     return (
         <div className="flex min-h-screen flex-col">

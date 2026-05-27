@@ -1,0 +1,192 @@
+import { getServerSession } from 'next-auth/next'
+import { redirect } from 'next/navigation'
+import { auth } from '@/app/api/auth/[...nextauth]/route'
+import { TIER1_KEYS, isSet } from '@/lib/validate-env'
+
+export const metadata = {
+  title: 'Env Check — Admin',
+  robots: { index: false, follow: false, noarchive: true, nosnippet: true },
+}
+
+// ── Tier 2 var definitions ────────────────────────────────────────────────────
+// Kept here rather than validate-env.ts to avoid polluting that module.
+
+interface EnvVar {
+  key: string
+  notes: string
+}
+
+const TIER2_VARS: EnvVar[] = [
+  { key: 'TURNSTILE_SECRET_KEY',           notes: 'Pair with NEXT_PUBLIC_TURNSTILE_SITE_KEY — forms unprotected if unset' },
+  { key: 'NEXT_PUBLIC_TURNSTILE_SITE_KEY', notes: 'Pair with TURNSTILE_SECRET_KEY' },
+  { key: 'FAREHARBOR_APP_KEY',             notes: 'Pair with FAREHARBOR_USER_KEY — live spots widget dark if unset' },
+  { key: 'FAREHARBOR_USER_KEY',            notes: 'Pair with FAREHARBOR_APP_KEY' },
+  { key: 'FAREHARBOR_ITEM_TOUR_MEET_HERD',        notes: 'Per-tour Book button → main calendar fallback if unset' },
+  { key: 'FAREHARBOR_ITEM_TOUR_WEAVING_WORKSHOP', notes: 'Per-tour Book button → main calendar fallback if unset' },
+  { key: 'FAREHARBOR_ITEM_TOUR_FARM_EXPERIENCE',  notes: 'Per-tour Book button → main calendar fallback if unset' },
+  { key: 'FAREHARBOR_ITEM_TOUR_PHOTO_SESSION',    notes: 'Per-tour Book button → main calendar fallback if unset' },
+  { key: 'FAREHARBOR_ITEM_YOGA',                  notes: 'Yoga filtered booking → main calendar fallback if unset' },
+  { key: 'FAREHARBOR_ITEM_WEDDINGS',              notes: 'Weddings CTA → main calendar fallback if unset' },
+  { key: 'FAREHARBOR_ITEM_BUSINESS_INCENTIVES',   notes: 'Business incentives CTA → main calendar fallback if unset' },
+  { key: 'FAREHARBOR_ITEM_ROMANTIC_SUNSET',       notes: 'Romantic sunset CTA → main calendar fallback if unset' },
+  { key: 'FAREHARBOR_ITEM_FAMILY_FARM_DAYS',      notes: 'Family farm days CTA → main calendar fallback if unset' },
+  { key: 'FAREHARBOR_ITEM_GIFT_CARD',             notes: '/gifts CTA → main calendar fallback if unset' },
+  { key: 'GA4_PROPERTY_ID',     notes: 'GA4 service account — admin analytics dark if unset' },
+  { key: 'GA4_CLIENT_EMAIL',    notes: 'GA4 service account' },
+  { key: 'GA4_PRIVATE_KEY',     notes: 'GA4 service account' },
+  { key: 'GOOGLE_PLACES_API_KEY', notes: 'Google Places — review badge hidden if unset' },
+  { key: 'GOOGLE_PLACES_PLACE_ID', notes: 'Google Places — review badge hidden if unset' },
+  { key: 'NEWSLETTER_SIGNING_KEY', notes: 'Falls back to NEXTAUTH_SECRET if unset; set for independent rotation' },
+  { key: 'STRIPE_SECRET_KEY',              notes: 'Stripe checkout 503 if unset; adopt CTA → mailto fallback' },
+  { key: 'STRIPE_WEBHOOK_SECRET',          notes: 'Stripe webhook fail-CLOSED if unset' },
+  { key: 'STRIPE_ADOPT_PRICE_ID_MONTHLY',  notes: 'Monthly adopt tier 503 if unset (PAYMENT_VENDOR=stripe)' },
+  { key: 'STRIPE_ADOPT_PRICE_ID_YEARLY',   notes: 'Yearly adopt tier 503 if unset (PAYMENT_VENDOR=stripe)' },
+  { key: 'MOLLIE_API_KEY',         notes: 'Mollie checkout 503 if unset (PAYMENT_VENDOR=mollie)' },
+  { key: 'MOLLIE_WEBHOOK_SECRET',  notes: 'Mollie webhook fail-CLOSED if unset (PAYMENT_VENDOR=mollie)' },
+  { key: 'PAYMENT_VENDOR',         notes: 'stripe | mollie | empty → mailto fallback' },
+  { key: 'ADOPT_DISCOUNT_CODE_WEAVING_10',  notes: 'Discount email shows placeholder if unset' },
+  { key: 'ADOPT_DISCOUNT_CODE_FARMSHOP_15', notes: 'Discount email shows placeholder if unset' },
+]
+
+function maskedPreview(key: string): string | null {
+  const v = process.env[key]
+  if (!v || !isSet(key)) return null
+  return v.length <= 4 ? `${v}***` : `${v.slice(0, 4)}***`
+}
+
+function StatusBadge({ set }: { set: boolean }) {
+  if (set) {
+    return (
+      <span style={{ background: '#d1fae5', color: '#065f46', padding: '2px 8px', borderRadius: 4, fontSize: 12, fontWeight: 600 }}>
+        SET
+      </span>
+    )
+  }
+  return (
+    <span style={{ background: '#fee2e2', color: '#991b1b', padding: '2px 8px', borderRadius: 4, fontSize: 12, fontWeight: 600 }}>
+      UNSET
+    </span>
+  )
+}
+
+function EnvTable({
+  rows,
+  unsetColor,
+}: {
+  rows: { key: string; notes: string }[]
+  unsetColor: string
+}) {
+  return (
+    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+      <thead>
+        <tr style={{ background: '#f3f4f6' }}>
+          <th style={{ textAlign: 'left', padding: '8px 12px', border: '1px solid #e5e7eb' }}>Variable</th>
+          <th style={{ textAlign: 'center', padding: '8px 12px', border: '1px solid #e5e7eb', width: 80 }}>Status</th>
+          <th style={{ textAlign: 'left', padding: '8px 12px', border: '1px solid #e5e7eb', width: 140 }}>Preview</th>
+          <th style={{ textAlign: 'left', padding: '8px 12px', border: '1px solid #e5e7eb' }}>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map(({ key, notes }) => {
+          const set = isSet(key)
+          const preview = maskedPreview(key)
+          return (
+            <tr key={key} style={{ background: set ? undefined : unsetColor }}>
+              <td style={{ padding: '7px 12px', border: '1px solid #e5e7eb', fontFamily: 'monospace', fontSize: 12 }}>{key}</td>
+              <td style={{ padding: '7px 12px', border: '1px solid #e5e7eb', textAlign: 'center' }}>
+                <StatusBadge set={set} />
+              </td>
+              <td style={{ padding: '7px 12px', border: '1px solid #e5e7eb', fontFamily: 'monospace', color: '#6b7280', fontSize: 12 }}>
+                {preview ?? '—'}
+              </td>
+              <td style={{ padding: '7px 12px', border: '1px solid #e5e7eb', color: '#374151' }}>{notes}</td>
+            </tr>
+          )
+        })}
+      </tbody>
+    </table>
+  )
+}
+
+export default async function AdminEnvCheckPage() {
+  const session = await getServerSession(auth)
+  if (!session) redirect('/admin/login')
+
+  const tier1Rows = TIER1_KEYS.map((key) => ({
+    key,
+    notes: TIER1_IMPACT[key] ?? '',
+  }))
+
+  const unsetTier1 = tier1Rows.filter((r) => !isSet(r.key)).map((r) => r.key)
+  const unsetTier2 = TIER2_VARS.filter((r) => !isSet(r.key)).map((r) => r.key)
+  const allUnset = [...unsetTier1, ...unsetTier2]
+  const envTemplate = allUnset.map((k) => `${k}=`).join('\n')
+
+  return (
+    <div style={{ fontFamily: 'system-ui, sans-serif', maxWidth: 1000, margin: '0 auto', padding: '32px 16px' }}>
+      <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 4 }}>Env Var Status</h1>
+      <p style={{ color: '#6b7280', marginBottom: 32, fontSize: 14 }}>
+        Server-side read of <code>process.env</code>. Values are masked (first 4 chars only). Reload to refresh.
+      </p>
+
+      {unsetTier1.length > 0 && (
+        <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 8, padding: '12px 16px', marginBottom: 24 }}>
+          <strong style={{ color: '#b91c1c' }}>⚠ {unsetTier1.length} Tier 1 var{unsetTier1.length > 1 ? 's' : ''} missing — site will break or be unsafe in production.</strong>
+        </div>
+      )}
+
+      <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 8, marginTop: 0 }}>
+        Tier 1 — Must set before prod ({TIER1_KEYS.length} vars)
+      </h2>
+      <p style={{ color: '#6b7280', fontSize: 13, marginBottom: 12 }}>Site breaks or is unsafe without these.</p>
+      <EnvTable rows={tier1Rows} unsetColor="#fef2f2" />
+
+      <h2 style={{ fontSize: 16, fontWeight: 600, marginTop: 32, marginBottom: 8 }}>
+        Tier 2 — Graceful degrade ({TIER2_VARS.length} vars)
+      </h2>
+      <p style={{ color: '#6b7280', fontSize: 13, marginBottom: 12 }}>Site works; feature goes dark until set.</p>
+      <EnvTable rows={TIER2_VARS} unsetColor="#fefce8" />
+
+      {allUnset.length > 0 && (
+        <>
+          <h2 style={{ fontSize: 16, fontWeight: 600, marginTop: 32, marginBottom: 8 }}>
+            .env.local template — {allUnset.length} unset var{allUnset.length > 1 ? 's' : ''}
+          </h2>
+          <p style={{ color: '#6b7280', fontSize: 13, marginBottom: 8 }}>
+            Copy the block below into your <code>.env.local</code> and fill in the values.
+          </p>
+          <pre style={{
+            background: '#f8fafc',
+            border: '1px solid #e2e8f0',
+            borderRadius: 6,
+            padding: '16px',
+            fontSize: 12,
+            fontFamily: 'monospace',
+            overflowX: 'auto',
+            whiteSpace: 'pre-wrap',
+          }}>
+            {envTemplate}
+          </pre>
+        </>
+      )}
+
+      {allUnset.length === 0 && (
+        <div style={{ background: '#f0fdf4', border: '1px solid #86efac', borderRadius: 8, padding: '12px 16px', marginTop: 24 }}>
+          <strong style={{ color: '#166534' }}>All env vars are set.</strong>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ── Tier 1 impact notes (mirrors validate-env.ts) ─────────────────────────────
+const TIER1_IMPACT: Record<string, string> = {
+  RESEND_API_KEY:            'Contact form emails will not send',
+  CONTACT_EMAIL:             'Form submissions have no recipient (falls back to hardcoded default)',
+  NEXTAUTH_SECRET:           'Auth sessions are insecure / broken',
+  NEXTAUTH_URL:              'Auth redirect callbacks break in production',
+  ADMIN_USERNAME:            'Admin login non-functional',
+  ADMIN_PASSWORD:            'Admin login non-functional',
+  FAREHARBOR_WEBHOOK_SECRET: 'Webhook endpoint returns 503 (fail-CLOSED)',
+  CRON_SECRET:               'Cron routes unprotected or blocked',
+}
