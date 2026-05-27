@@ -1,0 +1,48 @@
+# Self-Heal Zone Classification Map
+# Patterns use glob-style matching. First match wins.
+# Edit this file to customize zone boundaries.
+#
+# Zones:
+#   safe   - Auto-apply fixes without prompting
+#   gray   - Present draft, require user approval
+#   danger - Recommendation only, never auto-modify
+#
+# Pattern syntax:
+#   ~ expands to home directory at runtime
+#   ** matches any number of directories
+#   * matches within a single directory
+#   Paths are normalized to forward slashes before matching
+
+safe:
+  - "~/.claude/skills/*/commands/*.md"
+  - "~/.claude/skills/*/references/*"
+  - "~/.claude/commands/**/*.md"
+  - "~/.claude/commands/*/*.md"
+  - "**/MEMORY.md"
+  - "**/reports/**"
+  - "**/.omni-cortex/tool_failures*.jsonl"
+  - "~/.claude/skills/*/SKILL.md"      # minor edits only; structural changes upgrade to gray
+  - "**/.omni-cortex/cortex.db"
+  - "~/.claude/mcp-backup.json"          # Backup file, safe to regenerate
+  - "~/.claude/stats/**"                 # Usage stats, safe to modify
+
+gray:
+  - "D:/Projects/omni-cortex/**"        # Owned MCP source
+  - "D:/Projects/patent-office-mcp/**"
+  - "D:/Projects/darkhold-mcp/**"
+  - "~/.claude/hooks/**"                # Hook modifications need review
+
+danger:
+  - "~/.claude/settings.json"
+  - "~/.claude/settings.local.json"
+  - "**/.claude.json"                   # MCP registration
+  - "~/.claude/plugins/**"
+  - "~/.claude/*.js"                    # Root scripts (restore-mcps.js etc)
+  - "~/.claude/*.py"                    # Root scripts
+
+# Zone override rules
+overrides:
+  # SKILL.md: minor edits (frontmatter, typos) = safe; structural (layers, architecture) = gray
+  skill_md_threshold: "structural"  # "any" | "structural" | "none"
+  # Multi-file zone inheritance: batch takes highest zone
+  multi_file_inheritance: true

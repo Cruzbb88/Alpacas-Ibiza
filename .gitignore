@@ -15,4 +15,4 @@ untun-script.mjs
 node_modules/
 .next/
 .env*.local
-.DS_Store
+.DS_Storedev_output.txt

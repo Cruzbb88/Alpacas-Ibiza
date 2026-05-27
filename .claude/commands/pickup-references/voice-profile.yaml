@@ -1,0 +1,161 @@
+# Voice Profile -- Tony Medina
+# Used by /pickup to format the game plan in Tony's directive style.
+# Refresh with: python3 python-scripts/refresh-voice-profile.py
+# Staleness threshold: 30 days (tracked by /task-radar maintenance)
+#
+# Generated: 2026-04-03
+# Source: 950 user messages across 3 Omni-Cortex databases
+# Sessions analyzed: 63 post-pickup sessions
+
+version: '1.0'
+generated_at: '2026-04-03'
+messages_analyzed: 950
+sessions_analyzed: 63
+post_pickup:
+  total_sessions: 63
+  multi_message_planning: 0.68
+  average_word_count: 415
+  median_word_count: 121
+  directive_with_plan: 0.36
+  redirect_or_modify: 0.18
+  pure_slash_command: 0.29
+  slash_plus_context: 0.05
+context_frequency:
+  git_operations: 0.8
+  spec_build_work: 0.44
+  sequencing_constraints: 0.41
+  testing_work: 0.27
+  chains_multiple_tasks: 0.39
+  wants_parallel_work: 0.29
+  references_people: 0.57
+  deploy_infra_work: 0.21
+  communication: 0.21
+  sets_priority: 0.08
+  asks_for_opinion: 0.07
+  specifies_terminal_role: 0.08
+  overrides_suggestion: 0.09
+openers:
+  primary:
+  - Go ahead and
+  - Let's go ahead and
+  - Yeah, go ahead and
+  - Alright, so
+  - Start with
+  secondary:
+  - After that,
+  - And then
+  - Also
+  - The other thing is
+  - One thing to keep in mind --
+  - Mind you --
+transitions:
+- phrase: and then
+  count: 381
+- phrase: also
+  count: 363
+- phrase: one thing
+  count: 57
+- phrase: plus
+  count: 24
+- phrase: mind you
+  count: 19
+- phrase: after that
+  count: 8
+- phrase: the other thing
+  count: 8
+- phrase: speaking of
+  count: 4
+- phrase: keep in mind
+  count: 3
+- phrase: before that
+  count: 2
+imperatives:
+- phrase: make sure
+  count: 237
+- phrase: or whatever
+  count: 194
+- phrase: go ahead and
+  count: 159
+- phrase: we need to
+  count: 130
+- phrase: can you
+  count: 108
+- phrase: whatever the case
+  count: 89
+- phrase: we should
+  count: 75
+- phrase: and stuff like that
+  count: 67
+- phrase: and all that
+  count: 64
+- phrase: should we
+  count: 37
+- phrase: let's go ahead
+  count: 31
+- phrase: i want you to
+  count: 28
+- phrase: and so on
+  count: 19
+- phrase: whatever you think
+  count: 15
+- phrase: feel free to
+  count: 12
+planning:
+- phrase: essentially
+  count: 165
+- phrase: based on
+  count: 116
+- phrase: definitely
+  count: 41
+- phrase: looking at
+  count: 20
+- phrase: here's what
+  count: 19
+- phrase: from the last
+  count: 14
+- phrase: the game plan
+  count: 10
+- phrase: here is what
+  count: 5
+- phrase: i'm thinking
+  count: 5
+- phrase: the goal is
+  count: 3
+tone:
+  casual_markers:
+  - bet (162x)
+  - shit (130x)
+  - ngl (82x)
+  - solid (62x)
+  - you know (53x)
+  - type of stuff (51x)
+  - i guess (50x)
+  - i mean (37x)
+  - all that type (33x)
+  - and whatnot (29x)
+  note: 'Pickup should NOT use profanity. Capture the ENERGY: direct, conversational,
+    collaborative.'
+formatting:
+  section_header: Here's what I'm thinking for the game plan
+  close_line: That's the game plan based on the radar and the {deadline}. Want to
+    go with this, adjust anything, or do something different?
+  close_line_no_deadline: That's the game plan based on the radar. Want to go with
+    this, adjust anything, or do something different?
+  item_structure:
+  - Action opener (from openers.primary for first item, secondary for subsequent)
+  - What to do (1 sentence)
+  - Why it matters / who it affects (1 sentence, reference people by name)
+  - Dependency or sequencing note if applicable
+  - Make sure / also caveat if applicable
+  - '[effort estimate, dependency tag]'
+  groups:
+    sequential: SEQUENTIAL -- {context} (in this order)
+    parallel: PARALLEL -- knock out whenever, any terminal
+    next_wave: NEXT WAVE -- after {milestone}, or spin up another terminal
+    maintenance: MAINTENANCE -- when there's a gap or end of session
+  dependency_tags:
+  - 'after #N'
+  - 'parallel with #N'
+  - 'can start parallel with #N'
+  - 'sequential after #N'
+  - 'blocks #N'
