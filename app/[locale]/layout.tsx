@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { i18nConfig } from '@/i18n.config'
+import { buildLocaleAlternates } from '@/lib/i18n-metadata'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { StickyBookingBar } from '@/components/booking/sticky-booking-bar'
@@ -29,14 +30,14 @@ export async function generateMetadata({
     params: Promise<{ locale: string }>
 }): Promise<Metadata> {
     const { locale } = await params
+    // Use the shared helper so the locale-root page emits an `x-default`
+    // hreflang entry (pointing at the default-locale URL) per Google's spec.
+    // sub-pages already call buildLocaleAlternates(locale, '<path>') — this
+    // centralizes the rule and prevents drift between root and sub-pages.
+    const alternates = buildLocaleAlternates(locale, '')
     return {
         metadataBase: new URL(BASE_URL),
-        alternates: {
-            canonical: `/${locale}`,
-            languages: Object.fromEntries(
-                i18nConfig.locales.map((l) => [l, `/${l}`])
-            ),
-        },
+        alternates,
         openGraph: {
             siteName: 'Alpacas Ibiza',
             locale,
