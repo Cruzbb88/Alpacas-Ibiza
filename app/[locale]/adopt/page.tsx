@@ -9,6 +9,13 @@ import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
 import { toJsonLd } from '@/lib/structured-data'
 import { GradientPageHero, PageSection, OwnerConfirmBanner } from '@/components/layout'
 import { BillingPortalLink } from '@/components/billing-portal-link'
+import { AdoptTierCard } from '@/components/adopt/adopt-tier-card'
+import { AdoptBenefitsList } from '@/components/adopt/adopt-benefits-list'
+import { AdoptionTimeline } from '@/components/adopt/adoption-timeline'
+import { AdopterCounter } from '@/components/adopt/adopter-counter'
+import { AdoptionCertificatePreview } from '@/components/adopt/adoption-certificate-preview'
+import { TrustSignals } from '@/components/adopt/trust-signals'
+import { RepeatCta } from '@/components/adopt/repeat-cta'
 import { ALPACAS, findAlpacaName } from '@/lib/data/alpacas'
 import { AlpacaPicker } from '@/components/adopt/alpaca-picker'
 import { AdoptThankYou } from '@/components/adopt-thank-you'
@@ -170,6 +177,12 @@ export default async function AdoptPage({
                 subtitle={translate('adopt.subtitle')}
             />
 
+            {/* Social proof — herd availability counter. `adopted={0}` until the
+                adoption DB lands; AdopterCounter degrades gracefully ("plenty available"). */}
+            <PageSection bg="default" width="narrow" className="pt-12 pb-2">
+                <AdopterCounter locale={locale} total={ALPACAS.length} adopted={0} />
+            </PageSection>
+
             {/* Alpaca picker — donor can pin a specific alpaca. Slug rides through Stripe/Mollie metadata
                 so the welcome email mentions which alpaca they adopted. "Pick for me" clears selection. */}
             <PageSection bg="default" width="narrow" className="pt-12 pb-2">
@@ -182,56 +195,56 @@ export default async function AdoptPage({
                 />
             </PageSection>
 
-            {/* Pricing tiers — rich layout: badge on yearly to highlight commitment level,
-                tagline from translation so locales can localise the cancellation copy. */}
+            {/* Pricing tiers — extracted to AdoptTierCard (monthly + yearly variants).
+                Both cards link to checkout URLs already built with the alpaca slug. */}
             <PageSection bg="default" width="narrow" className="py-16">
                 <h2 className="text-2xl font-bold text-foreground text-center mb-10">
                     {translate('adopt.tierLabel')}
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Monthly */}
-                    <div className="bg-card rounded-lg border border-border p-8 flex flex-col items-center text-center">
-                        <p className="text-sm font-semibold text-foreground/50 uppercase tracking-wide mb-2">Monthly</p>
-                        <p className="text-4xl font-bold text-foreground mb-1">
-                            {translate('adopt.monthlyPrice')}
-                        </p>
-                        <p className="text-sm text-foreground/60">{translate('adopt.monthlyTierTagline')}</p>
-                    </div>
-                    {/* Yearly */}
-                    <div className="relative bg-primary/5 rounded-lg border-2 border-primary/30 p-8 flex flex-col items-center text-center">
-                        <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs font-semibold px-3 py-1 rounded-full">
-                            {translate('adopt.yearlyTierBadge')}
-                        </span>
-                        <p className="text-sm font-semibold text-primary uppercase tracking-wide mb-2">Yearly — prepaid</p>
-                        <p className="text-4xl font-bold text-foreground mb-1">
-                            {translate('adopt.yearlyPrice')}
-                        </p>
-                        <p className="text-sm text-foreground/60">{translate('adopt.yearlyTierTagline')}</p>
-                    </div>
+                    <AdoptTierCard
+                        locale={locale}
+                        tier="monthly"
+                        priceLabel={translate('adopt.monthlyPrice')}
+                        checkoutUrl={monthlyUrl}
+                        subLabel={translate('adopt.monthlyTierTagline')}
+                    />
+                    <AdoptTierCard
+                        locale={locale}
+                        tier="yearly"
+                        priceLabel={translate('adopt.yearlyPrice')}
+                        checkoutUrl={yearlyUrl}
+                        subLabel={translate('adopt.yearlyTierTagline')}
+                        popularBadge={translate('adopt.yearlyTierBadge')}
+                    />
                 </div>
             </PageSection>
 
-            {/* Benefits — 3×3 grid */}
+            {/* What you'll receive — visual donor journey timeline */}
+            <PageSection width="narrow" className="py-12 border-t border-border">
+                <AdoptionTimeline locale={locale} />
+            </PageSection>
+
+            {/* Benefits — extracted to AdoptBenefitsList. Default 7-item list
+                covers the spec-confirmed benefits; caller can override per tenant. */}
             <PageSection width="narrow" className="border-t border-border">
-                <h2 className="text-2xl font-bold text-foreground mb-3">
-                    {translate('adopt.benefitsTitle')}
-                </h2>
-                <p className="text-sm text-foreground/70 mb-10">
-                    {translate('adopt.benefitsIntro')}
-                </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                    {BENEFITS.map((key) => (
-                        <div
-                            key={key}
-                            className="bg-card rounded-lg border border-border p-5 flex items-start gap-3"
-                        >
-                            <span className="mt-0.5 text-primary shrink-0">✓</span>
-                            <p className="text-sm text-foreground/80">
-                                {translate(`adopt.${key}`)}
-                            </p>
-                        </div>
-                    ))}
-                </div>
+                <AdoptBenefitsList locale={locale} />
+            </PageSection>
+
+            {/* Certificate preview — makes the headline perk concrete + personalises
+                with the picker selection when present. */}
+            <PageSection bg="muted" width="narrow" className="border-t border-border">
+                <AdoptionCertificatePreview
+                    title={translate('adopt.certPreviewTitle')}
+                    subtitle={translate('adopt.certPreviewSubtitle')}
+                    certificateLabel={translate('adopt.certPreviewLabel')}
+                    presentedToLabel={translate('adopt.certPreviewPresentedTo')}
+                    sponsorOfLabel={translate('adopt.certPreviewSponsorOf')}
+                    certificateFooter={translate('adopt.certPreviewFooter')}
+                    alpacaName={selectedAlpacaSlug ? findAlpacaName(selectedAlpacaSlug) : null}
+                    alpacaPlaceholder={translate('adopt.certPreviewAlpacaPlaceholder')}
+                    donorPlaceholder={translate('adopt.certPreviewDonorPlaceholder')}
+                />
             </PageSection>
 
             {/* CTA — routes through payment adapter; falls back to mailto until PAYMENT_VENDOR is set.
@@ -259,6 +272,19 @@ export default async function AdoptPage({
                 </div>
             </PageSection>
 
+            {/* Trust strip — directly below the CTA so security/cancellation/support
+                reassurance lands while the donor is still deciding. */}
+            <PageSection width="narrow" className="py-10 border-t border-border">
+                <TrustSignals
+                    heading={translate('adopt.trustHeading')}
+                    securePayments={translate('adopt.trustSecurePayments')}
+                    cancelAnyTime={translate('adopt.trustCancelAnyTime')}
+                    responsiveSupport={translate('adopt.trustResponsiveSupport')}
+                    receiptIncluded={translate('adopt.trustReceiptIncluded')}
+                    acceptedLabel={translate('adopt.trustAcceptedLabel')}
+                />
+            </PageSection>
+
             {/* Social proof — fail-quiet, renders null until owner adds testimonials with status:'live' */}
             <TestimonialsWall
                 title={translate('alpacas.adoptCta') ? `What adopters say` : undefined}
@@ -280,6 +306,21 @@ export default async function AdoptPage({
                         { question: translate('adopt.faqQ6'), answer: translate('adopt.faqA6') },
                         { question: translate('adopt.faqQ7'), answer: translate('adopt.faqA7') },
                     ]}
+                />
+            </PageSection>
+
+            {/* Closing CTA — catches donors who reached the FAQ without converting. Reuses the
+                page-level checkout URLs so the picker selection stays threaded into Stripe. */}
+            <PageSection width="narrow" className="py-12 border-t border-border">
+                <RepeatCta
+                    heading={translate('adopt.repeatHeading')}
+                    body={translate('adopt.repeatBody')}
+                    monthlyCtaLabel={translate('adopt.repeatMonthlyCta')}
+                    yearlyCtaLabel={translate('adopt.repeatYearlyCta')}
+                    monthlyHref={monthlyUrl}
+                    yearlyHref={yearlyUrl}
+                    alpacaName={selectedAlpacaSlug ? findAlpacaName(selectedAlpacaSlug) : null}
+                    alpacaPickedNote={translate('adopt.repeatAlpacaNote')}
                 />
             </PageSection>
 
