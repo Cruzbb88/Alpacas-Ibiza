@@ -54,6 +54,11 @@ export interface CreateCheckoutOpts {
   returnUrl: string
   /** Optional pre-fill for checkout forms. */
   customerEmail?: string
+  /**
+   * Stripe checkout mode. 'subscription' for recurring billing, 'payment' for one-time.
+   * Defaults to 'payment' when omitted. Caller MUST pass 'subscription' for monthly Adopt-a-Paca.
+   */
+  mode?: 'subscription' | 'payment'
 }
 
 // ── Result types ───────────────────────────────────────────────────────────────

@@ -25,7 +25,7 @@ export function NewsletterForm({ locale }: NewsletterFormProps) {
     setError(null)
 
     try {
-      const res = await fetch(`/${locale}/api/newsletter`, {
+      const res = await fetch(`/api/newsletter`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, 'cf-turnstile-response': captchaToken, business_name: honeypot }),

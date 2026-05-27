@@ -160,6 +160,16 @@ describe('handleStripeCheckoutCompleted — skipped paths', () => {
     assert.equal(calls.length, 0)
   })
 
+  it('customer_details.email explicitly null → skip with reason=missing-email', async () => {
+    const { sendEmail, calls } = makeSendEmailSpy()
+    const result = await handleStripeCheckoutCompleted(
+      makeSession({ customer_details: { email: null, name: 'Foo' } }),
+      { sendEmail },
+    )
+    assert.equal(result.reason, 'missing-email')
+    assert.equal(calls.length, 0, 'null email is still missing')
+  })
+
   it('invalid tier (e.g. metadata.tier=lifetime) → skip, reason=invalid-tier', async () => {
     const { sendEmail, calls } = makeSendEmailSpy()
     const result = await handleStripeCheckoutCompleted(
@@ -222,7 +232,23 @@ describe('handleStripeCheckoutCompleted — fail-quiet on send errors', () => {
     assert.ok(result.codesScheduledAt, 'scheduledAt set on the codes attempt')
   })
 
-  it('both emails throw → handler still does not throw', async () => {
+  it('both emails throw → reason=welcome-send-failed; flags reflect both failures', async () => {
+    const { sendEmail } = makeSendEmailSpy({ throwOn: 'all' })
+    let threw = false
+    let result
+    try {
+      result = await handleStripeCheckoutCompleted(makeSession(), { sendEmail })
+    } catch {
+      threw = true
+    }
+    assert.equal(threw, false, 'handler MUST NOT throw even when both fail')
+    assert.ok(result)
+    assert.equal(result.welcomeSent, false)
+    assert.equal(result.codesScheduled, false)
+    assert.equal(result.reason, 'welcome-send-failed', 'welcome failure dominates when both fail')
+  })
+
+  it('both emails throw — original assertion for backwards compat', async () => {
     const { sendEmail } = makeSendEmailSpy({ throwOn: 'all' })
     let threw = false
     try {
@@ -593,5 +619,28 @@ describe('handleStripeInvoicePaymentFailed — fail-quiet on send error', () => 
     assert.equal(result.reason, 'send-failed')
     assert.equal(result.donorNotified, false)
     assert.equal(result.ownerNotified, false)
+  })
+})
+
+// ── Zero-decimal currency formatting (Stripe JPY/KRW etc.) ──────────────────
+
+describe('handleStripeInvoicePaymentFailed — zero-decimal currency rendering', () => {
+  it('JPY amount_due 1500 renders as "1500" in owner email (not "15.00")', async () => {
+    const { sendEmail, calls } = makeSendEmailSpy()
+    await handleStripeInvoicePaymentFailed(
+      makeInvoice({ amount_due: 1500, currency: 'jpy' }),
+      { sendEmail, ownerEmail: 'owner@alpacasibiza.com' },
+    )
+    assert.match(calls[1].html, /1500 JPY/, 'JPY must render raw amount (no /100)')
+    assert.doesNotMatch(calls[1].html, /15\.00 JPY/, 'must NOT divide JPY by 100')
+  })
+
+  it('EUR amount_due 7500 renders as "75.00" in owner email', async () => {
+    const { sendEmail, calls } = makeSendEmailSpy()
+    await handleStripeInvoicePaymentFailed(
+      makeInvoice({ amount_due: 7500, currency: 'eur' }),
+      { sendEmail, ownerEmail: 'owner@alpacasibiza.com' },
+    )
+    assert.match(calls[1].html, /75\.00 EUR/, 'EUR uses cents → divide by 100')
   })
 })

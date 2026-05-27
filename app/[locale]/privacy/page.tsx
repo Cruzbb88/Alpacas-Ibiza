@@ -75,6 +75,22 @@ export default async function PrivacyPage({ params }: { params: Promise<{ locale
                         ))}
                     </ul>
 
+                    <h2 className="text-2xl font-bold text-foreground mt-8 mb-4">
+                        Your GDPR rights
+                    </h2>
+                    <p>
+                        Under GDPR Articles 15 and 17 you may request a copy of your personal data or ask
+                        us to delete it. We respond within 30 days.
+                    </p>
+                    <p>
+                        <a
+                            href={`mailto:info@alpacasibiza.com?subject=GDPR%20data%20request&body=Type%20(export%2Fdeletion)%3A%0AEmail%3A`}
+                            className="underline text-primary"
+                        >
+                            Request your data (export or deletion)
+                        </a>
+                    </p>
+
                     <p className="text-sm text-foreground/60 mt-8">
                         {translate('privacy.lastUpdated')}
                     </p>

@@ -59,12 +59,12 @@ export function stripeDirectPaymentProvider(opts?: {
       }
       const stripe = stripeFactory(secretKey, { apiVersion: '2024-06-20' })
 
-      // Determine mode from Price ID prefix heuristic or use payment as default.
-      // Subscription prices are created with mode: 'subscription'; one-time with 'payment'.
-      // The caller should pass the correct price ID per tier; we trust Stripe to
-      // reject a mismatch. For safety, default to 'payment' (one-time).
+      // Mode is caller-determined: 'subscription' for recurring tiers (monthly Adopt-a-Paca),
+      // 'payment' for one-time (yearly prepaid). Defaults to 'payment' if omitted.
+      // Stripe enforces that a subscription-Price-ID requires mode='subscription' — so a
+      // miscoded caller would 4xx at the Stripe API rather than create a wrong-mode charge.
       const session = await stripe.checkout.sessions.create({
-        mode: 'payment',
+        mode: checkoutOpts.mode ?? 'payment',
         line_items: [{ price: checkoutOpts.productId, quantity: 1 }],
         success_url: checkoutOpts.returnUrl,
         cancel_url: checkoutOpts.returnUrl,

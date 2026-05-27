@@ -101,6 +101,7 @@ This file holds two catalogs that PRACTICES doesn't: the in-code failsafe map (w
 | `GlobalError` `useEffect` POSTs to `/api/log-error` even when root layout crashed | [app/global-error.tsx](app/global-error.tsx) | `fetch keepalive`; `.catch(() => {})` — silent; captures `type: react-error-boundary` + digest + stack; does not block boundary render |
 | Honeypot field on all 3 forms — bot returns 200, no email sent | [lib/honeypot.ts](lib/honeypot.ts) `detectHoneypot()` → [app/api/contact/route.ts](app/api/contact/route.ts), [app/api/commission/route.ts](app/api/commission/route.ts), [app/api/newsletter/route.ts](app/api/newsletter/route.ts) | off-screen hidden field (`aria-hidden`, `tabIndex=-1`, not `display:none`); server returns 200 on bot detection (bot thinks it succeeded); field names differ per form: `company_url` / `phone_extension` / `business_name`; supplements Turnstile |
 | Webhook idempotency guard — duplicate event returns 200 without re-processing | [lib/webhook-idempotency.ts](lib/webhook-idempotency.ts) `isAlreadyProcessed()` → [app/api/stripe-webhook/route.ts](app/api/stripe-webhook/route.ts), [app/api/mollie-webhook/route.ts](app/api/mollie-webhook/route.ts) | In-memory Map, 7-day TTL (longer than Stripe 3-day / Mollie 18h retry windows). Process-scoped — cold start = re-process risk (same ADR 001 tradeoff as booking-schedule-store). Returns `{ok:true,idempotent:true}` 200. Key: Stripe event.id / Mollie payment.id. |
+| GDPR request rate-limit returns 200 on hit (silent, don't leak state) | [app/api/gdpr-request/route.ts](app/api/gdpr-request/route.ts) | 3 req / hour per IP; honeypot `business_name` field returns 200 on bot; email send failure → 500 with `info@alpacasibiza.com` fallback; all user input HTML-escaped before email render |
 
 **Documented tradeoffs** (not bugs):
 - In-memory `bookingScheduleStore` ([docs/adr/001-resend-scheduled-sends.md](docs/adr/001-resend-scheduled-sends.md)) loses state on cold start. At most one stale email per redeploy.
@@ -149,15 +150,44 @@ This file holds two catalogs that PRACTICES doesn't: the in-code failsafe map (w
 
 ---
 
+## Build state (2026-05-27)
+- 18 ADRs (docs/adr/001–018)
+- Specs done: 7 (specs/done/)
+- Specs open: 3 (specs/todo/)
+- 239 unit tests passing (pnpm test — last verified 2026-05-27 overnight)
+- E2E tests: deferred — requires deployed URL + headless browser (see CANT_BE_DONE.md)
+- Failsafes documented: 94 rows (In-code failsafe map above)
+- Production-blocking gaps: legal text, owner content, FareHarbor IDs, Stripe keys — see DROP_IN_GUIDE.md
+
+---
+
 ## Authoritative docs (in order)
 
 0. [START_HERE.md](START_HERE.md) — **master entry-point** + project state snapshot (read first)
 1. [PRACTICES.md](PRACTICES.md) — rules of conduct, pre-flight, append protocol
-2. [CANT_BE_DONE.md](CANT_BE_DONE.md) — 10 hard limits with explicit re-check triggers (read before dispatching agents)
+2. [CANT_BE_DONE.md](CANT_BE_DONE.md) — hard limits with explicit re-check triggers (read before dispatching agents)
 3. [PLAN.md](PLAN.md) — current execution plan + corrections to REALITY_CHECK
 4. [REALITY_CHECK.md](REALITY_CHECK.md) — redesign vs live vs competitors (2026-05-26)
 5. [OWNER_INPUT_NEEDED.md](OWNER_INPUT_NEEDED.md) — items blocked on owner
 6. [INTEGRATION_STATUS_2026-04-20.md](INTEGRATION_STATUS_2026-04-20.md) — integration matrix (note: PLAN.md flags some corrections)
 7. [REALITY_CHECK_PROMPTS.md](REALITY_CHECK_PROMPTS.md) — parameterized Sonnet prompts to re-run the audit
-8. [docs/adr/](docs/adr/) — 9 architecture decision records (load-bearing choices; don't re-litigate without a new ADR)
+8. [docs/adr/](docs/adr/) — 18 architecture decision records (load-bearing choices; don't re-litigate without a new ADR)
+   - 001 resend-scheduled-sends
+   - 002 turnstile-fail-open-dev-fail-closed-prod
+   - 003 webhook-secret-fail-closed
+   - 004 email-only-no-ecommerce
+   - 005-6 locale-en-default-gb-flag
+   - 006 ga4-before-interactive-ssr
+   - 007 admin-login-fail-closed
+   - 008 availability-isr-1800s
+   - 009 client-availability-dedup-promise-cache
+   - 010 csp-report-only-with-gtm-unsafe-inline
+   - 011 in-memory-rate-limit-vs-kv
+   - 012 content-provider-abstraction
+   - 013 payment-provider-defaults-manual-mailto
+   - 014 ga4-afterinteractive-supersedes-006
+   - 015 stripe-primary-mollie-deferred
+   - 016 pure-function-payment-handlers
+   - 017 site-base-url-mandatory-for-redirects
+   - 018 optional-sdk-dynamic-imports
 9. [specs/](specs/) — work items: `todo/`, `done/`, `roadmaps/`

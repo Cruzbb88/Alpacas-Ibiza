@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { sendEmail } from '@/lib/mailer'
-import { handleStripeCheckoutCompleted } from '@/lib/payment-handlers'
+import { handleStripeCheckoutCompleted, handleStripeInvoicePaymentFailed } from '@/lib/payment-handlers'
 import { importStripe } from '@/lib/integrations/stripe-sdk'
 import { requireEnvOrReturn503 } from '@/lib/route-helpers'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
@@ -129,12 +129,16 @@ export async function POST(request: Request) {
 
       case 'invoice.payment_failed': {
         const invoice = event.data.object
-        log.warn('invoice.payment_failed', {
-          id:           invoice.id,
-          subscription: invoice.subscription,
-          customer:     invoice.customer,
+        // Pure handler — donor email ("update your card") + owner notification.
+        // Both fail-quiet; webhook returns 200 (Stripe Smart Retries handles retry).
+        const failedResult = await handleStripeInvoicePaymentFailed(invoice, {
+          sendEmail,
+          ownerEmail: process.env.CONTACT_EMAIL,
         })
-        // TODO: mark subscription as past_due in DB; optionally notify owner.
+        const level = failedResult.reason === 'ok' ? 'warn' : 'error'
+        const msg = `invoice.payment_failed handler reason=${failedResult.reason}`
+        if (level === 'warn') log.warn(msg, failedResult.meta)
+        else log.error(msg, failedResult.meta)
         break
       }
 

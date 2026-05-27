@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "node --test --experimental-strip-types lib/*.test.ts lib/integrations/*.test.ts lib/tenants/*.test.ts",
+    "test": "node --test --experimental-strip-types lib/*.test.ts lib/integrations/*.test.ts lib/tenants/*.test.ts lib/data/*.test.ts",
     "test:unit": "vitest run",
     "test:unit:watch": "vitest",
     "test:coverage": "vitest run --coverage",

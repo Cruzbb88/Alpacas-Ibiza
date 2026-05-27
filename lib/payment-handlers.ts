@@ -138,33 +138,35 @@ export async function handleStripeCheckoutCompleted(
   const nowMs = (deps.now ?? Date.now)()
   const codesScheduledAt = new Date(nowMs + delayMs).toISOString()
 
-  const unsubscribeUrl = `mailto:${process.env.CONTACT_EMAIL ?? 'info@alpacasibiza.com'}?subject=unsubscribe`
-
+  // Wrap each send in an async lambda so synchronous throws from html builders
+  // (e.g. buildAdoptDiscountCodesEmail) are caught by Promise.allSettled.
+  // Without the lambda wrap, a synchronous throw bubbles past allSettled and
+  // violates the "NEVER throws" contract documented at the top of the function.
   const [welcomeResult, codesResult] = await Promise.allSettled([
-    deps.sendEmail({
-      to: email,
-      subject: welcomeAdoptionSubject(tier),
-      html: welcomeAdoptionEmailHtml({
-        escapedName: name ? escapeHtml(name) : undefined,
-        tier,
-        processor: 'Stripe',
-        paymentRef: session.id,
-      }),
-      listUnsubscribeUrl: unsubscribeUrl,
-    }),
-    deps.sendEmail({
-      to: email,
-      scheduledAt: codesScheduledAt,
-      ...buildAdoptDiscountCodesEmail({ name: name ?? '' }),
-    }),
+    (async () =>
+      deps.sendEmail({
+        to: email,
+        subject: welcomeAdoptionSubject(tier),
+        html: welcomeAdoptionEmailHtml({
+          escapedName: name ? escapeHtml(name) : undefined,
+          tier,
+          processor: 'Stripe',
+          paymentRef: session.id,
+        }),
+      }))(),
+    (async () =>
+      deps.sendEmail({
+        to: email,
+        scheduledAt: codesScheduledAt,
+        ...buildAdoptDiscountCodesEmail({ name: name ?? '' }),
+      }))(),
   ])
 
   const welcomeSent = welcomeResult.status === 'fulfilled'
   const codesScheduled = codesResult.status === 'fulfilled'
 
-  if (!welcomeSent && !codesScheduled) {
-    return { welcomeSent, codesScheduled, reason: 'welcome-send-failed', codesScheduledAt, meta }
-  }
+  // Welcome failure dominates — codes alone is not enough since welcome carries
+  // the primary confirmation. Both branches collapse to welcome-send-failed.
   if (!welcomeSent) {
     return { welcomeSent, codesScheduled, reason: 'welcome-send-failed', codesScheduledAt, meta }
   }
@@ -295,8 +297,22 @@ function buildDonorPaymentFailedHtml(invoice: StripeInvoiceLike): string {
   `.trim()
 }
 
+// Stripe zero-decimal currencies — amount is already in major units, not cents.
+// Source: https://stripe.com/docs/currencies#zero-decimal
+const ZERO_DECIMAL_CURRENCIES = new Set([
+  'bif', 'clp', 'djf', 'gnf', 'jpy', 'kmf', 'krw', 'mga', 'pyg',
+  'rwf', 'ugx', 'vnd', 'vuv', 'xaf', 'xof', 'xpf',
+])
+
+function formatStripeAmount(amountMinor: number | null | undefined, currency: string | null | undefined): string {
+  if (amountMinor == null) return '—'
+  const cur = (currency ?? 'eur').toLowerCase()
+  if (ZERO_DECIMAL_CURRENCIES.has(cur)) return String(amountMinor)
+  return (amountMinor / 100).toFixed(2)
+}
+
 function buildOwnerPaymentFailedHtml(invoice: StripeInvoiceLike): string {
-  const amount = invoice.amount_due != null ? (invoice.amount_due / 100).toFixed(2) : '—'
+  const amount = formatStripeAmount(invoice.amount_due, invoice.currency)
   const currency = (invoice.currency ?? 'eur').toUpperCase()
   return `
     <div style="font-family:sans-serif;max-width:600px;margin:0 auto;color:#2d2d2d;padding:16px">

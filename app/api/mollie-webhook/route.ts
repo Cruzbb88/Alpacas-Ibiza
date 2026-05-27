@@ -143,8 +143,11 @@ async function createMonthlySubscription(
   webhookSecret: string,
 ): Promise<void> {
   if (!mollie) {
+    // THROW: caller catches → returns 500 → Mollie retries within 18h window.
+    // SDK may be installed on a subsequent deploy; retry would then succeed.
+    // Without throwing, donor is charged but no recurring subscription is set up.
     console.error('[mollie-webhook] @mollie/api-client not installed — cannot create subscription. Run: pnpm add @mollie/api-client')
-    return // Don't throw — SDK absence is a deploy issue, retrying won't help.
+    throw new Error('mollie-sdk-missing — webhook will retry once SDK is installed')
   }
   if (!payment.customerId) {
     console.error('[mollie-webhook] Cannot create subscription — missing customerId.')
