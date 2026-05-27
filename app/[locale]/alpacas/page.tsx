@@ -10,6 +10,8 @@ import { tenantMetadata } from '@/lib/tenants/metadata'
 import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
 import { PageSection } from '@/components/layout'
 import { getOgImage } from '@/lib/og-images'
+import { AlpacaSearchFilter, filterAlpacas } from '@/components/alpacas/alpaca-search-filter'
+import { AlpacaFunFactCarousel } from '@/components/alpacas/alpaca-fun-fact-carousel'
 
 export async function generateMetadata({
     params,
@@ -33,13 +35,29 @@ export async function generateMetadata({
     }
 }
 
-export default async function AlpacasPage({ params }: { params: Promise<{ locale: Locale }> }) {
+export default async function AlpacasPage({
+    params,
+    searchParams,
+}: {
+    params: Promise<{ locale: Locale }>
+    searchParams: Promise<{ p?: string; c?: string; b?: string }>
+}) {
     const { locale } = await params
+    const { p, c, b } = await searchParams
     const translate = t(locale)
 
     const tenant = await getTenant()
     const providers = getProviders(tenant)
     const animals = providers.content.listAnimals()
+
+    // Server-side filter mirrors AlpacaSearchFilter's client-side logic.
+    // URL params `?p=`, `?c=`, `?b=` are comma-joined keyword lists.
+    const filters = {
+        p: p ? p.split(',').filter(Boolean) : [],
+        c: c ? c.split(',').filter(Boolean) : [],
+        b: b ? b.split(',').filter(Boolean) : [],
+    }
+    const filtered = filterAlpacas(animals, filters)
 
     const schema = localBusinessSchema()
     const attractionSchema = herdAttractionSchema()
@@ -70,13 +88,35 @@ export default async function AlpacasPage({ params }: { params: Promise<{ locale
                 subtitle={translate('alpacas.subtitle')}
             />
 
-            {/* Alpaca grid */}
+            {/* Fun-fact carousel — pulls non-null fun_fact from the full herd
+                (unfiltered intentionally: the carousel is a sitewide hook, not a
+                filter-aware listing). Renders null while UNMAPPED. */}
+            <PageSection width="narrow" className="pt-8 pb-4">
+                <AlpacaFunFactCarousel locale={locale} animals={animals} />
+            </PageSection>
+
+            {/* Filter chips — URL-driven, server re-renders the grid below */}
+            <PageSection width="narrow" className="py-6 border-t border-border">
+                <AlpacaSearchFilter
+                    locale={locale}
+                    matchCount={filtered.length}
+                    totalCount={animals.length}
+                />
+            </PageSection>
+
+            {/* Alpaca grid — filtered server-side; empty state when no matches */}
             <PageSection>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    {animals.map((animal) => (
-                        <AlpacaCard key={animal.id} alpaca={animal} locale={locale} showAdoptCta />
-                    ))}
-                </div>
+                {filtered.length === 0 ? (
+                    <p className="text-center text-foreground/60 py-12">
+                        {translate('alpacas.filter.noMatches', 'No alpacas match those filters. Try clearing one.')}
+                    </p>
+                ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                        {filtered.map((animal) => (
+                            <AlpacaCard key={animal.id} alpaca={animal} locale={locale} showAdoptCta />
+                        ))}
+                    </div>
+                )}
             </PageSection>
         </main>
     )

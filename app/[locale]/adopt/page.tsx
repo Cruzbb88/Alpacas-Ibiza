@@ -20,6 +20,7 @@ import { TrustSignals } from '@/components/adopt/trust-signals'
 import { RepeatCta } from '@/components/adopt/repeat-cta'
 import { ALPACAS, findAlpacaName } from '@/lib/data/alpacas'
 import { AlpacaPicker } from '@/components/adopt/alpaca-picker'
+import { AdoptGiftAdoption } from '@/components/adopt/adopt-gift-adoption'
 import { AdoptThankYou } from '@/components/adopt-thank-you'
 import { FAQ } from '@/components/faq'
 import { TestimonialsWall } from '@/components/testimonials-wall'
@@ -207,6 +208,12 @@ export default async function AdoptPage({
                     subheading={translate('adopt.pickerSubheading') || 'Or let us match you with one of the herd.'}
                     randomLabel={translate('adopt.pickerRandomLabel') || 'Pick for me'}
                 />
+            </PageSection>
+
+            {/* Gift adoption disclosure — threads recipient name/email/delivery date
+                into URL params; the tier CTAs above pick them up automatically. */}
+            <PageSection bg="default" width="narrow" className="pt-2 pb-6">
+                <AdoptGiftAdoption locale={locale} />
             </PageSection>
 
             {/* Pricing tiers — extracted to AdoptTierCard (monthly + yearly variants).
