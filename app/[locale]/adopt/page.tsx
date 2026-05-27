@@ -12,6 +12,8 @@ import { BillingPortalLink } from '@/components/billing-portal-link'
 import { ALPACAS, findAlpacaName } from '@/lib/data/alpacas'
 import { AlpacaPicker } from '@/components/adopt/alpaca-picker'
 import { AdoptThankYou } from '@/components/adopt-thank-you'
+import { FAQ } from '@/components/faq'
+import { TestimonialsWall } from '@/components/testimonials-wall'
 import { getTenant } from '@/lib/tenants/server'
 import { getOgImage } from '@/lib/og-images'
 
@@ -180,7 +182,8 @@ export default async function AdoptPage({
                 />
             </PageSection>
 
-            {/* Pricing tiers */}
+            {/* Pricing tiers — rich layout: badge on yearly to highlight commitment level,
+                tagline from translation so locales can localise the cancellation copy. */}
             <PageSection bg="default" width="narrow" className="py-16">
                 <h2 className="text-2xl font-bold text-foreground text-center mb-10">
                     {translate('adopt.tierLabel')}
@@ -192,15 +195,18 @@ export default async function AdoptPage({
                         <p className="text-4xl font-bold text-foreground mb-1">
                             {translate('adopt.monthlyPrice')}
                         </p>
-                        <p className="text-sm text-foreground/60">Cancel any time</p>
+                        <p className="text-sm text-foreground/60">{translate('adopt.monthlyTierTagline')}</p>
                     </div>
                     {/* Yearly */}
-                    <div className="bg-primary/5 rounded-lg border-2 border-primary/30 p-8 flex flex-col items-center text-center">
+                    <div className="relative bg-primary/5 rounded-lg border-2 border-primary/30 p-8 flex flex-col items-center text-center">
+                        <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs font-semibold px-3 py-1 rounded-full">
+                            {translate('adopt.yearlyTierBadge')}
+                        </span>
                         <p className="text-sm font-semibold text-primary uppercase tracking-wide mb-2">Yearly — prepaid</p>
                         <p className="text-4xl font-bold text-foreground mb-1">
                             {translate('adopt.yearlyPrice')}
                         </p>
-                        <p className="text-sm text-foreground/60">Same total as monthly, paid upfront</p>
+                        <p className="text-sm text-foreground/60">{translate('adopt.yearlyTierTagline')}</p>
                     </div>
                 </div>
             </PageSection>
@@ -251,6 +257,30 @@ export default async function AdoptPage({
                         {translate('adopt.ctaLabel')} — Yearly
                     </a>
                 </div>
+            </PageSection>
+
+            {/* Social proof — fail-quiet, renders null until owner adds testimonials with status:'live' */}
+            <TestimonialsWall
+                title={translate('alpacas.adoptCta') ? `What adopters say` : undefined}
+                limit={6}
+                className="border-t border-border"
+            />
+
+            {/* FAQ — addresses the cancel/visit/gift questions every competitor's adopt page covers */}
+            <PageSection bg="muted" width="narrow" className="border-t border-border">
+                <FAQ
+                    title={translate('adopt.faqTitle')}
+                    subtitle={translate('adopt.faqSubtitle')}
+                    items={[
+                        { question: translate('adopt.faqQ1'), answer: translate('adopt.faqA1') },
+                        { question: translate('adopt.faqQ2'), answer: translate('adopt.faqA2') },
+                        { question: translate('adopt.faqQ3'), answer: translate('adopt.faqA3') },
+                        { question: translate('adopt.faqQ4'), answer: translate('adopt.faqA4') },
+                        { question: translate('adopt.faqQ5'), answer: translate('adopt.faqA5') },
+                        { question: translate('adopt.faqQ6'), answer: translate('adopt.faqA6') },
+                        { question: translate('adopt.faqQ7'), answer: translate('adopt.faqA7') },
+                    ]}
+                />
             </PageSection>
 
             {/* Billing portal — existing subscribers only; collapsed by default */}
