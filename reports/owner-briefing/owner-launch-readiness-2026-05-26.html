@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alpacas Ibiza — Launch Readiness Briefing · 26 May 2026</title>
+  <style>
+    /* ─── Brand tokens ─────────────────────────────────── */
+    :root {
+      --sage:   #6da855;
+      --terra:  #e67e22;
+      --cream:  #e0d8d0;
+      --bg:     #fbf9f7;
+      --ink:    #261410;
+      --muted:  #7a6a63;
+      --warn:   #c0392b;
+      --border: #d4ccc8;
+    }
+
+    /* ─── Reset & base ──────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Nunito', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      font-size: 15px;
+      line-height: 1.7;
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+    h1 { font-size: 1.8rem; font-weight: 800; color: var(--ink); line-height: 1.2; }
+    h2 { font-size: 1.15rem; font-weight: 700; color: var(--ink); margin-bottom: 0.75rem; }
+    p  { margin-bottom: 0.9rem; }
+    a  { color: var(--sage); }
+
+    /* ─── Header banner ─────────────────────────────────── */
+    .banner {
+      background: var(--sage);
+      color: #fff;
+      border-radius: 12px;
+      padding: 2rem 2.25rem;
+      margin-bottom: 2rem;
+    }
+    .banner .sub {
+      font-size: 0.88rem;
+      opacity: 0.88;
+      margin-top: 0.35rem;
+      margin-bottom: 0;
+    }
+    .badge {
+      display: inline-block;
+      background: var(--terra);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border-radius: 4px;
+      padding: 2px 8px;
+      margin-bottom: 0.6rem;
+    }
+
+    /* ─── Sections ───────────────────────────────────────── */
+    .section {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 2px solid var(--cream);
+    }
+    .section-label .num {
+      background: var(--sage);
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 800;
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .section-label .num.terra { background: var(--terra); }
+    .section-label .num.warn  { background: var(--warn); }
+
+    /* ─── Lists ──────────────────────────────────────────── */
+    ul { list-style: none; padding: 0; }
+    ul li {
+      padding: 0.55rem 0 0.55rem 1.5rem;
+      position: relative;
+      border-bottom: 1px solid var(--cream);
+    }
+    ul li:last-child { border-bottom: none; }
+    ul li::before {
+      content: '✓';
+      position: absolute; left: 0;
+      color: var(--sage);
+      font-weight: 700;
+    }
+
+    /* Owner-action checklist */
+    .checklist li::before { content: '☐'; color: var(--terra); }
+    .checklist li .tag {
+      display: inline-block;
+      background: #fef3cd;
+      border: 1px solid #f0c040;
+      color: #7a5500;
+      font-size: 0.72rem;
+      font-weight: 700;
+      border-radius: 4px;
+      padding: 1px 6px;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+    .checklist li .impact {
+      font-size: 0.8rem;
+      color: var(--muted);
+      display: block;
+      margin-top: 0.2rem;
+      padding-left: 0;
+    }
+
+    /* External-action / CANT_BE_DONE list */
+    .ext-list li::before { content: '→'; color: var(--terra); font-weight: 700; }
+
+    /* ─── Alert box ──────────────────────────────────────── */
+    .alert {
+      background: #fff5f5;
+      border-left: 4px solid var(--warn);
+      border-radius: 0 8px 8px 0;
+      padding: 1rem 1.25rem;
+      margin-top: 0.75rem;
+      font-size: 0.9rem;
+    }
+    .alert strong { color: var(--warn); }
+
+    /* ─── Footer ─────────────────────────────────────────── */
+    footer {
+      margin-top: 2.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    footer p { margin-bottom: 0.3rem; }
+
+    /* ─── Print ──────────────────────────────────────────── */
+    @media print {
+      body { padding: 0; font-size: 13px; max-width: 100%; }
+      .banner { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .section { break-inside: avoid; page-break-inside: avoid; }
+      h2 { break-after: avoid; }
+      @page { size: A4; margin: 18mm 20mm; }
+    }
+
+    @media (max-width: 600px) {
+      body { padding: 1rem; }
+      .banner { padding: 1.25rem; }
+      .section { padding: 1.1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header class="banner">
+  <div class="badge">Confidential · Owner Briefing</div>
+  <h1>Your New Website<br>Launch Readiness</h1>
+  <p class="sub">Alpacas Ibiza &nbsp;·&nbsp; Prepared 26 May 2026</p>
+</header>
+
+<!-- ── SECTION 1: WHAT YOUR NEW WEBSITE IS ── -->
+<section class="section" aria-labelledby="s1">
+  <div class="section-label">
+    <span class="num">1</span>
+    <h2 id="s1">What Your New Website Is</h2>
+  </div>
+  <p>
+    Your new website is a modern, conversion-focused home for <strong>Ibiza's first alpaca farm and weaving studio</strong>.
+    It replaces the current site with a faster, more welcoming experience built around four things visitors want to do:
+    book a tour, shop handwoven pieces, request a custom commission, and buy Alcaca (alpaca manure for the garden).
+    The site handles six languages, connects directly to your FareHarbor booking calendar so guests can reserve their spot
+    without calling or emailing, and sends automatic confirmation and reminder emails through your Resend account — all
+    without you touching a button.
+    It is fully built; what remains is plugging in your content, your photos, and a handful of account keys before it goes live.
+    <em>(Source: README.md, START_HERE.md)</em>
+  </p>
+</section>
+
+<!-- ── SECTION 2: WHAT'S READY TO LAUNCH ── -->
+<section class="section" aria-labelledby="s2">
+  <div class="section-label">
+    <span class="num">2</span>
+    <h2 id="s2">What Is Ready to Launch</h2>
+  </div>
+  <ul>
+    <li><strong>Tour booking pages</strong> — all four tour types have pages, descriptions, FAQs, and a live FareHarbor embed calendar wired to your account (shortname: alpacasibiza, Flow 1257173). Guests can book directly. <em>(Source: INTEGRATION_STATUS_2026-04-20.md)</em></li>
+    <li><strong>Contact &amp; commission forms</strong> — the contact form and custom-commission enquiry form work end-to-end: they send emails via Resend, include bot protection via Cloudflare Turnstile, and escape any harmful input before it reaches your inbox. <em>(Source: START_HERE.md, CLAUDE.md)</em></li>
+    <li><strong>Shop structure</strong> — pages for the woven collection, Alcaca enquiries, and custom commissions are built with product layouts and enquiry flows ready for your real photos and prices. <em>(Source: README.md)</em></li>
+    <li><strong>Automated email sequences</strong> — booking confirmation, 48-hour pre-visit reminder, and post-tour review-request emails are coded and ready; they fire automatically once FareHarbor webhooks are activated. <em>(Source: docs/adr/001, INTEGRATION_STATUS_2026-04-20.md)</em></li>
+    <li><strong>Privacy, Terms, and Cookie pages exist</strong> — structural pages are in place at <code>/privacy</code>, <code>/terms</code>, and <code>/cookies</code>. The text inside is placeholder only and must be replaced before the site receives EU visitors. <em>(Source: README.md — see Section 5 below)</em></li>
+  </ul>
+</section>
+
+<!-- ── SECTION 3: WHAT WE NEED FROM YOU ── -->
+<section class="section" aria-labelledby="s3">
+  <div class="section-label">
+    <span class="num terra">3</span>
+    <h2 id="s3">What We Need From You <small style="font-weight:400;font-size:0.85rem;">(sorted by impact)</small></h2>
+  </div>
+  <p style="font-size:0.88rem;color:var(--muted);margin-bottom:1rem;">
+    Everything below is a launch blocker unless marked 🟡. Items with
+    <span style="background:#fef3cd;border:1px solid #f0c040;color:#7a5500;font-size:0.72rem;font-weight:700;border-radius:4px;padding:1px 6px;">NEEDS YOUR INPUT</span>
+    cannot be built or finalised without your answer.
+  </p>
+  <ul class="checklist">
+
+    <li>
+      <strong>Tour prices — one price per tour, per person</strong>
+      <span class="tag">NEEDS YOUR INPUT</span>
+      <span class="impact">The four tour cards (Meet the Herd, Weaving Workshop, Farm Experience, Photo Session) currently show no price. Displaying even a "from €X/person" anchor before visitors click lifts bookings by roughly 10–15%. Provide the adult price for each tour; note if peak/off-season rates differ. <em>(Source: OWNER_INPUT_NEEDED.md — Pricing section)</em></span>
+    </li>
+
+    <li>
+      <strong>14 alpaca bios + one photo each</strong>
+      <span class="tag">NEEDS YOUR INPUT</span>
+      <span class="impact">The Adopt-a-Paca and alpaca-profile pages are scaffolded for Barbarella, Avalon, Bardot, Chet, Dusty, Fela, Fonda, Lewis, Marron, Mojo, Moloko, Nelson, Suki, and Toots — but every bio and photo is blank. A short warm paragraph per animal (age, personality, favourite snack) and one head-and-shoulders photo, same crop for all. <em>(Source: OWNER_INPUT_NEEDED.md — Individual alpaca profiles)</em></span>
+    </li>
+
+    <li>
+      <strong>Adopt-a-Paca pricing confirmation — €75/month or €900/year?</strong>
+      <span class="tag">NEEDS YOUR INPUT</span>
+      <span class="impact">The live site charges €75/mo or €900/yr. The Adopt-a-Paca page on the redesign is blocked until you confirm whether these prices carry over, change, or the product is retired. Also confirm: per-alpaca sponsor cap, cancellation terms, and whether existing subscribers migrate to the new site. <em>(Source: OWNER_INPUT_NEEDED.md — Adopt-a-Paca section)</em></span>
+    </li>
+
+    <li>
+      <strong>Real photos for every page</strong>
+      <span class="tag">NEEDS YOUR INPUT</span>
+      <span class="impact">Hero, four tour images, team headshots + bios, About-page farm story photos, and woven-product shots are all placeholders. Without photos the site looks unfinished. A short video clip (15–30 seconds of alpacas) is optional but lifts engagement roughly 30%. <em>(Source: OWNER_INPUT_NEEDED.md — Real photos + Content-creation shopping list)</em></span>
+    </li>
+
+    <li>
+      <strong>Cancellation policy — exact terms</strong>
+      <span class="tag">NEEDS YOUR INPUT</span>
+      <span class="impact">Every "Book Now" button currently reads "Free cancellation up to 24 hours before your visit." This must match your FareHarbor booking-flow setting exactly — a mismatch means guests arrive with the wrong expectation. Confirm: free cancellation window (24h / 48h / 7 days?), partial-refund percentage if any, and whether the policy differs for yoga vs tours. <em>(Source: OWNER_INPUT_NEEDED.md — Cancellation policy)</em></span>
+    </li>
+
+    <li>
+      <strong>Language strategy — which languages, which default?</strong>
+      <span class="tag">NEEDS YOUR INPUT</span>
+      <span class="impact">Six languages are currently active (English, Dutch, German, Spanish, Italian, French). Your live site is Dutch-first. Italian and French are speculative. Decide: keep all six, or drop IT/FR until visitor numbers justify them? Should the default be English (broader SEO) or Dutch (matches your current audience)? <em>(Source: OWNER_INPUT_NEEDED.md — Language strategy)</em></span>
+    </li>
+
+    <li>
+      <strong>Spanish business legal details (CIF, registered name, full address)</strong>
+      <span class="tag">NEEDS YOUR INPUT</span>
+      <span class="impact">Spanish law requires the CIF (tax ID), registered business name, and physical address in the footer of every page. Without these the site is non-compliant for a Spain-registered business. <em>(Source: OWNER_INPUT_NEEDED.md — Spanish legal requirements)</em></span>
+    </li>
+
+    <li>
+      <strong>Phone number to display — Belgian or Spanish?</strong>
+      <span class="tag">NEEDS YOUR INPUT</span>
+      <span class="impact">Footer and WhatsApp currently use +32 475 58 65 44 (Belgian). Confirm this is correct, or supply a Spanish +34 number. Which number should receive booking enquiries vs general support? <em>(Source: OWNER_INPUT_NEEDED.md — Phone contact method)</em></span>
+    </li>
+
+  </ul>
+</section>
+
+<!-- ── SECTION 4: WHAT NEEDS EXTERNAL ACTION ── -->
+<section class="section" aria-labelledby="s4">
+  <div class="section-label">
+    <span class="num terra">4</span>
+    <h2 id="s4">What Needs External Action (Keys &amp; Accounts)</h2>
+  </div>
+  <p style="font-size:0.88rem;color:var(--muted);margin-bottom:1rem;">
+    These items are technically complete in the code — the site is built to handle them — but they require you to create accounts, request access, or set configuration outside our files. None of these can be done for you.
+    <em>(Source: OWNER_INPUT_NEEDED.md, CANT_BE_DONE.md)</em>
+  </p>
+  <ul class="ext-list">
+    <li>
+      <strong>FareHarbor API keys</strong> — email <a href="mailto:support@fareharbor.com">support@fareharbor.com</a> requesting an API App Key and User Key. This unlocks the live "X spots left" urgency widget on tour cards and the weekly owner-digest email. Also ask FareHarbor to activate webhooks for <code>booking.created</code> and <code>availability.completed</code> so reminder and review-request emails fire automatically. <em>(Source: OWNER_INPUT_NEEDED.md — FareHarbor configuration; CANT_BE_DONE.md)</em>
+    </li>
+    <li>
+      <strong>Cloudflare Turnstile registration (5 minutes, free)</strong> — visit <a href="https://dash.cloudflare.com">dash.cloudflare.com</a> → Turnstile, register the site, and share the two keys (Site Key and Secret Key) so contact and commission forms are protected from bots. <em>(Source: OWNER_INPUT_NEEDED.md — Cloudflare Turnstile)</em>
+    </li>
+    <li>
+      <strong>Google Reviews integration</strong> — to show your live star rating on the tours page, create a Google Places API key at <a href="https://console.cloud.google.com">console.cloud.google.com</a> and provide your Google Business Profile Place ID. <em>(Source: OWNER_INPUT_NEEDED.md — Google reviews; CANT_BE_DONE.md)</em>
+    </li>
+    <li>
+      <strong>Vercel deployment + domain handover</strong> — the site needs a Vercel account connected to the GitHub repository, all environment variables pasted into the Vercel dashboard, and your <code>alpacasibiza.com</code> domain pointed at Vercel's servers. Set a strong admin username and password before going live. <em>(Source: OWNER_INPUT_NEEDED.md — Vercel deployment)</em>
+    </li>
+    <li>
+      <strong>Resend email domain verification</strong> — to send emails from <code>hello@alpacasibiza.com</code> (rather than a Resend default address), log in to your Resend dashboard, verify the domain, and paste two DNS records (DKIM/SPF) into your domain registrar. <em>(Source: OWNER_INPUT_NEEDED.md — Resend domain verification)</em>
+    </li>
+    <li>
+      <strong>GA4 analytics access</strong> — to see live visitor and booking data: either invite yourself to the existing GA4 property (easiest), or provide a Google Cloud service-account key so our custom admin dashboard activates. <em>(Source: OWNER_INPUT_NEEDED.md — Analytics owner access; CANT_BE_DONE.md — GA4 events cannot be confirmed until site is deployed)</em>
+    </li>
+  </ul>
+</section>
+
+<!-- ── SECTION 5: PRIVACY + LEGAL ── -->
+<section class="section" aria-labelledby="s5">
+  <div class="section-label">
+    <span class="num warn">5</span>
+    <h2 id="s5">Privacy &amp; Legal — Action Required Before EU Traffic</h2>
+  </div>
+  <p>
+    The site currently has Privacy Policy, Terms of Service, and Cookie Policy pages — but the text on all three is
+    <strong>generic placeholder copy</strong>. Publishing them as-is to real visitors carries legal risk under GDPR,
+    because the pages do not describe your actual data practices (what FareHarbor collects, what Resend stores,
+    what GA4 tracks, or who to contact for data removal requests).
+  </p>
+  <div class="alert">
+    <strong>Before the site goes live to any EU visitors:</strong> replace the placeholder text on all three legal pages
+    with language that reflects your real data handling. At minimum this covers: what data you collect and why,
+    who processes it (FareHarbor, Resend, Google Analytics, Cloudflare), how long you keep it, your contact details
+    as data controller, and your cancellation/refund terms. A lawyer review is recommended for an EU-registered business.
+    <em>(Source: OWNER_INPUT_NEEDED.md — Privacy Policy &amp; Terms of Service; README.md — Legal &amp; Compliance)</em>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <p><strong>Alpacas Ibiza — Owner Launch Readiness Briefing</strong> &nbsp;·&nbsp; Prepared 26 May 2026</p>
+  <p>All claims in this document cite a source file. Items tagged [NEEDS YOUR INPUT] are genuinely blocked — no estimate or placeholder can substitute for the owner's answer.</p>
+  <p>Sources: README.md · START_HERE.md · OWNER_INPUT_NEEDED.md · CANT_BE_DONE.md · PLAN.md · INTEGRATION_STATUS_2026-04-20.md</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,42 @@
+name: Admin Credentials Check
+
+on:
+  push:
+  pull_request:
+
+# Soft-fail guard: warns if a committed file contains the literal default
+# password "ADMIN_PASSWORD=password". This catches accidental .env commits
+# before they reach production. Does NOT block merge (continue-on-error: true)
+# because full CI is not yet in place. Upgrade to hard-fail when CI is stable.
+
+jobs:
+  check-admin-creds:
+    name: Check for default admin credentials
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Scan committed files for ADMIN_PASSWORD=password
+        id: scan
+        continue-on-error: true
+        run: |
+          # Grep all committed files (exclude .github itself and node_modules)
+          if git ls-files | grep -v node_modules | xargs grep -l "ADMIN_PASSWORD=password" 2>/dev/null | grep .; then
+            echo "::warning::One or more committed files contain ADMIN_PASSWORD=password (default credential). Remove before deploying to production."
+            exit 1
+          else
+            echo "No default admin credentials found in committed files."
+          fi
+
+      - name: Scan .env* files for ADMIN_PASSWORD=password
+        id: scan-env
+        continue-on-error: true
+        run: |
+          # Catch any .env* files that were accidentally committed
+          if find . -maxdepth 2 -name ".env*" -not -path "*/node_modules/*" -not -path "*/.next/*" \
+               | xargs grep -l "ADMIN_PASSWORD=password" 2>/dev/null | grep .; then
+            echo "::warning::.env file with ADMIN_PASSWORD=password detected in repo. Rotate the credential and remove the file from git history."
+            exit 1
+          else
+            echo "No .env files with default admin password found."
+          fi
