@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { sendEmail } from '@/lib/mailer'
 import { verifyTurnstile } from '@/lib/turnstile'
+import { detectHoneypot } from '@/lib/honeypot'
 
 const TO_EMAIL = process.env.CONTACT_EMAIL ?? 'info@alpacasibiza.com'
 
@@ -8,6 +9,11 @@ export async function POST(request: Request) {
     try {
         const body = await request.json()
         const { name, email, description, 'cf-turnstile-response': captchaToken } = body
+
+        if (detectHoneypot(body, 'phone_extension')) {
+            console.warn('[honeypot] Bot submission blocked', { route: '/api/commission' })
+            return NextResponse.json({ success: true }, { status: 200 })
+        }
 
         if (!name || !email || !description) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
