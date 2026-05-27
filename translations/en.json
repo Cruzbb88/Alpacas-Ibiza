@@ -5,7 +5,10 @@
     "about": "About",
     "contact": "Contact",
     "bookTour": "Book Tour",
-    "language": "Language"
+    "language": "Language",
+    "home": "Home",
+    "alpacas": "Our Alpacas",
+    "gifts": "Gift Vouchers"
   },
   "hero": {
     "title": "Es Currals Alpacas Ibiza",
@@ -796,6 +799,9 @@
     "alpacaGridTitle": "Choose your alpaca",
     "alpacaGridSubtitle": "",
     "alpacaUnmappedBio": "",
+    "pickerHeading": "Pick your alpaca",
+    "pickerSubheading": "Choose a specific alpaca to support, or let us match you with one of the herd.",
+    "pickerRandomLabel": "Pick for me",
     "ctaLabel": "Adopt now",
     "ctaSubtext": "",
     "successHeading": "Welcome to the herd!",
@@ -809,7 +815,14 @@
   "journal": {
     "title": "Journal",
     "backToJournal": "Back to Journal",
-    "relatedTitle": "More from"
+    "relatedTitle": "More from",
+    "subtitle": "Stories from the farm — life with the herd, weaving rhythms, seasonal notes.",
+    "emptyTitle": "Stories coming soon",
+    "emptyBody": "Follow us on Instagram for updates while we get the journal ready.",
+    "emptyCtaHref": "/contact",
+    "emptyCtaLabel": "Get in touch →",
+    "ownerConfirmHeader": "Owner: add posts to activate",
+    "ownerConfirmBody": "Add entries to lib/data/journal.ts with status: 'live'. Drop hero images at public/images/journal/<slug>.webp. Empty state shows publicly until then."
   },
   "share": {
     "label": "Share",
@@ -857,5 +870,259 @@
     "linkTerms": "Terms of Service",
     "linkCookies": "Cookie Policy",
     "linkSitemap": "Site Map"
+  },
+  "awards": {
+    "recognizedBy": "Recognized by",
+    "certified": "Certified",
+    "awardsAndRecognition": "Awards & Recognition"
+  },
+  "alpacas": {
+    "title": "Meet Our Alpacas",
+    "subtitle": "Get to know the herd at Es Currals — 14 individuals, each with their own personality.",
+    "adoptCta": "Adopt me"
+  },
+  "yoga": {
+    "title": "Alpaca Yoga",
+    "subtitle": "Hatha yoga among the alpacas — 1 hour 15 minutes, max 6 guests. Every Wednesday and Saturday.",
+    "cta": "Book Your Yoga Session",
+    "ctaSecondary": "Enquire about private groups",
+    "whatTitle": "What is Alpaca Yoga?",
+    "whatBody": "A 75-minute outdoor Hatha yoga session held in the alpaca paddock at Es Currals finca in the rural north of Ibiza. Practise surrounded by the gentle presence of our herd — they graze freely around you while your guide leads the session.",
+    "whyTitle": "Why Yoga with Alpacas?",
+    "whyBody": "Alpacas are naturally calming animals. Their unhurried pace, soft sounds, and curious nature create an environment that deepens relaxation and focus. Guests consistently report that the presence of the herd makes it easier to stay present on the mat.",
+    "whenTitle": "When & Where",
+    "whenBody": "Sessions run every Wednesday and Saturday. The yoga area is on the finca in San Carlos, rural north Ibiza. Contact us to confirm the start time for your preferred date, and for off-season availability.",
+    "priceTitle": "Price & Capacity",
+    "priceBody": "€30 per person. Maximum 6 participants per session to keep the experience intimate and to respect the alpacas' space.",
+    "scheduleNote": "Wednesday & Saturday sessions. Contact us for the current start time and seasonal availability.",
+    "details": {
+      "price": {
+        "title": "€30 per person",
+        "desc": "Verified from live site"
+      },
+      "duration": {
+        "title": "1 hour 15 minutes",
+        "desc": "Hatha session"
+      },
+      "groupSize": {
+        "title": "Max 6 guests",
+        "desc": "Intimate by design"
+      }
+    },
+    "faq": {
+      "audience": {
+        "q": "Do I need yoga experience?",
+        "a": "No experience is necessary. The session is suitable for all levels, including complete beginners. The instructor adapts to the group."
+      },
+      "bring": {
+        "q": "What should I bring?",
+        "a": "Comfortable clothing you can move in, and sunscreen for outdoor sessions. Contact us to confirm whether mats are provided or if you should bring your own."
+      },
+      "weather": {
+        "q": "What happens if it rains?",
+        "a": "Sessions may be rescheduled or moved to a sheltered area in poor weather. We will contact you in advance if conditions require a change."
+      },
+      "refund": {
+        "q": "What is the cancellation policy?",
+        "a": "Cancellations made at least 48 hours in advance receive a full refund or rebooking. Later cancellations may incur a 50% fee."
+      }
+    },
+    "ownerConfirmHeader": "Owner action required before launch",
+    "ownerConfirmBody": "The items below need owner confirmation before the yoga page goes live."
+  },
+  "weddings": {
+    "eyebrow": "Weddings & Photoshoots",
+    "title": "Alpacas at Your Wedding",
+    "subtitle": "Make your wedding, engagement, or photoshoot unforgettable with our gentle herd. On-site at the finca or at your venue — contact us for a bespoke quote.",
+    "includedTitle": "What's Included",
+    "includedSubtitle": "Package details are tailored to your event. Contact us for a full quote.",
+    "contactForDetails": "Contact us for details",
+    "useCasesTitle": "Perfect for Every Occasion",
+    "useCases": {
+      "bridal": "Bridal photoshoot",
+      "ringBearer": "Ring-bearer ceremony",
+      "engagement": "Engagement portraits",
+      "family": "Family photo sessions",
+      "socialMedia": "Social media & content shoots"
+    },
+    "details": {
+      "alpacaCount": "Alpacas included",
+      "duration": "Duration",
+      "radius": "Off-site travel radius",
+      "handler": "Handler"
+    },
+    "welfareTitle": "Welfare Comes First",
+    "welfareText": "Our alpacas are socialized, calm, and accustomed to guests. All appearances are supervised by an experienced handler. We only accept bookings we are confident are safe and comfortable for the herd.",
+    "welfare": {
+      "gentle": "Gentle & socialized",
+      "gentleDesc": "Our herd is used to people and calm in new settings.",
+      "supervised": "Always supervised",
+      "supervisedDesc": "An experienced handler accompanies every appearance.",
+      "allergy": "Hypoallergenic fleece",
+      "allergyDesc": "Alpaca fibre is low-allergen — kind to sensitive guests."
+    },
+    "bookingTitle": "Plan Your Wedding with Alpacas",
+    "bookingText": "Whether you are hosting at our finca or need us to bring the alpacas to your venue, we will work with you to create the right experience. Get in touch to start planning.",
+    "bookAtFarm": "Book at the Farm",
+    "bookOffSite": "Enquire about off-site",
+    "faq": {
+      "notice": {
+        "q": "How far in advance should I book?",
+        "a": "We recommend booking as early as possible — at least 4–6 weeks ahead for standard shoots and as far in advance as possible for weddings. Popular dates fill quickly in peak season (May–October)."
+      },
+      "location": {
+        "q": "Can you bring alpacas to our venue?",
+        "a": "Yes, off-site appearances are available. Contact us with your venue location and we will confirm whether it is within our travel area and provide a quote."
+      },
+      "kids": {
+        "q": "Are alpacas safe around children?",
+        "a": "Yes. Our alpacas are socialized and gentle. All interactions are supervised by a handler. We advise children to approach calmly and follow the handler's guidance."
+      },
+      "cancellation": {
+        "q": "What is your cancellation policy for weddings?",
+        "a": "Cancellation terms depend on the package. Please contact us for the specific policy for your booking. We aim to be as flexible as possible given the nature of special events."
+      }
+    }
+  },
+  "workshops": {
+    "breadcrumb": "Workshops",
+    "title": "Weaving + Spinning Workshops with San",
+    "subtitle": "A 2-day deep-dive into the full journey from alpaca fleece to finished scarf. Taught by San of Wishfulfilling Weaving, off-season and on request.",
+    "cta": "Request a Workshop Date",
+    "curriculum": {
+      "title": "What You'll Learn",
+      "subtitle": "Every step of the craft, from raw fleece to finished cloth",
+      "wash": "Wash and card alpaca fleece from our own herd",
+      "spin": "Spin yarn on a spinning wheel",
+      "weave": "Weave on a traditional wooden loom",
+      "scarf": "Take home the scarf you wove yourself"
+    },
+    "facts": {
+      "title": "Workshop at a Glance",
+      "subtitle": "Everything you need to know before you request a date",
+      "duration": {
+        "title": "Duration",
+        "desc": "2 days"
+      },
+      "instructor": {
+        "title": "Instructor",
+        "desc": "San"
+      },
+      "groupSize": {
+        "title": "Group Size",
+        "desc": "Small group — contact for details"
+      },
+      "schedule": {
+        "title": "Schedule",
+        "desc": "Off-season only — on request"
+      },
+      "price": {
+        "title": "Price",
+        "desc": "Contact us for pricing"
+      },
+      "takeaway": {
+        "title": "Takeaway",
+        "desc": "Your own handwoven scarf"
+      }
+    },
+    "san": {
+      "title": "About San",
+      "body": "San is the weaver behind Wishfulfilling Weaving — the artisan studio at the heart of Es Currals alpaca farm. She works on a traditional wooden loom, turning fleece from our own herd into exclusive handcrafted textiles. The workshop is her invitation to share that craft with guests who want to go beyond watching and actually make something."
+    },
+    "booking": {
+      "title": "How to Book",
+      "body": "The workshop runs off-season, when the farm is quieter and San has time to give you her full attention. There is no fixed calendar — send us a message with your preferred dates and we will confirm availability.",
+      "cta": "Request a Workshop Date"
+    },
+    "faq": {
+      "experience": {
+        "q": "Do I need weaving experience?",
+        "a": "None at all. The workshop is designed for complete beginners. San takes you through every step, from washing the raw fleece to finishing your scarf."
+      },
+      "bring": {
+        "q": "What should I bring?",
+        "a": "Just yourself and comfortable clothes you do not mind getting a little dusty. All materials, tools, and equipment are provided. Lunch arrangements will be confirmed when you book."
+      },
+      "cancellation": {
+        "q": "What is the cancellation policy?",
+        "a": "If you need to cancel or reschedule, please contact us as early as possible. Because workshops are scheduled on request and San sets aside two full days, we ask for reasonable notice."
+      },
+      "wool": {
+        "q": "Is the wool from your own alpacas?",
+        "a": "Yes. You will work with fleece from our own herd at Es Currals — the same animals you can meet on a farm visit. The connection between the animal and the finished cloth is real."
+      }
+    }
+  },
+  "sustainability": {
+    "title": "Sustainability",
+    "subtitle": "How we live and work on the land at Es Currals — animal welfare, traditional craft, and low-impact farming.",
+    "welfareTitle": "Animal Welfare",
+    "welfareBody": "Our alpacas come first in every decision we make. The herd at Es Currals lives on open pasture, is sheared once a year in spring, and is never subjected to anything that causes stress or harm. Each of our 14 alpacas has a name and is treated as an individual.",
+    "craftTitle": "Traditional Weaving",
+    "craftBody": "San weaves on a traditional wooden loom using fleece from our own herd. The Wishfulfilling Weaving studio produces scarves and textiles by hand — slow, intentional work that uses the full value of what the alpacas give us each year.",
+    "dyesTitle": "Natural Dyes",
+    "dyesBody": "We use natural dyes wherever possible. The colour palette comes from plants, minerals, and other natural sources rather than synthetic chemicals — keeping the process honest from fleece to finished cloth.",
+    "wasteTitle": "Zero-Waste Approach",
+    "wasteBody": "Fleece that does not go into weaving is composted or used in our Alcaca organic fertilizer programme. Nothing from the alpacas is wasted. Alcaca — our branded alpaca manure — closes the loop between animal care and land care.",
+    "landTitle": "The Land",
+    "landBody": "Es Currals is an authentic Ibiza finca in the rural north of the island. We manage the land using organic practices, with no artificial fertilizers or pesticides. The alpacas graze naturally and their manure replenishes the soil.",
+    "sourcingTitle": "Responsible Sourcing",
+    "sourcingBody": "When we need materials beyond our own fleece — linen, mohair, silk — we source from suppliers who share our values. We do not cut corners on quality or ethics at any point in the supply chain.",
+    "trustSectionTitle": "Learn more about Es Currals",
+    "trustAbout": "Our Story",
+    "trustPress": "Press Coverage",
+    "trustContact": "Get in Touch",
+    "ownerConfirmHeader": "Owner action required before launch",
+    "ownerConfirmBody": "Please review the items flagged below and provide the confirmed details before this page goes live."
+  },
+  "media": {
+    "title": "Media & Gallery",
+    "subtitle": "A glimpse of life on the farm — by us, by guests, by the press.",
+    "categoryFarm": "Farm life",
+    "categoryAlpacas": "The herd",
+    "categoryWeaving": "Wishfulfilling Weaving",
+    "categoryEvents": "Events & weddings",
+    "categoryPress": "Press coverage",
+    "emptyTitle": "Photos coming soon",
+    "emptyBody": "We're building the gallery. Follow us on Instagram for updates.",
+    "ownerConfirmHeader": "Owner: drop photos to activate",
+    "ownerConfirmBody": "Add files to public/images/gallery/ and entries to lib/data/media.ts with status: 'live'. Empty state shows publicly until then."
+  },
+  "press": {
+    "title": "Press & Media",
+    "subtitle": "Alpacas Ibiza has been featured in Belgian national press, regional Flemish media, Spanish local newspapers, and international travel outlets.",
+    "featuredIn": "As Seen In",
+    "readArticle": "Read article",
+    "logosComingSoon": "Press logos and article links coming soon — check back shortly.",
+    "inquiriesTitle": "Press Inquiries",
+    "inquiriesBody": "Journalists and media professionals are welcome to reach out for interviews, photography access, or editorial information.",
+    "inquiriesCta": "Contact for Press"
+  },
+  "gifts": {
+    "meta": {
+      "title": "Gift a Visit — Alpacas Ibiza",
+      "description": "Give someone a memorable day with our alpaca herd. Gift vouchers valid for any of our tours."
+    },
+    "hero": {
+      "title": "Give the gift of alpacas",
+      "subtitle": "A unique Ibiza experience — valid for any tour, any date",
+      "cta": "Buy a gift voucher"
+    },
+    "why": {
+      "title": "Why gift an Alpacas Ibiza visit?",
+      "reason1": "An experience, not another thing they will store away",
+      "reason2": "Redeemable on any date — flexible for their schedule",
+      "reason3": "Works for any age — families, couples, groups",
+      "reason4": "Digital voucher delivered by email — no shipping wait"
+    },
+    "booking": {
+      "title": "Buy a gift voucher",
+      "subtitle": "Select a tour and purchase a voucher. We will email it directly to the recipient on your chosen date.",
+      "poweredBy": "Secure gift voucher checkout powered by FareHarbor"
+    },
+    "faq": {
+      "howItWorksTitle": "How it works",
+      "howItWorksText": "Choose a tour, pay securely, and we send a branded voucher by email to the recipient. They pick a date that works for them and book through the same system."
+    }
   }
 }

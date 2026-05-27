@@ -4,6 +4,7 @@ import { importStripe } from '@/lib/integrations/stripe-sdk'
 import { extractLocaleFromReferer, requireEnvOrReturn503 } from '@/lib/route-helpers'
 import { isAdoptTier, type AdoptTier } from '@/lib/payment-vendor'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
+import { findAlpacaName } from '@/lib/data/alpacas'
 
 /**
  * POST /api/checkout
@@ -41,13 +42,17 @@ async function handleCheckout(request: Request, method: 'GET' | 'POST') {
   const secretKey = process.env.STRIPE_SECRET_KEY!
 
   let tier: AdoptTier | null = null
+  let alpacaSlugRaw: string | null = null
   if (method === 'GET') {
-    const raw = new URL(request.url).searchParams.get('tier')
+    const url = new URL(request.url)
+    const raw = url.searchParams.get('tier')
     if (isAdoptTier(raw)) tier = raw
+    alpacaSlugRaw = url.searchParams.get('alpaca')
   } else {
     try {
       const body = await request.json()
       if (isAdoptTier(body?.tier)) tier = body.tier
+      if (typeof body?.alpaca === 'string') alpacaSlugRaw = body.alpaca
     } catch {
       return attachRequestId(NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 }), reqId)
     }
@@ -55,6 +60,11 @@ async function handleCheckout(request: Request, method: 'GET' | 'POST') {
   if (!tier) {
     return attachRequestId(NextResponse.json({ error: 'tier must be "monthly" or "yearly"' }, { status: 400 }), reqId)
   }
+
+  // Validate alpaca slug against the canonical roster — unknown slugs (forged
+  // URLs, typos) are silently dropped so no junk text reaches Stripe metadata.
+  // null = "donor didn't pick a specific alpaca; we'll match them".
+  const alpacaSlug = findAlpacaName(alpacaSlugRaw) ? alpacaSlugRaw : null
 
   const priceKey = tier === 'monthly' ? 'STRIPE_ADOPT_PRICE_ID_MONTHLY' : 'STRIPE_ADOPT_PRICE_ID_YEARLY'
   const priceGate = requireEnvOrReturn503(priceKey, 'Payment price not configured for this tier')
@@ -64,8 +74,12 @@ async function handleCheckout(request: Request, method: 'GET' | 'POST') {
   // SECURITY: SITE_BASE_URL only — never request.headers.get('origin'). See
   // CLAUDE.md failsafe map "Stripe checkout success_url uses SITE_BASE_URL".
   const locale = extractLocaleFromReferer(request.headers.get('referer'))
+  // Round-trip the alpaca slug on cancel so the picker stays selected if the
+  // donor abandons checkout and comes back. Success URL doesn't need it —
+  // the AdoptThankYou screen takes over and reads from Stripe's metadata via webhook.
+  const cancelAlpacaQuery = alpacaSlug ? `&alpaca=${encodeURIComponent(alpacaSlug)}` : ''
   const successUrl = `${SITE_BASE_URL}/${locale}/adopt?checkout=success&tier=${tier}`
-  const cancelUrl  = `${SITE_BASE_URL}/${locale}/adopt?checkout=cancelled`
+  const cancelUrl  = `${SITE_BASE_URL}/${locale}/adopt?checkout=cancelled${cancelAlpacaQuery}`
 
   const stripeFactory = await importStripe()
   if (!stripeFactory) {
@@ -88,7 +102,11 @@ async function handleCheckout(request: Request, method: 'GET' | 'POST') {
       cancel_url: cancelUrl,
       billing_address_collection: 'auto',
       automatic_tax: { enabled: false }, // OWNER_INPUT_NEEDED: set true once Stripe Tax activated
-      metadata: { product: 'adopt-a-paca', tier },
+      metadata: {
+        product: 'adopt-a-paca',
+        tier,
+        ...(alpacaSlug ? { alpaca: alpacaSlug } : {}),
+      },
     })
     if (!session.url) {
       log.error('Stripe returned a session with no URL', { id: session.id })

@@ -124,6 +124,12 @@ export interface WelcomeAdoptionInput {
     processor: 'Stripe' | 'Mollie'
     /** Stripe session id / Mollie payment id — for audit reference. Optional; absent → processor-only line. */
     paymentRef?: string
+    /**
+     * HTML-escaped display name of the adopted alpaca (caller responsibility).
+     * undefined → generic "your alpaca" copy. Resolved from
+     * `metadata.alpaca` on the payment provider by findAlpacaName().
+     */
+    escapedAlpacaName?: string
 }
 
 export function welcomeAdoptionSubject(tier: AdoptTier): string {
@@ -141,9 +147,15 @@ export function welcomeAdoptionEmailHtml(opts: WelcomeAdoptionInput): string {
     const paymentLine = opts.paymentRef
         ? `Payment ref (${opts.processor}): ${opts.paymentRef}`
         : `Payment processor: ${opts.processor}`
+    // When the donor chose a specific alpaca on the adopt page, name them in the
+    // welcome copy. When they let us pick, fall back to "your alpaca".
+    const alpacaLine = opts.escapedAlpacaName
+        ? `<p style="margin-top:8px"><strong>Your adopted alpaca: ${opts.escapedAlpacaName}.</strong> We'll send a photo and intro story within a few days.</p>`
+        : `<p style="margin-top:8px">We'll match you with one of the herd this week and send a photo and intro story.</p>`
     return emailLayout(`
         <p>${greeting}</p>
         <p>Thank you for joining the herd at Es Currals Alpacas Ibiza. ${tierCopy}</p>
+        ${alpacaLine}
         <p>Here's what arrives over your adoption year:</p>
         <ul>
           <li>An adoption certificate with your sponsored alpaca's name</li>

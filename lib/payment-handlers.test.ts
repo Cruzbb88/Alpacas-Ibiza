@@ -19,9 +19,11 @@ import {
   handleStripeCheckoutCompleted,
   handleMolliePaymentPaid,
   handleStripeInvoicePaymentFailed,
+  handleStripeSubscriptionDeleted,
   type StripeCheckoutSessionLike,
   type MolliePaymentLike,
   type StripeInvoiceLike,
+  type StripeSubscriptionLike,
   type SendEmailFn,
 } from './payment-handlers.ts'
 
@@ -301,6 +303,58 @@ describe('handleStripeCheckoutCompleted — XSS + content guarantees', () => {
       { sendEmail },
     )
     assert.match(calls[0].html, /cs_live_unique_id_XYZ/, 'session.id must appear as paymentRef')
+  })
+})
+
+// ── Alpaca selector pass-through (donor pinned a specific alpaca) ────────────
+
+describe('handleStripeCheckoutCompleted — alpaca selector metadata', () => {
+  it('names the chosen alpaca in the welcome email when metadata.alpaca matches the roster', async () => {
+    const { sendEmail, calls } = makeSendEmailSpy()
+    await handleStripeCheckoutCompleted(
+      makeSession({ metadata: { tier: 'monthly', alpaca: 'bardot' } }),
+      { sendEmail },
+    )
+    assert.match(calls[0].html, /Bardot/, 'roster name should appear in welcome HTML')
+    assert.match(
+      calls[0].html,
+      /Your adopted alpaca: Bardot/,
+      'should use the named-alpaca copy variant',
+    )
+  })
+
+  it('falls back to generic "match you" copy when metadata.alpaca is missing', async () => {
+    const { sendEmail, calls } = makeSendEmailSpy()
+    await handleStripeCheckoutCompleted(makeSession(), { sendEmail })
+    assert.doesNotMatch(calls[0].html, /Your adopted alpaca:/, 'must not promise a specific name')
+    assert.match(calls[0].html, /match you with one of the herd/, 'should use generic copy')
+  })
+
+  it('drops unknown slugs silently (forged URL / typo)', async () => {
+    const { sendEmail, calls } = makeSendEmailSpy()
+    await handleStripeCheckoutCompleted(
+      makeSession({ metadata: { tier: 'monthly', alpaca: 'definitely-not-a-real-alpaca' } }),
+      { sendEmail },
+    )
+    // Unknown slug → findAlpacaName returns null → generic copy renders.
+    assert.doesNotMatch(calls[0].html, /Your adopted alpaca:/)
+    assert.doesNotMatch(
+      calls[0].html,
+      /definitely-not-a-real-alpaca/,
+      'raw slug must NEVER appear in donor-facing HTML',
+    )
+  })
+
+  it('escapes the resolved alpaca name (defence-in-depth even though roster is static)', async () => {
+    // The roster names are static, but the escape path must still be exercised
+    // so a future roster-mutation regression cannot inject HTML via this field.
+    const { sendEmail, calls } = makeSendEmailSpy()
+    await handleStripeCheckoutCompleted(
+      makeSession({ metadata: { tier: 'yearly', alpaca: 'avalon' } }),
+      { sendEmail },
+    )
+    assert.doesNotMatch(calls[0].html, /<script/i, 'no script tags from alpaca path')
+    assert.match(calls[0].html, /Avalon/)
   })
 })
 
@@ -642,5 +696,121 @@ describe('handleStripeInvoicePaymentFailed — zero-decimal currency rendering',
       { sendEmail, ownerEmail: 'owner@alpacasibiza.com' },
     )
     assert.match(calls[1].html, /75\.00 EUR/, 'EUR uses cents → divide by 100')
+  })
+})
+
+// ── handleStripeSubscriptionDeleted tests ──────────────────────────────────
+
+function makeSubscription(overrides?: Partial<StripeSubscriptionLike>): StripeSubscriptionLike {
+  return {
+    id: 'sub_test_abc',
+    customer: 'cus_test_xyz',
+    status: 'canceled',
+    canceled_at: 1700000000,
+    cancel_at_period_end: false,
+    cancellation_details: { reason: 'cancellation_requested', feedback: null, comment: null },
+    metadata: { product: 'adopt-a-paca', tier: 'monthly' },
+    ...overrides,
+  }
+}
+
+describe('handleStripeSubscriptionDeleted — happy path with owner email', () => {
+  it('sends owner notification with cancel reason; reason=ok', async () => {
+    const { sendEmail, calls } = makeSendEmailSpy()
+    const result = await handleStripeSubscriptionDeleted(makeSubscription(), {
+      sendEmail,
+      ownerEmail: 'owner@alpacasibiza.com',
+    })
+    assert.equal(result.reason, 'ok')
+    assert.equal(result.ownerNotified, true)
+    assert.equal(calls.length, 1)
+    assert.equal(calls[0].to, 'owner@alpacasibiza.com')
+    assert.match(calls[0].subject, /Subscription cancelled.*sub_test_abc/)
+    assert.match(calls[0].html, /cancellation_requested/, 'reason shown')
+    assert.match(calls[0].html, /Reason is recoverable/, 'recoverable banner shown')
+  })
+
+  it('payment_failed reason triggers recoverable banner', async () => {
+    const { sendEmail, calls } = makeSendEmailSpy()
+    await handleStripeSubscriptionDeleted(
+      makeSubscription({
+        cancellation_details: { reason: 'payment_failed', feedback: null, comment: null },
+      }),
+      { sendEmail, ownerEmail: 'owner@alpacasibiza.com' },
+    )
+    assert.match(calls[0].html, /Reason is recoverable/, 'payment_failed must be marked recoverable')
+  })
+
+  it('non-recoverable reason omits the recoverable banner', async () => {
+    const { sendEmail, calls } = makeSendEmailSpy()
+    await handleStripeSubscriptionDeleted(
+      makeSubscription({
+        cancellation_details: { reason: 'customer_service', feedback: 'too_expensive', comment: 'pricey' },
+      }),
+      { sendEmail, ownerEmail: 'owner@alpacasibiza.com' },
+    )
+    assert.doesNotMatch(calls[0].html, /Reason is recoverable/)
+    assert.match(calls[0].html, /too_expensive/, 'feedback appears')
+    assert.match(calls[0].html, /pricey/, 'comment appears')
+  })
+})
+
+describe('handleStripeSubscriptionDeleted — skipped + fail-quiet paths', () => {
+  it('non-adopt product → reason=not-adoption; no send', async () => {
+    const { sendEmail, calls } = makeSendEmailSpy()
+    const result = await handleStripeSubscriptionDeleted(
+      makeSubscription({ metadata: { product: 'gift-card' } }),
+      { sendEmail, ownerEmail: 'owner@alpacasibiza.com' },
+    )
+    assert.equal(result.reason, 'not-adoption')
+    assert.equal(result.ownerNotified, false)
+    assert.equal(calls.length, 0)
+  })
+
+  it('missing ownerEmail → reason=missing-owner-email; no send', async () => {
+    const { sendEmail, calls } = makeSendEmailSpy()
+    const result = await handleStripeSubscriptionDeleted(makeSubscription(), { sendEmail })
+    assert.equal(result.reason, 'missing-owner-email')
+    assert.equal(calls.length, 0)
+  })
+
+  it('send throws → reason=send-failed; handler does NOT throw', async () => {
+    const { sendEmail } = makeSendEmailSpy({ throwOn: 'all' })
+    let threw = false
+    let result
+    try {
+      result = await handleStripeSubscriptionDeleted(makeSubscription(), {
+        sendEmail,
+        ownerEmail: 'owner@alpacasibiza.com',
+      })
+    } catch {
+      threw = true
+    }
+    assert.equal(threw, false, 'handler MUST NOT throw — Stripe retry would re-notify owner')
+    assert.ok(result)
+    assert.equal(result.reason, 'send-failed')
+    assert.equal(result.ownerNotified, false)
+  })
+
+  it('subscription with no metadata → treated as adopt (default)', async () => {
+    const { sendEmail, calls } = makeSendEmailSpy()
+    const result = await handleStripeSubscriptionDeleted(
+      makeSubscription({ metadata: null }),
+      { sendEmail, ownerEmail: 'owner@alpacasibiza.com' },
+    )
+    assert.equal(result.reason, 'ok', 'no metadata.product = no veto, send proceeds')
+    assert.equal(calls.length, 1)
+  })
+
+  it('XSS guard on cancellation comment', async () => {
+    const { sendEmail, calls } = makeSendEmailSpy()
+    await handleStripeSubscriptionDeleted(
+      makeSubscription({
+        cancellation_details: { reason: 'other', feedback: null, comment: '<script>alert(1)</script>' },
+      }),
+      { sendEmail, ownerEmail: 'owner@alpacasibiza.com' },
+    )
+    assert.doesNotMatch(calls[0].html, /<script>alert/)
+    assert.match(calls[0].html, /&lt;script&gt;/)
   })
 })

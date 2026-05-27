@@ -104,7 +104,7 @@ export async function importMollie(): Promise<MollieFactory | null> {
     const mod: any = await import(/* webpackIgnore: true */ /* turbopackIgnore: true */ '@mollie/api-client')
     const factory = mod.createMollieClient ?? mod.default?.createMollieClient ?? mod.default
     _mollieFactory = typeof factory === 'function' ? factory : null
-    return _mollieFactory
+    return _mollieFactory ?? null
   } catch {
     _mollieFactory = null
     return null
@@ -192,6 +192,7 @@ export function molliePaymentProvider(opts?: {
             product: 'adopt-a-paca',
             tier,
             tenantId: checkoutOpts.tenantId,
+            ...(checkoutOpts.alpacaSlug ? { alpaca: checkoutOpts.alpacaSlug } : {}),
           },
         }
 

@@ -17,6 +17,7 @@
 
 import { welcomeAdoptionEmailHtml, welcomeAdoptionSubject, buildAdoptDiscountCodesEmail } from './email-templates.ts'
 import { escapeHtml } from './html.ts'
+import { findAlpacaName } from './data/alpacas.ts'
 
 // ── Stripe checkout.session.completed handler ────────────────────────────────
 
@@ -31,7 +32,7 @@ export interface StripeCheckoutSessionLike {
   subscription?: string | null
   amount_total?: number | null
   currency?: string | null
-  metadata?: { tier?: 'monthly' | 'yearly' | string } | null
+  metadata?: { tier?: 'monthly' | 'yearly' | string; alpaca?: string } | null
   customer_details?: {
     email?: string | null
     name?: string | null
@@ -100,6 +101,10 @@ export async function handleStripeCheckoutCompleted(
     tierRaw === 'monthly' || tierRaw === 'yearly' ? tierRaw : null
   const email = session.customer_details?.email ?? undefined
   const name = session.customer_details?.name ?? undefined
+  // metadata.alpaca is the slug recorded at checkout. Resolve to display name
+  // via the canonical roster — findAlpacaName returns null for unknown slugs,
+  // which collapses to the generic "we'll match you" email copy.
+  const alpacaName = findAlpacaName(session.metadata?.alpaca ?? null)
 
   const meta = {
     sessionId: session.id,
@@ -152,6 +157,7 @@ export async function handleStripeCheckoutCompleted(
           tier,
           processor: 'Stripe',
           paymentRef: session.id,
+          escapedAlpacaName: alpacaName ? escapeHtml(alpacaName) : undefined,
         }),
       }))(),
     (async () =>
@@ -346,6 +352,7 @@ export interface MolliePaymentLike {
     product?: string
     tier?: 'monthly' | 'yearly' | string
     tenantId?: string
+    alpaca?: string
   } | null
   /** Mollie one-off payments set billingEmail at create-time. */
   billingEmail?: string | null
@@ -483,6 +490,7 @@ async function sendMollieWelcomeQuiet(
   name: string | null,
 ): Promise<boolean> {
   try {
+    const alpacaName = findAlpacaName(payment.metadata?.alpaca ?? null)
     await sendEmail({
       to: email,
       subject: welcomeAdoptionSubject(tier),
@@ -491,6 +499,7 @@ async function sendMollieWelcomeQuiet(
         tier,
         processor: 'Mollie',
         paymentRef: payment.id,
+        escapedAlpacaName: alpacaName ? escapeHtml(alpacaName) : undefined,
       }),
       listUnsubscribeUrl: `mailto:${process.env.CONTACT_EMAIL ?? 'info@alpacasibiza.com'}?subject=unsubscribe`,
     })
@@ -498,4 +507,108 @@ async function sendMollieWelcomeQuiet(
   } catch {
     return false
   }
+}
+
+// ── Stripe customer.subscription.deleted handler ─────────────────────────────
+
+/** Minimal shape of a Stripe Subscription the handler reads. */
+export interface StripeSubscriptionLike {
+  id: string
+  customer?: string | null
+  status?: string
+  canceled_at?: number | null
+  cancel_at_period_end?: boolean | null
+  cancellation_details?: {
+    reason?: string | null
+    feedback?: string | null
+    comment?: string | null
+  } | null
+  metadata?: { product?: string; tier?: string } | null
+}
+
+export interface SubscriptionDeletedDeps {
+  sendEmail: SendEmailFn
+  ownerEmail?: string
+}
+
+export interface SubscriptionDeletedResult {
+  ownerNotified: boolean
+  reason: 'ok' | 'missing-owner-email' | 'send-failed' | 'not-adoption'
+  meta: {
+    subscriptionId: string
+    customerId?: string | null
+    cancelReason?: string | null
+    tier?: string
+  }
+}
+
+/**
+ * Handle Stripe's `customer.subscription.deleted` event — adopter cancelled.
+ *
+ * Was a silent log (TODO comment). Now sends owner a structured notification
+ * so they can follow up if cancellation reason is "payment_failed" or other
+ * recoverable cause. Fail-quiet on send error — webhook still returns 200.
+ *
+ * Skip the send entirely if metadata.product !== 'adopt-a-paca' (the same
+ * Stripe account might host other subscriptions one day).
+ */
+export async function handleStripeSubscriptionDeleted(
+  subscription: StripeSubscriptionLike,
+  deps: SubscriptionDeletedDeps,
+): Promise<SubscriptionDeletedResult> {
+  const meta = {
+    subscriptionId: subscription.id,
+    customerId: subscription.customer,
+    cancelReason: subscription.cancellation_details?.reason,
+    tier: subscription.metadata?.tier,
+  }
+
+  // Only act on adopt-a-paca cancellations. The Stripe account may host other
+  // subscription products in future — skip non-matching metadata silently.
+  if (subscription.metadata?.product && subscription.metadata.product !== 'adopt-a-paca') {
+    return { ownerNotified: false, reason: 'not-adoption', meta }
+  }
+
+  if (!deps.ownerEmail) {
+    return { ownerNotified: false, reason: 'missing-owner-email', meta }
+  }
+
+  try {
+    await deps.sendEmail({
+      to: deps.ownerEmail,
+      subject: `[Adopt-a-Paca] Subscription cancelled — ${subscription.id}`,
+      html: buildOwnerSubscriptionDeletedHtml(subscription),
+    })
+    return { ownerNotified: true, reason: 'ok', meta }
+  } catch {
+    return { ownerNotified: false, reason: 'send-failed', meta }
+  }
+}
+
+function buildOwnerSubscriptionDeletedHtml(subscription: StripeSubscriptionLike): string {
+  const canceledAtIso = subscription.canceled_at
+    ? new Date(subscription.canceled_at * 1000).toISOString()
+    : null
+  const reasonText = subscription.cancellation_details?.reason ?? 'not provided'
+  const feedbackText = subscription.cancellation_details?.feedback ?? null
+  const commentText = subscription.cancellation_details?.comment ?? null
+  const recoverableReasons = new Set(['payment_failed', 'cancellation_requested'])
+  const isRecoverable = recoverableReasons.has(reasonText)
+
+  return `
+    <div style="font-family:sans-serif;max-width:600px;margin:0 auto;color:#2d2d2d;padding:16px">
+      <h2 style="color:${isRecoverable ? '#a44' : '#666'}">Adopt-a-Paca subscription cancelled</h2>
+      ${isRecoverable ? '<p style="color:#a44"><strong>Reason is recoverable — consider reaching out.</strong></p>' : ''}
+      <table style="width:100%;border-collapse:collapse;font-size:14px">
+        <tr><td style="padding:6px 0">Subscription:</td><td><code>${escapeHtml(subscription.id)}</code></td></tr>
+        <tr><td style="padding:6px 0">Customer:</td><td><code>${escapeHtml(subscription.customer ?? '—')}</code></td></tr>
+        <tr><td style="padding:6px 0">Tier:</td><td>${escapeHtml(subscription.metadata?.tier ?? '—')}</td></tr>
+        <tr><td style="padding:6px 0">Cancel reason:</td><td>${escapeHtml(reasonText)}</td></tr>
+        ${feedbackText ? `<tr><td style="padding:6px 0">Feedback:</td><td>${escapeHtml(feedbackText)}</td></tr>` : ''}
+        ${commentText ? `<tr><td style="padding:6px 0">Comment:</td><td>${escapeHtml(commentText)}</td></tr>` : ''}
+        ${canceledAtIso ? `<tr><td style="padding:6px 0">Cancelled at:</td><td>${escapeHtml(canceledAtIso)}</td></tr>` : ''}
+      </table>
+      <p style="margin-top:16px;color:#666;font-size:13px">Look up the customer in Stripe dashboard if you want to email them a reactivation link.</p>
+    </div>
+  `.trim()
 }

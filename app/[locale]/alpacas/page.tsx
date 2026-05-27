@@ -74,7 +74,7 @@ export default async function AlpacasPage({ params }: { params: Promise<{ locale
             <PageSection>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     {animals.map((animal) => (
-                        <AlpacaCard key={animal.id} alpaca={animal} locale={locale} />
+                        <AlpacaCard key={animal.id} alpaca={animal} locale={locale} showAdoptCta />
                     ))}
                 </div>
             </PageSection>

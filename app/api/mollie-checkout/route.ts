@@ -5,6 +5,7 @@ import { isAdoptTier, type AdoptTier } from '@/lib/payment-vendor'
 import { extractLocaleFromReferer, requireEnvOrReturn503 } from '@/lib/route-helpers'
 import { isValidEmail } from '@/lib/validate-email'
 import { getRequestId, attachRequestId } from '@/lib/request-id'
+import { findAlpacaName } from '@/lib/data/alpacas'
 
 /**
  * GET  /api/mollie-checkout?tier=monthly|yearly
@@ -43,9 +44,12 @@ async function handleCheckout(request: Request, method: 'GET' | 'POST') {
 
   let tier: AdoptTier | null = null
   let customerEmail: string | undefined
+  let alpacaSlugRaw: string | null = null
   if (method === 'GET') {
-    const raw = new URL(request.url).searchParams.get('tier')
+    const url = new URL(request.url)
+    const raw = url.searchParams.get('tier')
     if (isAdoptTier(raw)) tier = raw
+    alpacaSlugRaw = url.searchParams.get('alpaca')
   } else {
     try {
       const body = (await request.json()) as Record<string, unknown>
@@ -53,6 +57,7 @@ async function handleCheckout(request: Request, method: 'GET' | 'POST') {
       if (typeof body?.email === 'string' && isValidEmail(body.email)) {
         customerEmail = body.email
       }
+      if (typeof body?.alpaca === 'string') alpacaSlugRaw = body.alpaca
     } catch {
       return attachRequestId(NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 }), reqId)
     }
@@ -60,6 +65,7 @@ async function handleCheckout(request: Request, method: 'GET' | 'POST') {
   if (!tier) {
     return attachRequestId(NextResponse.json({ error: 'tier must be "monthly" or "yearly"' }, { status: 400 }), reqId)
   }
+  const alpacaSlug = findAlpacaName(alpacaSlugRaw) ? alpacaSlugRaw! : undefined
 
   // SECURITY: SITE_BASE_URL only — never request.headers.get('origin'). See
   // CLAUDE.md failsafe map "Mollie checkout returnUrl uses SITE_BASE_URL".
@@ -72,6 +78,7 @@ async function handleCheckout(request: Request, method: 'GET' | 'POST') {
     productId: tier, // overload: tier carried in productId (see payment-mollie.ts header)
     returnUrl,
     customerEmail,
+    alpacaSlug,
   })
 
   if ('unconfigured' in result) {

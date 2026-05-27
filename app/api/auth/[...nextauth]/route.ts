@@ -1,8 +1,15 @@
-import NextAuth from 'next-auth'
+import NextAuth, { type NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { safeEqual } from '@/lib/secrets'
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
+/**
+ * NextAuth v4 (package.json pins ^4.24.13). v4 returns a single handler from
+ * NextAuth(authOptions); we re-export it as GET + POST per the App Router
+ * convention. Do NOT switch to `const { handlers } = NextAuth(...)` — that is
+ * v5-only and breaks at build with "Cannot read properties of undefined
+ * (reading 'GET')".
+ */
+export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: 'credentials',
@@ -40,10 +47,21 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
   callbacks: {
     async session({ session, token }) {
-      if (token) {
-        session.user.id = token.sub!
+      if (token && session.user) {
+        ;(session.user as { id?: string }).id = token.sub
       }
       return session
     },
   },
-})
+}
+
+const handler = NextAuth(authOptions)
+
+export { handler as GET, handler as POST }
+
+// `auth` is the legacy import name used by admin/* pages + /api/analytics/data:
+//   const session = await getServerSession(auth)
+// In NextAuth v4, getServerSession takes the authOptions object — so this
+// alias is just `authOptions` under a more readable name. Keep both exports
+// so existing callers compile without churn.
+export { authOptions as auth }

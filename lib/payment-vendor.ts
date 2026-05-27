@@ -51,6 +51,16 @@ export function isAdoptTier(value: unknown): value is AdoptTier {
 export const ADOPT_FALLBACK_MAILTO =
   'mailto:info@alpacasibiza.com?subject=Adopt%20an%20Alpaca%20enquiry'
 
+export interface AdoptCheckoutOpts {
+  /**
+   * Optional alpaca slug chosen on the /adopt picker. When set, threaded into
+   * the resulting checkout URL as `&alpaca=<slug>` so the route handler can
+   * stamp it onto provider metadata. Caller MUST have already validated against
+   * the canonical roster — the adapter does not re-validate.
+   */
+  alpaca?: string
+}
+
 export interface PaymentAdapter {
   vendor: PaymentVendor
   /**
@@ -58,14 +68,22 @@ export interface PaymentAdapter {
    * checkout, or null if the required env vars are not yet set.
    * Callers MUST fall back to mailto: when null is returned.
    */
-  buildAdoptCheckoutUrl(tier: 'monthly' | 'yearly'): string | null
+  buildAdoptCheckoutUrl(tier: 'monthly' | 'yearly', opts?: AdoptCheckoutOpts): string | null
+}
+
+function appendAlpacaQuery(url: string, alpaca?: string): string {
+  if (!alpaca) return url
+  const sep = url.includes('?') ? '&' : '?'
+  return `${url}${sep}alpaca=${encodeURIComponent(alpaca)}`
 }
 
 // ── Mailto adapter (default) ──────────────────────────────────────────────────
 
 const mailtoAdapter: PaymentAdapter = {
   vendor: 'mailto',
-  buildAdoptCheckoutUrl(_tier) {
+  buildAdoptCheckoutUrl(_tier, _opts) {
+    // Mailto fallback ignores alpaca choice — the email subject conveys intent;
+    // the owner reads the body and follows up. No URL parameters to thread.
     return ADOPT_FALLBACK_MAILTO
   },
 }
@@ -80,7 +98,7 @@ const mailtoAdapter: PaymentAdapter = {
 function stripeAdapter(): PaymentAdapter {
   return {
     vendor: 'stripe',
-    buildAdoptCheckoutUrl(tier) {
+    buildAdoptCheckoutUrl(tier, opts) {
       const priceId =
         tier === 'monthly'
           ? process.env.STRIPE_ADOPT_PRICE_ID_MONTHLY
@@ -97,7 +115,7 @@ function stripeAdapter(): PaymentAdapter {
         return null
       }
 
-      return `/api/checkout?tier=${tier}`
+      return appendAlpacaQuery(`/api/checkout?tier=${tier}`, opts?.alpaca)
     },
   }
 }
@@ -191,7 +209,7 @@ function fareharborAdapter(): PaymentAdapter {
 function mollieAdapter(): PaymentAdapter {
   return {
     vendor: 'mollie',
-    buildAdoptCheckoutUrl(tier) {
+    buildAdoptCheckoutUrl(tier, opts) {
       const apiKey = process.env.MOLLIE_API_KEY
       const webhookSecret = process.env.MOLLIE_WEBHOOK_SECRET
 
@@ -204,7 +222,7 @@ function mollieAdapter(): PaymentAdapter {
         return null
       }
 
-      return `/api/mollie-checkout?tier=${tier}`
+      return appendAlpacaQuery(`/api/mollie-checkout?tier=${tier}`, opts?.alpaca)
     },
   }
 }

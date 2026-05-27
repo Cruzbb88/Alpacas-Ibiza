@@ -20,6 +20,24 @@ export interface Alpaca {
   image: string | null
 }
 
+/**
+ * Resolve an alpaca slug to its display name from the canonical roster.
+ * Returns null when the slug is not in the roster — callers MUST treat this
+ * as "no specific alpaca chosen" (e.g. user supplied a forged slug, or picker
+ * defaulted to "pick for me").
+ *
+ * Used by the Adopt flow to:
+ *   1. Validate `?alpaca=<slug>` query param before passing to Stripe metadata
+ *      (untrusted input — rejecting unknown slugs prevents arbitrary text
+ *      reaching the Stripe Dashboard metadata viewer).
+ *   2. Look up the human-readable name for the welcome email.
+ */
+export function findAlpacaName(slug: string | null | undefined): string | null {
+  if (!slug) return null
+  const hit = ALPACAS.find((a) => a.id === slug)
+  return hit ? hit.name : null
+}
+
 export const ALPACAS: Alpaca[] = [
   { id: 'barbarella', name: 'Barbarella', bio: null, image: null },
   { id: 'avalon',     name: 'Avalon',     bio: null, image: null },

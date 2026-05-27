@@ -9,7 +9,8 @@ import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
 import { toJsonLd } from '@/lib/structured-data'
 import { GradientPageHero, PageSection, OwnerConfirmBanner } from '@/components/layout'
 import { BillingPortalLink } from '@/components/billing-portal-link'
-import { ALPACAS } from '@/lib/data/alpacas'
+import { ALPACAS, findAlpacaName } from '@/lib/data/alpacas'
+import { AlpacaPicker } from '@/components/adopt/alpaca-picker'
 import { AdoptThankYou } from '@/components/adopt-thank-you'
 import { getTenant } from '@/lib/tenants/server'
 import { getOgImage } from '@/lib/og-images'
@@ -62,16 +63,22 @@ export default async function AdoptPage({
     searchParams,
 }: {
     params: Promise<{ locale: Locale }>
-    searchParams: Promise<{ checkout?: string; tier?: string; portal?: string }>
+    searchParams: Promise<{ checkout?: string; tier?: string; portal?: string; alpaca?: string }>
 }) {
     const { locale } = await params
-    const { checkout } = await searchParams
+    const { checkout, alpaca: alpacaParam } = await searchParams
     const translate = t(locale)
     const tenant = await getTenant()
 
+    // Validate alpaca slug against the canonical roster — unknown slugs (forged
+    // URL, typo) collapse to "no selection". The same validation runs in the
+    // checkout routes as a second line of defence.
+    const selectedAlpacaSlug = findAlpacaName(alpacaParam ?? null) ? (alpacaParam as string) : null
+
     const paymentAdapter = getPaymentAdapter()
-    const monthlyUrl = paymentAdapter.buildAdoptCheckoutUrl('monthly') ?? `mailto:info@alpacasibiza.com?subject=Adopt%20an%20Alpaca%20enquiry`
-    const yearlyUrl  = paymentAdapter.buildAdoptCheckoutUrl('yearly')  ?? `mailto:info@alpacasibiza.com?subject=Adopt%20an%20Alpaca%20enquiry`
+    const adoptOpts = selectedAlpacaSlug ? { alpaca: selectedAlpacaSlug } : undefined
+    const monthlyUrl = paymentAdapter.buildAdoptCheckoutUrl('monthly', adoptOpts) ?? `mailto:info@alpacasibiza.com?subject=Adopt%20an%20Alpaca%20enquiry`
+    const yearlyUrl  = paymentAdapter.buildAdoptCheckoutUrl('yearly', adoptOpts)  ?? `mailto:info@alpacasibiza.com?subject=Adopt%20an%20Alpaca%20enquiry`
     // When vendor returns null (env vars unset), both fall back to mailto — same as before.
     // Drop-in: set PAYMENT_VENDOR + vendor-specific keys in .env.local and both CTAs activate.
 
@@ -161,6 +168,18 @@ export default async function AdoptPage({
                 subtitle={translate('adopt.subtitle')}
             />
 
+            {/* Alpaca picker — donor can pin a specific alpaca. Slug rides through Stripe/Mollie metadata
+                so the welcome email mentions which alpaca they adopted. "Pick for me" clears selection. */}
+            <PageSection bg="default" width="narrow" className="pt-12 pb-2">
+                <AlpacaPicker
+                    locale={locale}
+                    selectedSlug={selectedAlpacaSlug}
+                    heading={translate('adopt.pickerHeading') || 'Pick your alpaca'}
+                    subheading={translate('adopt.pickerSubheading') || 'Or let us match you with one of the herd.'}
+                    randomLabel={translate('adopt.pickerRandomLabel') || 'Pick for me'}
+                />
+            </PageSection>
+
             {/* Pricing tiers */}
             <PageSection bg="default" width="narrow" className="py-16">
                 <h2 className="text-2xl font-bold text-foreground text-center mb-10">
@@ -209,8 +228,9 @@ export default async function AdoptPage({
                 </div>
             </PageSection>
 
-            {/* CTA — routes through payment adapter; falls back to mailto until PAYMENT_VENDOR is set */}
-            <PageSection bg="gradient" width="tight" borderTop className="py-16" innerClassName="text-center">
+            {/* CTA — routes through payment adapter; falls back to mailto until PAYMENT_VENDOR is set.
+                `id="cta"` is the AlpacaPicker's smooth-scroll target after a donor picks an alpaca. */}
+            <PageSection id="cta" bg="gradient" width="tight" borderTop className="py-16" innerClassName="text-center">
                 <h2 className="text-2xl font-bold text-foreground mb-4">
                     {translate('adopt.ctaLabel')}
                 </h2>

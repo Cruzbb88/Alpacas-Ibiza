@@ -59,6 +59,13 @@ export interface CreateCheckoutOpts {
    * Defaults to 'payment' when omitted. Caller MUST pass 'subscription' for monthly Adopt-a-Paca.
    */
   mode?: 'subscription' | 'payment'
+  /**
+   * Optional alpaca slug chosen by the donor on the /adopt picker. When set,
+   * threaded into the provider's metadata so the welcome email can name the
+   * specific alpaca. Caller MUST have already validated against the roster
+   * (findAlpacaName from lib/data/alpacas) — providers do not re-validate.
+   */
+  alpacaSlug?: string
 }
 
 // ── Result types ───────────────────────────────────────────────────────────────

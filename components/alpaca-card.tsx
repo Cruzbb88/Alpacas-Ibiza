@@ -11,6 +11,7 @@
  */
 
 import Image from 'next/image'
+import Link from 'next/link'
 import type { Locale } from '@/i18n.config'
 import type { AnimalEntity } from '@/lib/integrations/content-types'
 import { t } from '@/lib/translations'
@@ -18,9 +19,15 @@ import { t } from '@/lib/translations'
 interface AlpacaCardProps {
   alpaca: AnimalEntity
   locale: Locale
+  /**
+   * When true, render an "Adopt me →" link inside the card pointing at
+   * /[locale]/adopt?alpaca=<slug>. Defaults to false so the /alpacas listing
+   * page stays purely informational unless explicitly opted in.
+   */
+  showAdoptCta?: boolean
 }
 
-export function AlpacaCard({ alpaca, locale }: AlpacaCardProps) {
+export function AlpacaCard({ alpaca, locale, showAdoptCta = false }: AlpacaCardProps) {
   const translate = t(locale)
   const hasImage = alpaca.image !== null && alpaca.image !== undefined
 
@@ -77,8 +84,16 @@ export function AlpacaCard({ alpaca, locale }: AlpacaCardProps) {
       )}
 
       <div className="p-4 flex flex-col gap-2 flex-1">
-        {/* Name */}
-        <h3 className="font-bold text-primary">{alpaca.name}</h3>
+        {/* Name — links to individual alpaca detail page so visitors can read
+            full bio + adopt this specific alpaca. */}
+        <h3 className="font-bold text-primary">
+          <Link
+            href={`/${locale}/alpacas/${encodeURIComponent(alpaca.id)}`}
+            className="hover:underline focus:outline-none focus:ring-2 focus:ring-primary/50 rounded"
+          >
+            {alpaca.name}
+          </Link>
+        </h3>
 
         {/* Breed + Age badge — omitted entirely when both are null */}
         {hasBadge && (
@@ -98,6 +113,16 @@ export function AlpacaCard({ alpaca, locale }: AlpacaCardProps) {
           <p className="text-xs text-muted-foreground/60 italic mt-1">
             ✦ {alpaca.fun_fact}
           </p>
+        )}
+
+        {showAdoptCta && (
+          <Link
+            href={`/${locale}/adopt?alpaca=${encodeURIComponent(alpaca.id)}`}
+            className="mt-2 inline-block text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
+            aria-label={`${translate('alpacas.adoptCta') || 'Adopt'} ${alpaca.name}`}
+          >
+            {translate('alpacas.adoptCta') || 'Adopt me'} →
+          </Link>
         )}
       </div>
     </article>
