@@ -3,23 +3,46 @@ import { SITE_BASE_URL } from '@/lib/config'
 import { importStripe } from '@/lib/integrations/stripe-sdk'
 import { extractLocaleFromReferer, requireEnvOrReturn503 } from '@/lib/route-helpers'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
+import { verifyTurnstile } from '@/lib/turnstile'
+import { detectHoneypot } from '@/lib/honeypot'
+import { rateLimit, rateLimitByEmail, getClientIp } from '@/lib/rate-limit'
+import { isValidEmail } from '@/lib/validate-email'
+import { sendEmail } from '@/lib/mailer'
+import { buildBillingPortalEmail } from '@/lib/email-templates'
 
 /**
  * POST /api/billing-portal
  *
- * Returns a Stripe Customer Portal URL so subscribers can self-serve:
- * cancel, update payment method, view invoices — without contacting the owner.
+ * Accepts: { email: string; locale?: string; 'cf-turnstile-response'?: string }
+ * Returns: ALWAYS `{ ok: true }` 200 on any valid input.
  *
- * Accepts: { email?: string; customer_id?: string; locale?: string }
- * Returns: { url: string } on success, or { error, message } on failure.
+ * The Stripe Customer Portal URL is delivered out-of-band via email to the
+ * supplied address — NEVER in the JSON response. This closes an email-oracle
+ * enumeration vector: if the response differed between "subscriber" and
+ * "non-subscriber", an attacker could probe arbitrary emails to learn who
+ * has an adoption subscription (privacy leak + targeting data for phishing).
  *
- * Fail-CLOSED: returns 503 if STRIPE_SECRET_KEY is unset.
- * Mirror of app/api/checkout/route.ts env-var gate + dynamic import guard.
+ * Defence layers (in order):
+ *   1. Stripe key gate — 503 if STRIPE_SECRET_KEY unset (fail-CLOSED).
+ *   2. Honeypot — bots filling `website` field get silent 200 (no email sent).
+ *   3. IP rate limit — 3 req / 5 min per IP.
+ *   4. Per-email rate limit — 2 req / 1 hour per email (legit users rarely re-open).
+ *   5. Turnstile — bot check.
+ *   6. Side-channel email — portal URL emailed to user, never returned.
+ *
+ * The `customer_id` direct-lookup path that used to live here was removed:
+ *   - the only legit caller (BillingPortalLink) never sent customer_id
+ *   - allowing customer_id input would expose a separate Stripe-ID oracle
+ *
+ * Fail-CLOSED on Stripe gate. Fail-QUIET on everything else (silent 200) so
+ * that no response shape ever reveals customer existence.
  *
  * PREREQUISITE (owner action): Enable Customer Portal in Stripe dashboard:
  *   Stripe → Settings → Billing → Customer portal → Activate
  *   https://dashboard.stripe.com/settings/billing/portal
  */
+
+const GENERIC_OK = () => NextResponse.json({ ok: true }, { status: 200 })
 
 export async function POST(request: Request) {
   const reqId = getRequestId(request)
@@ -29,82 +52,93 @@ export async function POST(request: Request) {
   if (secretGate) return attachRequestId(secretGate, reqId)
   const secretKey = process.env.STRIPE_SECRET_KEY!
 
-  let body: { email?: string; customer_id?: string; locale?: string } = {}
+  let body: { email?: string; locale?: string; 'cf-turnstile-response'?: string; website?: string } = {}
   try {
     body = await request.json()
   } catch {
-    return attachRequestId(NextResponse.json({ error: 'INVALID_JSON', message: 'Invalid JSON body' }, { status: 400 }), reqId)
+    // Malformed body → silent 200 (don't help fuzzers).
+    return attachRequestId(GENERIC_OK(), reqId)
   }
-  const { email, customer_id, locale } = body
-  if (!email && !customer_id) {
-    return attachRequestId(
-      NextResponse.json(
-        { error: 'MISSING_IDENTIFIER', message: 'Provide either email or customer_id.' },
-        { status: 400 }
-      ),
-      reqId
-    )
+  const { email, locale, 'cf-turnstile-response': captchaToken } = body
+
+  if (detectHoneypot(body, 'website')) {
+    log.warn('Bot submission blocked', { route: '/api/billing-portal' })
+    return attachRequestId(GENERIC_OK(), reqId)
+  }
+
+  const ip = getClientIp(request)
+  const ipResult = rateLimit({ key: `billing-portal:${ip}`, limit: 3, windowMs: 5 * 60 * 1000 })
+  if (!ipResult.allowed) {
+    log.warn('IP rate limit hit', { ip, retryAfterSec: Math.ceil(ipResult.resetMs / 1000) })
+    return attachRequestId(GENERIC_OK(), reqId)
+  }
+
+  if (!email || !isValidEmail(email)) {
+    return attachRequestId(GENERIC_OK(), reqId)
+  }
+
+  const emailResult = rateLimitByEmail({ email, limit: 2, windowMs: 60 * 60 * 1000 })
+  if (!emailResult.allowed) {
+    log.warn('email rate limit hit', {
+      email_first4: email.slice(0, 4) + '…',
+      retryAfterSec: Math.ceil(emailResult.resetMs / 1000),
+    })
+    return attachRequestId(GENERIC_OK(), reqId)
+  }
+
+  const captcha = await verifyTurnstile(captchaToken, ip)
+  if (!captcha.ok) {
+    log.warn('Turnstile failed', { reason: captcha.reason })
+    return attachRequestId(GENERIC_OK(), reqId)
   }
 
   const stripeFactory = await importStripe()
   if (!stripeFactory) {
     log.error('stripe SDK not installed. Run: pnpm add stripe (owner-controlled deploy step).')
-    return attachRequestId(
-      NextResponse.json(
-        { error: 'STRIPE_SDK_MISSING', message: 'Server SDK not installed.' },
-        { status: 503 }
-      ),
-      reqId
-    )
+    return attachRequestId(GENERIC_OK(), reqId)
   }
   const stripe = stripeFactory(secretKey, { apiVersion: '2024-06-20' })
 
-  // ── 4. Resolve customer ID ────────────────────────────────────────────────
-  let customerId = customer_id
-  if (!customerId && email) {
-    try {
-      const customers = await stripe.customers.list({ email, limit: 1 })
-      const customer = customers.data[0]
-      if (!customer) {
-        return attachRequestId(
-          NextResponse.json(
-            {
-              error: 'CUSTOMER_NOT_FOUND',
-              message:
-                'No subscription found for that email. Contact info@alpacasibiza.com if you think this is wrong.',
-            },
-            { status: 404 }
-          ),
-          reqId
-        )
-      }
-      customerId = customer.id
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err)
-      log.error('Stripe customers.list failed', { message })
-      return attachRequestId(NextResponse.json({ error: 'STRIPE_LOOKUP_FAILED', message }, { status: 502 }), reqId)
-    }
+  let customerId: string | undefined
+  try {
+    const customers = await stripe.customers.list({ email, limit: 1 })
+    customerId = customers.data[0]?.id
+  } catch (err) {
+    log.error('Stripe customers.list failed', { message: err instanceof Error ? err.message : String(err) })
+    return attachRequestId(GENERIC_OK(), reqId)
   }
 
-  // Locale: body value preferred, else Referer header; both validated against the
-  // full 6-locale allowlist from i18n.config.ts (default in extractLocaleFromReferer).
+  if (!customerId) {
+    // No subscription for this email — silent no-op (preserves oracle closure).
+    log.info('billing-portal: no customer for email', { email_first4: email.slice(0, 4) + '…' })
+    return attachRequestId(GENERIC_OK(), reqId)
+  }
+
   const allowed = ['en', 'nl', 'es', 'de', 'it', 'fr']
   const safeLocale = locale && allowed.includes(locale)
     ? locale
     : extractLocaleFromReferer(request.headers.get('referer'))
   const returnUrl = `${SITE_BASE_URL}/${safeLocale}/adopt?portal=return`
 
+  let portalUrl: string
   try {
     const session = await stripe.billingPortal.sessions.create({
       customer: customerId,
       return_url: returnUrl,
     })
-
-    return attachRequestId(NextResponse.json({ url: session.url }), reqId)
+    portalUrl = session.url
   } catch (err) {
-    const message = err instanceof Error ? err.message : String(err)
-    log.error('billingPortal.sessions.create failed', { message })
-    return attachRequestId(NextResponse.json({ error: 'PORTAL_SESSION_FAILED', message }, { status: 502 }), reqId)
+    log.error('billingPortal.sessions.create failed', { message: err instanceof Error ? err.message : String(err) })
+    return attachRequestId(GENERIC_OK(), reqId)
   }
-}
 
+  try {
+    const { subject, html } = buildBillingPortalEmail(portalUrl)
+    await sendEmail({ to: email, subject, html })
+  } catch (err) {
+    log.error('sendEmail failed for billing-portal link', { message: err instanceof Error ? err.message : String(err) })
+    // Still return generic 200 — never reveal that customer existed but email failed.
+  }
+
+  return attachRequestId(GENERIC_OK(), reqId)
+}

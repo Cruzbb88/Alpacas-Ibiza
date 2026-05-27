@@ -251,3 +251,30 @@ ${unsubscribeFooter}
     return { subject, html }
 }
 
+/**
+ * Email containing a one-time Stripe Customer Portal link.
+ *
+ * Used by /api/billing-portal as a side-channel for the portal URL so the
+ * response payload never differs between "subscriber" and "non-subscriber"
+ * — closing the unauthenticated email-oracle enumeration vector.
+ *
+ * @param portalUrl  The Stripe portal session URL (already same-origin via SITE_BASE_URL).
+ *                   Trusted input — generated server-side by stripe.billingPortal.sessions.create().
+ */
+export function buildBillingPortalEmail(portalUrl: string): { subject: string; html: string } {
+    const subject = 'Manage your Alpacas Ibiza adoption'
+    const html = emailLayout(`
+<h2 style="color:${BRAND.primary}">Manage your adoption</h2>
+<p>You asked for a link to manage your Alpacas Ibiza adoption — here it is.</p>
+<p>This link opens the secure Stripe portal where you can update your payment method, view invoices, or cancel your adoption.</p>
+<div style="text-align:center;margin:32px 0">
+  <a href="${portalUrl}" style="display:inline-block;padding:14px 28px;background:${BRAND.primary};color:#fff;text-decoration:none;border-radius:8px;font-weight:600;font-size:16px">
+    Open subscription portal
+  </a>
+</div>
+<p style="color:#888;font-size:13px">If you didn't request this, you can ignore this email — the link does nothing without your Stripe account.</p>
+<p style="color:#888;font-size:12px;margin-top:8px">Or copy this link into your browser:<br/>${portalUrl}</p>
+`)
+    return { subject, html }
+}
+
