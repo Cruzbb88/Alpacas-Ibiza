@@ -41,7 +41,16 @@ function fromBase64Url(s: string): Buffer | null {
   }
 }
 
-export type MollieManageTokenScope = 'cancel'
+/**
+ * Three scopes carry distinct capabilities — scope guard prevents cross-use:
+ *   'cancel'         → POST /api/mollie-manage/cancel  (terminate the sub)
+ *   'status'         → GET  /api/mollie-manage/status  (read-only summary)
+ *   'update-payment' → POST /api/mollie-manage/update-payment (start a re-mandate)
+ *
+ * The same signing key + nonce scheme is used for all three; the `scope` field
+ * in the payload is mandatory and verifyMollieToken takes the expected scope.
+ */
+export type MollieManageTokenScope = 'cancel' | 'status' | 'update-payment'
 
 export interface MollieManageTokenPayload {
   customerId: string
@@ -51,28 +60,60 @@ export interface MollieManageTokenPayload {
   nonce: string
 }
 
-export function signMollieCancelToken(
-  customerId: string,
-  subscriptionId: string,
-  ttlMs = 7 * 24 * 60 * 60 * 1000,
-): string {
-  const payload: MollieManageTokenPayload = {
-    customerId,
-    subscriptionId,
-    scope: 'cancel',
-    expiresAt: new Date(Date.now() + ttlMs).toISOString(),
-    nonce: randomBytes(12).toString('hex'),
-  }
+function signToken(payload: MollieManageTokenPayload): string {
   const payloadB64 = toBase64Url(JSON.stringify(payload))
   const sig = createHmac('sha256', getSigningKey()).update(payloadB64).digest()
   return `${payloadB64}.${toBase64Url(sig)}`
 }
 
-/**
- * Verify a cancel token. Returns the payload on success, or null on any
- * failure (invalid / expired / tampered / wrong scope). Never throws.
- */
-export function verifyMollieCancelToken(token: string): MollieManageTokenPayload | null {
+export function signMollieCancelToken(
+  customerId: string,
+  subscriptionId: string,
+  ttlMs = 7 * 24 * 60 * 60 * 1000,
+): string {
+  return signToken({
+    customerId,
+    subscriptionId,
+    scope: 'cancel',
+    expiresAt: new Date(Date.now() + ttlMs).toISOString(),
+    nonce: randomBytes(12).toString('hex'),
+  })
+}
+
+/** Read-only status link. 7-day TTL — donor can refresh whenever. */
+export function signMollieStatusToken(
+  customerId: string,
+  subscriptionId: string,
+  ttlMs = 7 * 24 * 60 * 60 * 1000,
+): string {
+  return signToken({
+    customerId,
+    subscriptionId,
+    scope: 'status',
+    expiresAt: new Date(Date.now() + ttlMs).toISOString(),
+    nonce: randomBytes(12).toString('hex'),
+  })
+}
+
+/** Update-payment link (re-mandate). 7-day TTL — matches dunning window. */
+export function signMollieUpdatePaymentToken(
+  customerId: string,
+  subscriptionId: string,
+  ttlMs = 7 * 24 * 60 * 60 * 1000,
+): string {
+  return signToken({
+    customerId,
+    subscriptionId,
+    scope: 'update-payment',
+    expiresAt: new Date(Date.now() + ttlMs).toISOString(),
+    nonce: randomBytes(12).toString('hex'),
+  })
+}
+
+function verifyTokenWithScope(
+  token: string,
+  expectedScope: MollieManageTokenScope,
+): MollieManageTokenPayload | null {
   try {
     const dot = token.lastIndexOf('.')
     if (dot < 1) return null
@@ -85,7 +126,7 @@ export function verifyMollieCancelToken(token: string): MollieManageTokenPayload
     if (!rawBuf) return null
     const payload: MollieManageTokenPayload = JSON.parse(rawBuf.toString('utf8'))
 
-    if (payload.scope !== 'cancel') return null
+    if (payload.scope !== expectedScope) return null
     if (!payload.customerId || !payload.subscriptionId) return null
     if (!payload.expiresAt || new Date(payload.expiresAt).getTime() < Date.now()) return null
 
@@ -93,4 +134,14 @@ export function verifyMollieCancelToken(token: string): MollieManageTokenPayload
   } catch {
     return null
   }
+}
+
+export function verifyMollieCancelToken(token: string): MollieManageTokenPayload | null {
+  return verifyTokenWithScope(token, 'cancel')
+}
+export function verifyMollieStatusToken(token: string): MollieManageTokenPayload | null {
+  return verifyTokenWithScope(token, 'status')
+}
+export function verifyMollieUpdatePaymentToken(token: string): MollieManageTokenPayload | null {
+  return verifyTokenWithScope(token, 'update-payment')
 }

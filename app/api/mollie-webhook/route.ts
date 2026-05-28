@@ -116,6 +116,40 @@ export async function POST(request: Request) {
     return attachRequestId(NextResponse.json({ received: true }), reqId)
   }
 
+  // Re-mandate flow: a payment.paid with metadata.action='update-payment' and a
+  // seedSubscriptionId means the donor just confirmed a new mandate via the
+  // /api/mollie-manage/update-payment route. Patch the existing subscription
+  // onto the new mandate so future auto-charges flow through it. Do this
+  // BEFORE handleMolliePaymentPaid because that handler would otherwise treat
+  // sequenceType='first' as a brand-new adoption and create a duplicate sub.
+  if (
+    payment.metadata?.action === 'update-payment' &&
+    typeof payment.metadata?.seedSubscriptionId === 'string' &&
+    payment.customerId
+  ) {
+    const seedSubId = payment.metadata.seedSubscriptionId
+    const mandateId = typeof payment.mandateId === 'string' ? payment.mandateId : null
+    try {
+      if (!mollie) throw new Error('mollie-sdk-missing')
+      if (!mandateId) {
+        log.warn(`update-payment: payment ${payment.id} has no mandateId; cannot relink subscription ${seedSubId}`)
+      } else {
+        await mollie.customerSubscriptions.update(seedSubId, {
+          customerId: payment.customerId,
+          mandateId,
+        } as unknown as Parameters<typeof mollie.customerSubscriptions.update>[1])
+        log.info(`update-payment: relinked subscription ${seedSubId} to mandate ${mandateId}`)
+      }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err)
+      log.error(`update-payment: relink failed for subscription ${seedSubId}`, { message })
+      // Do NOT markProcessed — let Mollie retry so the patch eventually applies.
+      return attachRequestId(NextResponse.json({ error: 'Relink failed' }, { status: 500 }), reqId)
+    }
+    markProcessed(dedupKey)
+    return attachRequestId(NextResponse.json({ received: true, flow: 'update-payment' }), reqId)
+  }
+
   try {
     const result = await handleMolliePaymentPaid(payment, {
       sendEmail,

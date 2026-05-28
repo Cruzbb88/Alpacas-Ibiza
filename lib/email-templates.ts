@@ -294,6 +294,8 @@ export function buildMollieManageEmail(input: {
         id: string
         amount: string
         interval: string
+        statusUrl: string
+        updatePaymentUrl: string
         cancelUrl: string
     }>
 }): { subject: string; html: string } {
@@ -302,8 +304,12 @@ export function buildMollieManageEmail(input: {
         <div style="margin:24px 0;padding:16px;border:1px solid #eee;border-radius:8px">
             <p style="margin:0;font-size:12px;color:#888">Subscription <code>${escapeHtml(s.id)}</code></p>
             <p style="margin:6px 0 12px;font-size:16px;font-weight:600">${escapeHtml(s.amount)} every ${escapeHtml(s.interval)}</p>
-            <a href="${escapeHtml(s.cancelUrl)}" style="display:inline-block;padding:10px 20px;background:#a44;color:#fff;text-decoration:none;border-radius:6px;font-size:14px;font-weight:600">Cancel this subscription</a>
-            <p style="margin-top:12px;font-size:12px;color:#888">Link valid for 7 days. You can also reply to this email — we read every message.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px">
+                <a href="${escapeHtml(s.statusUrl)}" style="display:inline-block;padding:10px 16px;background:#556B2F;color:#fff;text-decoration:none;border-radius:6px;font-size:14px;font-weight:600">View status</a>
+                <a href="${escapeHtml(s.updatePaymentUrl)}" style="display:inline-block;padding:10px 16px;background:#fff;color:#556B2F;border:1px solid #556B2F;text-decoration:none;border-radius:6px;font-size:14px;font-weight:600">Update payment method</a>
+                <a href="${escapeHtml(s.cancelUrl)}" style="display:inline-block;padding:10px 16px;background:#fff;color:#a44;border:1px solid #a44;text-decoration:none;border-radius:6px;font-size:14px;font-weight:600">Cancel</a>
+            </div>
+            <p style="margin-top:12px;font-size:12px;color:#888">All links valid for 7 days. You can also reply to this email — we read every message.</p>
         </div>
     `).join('')
     const html = emailLayout(`

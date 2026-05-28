@@ -9,7 +9,11 @@ import { rateLimit, rateLimitByEmail, getClientIp } from '@/lib/rate-limit'
 import { isValidEmail } from '@/lib/validate-email'
 import { sendEmail } from '@/lib/mailer'
 import { buildMollieManageEmail } from '@/lib/email-templates'
-import { signMollieCancelToken } from '@/lib/mollie-manage-token'
+import {
+  signMollieCancelToken,
+  signMollieStatusToken,
+  signMollieUpdatePaymentToken,
+} from '@/lib/mollie-manage-token'
 
 /**
  * POST /api/mollie-manage
@@ -149,12 +153,16 @@ export async function POST(request: Request) {
   try {
     const { subject, html } = buildMollieManageEmail({
       subscriptions: activeSubs.map(s => {
-        const token = signMollieCancelToken(customerId!, s.id)
+        const cancelToken = signMollieCancelToken(customerId!, s.id)
+        const statusToken = signMollieStatusToken(customerId!, s.id)
+        const updateToken = signMollieUpdatePaymentToken(customerId!, s.id)
         return {
           id: s.id,
           amount: `${s.amount.value} ${s.amount.currency}`,
           interval: s.interval,
-          cancelUrl: `${SITE_BASE_URL}/api/mollie-manage/cancel?token=${encodeURIComponent(token)}`,
+          statusUrl: `${SITE_BASE_URL}/api/mollie-manage/status?token=${encodeURIComponent(statusToken)}`,
+          updatePaymentUrl: `${SITE_BASE_URL}/api/mollie-manage/update-payment?token=${encodeURIComponent(updateToken)}`,
+          cancelUrl: `${SITE_BASE_URL}/api/mollie-manage/cancel?token=${encodeURIComponent(cancelToken)}`,
         }
       }),
     })

@@ -68,30 +68,20 @@ function buildPreviews() {
   // entries simulate one and two active subscriptions so the owner can QA
   // both layouts before shipping. Cancel URL is a dummy /api/mollie-manage/
   // cancel link with a fake token.
+  const dummyMollieUrls = (subId: string) => ({
+    statusUrl: `https://example.com/api/mollie-manage/status?token=DUMMY_${subId}`,
+    updatePaymentUrl: `https://example.com/api/mollie-manage/update-payment?token=DUMMY_${subId}`,
+    cancelUrl: `https://example.com/api/mollie-manage/cancel?token=DUMMY_${subId}`,
+  })
   const mollieManageOne = buildMollieManageEmail({
     subscriptions: [
-      {
-        id: 'sub_DUMMY_1',
-        amount: '75.00 EUR',
-        interval: '1 month',
-        cancelUrl: 'https://example.com/api/mollie-manage/cancel?token=DUMMY_TOKEN_1',
-      },
+      { id: 'sub_DUMMY_1', amount: '75.00 EUR', interval: '1 month', ...dummyMollieUrls('1') },
     ],
   })
   const mollieManageTwo = buildMollieManageEmail({
     subscriptions: [
-      {
-        id: 'sub_DUMMY_1',
-        amount: '75.00 EUR',
-        interval: '1 month',
-        cancelUrl: 'https://example.com/api/mollie-manage/cancel?token=DUMMY_TOKEN_1',
-      },
-      {
-        id: 'sub_DUMMY_2',
-        amount: '900.00 EUR',
-        interval: '1 year',
-        cancelUrl: 'https://example.com/api/mollie-manage/cancel?token=DUMMY_TOKEN_2',
-      },
+      { id: 'sub_DUMMY_1', amount: '75.00 EUR', interval: '1 month', ...dummyMollieUrls('1') },
+      { id: 'sub_DUMMY_2', amount: '900.00 EUR', interval: '1 year', ...dummyMollieUrls('2') },
     ],
   })
 

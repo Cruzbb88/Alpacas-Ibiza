@@ -19,6 +19,7 @@ import { welcomeAdoptionEmailHtml, welcomeAdoptionSubject, buildAdoptDiscountCod
 import { escapeHtml } from './html.ts'
 import { findAlpacaName } from './data/alpacas.ts'
 import { SITE_BASE_URL } from './config.ts'
+import { recordFailure, resetFailures, type FailureSeverity } from './payment-failure-tracker.ts'
 
 // ── Stripe checkout.session.completed handler ────────────────────────────────
 
@@ -126,6 +127,13 @@ export async function handleStripeCheckoutCompleted(
     sessionId: session.id,
     tier: tier ?? tierRaw ?? undefined,
     email: email ?? undefined,
+  }
+
+  // Reset Stripe-side failure counter on a successful checkout. Even though
+  // Stripe Smart Retries handles most card retries internally, an initial
+  // success after a prior incident should still flush the tracker.
+  if (typeof session.customer === 'string' && session.customer.length > 0) {
+    resetFailures('stripe', session.customer)
   }
 
   if (!email) {
@@ -289,6 +297,10 @@ export interface InvoicePaymentFailedResult {
   donorNotified: boolean
   /** Was the owner notified about the failed renewal? */
   ownerNotified: boolean
+  /** Escalation severity from the failure tracker. */
+  severity: FailureSeverity | null
+  /** Consecutive-failure count for this customer (1, 2, 3+). */
+  failureCount: number
   reason: 'ok' | 'missing-donor-email' | 'missing-owner-email' | 'send-failed'
   meta: {
     invoiceId: string
@@ -327,23 +339,45 @@ export async function handleStripeInvoicePaymentFailed(
   }
   const donorEmail = invoice.customer_email ?? undefined
 
+  // Track Stripe-side failures even though Stripe has Smart Retries — the
+  // escalation ladder lets the owner see a donor's cumulative struggle
+  // (Smart Retries can run for ~3 weeks before giving up; the owner deserves
+  // earlier visibility into the second+ failure than waiting for cancellation).
+  const trackKey = typeof invoice.customer === 'string' && invoice.customer.length > 0
+    ? invoice.customer
+    : `invoice:${invoice.id}`
+  const { count: failureCount, severity } = recordFailure('stripe', trackKey)
+
   if (!donorEmail) {
-    return { donorNotified: false, ownerNotified: false, reason: 'missing-donor-email', meta }
+    return { donorNotified: false, ownerNotified: false, severity, failureCount, reason: 'missing-donor-email', meta }
   }
 
-  const donorHtml = buildDonorPaymentFailedHtml(invoice)
-  const ownerHtml = buildOwnerPaymentFailedHtml(invoice)
+  const donorHtml = buildDonorPaymentFailedHtml(invoice, failureCount)
+  const ownerHtml = buildOwnerPaymentFailedHtml(invoice, severity, failureCount)
+
+  const ownerSubject =
+    severity === 'action-required'
+      ? `[Adopt-a-Paca] ACTION REQUIRED — Stripe donor about to lapse (${failureCount} fails) — invoice ${invoice.id}`
+      : severity === 'at-risk'
+        ? `[Adopt-a-Paca] AT-RISK donor — 2nd Stripe fail — invoice ${invoice.id}`
+        : `[Adopt-a-Paca] Payment failed — invoice ${invoice.id}`
+  const donorSubject =
+    severity === 'action-required'
+      ? `Final reminder: please update your Adopt-a-Paca payment`
+      : severity === 'at-risk'
+        ? `Reminder: your Adopt-a-Paca payment failed again`
+        : `Action needed: your Adopt-a-Paca payment didn't go through`
 
   const [donorResult, ownerResult] = await Promise.allSettled([
     deps.sendEmail({
       to: donorEmail,
-      subject: 'Action needed: your Adopt-a-Paca payment didn\'t go through',
+      subject: donorSubject,
       html: donorHtml,
     }),
     deps.ownerEmail
       ? deps.sendEmail({
           to: deps.ownerEmail,
-          subject: `[Adopt-a-Paca] Payment failed — invoice ${invoice.id}`,
+          subject: ownerSubject,
           html: ownerHtml,
         })
       : Promise.resolve({ id: null }),
@@ -353,30 +387,40 @@ export async function handleStripeInvoicePaymentFailed(
   const ownerNotified = deps.ownerEmail ? ownerResult.status === 'fulfilled' : false
 
   if (!deps.ownerEmail && !donorNotified) {
-    return { donorNotified, ownerNotified, reason: 'send-failed', meta }
+    return { donorNotified, ownerNotified, severity, failureCount, reason: 'send-failed', meta }
   }
   if (!deps.ownerEmail) {
-    return { donorNotified, ownerNotified, reason: donorNotified ? 'ok' : 'send-failed', meta }
+    return { donorNotified, ownerNotified, severity, failureCount, reason: donorNotified ? 'ok' : 'send-failed', meta }
   }
   if (!donorNotified || !ownerNotified) {
-    return { donorNotified, ownerNotified, reason: 'send-failed', meta }
+    return { donorNotified, ownerNotified, severity, failureCount, reason: 'send-failed', meta }
   }
-  return { donorNotified, ownerNotified, reason: 'ok', meta }
+  return { donorNotified, ownerNotified, severity, failureCount, reason: 'ok', meta }
 }
 
-function buildDonorPaymentFailedHtml(invoice: StripeInvoiceLike): string {
+function buildDonorPaymentFailedHtml(invoice: StripeInvoiceLike, failureCount: number): string {
   const escapedName = invoice.customer_name ? escapeHtml(invoice.customer_name) : null
   const greeting = escapedName ? `Hi ${escapedName},` : 'Hi there,'
   const updateUrl = invoice.hosted_invoice_url
   const updateBlock = updateUrl
     ? `<p style="margin-top:16px"><a href="${escapeHtml(updateUrl)}" style="display:inline-block;background:#556B2F;color:#fff;padding:12px 24px;border-radius:6px;text-decoration:none">Update payment method</a></p>`
     : `<p style="margin-top:16px">Please contact <a href="mailto:info@alpacasibiza.com">info@alpacasibiza.com</a> to update your payment method.</p>`
+  const intro =
+    failureCount >= 3
+      ? `<p>This is the third time your monthly Adopt-a-Paca payment hasn't gone through. We'd love to keep your adoption running — please update your payment method so the next charge succeeds.</p>`
+      : failureCount === 2
+        ? `<p>Your monthly Adopt-a-Paca payment didn't go through again. The most common cause is an expired or replaced card; updating it usually fixes the issue immediately.</p>`
+        : `<p>Your monthly Adopt-a-Paca payment didn't go through this time. This often happens when a card expires or the bank flags an automatic charge.</p>`
+  const closing =
+    failureCount >= 3
+      ? `<p style="margin-top:16px;color:#a44;font-size:13px"><strong>If we can't collect within the next few days, your adoption will pause</strong> and we'll free up your alpaca's spot. Updating the card takes under a minute.</p>`
+      : `<p style="margin-top:16px;color:#666;font-size:13px">If you don't update within a few days, your adoption will pause and we'll keep your alpaca's spot open while we get in touch.</p>`
   return `
     <div style="font-family:sans-serif;max-width:600px;margin:0 auto;color:#2d2d2d;padding:16px">
       <p>${greeting}</p>
-      <p>Your monthly Adopt-a-Paca payment didn't go through this time. This often happens when a card expires or the bank flags an automatic charge.</p>
+      ${intro}
       ${updateBlock}
-      <p style="margin-top:16px;color:#666;font-size:13px">If you don't update within a few days, your adoption will pause and we'll keep your alpaca's spot open while we get in touch.</p>
+      ${closing}
       <hr style="border:none;border-top:1px solid #eee;margin:24px 0" />
       <p style="color:#999;font-size:12px">Alpacas Ibiza · info@alpacasibiza.com</p>
     </div>
@@ -397,12 +441,23 @@ function formatStripeAmount(amountMinor: number | null | undefined, currency: st
   return (amountMinor / 100).toFixed(2)
 }
 
-function buildOwnerPaymentFailedHtml(invoice: StripeInvoiceLike): string {
+function buildOwnerPaymentFailedHtml(
+  invoice: StripeInvoiceLike,
+  severity: FailureSeverity,
+  failureCount: number,
+): string {
   const amount = formatStripeAmount(invoice.amount_due, invoice.currency)
   const currency = (invoice.currency ?? 'eur').toUpperCase()
+  const banner =
+    severity === 'action-required'
+      ? `<p style="background:#fff3f3;border-left:4px solid #a44;padding:12px;margin:0 0 16px;color:#a44;font-size:14px"><strong>Action required.</strong> Failure #${failureCount} for this donor. Stripe Smart Retries is still attempting, but at this rate the subscription will cancel within Stripe's retry window. Personal follow-up advised.</p>`
+      : severity === 'at-risk'
+        ? `<p style="background:#fff8e1;border-left:4px solid #ffb300;padding:12px;margin:0 0 16px;color:#7a5500;font-size:14px"><strong>At-risk donor.</strong> Second consecutive Stripe fail. Donor was emailed an escalated reminder; consider WhatsApp follow-up if no response in 48h.</p>`
+        : ''
   return `
     <div style="font-family:sans-serif;max-width:600px;margin:0 auto;color:#2d2d2d;padding:16px">
       <h2 style="color:#a44">Adopt-a-Paca payment failed</h2>
+      ${banner}
       <table style="width:100%;border-collapse:collapse;font-size:14px">
         <tr><td style="padding:6px 0">Invoice:</td><td><code>${escapeHtml(invoice.id)}</code></td></tr>
         <tr><td style="padding:6px 0">Subscription:</td><td><code>${escapeHtml(invoice.subscription ?? '—')}</code></td></tr>
@@ -410,6 +465,7 @@ function buildOwnerPaymentFailedHtml(invoice: StripeInvoiceLike): string {
         <tr><td style="padding:6px 0">Donor email:</td><td>${escapeHtml(invoice.customer_email ?? '—')}</td></tr>
         <tr><td style="padding:6px 0">Amount due:</td><td>${amount} ${escapeHtml(currency)}</td></tr>
         <tr><td style="padding:6px 0">Attempt #:</td><td>${invoice.attempt_count ?? '—'}</td></tr>
+        <tr><td style="padding:6px 0">Consecutive fails:</td><td><strong>${failureCount}</strong></td></tr>
       </table>
       <p style="margin-top:16px">Donor was emailed a link to update payment. Stripe Smart Retries will keep trying on its own schedule.</p>
       <p>If donor doesn't update within Stripe's retry window (~3 weeks), the subscription will cancel automatically and you'll receive a <code>customer.subscription.deleted</code> notification.</p>
@@ -428,11 +484,25 @@ export interface MolliePaymentLike {
   status: string
   sequenceType?: 'oneoff' | 'first' | 'recurring'
   customerId?: string
+  /**
+   * Set on `first` and `recurring` payments — the SEPA / card mandate that
+   * authorised the charge. Used by the re-mandate flow to PATCH an existing
+   * subscription onto a freshly-confirmed mandate.
+   */
+  mandateId?: string
   metadata?: {
     product?: string
     tier?: 'monthly' | 'yearly' | string
     tenantId?: string
     alpaca?: string
+    /**
+     * Set by the update-payment route to signal a re-mandate flow. Webhook
+     * patches the existing subscription instead of treating this as a new
+     * adoption.
+     */
+    action?: 'update-payment' | string
+    /** Subscription ID to relink when action === 'update-payment'. */
+    seedSubscriptionId?: string
   } | null
   /** Mollie one-off payments set billingEmail at create-time. */
   billingEmail?: string | null
@@ -493,6 +563,14 @@ export async function handleMolliePaymentPaid(
 ): Promise<MolliePaidResult> {
   const tier = payment.metadata?.tier
   const isAdopt = payment.metadata?.product === 'adopt-a-paca'
+
+  // Reset any prior failure count for this customer on ANY successful Mollie
+  // payment.paid event — recurring renewal, first-of-mandate, or yearly one-off.
+  // A new success means the donor is current again; future fails should start
+  // fresh at severity='first'.
+  if (payment.customerId) {
+    resetFailures('mollie', payment.customerId)
+  }
 
   // ── Monthly first-of-mandate: create sub + welcome (parallel) ────────────
   if (isAdopt && tier === 'monthly' && payment.sequenceType === 'first' && payment.customerId) {
@@ -679,6 +757,14 @@ export interface MollieFailedDeps {
 export interface MollieFailedResult {
   donorNotified: boolean
   ownerNotified: boolean | null
+  /**
+   * Escalation severity: 'first' (1st fail, normal), 'at-risk' (2nd consecutive),
+   * 'action-required' (3+ consecutive). Drives the owner email subject/copy and
+   * surfaces in the result so the webhook log shows it.
+   */
+  severity: FailureSeverity | null
+  /** Consecutive-failure count for this customer (1, 2, 3+). */
+  failureCount: number
   reason:
     | 'ok'
     | 'not-adoption'
@@ -720,7 +806,7 @@ export async function handleMolliePaymentFailed(
   }
 
   if (payment.metadata?.product !== 'adopt-a-paca') {
-    return { donorNotified: false, ownerNotified: null, reason: 'not-adoption', meta }
+    return { donorNotified: false, ownerNotified: null, severity: null, failureCount: 0, reason: 'not-adoption', meta }
   }
 
   let donorEmail: string | null = null
@@ -733,28 +819,56 @@ export async function handleMolliePaymentFailed(
     donorEmail = payment.billingEmail
   }
 
+  // Record the failure FIRST so the resulting severity drives owner-email tone,
+  // even when we can't reach the donor. Use payment.id as customer-key fallback
+  // when customerId is missing (rare; donor still gets one tracked attempt).
+  const trackKey = payment.customerId ?? `payment:${payment.id}`
+  const { count: failureCount, severity } = recordFailure('mollie', trackKey)
+
   if (!donorEmail) {
+    // Donor unreachable but owner still benefits from the escalated context.
+    let ownerNotified: boolean | null = null
+    if (deps.ownerEmail) {
+      try {
+        await deps.sendEmail({
+          to: deps.ownerEmail,
+          subject: buildMollieOwnerFailedSubject(payment, severity, failureCount),
+          html: buildMollieOwnerPaymentFailedHtml(payment, '(unknown — customer record missing)', null, severity, failureCount),
+        })
+        ownerNotified = true
+      } catch {
+        ownerNotified = false
+      }
+    }
     return {
       donorNotified: false,
-      ownerNotified: deps.ownerEmail ? false : null,
+      ownerNotified,
+      severity,
+      failureCount,
       reason: 'missing-donor-email',
       meta,
     }
   }
 
-  const donorHtml = buildMollieDonorPaymentFailedHtml(payment, donorName)
-  const ownerHtml = buildMollieOwnerPaymentFailedHtml(payment, donorEmail, donorName)
+  const donorHtml = buildMollieDonorPaymentFailedHtml(payment, donorName, failureCount)
+  const ownerHtml = buildMollieOwnerPaymentFailedHtml(payment, donorEmail, donorName, severity, failureCount)
+  const ownerSubject = buildMollieOwnerFailedSubject(payment, severity, failureCount)
 
   const [donorResult, ownerResult] = await Promise.allSettled([
     deps.sendEmail({
       to: donorEmail,
-      subject: 'Action needed: your Adopt-a-Paca payment didn\'t go through',
+      subject:
+        severity === 'action-required'
+          ? `Final reminder: please update your Adopt-a-Paca payment`
+          : severity === 'at-risk'
+            ? `Reminder: your Adopt-a-Paca payment failed again`
+            : `Action needed: your Adopt-a-Paca payment didn't go through`,
       html: donorHtml,
     }),
     deps.ownerEmail
       ? deps.sendEmail({
           to: deps.ownerEmail,
-          subject: `[Adopt-a-Paca] SEPA payment failed — ${payment.id}`,
+          subject: ownerSubject,
           html: ownerHtml,
         })
       : Promise.resolve({ id: null }),
@@ -763,46 +877,86 @@ export async function handleMolliePaymentFailed(
   const donorNotified = donorResult.status === 'fulfilled'
   const ownerNotified = deps.ownerEmail ? ownerResult.status === 'fulfilled' : null
 
-  if (!donorNotified) return { donorNotified, ownerNotified, reason: 'donor-send-failed', meta }
+  if (!donorNotified) return { donorNotified, ownerNotified, severity, failureCount, reason: 'donor-send-failed', meta }
   if (deps.ownerEmail && ownerNotified === false) {
-    return { donorNotified, ownerNotified, reason: 'send-failed', meta }
+    return { donorNotified, ownerNotified, severity, failureCount, reason: 'send-failed', meta }
   }
-  return { donorNotified, ownerNotified, reason: 'ok', meta }
+  return { donorNotified, ownerNotified, severity, failureCount, reason: 'ok', meta }
 }
 
-function buildMollieDonorPaymentFailedHtml(payment: MolliePaymentLike, donorName: string | null): string {
+function buildMollieDonorPaymentFailedHtml(
+  payment: MolliePaymentLike,
+  donorName: string | null,
+  failureCount: number,
+): string {
   const greeting = donorName ? `Hi ${escapeHtml(donorName)},` : 'Hi there,'
-  // SITE_BASE_URL from lib/config.ts already normalises trailing slash and
-  // handles the empty-string-env case correctly (uses fallback). Using `??`
-  // on the env var directly would treat '' as truthy and produce a relative
-  // URL inside the email — same failure class ADR 017 was written to prevent.
   const updateUrl = `${SITE_BASE_URL}/en/adopt#manage`
+  // Escalation copy mirrors the owner-facing severity. We don't surface the
+  // raw count to the donor — just the warmth/urgency calibration.
+  const intro =
+    failureCount >= 3
+      ? `<p>This is the third time your monthly Adopt-a-Paca payment hasn't gone through, so we wanted to reach out one more time before your adoption pauses.</p>`
+      : failureCount === 2
+        ? `<p>Your monthly Adopt-a-Paca SEPA payment didn't go through again. This usually means the bank's direct-debit mandate needs a refresh, or there's a temporary balance issue on the account.</p>`
+        : `<p>Your monthly Adopt-a-Paca SEPA payment didn't go through this time. This usually means the bank flagged the direct-debit charge or your account balance was low at the moment we tried.</p>`
+  const closing =
+    failureCount >= 3
+      ? `<p style="margin-top:16px;color:#a44;font-size:13px"><strong>If we don't hear from you in the next few days, your adoption will pause and we'll free up your alpaca's spot.</strong> Reply to this email or open the portal to keep things going.</p>`
+      : `<p style="margin-top:16px;color:#666;font-size:13px">If we don't hear from you within a few days, your adoption will pause and we'll keep your alpaca's spot open while we get in touch.</p>`
   return `
     <div style="font-family:sans-serif;max-width:600px;margin:0 auto;color:#2d2d2d;padding:16px">
       <p>${greeting}</p>
-      <p>Your monthly Adopt-a-Paca SEPA payment didn't go through this time. This usually means the bank flagged the direct-debit charge or your account balance was low at the moment we tried.</p>
+      ${intro}
       <p style="margin-top:16px">
         <a href="${escapeHtml(updateUrl)}" style="display:inline-block;background:#556B2F;color:#fff;padding:12px 24px;border-radius:6px;text-decoration:none">Manage your adoption</a>
       </p>
-      <p style="margin-top:16px;color:#666;font-size:13px">If we don't hear from you within a few days, your adoption will pause and we'll keep your alpaca's spot open while we get in touch.</p>
+      ${closing}
       <hr style="border:none;border-top:1px solid #eee;margin:24px 0" />
       <p style="color:#999;font-size:12px">Alpacas Ibiza · info@alpacasibiza.com</p>
     </div>
   `.trim()
 }
 
-function buildMollieOwnerPaymentFailedHtml(payment: MolliePaymentLike, donorEmail: string, donorName: string | null): string {
+function buildMollieOwnerFailedSubject(
+  payment: MolliePaymentLike,
+  severity: FailureSeverity,
+  failureCount: number,
+): string {
+  const prefix =
+    severity === 'action-required'
+      ? `[Adopt-a-Paca] ACTION REQUIRED — donor about to lapse (${failureCount} fails)`
+      : severity === 'at-risk'
+        ? `[Adopt-a-Paca] AT-RISK donor — 2nd consecutive fail`
+        : `[Adopt-a-Paca] SEPA payment failed`
+  return `${prefix} — ${payment.id}`
+}
+
+function buildMollieOwnerPaymentFailedHtml(
+  payment: MolliePaymentLike,
+  donorEmail: string,
+  donorName: string | null,
+  severity: FailureSeverity,
+  failureCount: number,
+): string {
+  const banner =
+    severity === 'action-required'
+      ? `<p style="background:#fff3f3;border-left:4px solid #a44;padding:12px;margin:0 0 16px;color:#a44;font-size:14px"><strong>Action required.</strong> This is failure #${failureCount} for this donor — Mollie has retried via its own cadence and they have not resolved it. A personal follow-up (WhatsApp / direct email) typically saves these.</p>`
+      : severity === 'at-risk'
+        ? `<p style="background:#fff8e1;border-left:4px solid #ffb300;padding:12px;margin:0 0 16px;color:#7a5500;font-size:14px"><strong>At-risk donor.</strong> Second consecutive failure. The escalated donor email has gone out; consider WhatsApp follow-up if no response in 48h.</p>`
+        : ''
   return `
     <div style="font-family:sans-serif;max-width:600px;margin:0 auto;color:#2d2d2d;padding:16px">
       <h2 style="color:#a44">Adopt-a-Paca SEPA payment failed (Mollie)</h2>
+      ${banner}
       <table style="width:100%;border-collapse:collapse;font-size:14px">
         <tr><td style="padding:6px 0">Payment:</td><td><code>${escapeHtml(payment.id)}</code></td></tr>
         <tr><td style="padding:6px 0">Customer:</td><td><code>${escapeHtml(payment.customerId ?? '—')}</code></td></tr>
         <tr><td style="padding:6px 0">Sequence type:</td><td>${escapeHtml(payment.sequenceType ?? '—')}</td></tr>
         <tr><td style="padding:6px 0">Donor email:</td><td>${escapeHtml(donorEmail)}</td></tr>
         <tr><td style="padding:6px 0">Donor name:</td><td>${escapeHtml(donorName ?? '—')}</td></tr>
+        <tr><td style="padding:6px 0">Consecutive fails:</td><td><strong>${failureCount}</strong></td></tr>
       </table>
-      <p style="margin-top:16px">Mollie does not auto-retry SEPA the way Stripe Smart Retries does. The donor was emailed a portal link to update their payment method; if they don't act within a few days, consider a personal follow-up before the subscription auto-pauses.</p>
+      <p style="margin-top:16px">Mollie does not auto-retry SEPA the way Stripe Smart Retries does. The donor was emailed a portal link to update their payment method.</p>
     </div>
   `.trim()
 }
