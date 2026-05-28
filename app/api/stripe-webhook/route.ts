@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import type Stripe from 'stripe'
 import { sendEmail } from '@/lib/mailer'
 import {
   handleStripeCheckoutCompleted,
@@ -8,7 +9,7 @@ import {
 import { importStripe } from '@/lib/integrations/stripe-sdk'
 import { requireEnvOrReturn503 } from '@/lib/route-helpers'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
-import { isAlreadyProcessed } from '@/lib/webhook-idempotency'
+import { isAlreadyProcessed, markProcessed } from '@/lib/webhook-idempotency'
 
 /**
  * POST /api/stripe-webhook
@@ -62,8 +63,7 @@ export async function POST(request: Request) {
   const stripe = stripeFactory(secretKey, { apiVersion: '2024-06-20' })
 
   // ── 4. Verify signature ───────────────────────────────────────────────────
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let event: any
+  let event: Stripe.Event
   try {
     event = stripe.webhooks.constructEvent(rawBody, signature, webhookSecret)
   } catch (err) {
@@ -101,10 +101,14 @@ export async function POST(request: Request) {
         // Pure handler covers welcome + discount-codes emails (fail-quiet both).
         // Never throws — webhook always returns 200 to prevent Stripe retry-spam.
         // Unit-tested in lib/payment-handlers.test.ts.
-        const handlerResult = await handleStripeCheckoutCompleted(session, {
-          sendEmail,
-          ownerEmail: process.env.CONTACT_EMAIL,
-        })
+        // The Stripe SDK's Session type is a strict superset of our minimal
+        // StripeCheckoutSessionLike. Cast through unknown to make that
+        // subset boundary explicit (and let tsc still catch any handler
+        // access to fields the like-shape doesn't declare).
+        const handlerResult = await handleStripeCheckoutCompleted(
+          session as unknown as Parameters<typeof handleStripeCheckoutCompleted>[0],
+          { sendEmail, ownerEmail: process.env.CONTACT_EMAIL },
+        )
         if (handlerResult.reason !== 'ok') {
           const level = handlerResult.reason === 'missing-email' || handlerResult.reason === 'invalid-tier' ? 'warn' : 'error'
           const msg = `checkout.session.completed handler result: ${handlerResult.reason}`
@@ -123,9 +127,12 @@ export async function POST(request: Request) {
       case 'invoice.paid': {
         // Monthly subscription renewal
         const invoice = event.data.object
+        // Stripe deprecated invoice.subscription in newer API versions; read via
+        // a loose record cast to keep the log line working across versions.
+        const invoiceLoose = invoice as unknown as Record<string, unknown>
         log.info('invoice.paid (subscription renewal)', {
           id:           invoice.id,
-          subscription: invoice.subscription,
+          subscription: invoiceLoose.subscription,
           customer:     invoice.customer,
           amountPaid:   invoice.amount_paid,
           currency:     invoice.currency,
@@ -138,10 +145,10 @@ export async function POST(request: Request) {
         const invoice = event.data.object
         // Pure handler — donor email ("update your card") + owner notification.
         // Both fail-quiet; webhook returns 200 (Stripe Smart Retries handles retry).
-        const failedResult = await handleStripeInvoicePaymentFailed(invoice, {
-          sendEmail,
-          ownerEmail: process.env.CONTACT_EMAIL,
-        })
+        const failedResult = await handleStripeInvoicePaymentFailed(
+          invoice as unknown as Parameters<typeof handleStripeInvoicePaymentFailed>[0],
+          { sendEmail, ownerEmail: process.env.CONTACT_EMAIL },
+        )
         const level = failedResult.reason === 'ok' ? 'warn' : 'error'
         const msg = `invoice.payment_failed handler reason=${failedResult.reason}`
         if (level === 'warn') log.warn(msg, failedResult.meta)
@@ -154,10 +161,10 @@ export async function POST(request: Request) {
         // Pure handler — notifies owner so they can follow up if cancellation
         // reason is recoverable (payment_failed, cancellation_requested).
         // Fail-quiet on send error.
-        const cancelResult = await handleStripeSubscriptionDeleted(subscription, {
-          sendEmail,
-          ownerEmail: process.env.CONTACT_EMAIL,
-        })
+        const cancelResult = await handleStripeSubscriptionDeleted(
+          subscription as unknown as Parameters<typeof handleStripeSubscriptionDeleted>[0],
+          { sendEmail, ownerEmail: process.env.CONTACT_EMAIL },
+        )
         const msg = `customer.subscription.deleted handler reason=${cancelResult.reason}`
         if (cancelResult.reason === 'ok' || cancelResult.reason === 'not-adoption') {
           log.info(msg, cancelResult.meta)
@@ -175,9 +182,13 @@ export async function POST(request: Request) {
     const message = err instanceof Error ? err.message : String(err)
     log.error(`Error processing ${event.type}`, { message })
     // Return 500 so Stripe retries — do not silently swallow processing errors.
+    // CRITICAL: do NOT markProcessed — the 500 lets Stripe retry, which only
+    // helps if the event isn't blocked by an idempotency hit on next attempt.
     return attachRequestId(NextResponse.json({ error: 'Event processing failed' }, { status: 500 }), reqId)
   }
 
+  // All handlers completed without throwing — mark processed AFTER success.
+  markProcessed(event.id)
   return attachRequestId(NextResponse.json({ received: true }), reqId)
 }
 

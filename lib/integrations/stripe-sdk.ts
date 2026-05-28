@@ -1,31 +1,37 @@
 /**
  * Shared dynamic-import loader for the `stripe` SDK.
  *
- * The `stripe` package is intentionally NOT in package.json dependencies —
- * owner installs it on deploy (matches the Mollie pattern). Until installed,
- * `importStripe()` returns `null` so callers can fail-closed gracefully.
+ * `stripe` is a real dependency in package.json. The dynamic import + fallback
+ * pattern is retained because:
+ *   - Bundlers (Turbopack/webpack) can mark it as runtime-only via the
+ *     `webpackIgnore` / `turbopackIgnore` magic comments → keeps the SDK out
+ *     of edge-runtime bundles where it's unsupported.
+ *   - If a future deploy omits the package, the catch-block returns null so
+ *     routes can fail-closed instead of crashing the whole function.
  *
- * Module-level cache means the dynamic import is resolved exactly once per
- * process lifetime; subsequent calls return the cached factory.
- *
- * Previously this function was duplicated verbatim in 3 route files + 1 lib file.
+ * Real Stripe type imported as `type` only so the runtime resolution still
+ * works. Previous `type StripeFactory = (key) => any` hid SDK shape bugs in
+ * downstream code (see code-review 2026-05-28).
  */
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type StripeFactory = (key: string, opts?: object) => any
+import type Stripe from 'stripe'
 
-// sentinel: undefined = not yet attempted; null = attempted but module missing
+// The Stripe SDK's runtime export is a callable constructor: `Stripe(key, opts)`
+// returns a Stripe instance. The default `import type Stripe` brings the
+// constructor type itself. We treat `Stripe` (the type) AS the instance type
+// because Stripe's typings overload the default export so that calling it
+// returns `Stripe`. Config is left as a loose record to match the constructor's
+// runtime signature without coupling to a private interface.
+type StripeFactory = (key: string, opts?: Record<string, unknown>) => Stripe
+
 let _stripeFactory: StripeFactory | null | undefined = undefined
 
 export async function importStripe(): Promise<StripeFactory | null> {
     if (_stripeFactory !== undefined) return _stripeFactory
     try {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore — stripe SDK intentionally absent until owner installs it
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const mod: any = await import(/* webpackIgnore: true */ /* turbopackIgnore: true */ 'stripe')
-        const Ctor = mod.default ?? mod
-        _stripeFactory = (key: string, opts?: object) => new Ctor(key, opts)
+        const mod = await import(/* webpackIgnore: true */ /* turbopackIgnore: true */ 'stripe')
+        const Ctor = (mod.default ?? mod) as unknown as new (key: string, opts?: Record<string, unknown>) => Stripe
+        _stripeFactory = (key: string, opts?: Record<string, unknown>) => new Ctor(key, opts)
         return _stripeFactory
     } catch {
         _stripeFactory = null

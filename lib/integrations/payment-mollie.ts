@@ -76,19 +76,18 @@ export function getMollieWebhookUrl(secret: string): string {
   return `${SITE_BASE_URL}/api/mollie-webhook?secret=${encodeURIComponent(secret)}`
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type MollieClient = any
-
 /**
- * Dynamic import wrapper for the Mollie SDK with module-level cache.
- * Returns null if the package is not installed (build-safe).
- *
- * Cached so repeated calls in the same process (e.g. checkout + webhook chain)
- * don't pay the dynamic-import cost twice. `__resetMollieImportCache()` is
- * exported for tests only.
+ * Real SDK type — imported as type-only so the runtime dynamic-import + missing-
+ * package fallback still work. `@mollie/api-client` is now an `optionalDependency`
+ * (per ADR 019 follow-up); CI installs it so tsc + eslint catch shape errors at
+ * build time, but production deploys can still ship without it. Previous code
+ * used `type MollieClient = any` which hid four CRITICAL SDK bugs (snake_case
+ * `customers_subscriptions` vs camelCase `customerSubscriptions`, calling
+ * non-existent `.list()` etc.) — see code-review findings 2026-05-28.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type MollieFactory = (opts: { apiKey: string }) => any
+import type { MollieClient } from '@mollie/api-client'
+
+type MollieFactory = (opts: { apiKey: string }) => MollieClient
 
 // sentinel: undefined = not yet attempted; null = attempted but module missing
 let _mollieFactory: MollieFactory | null | undefined = undefined
@@ -98,12 +97,24 @@ export async function importMollie(): Promise<MollieFactory | null> {
   const cached = _mollieFactory
   if (cached !== undefined) return cached
   try {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore — @mollie/api-client intentionally optional until owner installs
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const mod: any = await import(/* webpackIgnore: true */ /* turbopackIgnore: true */ '@mollie/api-client')
-    const factory = mod.createMollieClient ?? mod.default?.createMollieClient ?? mod.default
-    _mollieFactory = typeof factory === 'function' ? factory : null
+    // Runtime import keeps the SDK optional: production deploys can omit
+    // @mollie/api-client and the catch below returns null. The `type` import
+    // up top means tsc still type-checks every call site against the real SDK.
+    // ESM vs CJS interop: when bundlers / runtimes resolve the package the
+    // factory can appear as the module itself (CJS) or under `.default` (ESM)
+    // or as a named export. Probe all three; cast through `unknown` so the
+    // type system doesn't pre-narrow `mod` and hide one of the branches.
+    const modUnknown = (await import(/* webpackIgnore: true */ /* turbopackIgnore: true */ '@mollie/api-client')) as unknown
+    const m = modUnknown as { createMollieClient?: MollieFactory; default?: MollieFactory | { createMollieClient?: MollieFactory } } | MollieFactory
+    let candidate: unknown
+    if (typeof m === 'function') {
+      candidate = m
+    } else {
+      candidate =
+        m.createMollieClient ??
+        (typeof m.default === 'function' ? m.default : m.default?.createMollieClient)
+    }
+    _mollieFactory = typeof candidate === 'function' ? (candidate as MollieFactory) : null
     return _mollieFactory ?? null
   } catch {
     _mollieFactory = null
@@ -183,6 +194,10 @@ export function molliePaymentProvider(opts?: {
         // Yearly is a one-off Payment (no subscription needed).
         // Monthly is a "first" Payment that establishes a SEPA/card mandate;
         // the webhook handler then creates a Subscription on payment.paid.
+        //
+        // The SDK's Payment.create + Customer.create types are strict — we
+        // build a loose object first, then cast to the SDK shape at call
+        // time. Cast through `unknown` to make the boundary explicit.
         const paymentArgs: Record<string, unknown> = {
           amount: { value: amount.toFixed(2), currency: 'EUR' },
           description,
@@ -198,11 +213,11 @@ export function molliePaymentProvider(opts?: {
 
         if (tier === 'monthly') {
           // Mandate-creating first payment — needs a Customer.
-          const customer = await mollie.customers.create({
+          const customerArgs = {
             email: checkoutOpts.customerEmail ?? undefined,
-            name: undefined,
             metadata: { tenantId: checkoutOpts.tenantId, tier },
-          })
+          } as unknown as Parameters<typeof mollie.customers.create>[0]
+          const customer = await mollie.customers.create(customerArgs)
           paymentArgs.customerId = customer.id
           paymentArgs.sequenceType = 'first'
         } else {
@@ -213,7 +228,16 @@ export function molliePaymentProvider(opts?: {
           }
         }
 
-        const payment = await mollie.payments.create(paymentArgs)
+        // mollie.payments.create has overload signatures returning either
+        // Promise<Payment> or void (callback variant). The intersection is
+        // unusable; cast through unknown to lock in the Promise overload.
+        const payment = (await mollie.payments.create(
+          paymentArgs as unknown as Parameters<typeof mollie.payments.create>[0],
+        )) as unknown as {
+          id: string
+          getCheckoutUrl?: () => string | undefined
+          _links?: { checkout?: { href?: string } }
+        }
         const checkoutUrl: string | undefined =
           typeof payment.getCheckoutUrl === 'function'
             ? payment.getCheckoutUrl()

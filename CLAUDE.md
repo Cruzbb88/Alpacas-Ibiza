@@ -142,6 +142,22 @@ This file holds two catalogs that PRACTICES doesn't: the in-code failsafe map (w
 
 **Default vendor (per ADR 019): Mollie.** Stripe is the fallback; set `PAYMENT_VENDOR=stripe` to switch.
 
+**SDK-shape rule (post-2026-05-28 code-review):** When integrating an external SDK
+(Stripe, Mollie, Resend, SendGrid, Google Places, FareHarbor), DO NOT use
+`type X = any` or `// eslint-disable-next-line @typescript-eslint/no-explicit-any`
+to escape its types. The code-review on 2026-05-28 found four CRITICAL Mollie
+SDK bugs (`customers_subscriptions` vs `customerSubscriptions`, missing
+`.list()` method, wrong `cancel()` signature, `Promise<Payment> & void`
+mishandling) that 603 tests + `next build` + `tsc --noEmit` all missed because
+`any`-casts deliberately bypassed the type system. Pattern to follow instead:
+- Import the SDK's type via `import type { X } from 'sdk-name'`.
+- For dynamic imports, type the candidate and the returned client.
+- For raw HTTP responses (no SDK), define an inline minimal-shape interface
+  and parse `await res.json() as Shape`.
+- Cast through `unknown` ONLY at deliberate subset boundaries (e.g. passing a
+  Stripe `Session` to a minimal `StripeCheckoutSessionLike`), never to mute
+  a mismatch you don't understand.
+
 **Tier 2 — fail-open / graceful** (site works, feature dark until set):
 - `TURNSTILE_SECRET_KEY` + `NEXT_PUBLIC_TURNSTILE_SITE_KEY` → forms unprotected (visible prod warn)
 - `FAREHARBOR_APP_KEY` + `FAREHARBOR_USER_KEY` → live spots-left widget hidden

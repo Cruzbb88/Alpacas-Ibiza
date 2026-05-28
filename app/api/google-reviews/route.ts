@@ -68,13 +68,25 @@ export async function GET(request: Request) {
             throw new Error(`Places API returned ${res.status}`)
         }
 
-        const data = await res.json()
+        // Google Places API v1 response shape (only the fields we read).
+        interface PlacesReview {
+            authorAttribution?: { displayName?: string }
+            rating?: number
+            text?: { text?: string }
+            relativePublishTimeDescription?: string
+        }
+        interface PlacesResponse {
+            rating?: number
+            userRatingCount?: number
+            reviews?: PlacesReview[]
+        }
+        const data: PlacesResponse = await res.json()
         const summary: ReviewSummary = {
             rating: data.rating || 0,
             reviewCount: data.userRatingCount || 0,
             topReviews: (data.reviews || [])
                 .slice(0, 3)
-                .map((r: any) => ({
+                .map((r) => ({
                     author: r.authorAttribution?.displayName || 'Anonymous',
                     rating: r.rating || 0,
                     text: r.text?.text || '',

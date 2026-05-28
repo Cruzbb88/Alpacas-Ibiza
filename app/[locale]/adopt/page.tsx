@@ -91,6 +91,13 @@ export default async function AdoptPage({
     const adoptOpts = selectedAlpacaSlug ? { alpaca: selectedAlpacaSlug } : undefined
     const monthlyUrl = paymentAdapter.buildAdoptCheckoutUrl('monthly', adoptOpts) ?? `mailto:info@alpacasibiza.com?subject=Adopt%20an%20Alpaca%20enquiry`
     const yearlyUrl  = paymentAdapter.buildAdoptCheckoutUrl('yearly', adoptOpts)  ?? `mailto:info@alpacasibiza.com?subject=Adopt%20an%20Alpaca%20enquiry`
+
+    // BillingPortalLink needs to hit the right vendor's manage endpoint based on
+    // who actually charged the donor. paymentAdapter.vendor is the live answer
+    // (Mollie by default per ADR 019; Stripe when PAYMENT_VENDOR=stripe). Other
+    // vendors (mailto, fareharbor) don't have a self-serve manage flow yet —
+    // they fall back to 'mollie' which 200s silently if no customer matches.
+    const billingPortalVendor: 'mollie' | 'stripe' = paymentAdapter.vendor === 'stripe' ? 'stripe' : 'mollie'
     // When vendor returns null (env vars unset), both fall back to mailto — same as before.
     // Drop-in: set PAYMENT_VENDOR + vendor-specific keys in .env.local and both CTAs activate.
 
@@ -347,7 +354,7 @@ export default async function AdoptPage({
 
             {/* Billing portal — existing subscribers only; collapsed by default */}
             <PageSection width="narrow" className="pt-0 pb-2">
-                <BillingPortalLink locale={locale} />
+                <BillingPortalLink locale={locale} vendor={billingPortalVendor} />
             </PageSection>
 
             {/* Owner-confirm banner — dev/staging only */}

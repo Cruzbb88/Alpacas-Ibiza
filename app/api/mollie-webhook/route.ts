@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import type { MollieClient } from '@mollie/api-client'
 import { safeEqual } from '@/lib/secrets'
 import {
   getMollieClient,
@@ -11,11 +12,10 @@ import { requireEnvOrReturn503 } from '@/lib/route-helpers'
 import {
   handleMolliePaymentPaid,
   handleMolliePaymentFailed,
-  handleMollieSubscriptionCanceled,
   type MolliePaymentLike,
 } from '@/lib/payment-handlers'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
-import { isAlreadyProcessed } from '@/lib/webhook-idempotency'
+import { isAlreadyProcessed, markProcessed } from '@/lib/webhook-idempotency'
 
 /**
  * POST /api/mollie-webhook?secret=<MOLLIE_WEBHOOK_SECRET>
@@ -68,10 +68,14 @@ export async function POST(request: Request) {
     `${event.type} id=${payment.id} status=${payment.status} sequenceType=${payment.sequenceType ?? 'n/a'}`,
   )
 
-  // Idempotency guard — Mollie retries exponentially up to 18h.
-  // Key: payment ID (stable across retries for the same payment event).
-  if (isAlreadyProcessed(payment.id)) {
-    log.info('event already processed — skipping', { paymentId: payment.id })
+  // Idempotency key includes status so payment.failed and payment.paid for the
+  // SAME payment.id (Mollie reuses ids when a SEPA payment fails then retries
+  // and succeeds) are tracked as separate events. Previous code keyed on id
+  // alone, which silently dropped the eventual payment.paid event when the
+  // first failure had already marked the id.
+  const dedupKey = `mollie:${payment.id}:${payment.status}`
+  if (isAlreadyProcessed(dedupKey)) {
+    log.info('event already processed — skipping', { dedupKey })
     return attachRequestId(
       NextResponse.json({ ok: true, idempotent: true }, { status: 200 }),
       reqId,
@@ -91,10 +95,14 @@ export async function POST(request: Request) {
     const msg = `payment.failed handler reason=${failedResult.reason}`
     if (failedResult.reason === 'ok' || failedResult.reason === 'not-adoption') {
       log.info(msg, failedResult.meta)
-    } else {
-      log.warn(msg, failedResult.meta)
+      markProcessed(dedupKey)
+      return attachRequestId(NextResponse.json({ received: true }), reqId)
     }
-    return attachRequestId(NextResponse.json({ received: true }), reqId)
+    // Transient send failures → 500 so Mollie retries (and we do NOT mark
+    // processed). Mollie's retry cadence will re-deliver the failure event;
+    // next attempt may succeed once Resend recovers.
+    log.warn(msg, failedResult.meta)
+    return attachRequestId(NextResponse.json({ error: 'Retry needed' }, { status: 500 }), reqId)
   }
 
   // Other non-paid terminal/transient states log-and-return.
@@ -104,6 +112,7 @@ export async function POST(request: Request) {
     } else {
       log.info(`Payment ${payment.id} status=${payment.status}; awaiting terminal state.`)
     }
+    markProcessed(dedupKey)
     return attachRequestId(NextResponse.json({ received: true }), reqId)
   }
 
@@ -120,10 +129,17 @@ export async function POST(request: Request) {
     if (level === 'warn') log.warn(msg, result.meta)
     else if (level === 'error') log.error(msg, result.meta)
     else log.info(msg, result.meta)
+    // Mark processed only AFTER the handler completes. A handler that
+    // returned an error reason (welcome-send-failed etc.) is still considered
+    // "processed" — we don't want Mollie retries to re-send the welcome to
+    // the donor. The handler's fail-quiet pattern already addresses send
+    // failures; what we guard against here is throws + manual replays.
+    markProcessed(dedupKey)
   } catch (err) {
     // handleMolliePaymentPaid only throws when createSubscription throws.
     // Returning 500 triggers Mollie retry (exponential up to 18h) — desired
     // because without the subscription, donor won't auto-charge next month.
+    // CRITICAL: do NOT markProcessed — the retry must be allowed through.
     const message = err instanceof Error ? err.message : String(err)
     log.error(`Subscription creation failed for payment ${payment.id}`, { message })
     return attachRequestId(NextResponse.json({ error: 'Processing failed' }, { status: 500 }), reqId)
@@ -133,9 +149,12 @@ export async function POST(request: Request) {
 }
 
 // ── Mollie SDK adapters (route-local; depend on the live `mollie` client) ────
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type MollieClient = any
+//
+// The local `mollie` parameter is the real SDK type (imported via getMollieClient
+// → import type { MollieClient } from '@mollie/api-client', hoisted to the top
+// of this file). The previous `type MollieClient = any` hid the snake_case
+// `customers_subscriptions` bug — the property is camelCase
+// `customerSubscriptions` on the SDK.
 
 async function fetchMollieCustomer(
   customerId: string,
@@ -161,9 +180,6 @@ async function createMonthlySubscription(
   webhookSecret: string,
 ): Promise<void> {
   if (!mollie) {
-    // THROW: caller catches → returns 500 → Mollie retries within 18h window.
-    // SDK may be installed on a subsequent deploy; retry would then succeed.
-    // Without throwing, donor is charged but no recurring subscription is set up.
     console.error('[mollie-webhook] @mollie/api-client not installed — cannot create subscription. Run: pnpm add @mollie/api-client')
     throw new Error('mollie-sdk-missing — webhook will retry once SDK is installed')
   }
@@ -171,7 +187,7 @@ async function createMonthlySubscription(
     console.error('[mollie-webhook] Cannot create subscription — missing customerId.')
     return
   }
-  const subscription = await mollie.customers_subscriptions.create({
+  const subscription = await mollie.customerSubscriptions.create({
     customerId: payment.customerId,
     amount: { value: ADOPT_PRICE_MONTHLY_EUR.toFixed(2), currency: 'EUR' },
     interval: '1 month',
@@ -184,10 +200,7 @@ async function createMonthlySubscription(
       seedPaymentId: payment.id,
     },
   })
-  // Note: these helpers lack reqId context — they're route-local SDK adapters.
-  // The outer POST handler already logs with reqId before calling these.
   console.log(
     `[mollie-webhook] Created subscription id=${subscription.id} customer=${payment.customerId} amount=${ADOPT_PRICE_MONTHLY_EUR}/mo`,
   )
-  // Throws on Mollie API failure → route returns 500 → Mollie retries.
 }

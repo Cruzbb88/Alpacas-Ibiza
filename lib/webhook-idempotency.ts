@@ -32,14 +32,25 @@ function purge(now: number): void {
 
 /**
  * Returns true if `eventId` has been seen before within TTL.
- * Otherwise marks it as seen and returns false (caller proceeds).
+ *
+ * Does NOT mark — the caller must call `markProcessed(eventId)` AFTER its
+ * handler succeeds. Previous API marked-on-check, which meant a transient
+ * handler failure left the eventId in the store; the subsequent Mollie/Stripe
+ * retry would then be skipped as "idempotent", defeating the retry mechanism.
  */
 export function isAlreadyProcessed(eventId: string): boolean {
   const now = Date.now()
   purge(now)
-  if (_store.has(eventId)) return true
-  _store.set(eventId, now)
-  return false
+  return _store.has(eventId)
+}
+
+/**
+ * Mark an eventId as processed. Call AFTER the handler succeeded (returned 200
+ * to the webhook source). Failed handlers must NOT mark — they need the
+ * retry to be allowed through.
+ */
+export function markProcessed(eventId: string): void {
+  _store.set(eventId, Date.now())
 }
 
 /** @internal — for tests */

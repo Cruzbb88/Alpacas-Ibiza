@@ -93,9 +93,12 @@ export function GiftFlow({ copy, checkoutHrefByType }: GiftFlowProps) {
     (sendDateMode === 'today' || sendDateValue.length > 0)
   const checkoutHref = checkoutHrefByType[giftType]
 
-  // Today's date in YYYY-MM-DD for the min attribute on the date picker.
-  // Computed once per render — value is recomputed each render, fine for short visits.
-  const todayIso = new Date().toISOString().slice(0, 10)
+  // Today's date in YYYY-MM-DD using the buyer's LOCAL timezone for the
+  // `min` attribute on the date picker. `toISOString()` returns UTC, which
+  // would let a Sydney (+11) buyer select "yesterday" at 09:00 local on the
+  // day-boundary, breaking the "schedule for future" UX. en-CA locale formats
+  // dates as yyyy-mm-dd, which matches the `<input type="date">` value format.
+  const todayIso = new Date().toLocaleDateString('en-CA')
 
   return (
     <section aria-labelledby="gift-flow-heading" className="w-full max-w-2xl mx-auto">

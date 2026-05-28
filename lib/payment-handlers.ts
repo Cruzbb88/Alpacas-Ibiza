@@ -18,6 +18,7 @@
 import { welcomeAdoptionEmailHtml, welcomeAdoptionSubject, buildAdoptDiscountCodesEmail } from './email-templates.ts'
 import { escapeHtml } from './html.ts'
 import { findAlpacaName } from './data/alpacas.ts'
+import { SITE_BASE_URL } from './config.ts'
 
 // ── Stripe checkout.session.completed handler ────────────────────────────────
 
@@ -495,10 +496,21 @@ export async function handleMolliePaymentPaid(
 
   // ── Monthly first-of-mandate: create sub + welcome (parallel) ────────────
   if (isAdopt && tier === 'monthly' && payment.sequenceType === 'first' && payment.customerId) {
-    const [, customer] = await Promise.all([
-      deps.createSubscription(payment), // throws → route 500 → Mollie retry
+    // Promise.allSettled (not Promise.all) so that if createSubscription throws
+    // (the documented Mollie-retry trigger), fetchCustomer's still-in-flight
+    // promise doesn't become an unhandled rejection. We then unwrap and
+    // re-throw the createSubscription error to preserve the existing 500-
+    // triggers-Mollie-retry contract.
+    const [subResult, customerResult] = await Promise.allSettled([
+      deps.createSubscription(payment),
       deps.fetchCustomer(payment.customerId),
     ])
+    if (subResult.status === 'rejected') {
+      throw subResult.reason
+    }
+    const customer = customerResult.status === 'fulfilled'
+      ? customerResult.value
+      : { email: null, name: null }
 
     if (!customer.email) {
       return {
@@ -535,6 +547,7 @@ export async function handleMolliePaymentPaid(
         flow: 'unmatched',
         welcomeSent: false,
         subscriptionCreated: false,
+        ownerNotified: null,
         reason: 'unmatched',
         meta: { paymentId: payment.id, tier, email: payment.billingEmail ?? null },
       }
@@ -759,7 +772,11 @@ export async function handleMolliePaymentFailed(
 
 function buildMollieDonorPaymentFailedHtml(payment: MolliePaymentLike, donorName: string | null): string {
   const greeting = donorName ? `Hi ${escapeHtml(donorName)},` : 'Hi there,'
-  const updateUrl = `${(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://alpacasibiza.com').replace(/\/$/, '')}/en/adopt#manage`
+  // SITE_BASE_URL from lib/config.ts already normalises trailing slash and
+  // handles the empty-string-env case correctly (uses fallback). Using `??`
+  // on the env var directly would treat '' as truthy and produce a relative
+  // URL inside the email — same failure class ADR 017 was written to prevent.
+  const updateUrl = `${SITE_BASE_URL}/en/adopt#manage`
   return `
     <div style="font-family:sans-serif;max-width:600px;margin:0 auto;color:#2d2d2d;padding:16px">
       <p>${greeting}</p>

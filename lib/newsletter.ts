@@ -22,7 +22,7 @@ export async function subscribe(email: string): Promise<NewsletterResponse> {
   }
 
   const url = 'https://api.sendgrid.com/v3/marketing/contacts'
-  const body: any = { contacts: [{ email }] }
+  const body: { contacts: Array<{ email: string }>; list_ids?: string[] } = { contacts: [{ email }] }
   if (SENDGRID_LIST_ID) {
     body.list_ids = [SENDGRID_LIST_ID]
   }
@@ -97,7 +97,8 @@ export async function unsubscribe(email: string): Promise<NewsletterResponse> {
         body: JSON.stringify({ emails: [email] }),
       })
       if (searchRes.ok) {
-        const data: any = await searchRes.json()
+        // SendGrid v3 contact-search response: { result: { [email]: { contact: { id } } } }
+        const data = (await searchRes.json()) as { result?: Record<string, { contact?: { id?: string } }> }
         const contactId: string | undefined = data?.result?.[email.toLowerCase()]?.contact?.id
         if (contactId) {
           const deleteUrl = `https://api.sendgrid.com/v3/marketing/contacts?ids=${encodeURIComponent(contactId)}`

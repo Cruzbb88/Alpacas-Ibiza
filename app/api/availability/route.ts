@@ -58,15 +58,20 @@ export async function GET(request: Request) {
                 throw new Error(`Failed to fetch items: ${itemsResponse.statusText}`)
             }
 
-            const itemsData = await itemsResponse.json()
-            itemsToCheck = itemsData.items?.map((item: any) => item.pk) || []
+            // FareHarbor's items endpoint returns { items: [{ pk, ... }] }. Min shape only.
+            const itemsData: { items?: Array<{ pk: number }> } = await itemsResponse.json()
+            itemsToCheck = itemsData.items?.map((item) => item.pk) || []
         }
 
         // Fetch availabilities for each item — parallel with per-item failure tolerance
         const availabilities: { date: string; capacity: number; startTime: string }[] = []
 
+        // FareHarbor's availability response shape (only the fields we read).
+        interface AvailabilityRecord { start_at: string; capacity: number }
+        interface AvailabilityResponse { availabilities?: AvailabilityRecord[] }
+
         const results = await Promise.allSettled(
-            itemsToCheck.slice(0, 3).map((itemPk: any) =>
+            itemsToCheck.slice(0, 3).map((itemPk) =>
                 fetchWithTimeout(
                     `https://fareharbor.com/api/external/v1/companies/${shortname}/items/${itemPk}/minimal/availabilities/date-range/${startDateStr}/${endDateStr}/`,
                     {
@@ -75,7 +80,7 @@ export async function GET(request: Request) {
                             'X-FareHarbor-API-User': userKey,
                         },
                     }
-                ).then(r => r.ok ? r.json() : null)
+                ).then((r): Promise<AvailabilityResponse | null> => r.ok ? r.json() : Promise.resolve(null))
             )
         )
 
@@ -83,8 +88,8 @@ export async function GET(request: Request) {
             if (r.status === 'fulfilled' && r.value?.availabilities?.length) {
                 availabilities.push(
                     ...r.value.availabilities
-                        .filter((avail: any) => avail.capacity > 0)
-                        .map((avail: any) => ({
+                        .filter((avail) => avail.capacity > 0)
+                        .map((avail) => ({
                             date: avail.start_at.split('T')[0],
                             capacity: avail.capacity,
                             startTime: avail.start_at,

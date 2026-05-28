@@ -8,6 +8,7 @@ import {
   buildAdoptDiscountCodesEmail,
   buildNewsletterConfirmEmail,
   buildBillingPortalEmail,
+  buildMollieManageEmail,
   reminderSubject,
   reviewRequestSubject,
   welcomeAdoptionSubject,
@@ -63,6 +64,36 @@ function buildPreviews() {
   const discountCodes = buildAdoptDiscountCodesEmail({ name: DUMMY.name })
   const newsletter    = buildNewsletterConfirmEmail(DUMMY.confirmUrl, DUMMY.unsubUrl)
   const billingPortal = buildBillingPortalEmail(DUMMY.portalUrl)
+  // Mollie-manage is the DEFAULT vendor's portal email per ADR 019. Two
+  // entries simulate one and two active subscriptions so the owner can QA
+  // both layouts before shipping. Cancel URL is a dummy /api/mollie-manage/
+  // cancel link with a fake token.
+  const mollieManageOne = buildMollieManageEmail({
+    subscriptions: [
+      {
+        id: 'sub_DUMMY_1',
+        amount: '75.00 EUR',
+        interval: '1 month',
+        cancelUrl: 'https://example.com/api/mollie-manage/cancel?token=DUMMY_TOKEN_1',
+      },
+    ],
+  })
+  const mollieManageTwo = buildMollieManageEmail({
+    subscriptions: [
+      {
+        id: 'sub_DUMMY_1',
+        amount: '75.00 EUR',
+        interval: '1 month',
+        cancelUrl: 'https://example.com/api/mollie-manage/cancel?token=DUMMY_TOKEN_1',
+      },
+      {
+        id: 'sub_DUMMY_2',
+        amount: '900.00 EUR',
+        interval: '1 year',
+        cancelUrl: 'https://example.com/api/mollie-manage/cancel?token=DUMMY_TOKEN_2',
+      },
+    ],
+  })
 
   return [
     { id: 'reminder',        subject: reminderSubject('en'),              html: reminderHtml },
@@ -71,7 +102,9 @@ function buildPreviews() {
     { id: 'welcome-yearly',  subject: welcomeAdoptionSubject('yearly'),   html: welcomeYearlyHtml },
     { id: 'discount-codes',  subject: discountCodes.subject,              html: discountCodes.html },
     { id: 'newsletter-confirm', subject: newsletter.subject,              html: newsletter.html },
-    { id: 'billing-portal',  subject: billingPortal.subject,              html: billingPortal.html },
+    { id: 'mollie-manage-one', subject: mollieManageOne.subject,          html: mollieManageOne.html },
+    { id: 'mollie-manage-two', subject: mollieManageTwo.subject,          html: mollieManageTwo.html },
+    { id: 'billing-portal-stripe', subject: billingPortal.subject,        html: billingPortal.html },
   ]
 }
 

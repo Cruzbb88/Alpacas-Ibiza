@@ -95,18 +95,20 @@ export async function POST(request: Request) {
     return attachRequestId(GENERIC_OK(), reqId)
   }
 
-  // Find Mollie customer by email. Mollie's list/get APIs don't filter by email
-  // server-side — we iterate, capped at 250 for safety. Owners with that many
-  // customers should migrate to a DB-backed lookup before scaling further.
+  // Find Mollie customer by email. Mollie's API has no email filter, so we
+  // walk the customer list via the SDK's async iterator (HelpfulIterator,
+  // supports .find directly). Owners growing past ~500 customers should
+  // migrate to a DB-backed lookup. The iterator paginates internally; the
+  // cap below stops scanning past 1k records to bound wall-clock.
+  const lowerEmail = email.toLowerCase()
   let customerId: string | null = null
   try {
-    const customers = await mollie.customers.list({ limit: 250 })
-    const hit = (customers ?? []).find(
-      (c: { email?: string }) => typeof c.email === 'string' && c.email.toLowerCase() === email.toLowerCase(),
+    const hit = await mollie.customers.iterate({}).take(1000).find(
+      (c) => typeof c.email === 'string' && c.email.toLowerCase() === lowerEmail,
     )
     customerId = hit?.id ?? null
   } catch (err) {
-    log.error('Mollie customers.list failed', { message: err instanceof Error ? err.message : String(err) })
+    log.error('Mollie customers.iterate failed', { message: err instanceof Error ? err.message : String(err) })
     return attachRequestId(GENERIC_OK(), reqId)
   }
 
@@ -115,21 +117,34 @@ export async function POST(request: Request) {
     return attachRequestId(GENERIC_OK(), reqId)
   }
 
-  // List active subscriptions for that customer. Anything not 'active' is
-  // silently filtered — donor can't cancel something already canceled.
-  let activeSubs: Array<{ id: string; amount: { value: string; currency: string }; interval: string; status: string }> = []
+  // List the donor's subscriptions and keep those they can still self-cancel.
+  // 'active' = currently auto-charging. 'pending' = SEPA mandate being
+  // confirmed (1-3 days for first SEPA); donors in buyer's-remorse during
+  // mandate setup must be able to cancel BEFORE the first pull. Anything else
+  // (canceled, suspended, completed) is excluded — nothing to cancel.
+  const cancellableStatuses = new Set(['active', 'pending'])
+  const cancellableSubs: Array<{ id: string; amount: { value: string; currency: string }; interval: string; status: string }> = []
   try {
-    const subs = await mollie.customers_subscriptions.list({ customerId, limit: 50 })
-    activeSubs = (subs ?? []).filter((s: { status?: string }) => s.status === 'active')
+    for await (const sub of mollie.customerSubscriptions.iterate({ customerId }).take(100)) {
+      if (sub.status && cancellableStatuses.has(sub.status)) {
+        cancellableSubs.push({
+          id: sub.id,
+          amount: sub.amount,
+          interval: sub.interval,
+          status: sub.status,
+        })
+      }
+    }
   } catch (err) {
-    log.error('Mollie subscriptions.list failed', { message: err instanceof Error ? err.message : String(err) })
+    log.error('Mollie customerSubscriptions.iterate failed', { message: err instanceof Error ? err.message : String(err) })
     return attachRequestId(GENERIC_OK(), reqId)
   }
 
-  if (activeSubs.length === 0) {
-    log.info('mollie-manage: no active subs for customer', { customerId })
+  if (cancellableSubs.length === 0) {
+    log.info('mollie-manage: no cancellable subs for customer', { customerId })
     return attachRequestId(GENERIC_OK(), reqId)
   }
+  const activeSubs = cancellableSubs
 
   try {
     const { subject, html } = buildMollieManageEmail({
