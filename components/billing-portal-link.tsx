@@ -6,6 +6,14 @@ import { TurnstileWidget } from '@/components/turnstile-widget'
 
 interface BillingPortalLinkProps {
   locale: string
+  /**
+   * Which manage endpoint to hit. Defaults to 'mollie' per ADR 019 (Mollie is
+   * the primary processor; cheaper SEPA fees). Set to 'stripe' when the page
+   * is rendered under PAYMENT_VENDOR=stripe so the donor's email is looked up
+   * in the right vendor's customer list. Both endpoints return identical 200
+   * shapes — the donor never sees which vendor handled the lookup.
+   */
+  vendor?: 'mollie' | 'stripe'
 }
 
 /**
@@ -13,16 +21,17 @@ interface BillingPortalLinkProps {
  * bottom of the adopt page.
  *
  * Flow (privacy-preserving — closes email-oracle enumeration):
- *   1. User submits email → POST /api/billing-portal
+ *   1. User submits email → POST /api/mollie-manage  (or /api/billing-portal for Stripe)
  *   2. Server always returns 200 {ok:true} regardless of subscriber status
- *   3. If subscription exists, server emails the user a portal link
+ *   3. If subscription exists, server emails the user a manage link
  *   4. UI shows generic "check your inbox" message either way — never
  *      confirms whether the address is in the customer list.
  *
- * Requires Stripe Customer Portal activated in Stripe dashboard:
- *   Stripe → Settings → Billing → Customer portal → Activate
+ * Mollie flow: the email contains a token-gated cancel link that hits
+ * /api/mollie-manage/cancel and triggers mollie.customers_subscriptions.cancel().
+ * Stripe flow: the email contains the Stripe Customer Portal URL.
  */
-export function BillingPortalLink({ locale }: BillingPortalLinkProps) {
+export function BillingPortalLink({ locale, vendor = 'mollie' }: BillingPortalLinkProps) {
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState<'idle' | 'loading' | 'sent' | 'error'>('idle')
   const captchaTokenRef = useRef<string>('')
@@ -31,14 +40,15 @@ export function BillingPortalLink({ locale }: BillingPortalLinkProps) {
     e.preventDefault()
     setStatus('loading')
 
+    const endpoint = vendor === 'mollie' ? '/api/mollie-manage' : '/api/billing-portal'
     try {
-      const res = await fetch('/api/billing-portal', {
+      const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, locale, 'cf-turnstile-response': captchaTokenRef.current }),
       })
 
-      // 503 only when Stripe key unset on server. Every other path returns 200.
+      // 503 only when the vendor's key/SDK is unset. Every other path returns 200.
       setStatus(res.ok ? 'sent' : 'error')
     } catch {
       setStatus('error')

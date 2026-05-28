@@ -10,6 +10,8 @@ import { sendEmail } from '@/lib/mailer'
 import { requireEnvOrReturn503 } from '@/lib/route-helpers'
 import {
   handleMolliePaymentPaid,
+  handleMolliePaymentFailed,
+  handleMollieSubscriptionCanceled,
   type MolliePaymentLike,
 } from '@/lib/payment-handlers'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
@@ -79,10 +81,25 @@ export async function POST(request: Request) {
   // Construct one Mollie client for any post-verify SDK calls. Cached factory.
   const mollie = await getMollieClient(apiKey)
 
-  // Only paid events have a domain handler. Other terminal/transient states
-  // log-and-return (Mollie will fire again on terminal transition).
+  // payment.failed → recoverable for SEPA; notify donor + owner via handler.
+  if (payment.status === 'failed') {
+    const failedResult = await handleMolliePaymentFailed(payment, {
+      sendEmail,
+      fetchCustomer: (customerId) => fetchMollieCustomer(customerId, mollie),
+      ownerEmail: process.env.CONTACT_EMAIL,
+    })
+    const msg = `payment.failed handler reason=${failedResult.reason}`
+    if (failedResult.reason === 'ok' || failedResult.reason === 'not-adoption') {
+      log.info(msg, failedResult.meta)
+    } else {
+      log.warn(msg, failedResult.meta)
+    }
+    return attachRequestId(NextResponse.json({ received: true }), reqId)
+  }
+
+  // Other non-paid terminal/transient states log-and-return.
   if (payment.status !== 'paid') {
-    if (payment.status === 'failed' || payment.status === 'expired' || payment.status === 'canceled') {
+    if (payment.status === 'expired' || payment.status === 'canceled') {
       log.warn(`Payment ${payment.id} ended in ${payment.status}; no follow-up action.`)
     } else {
       log.info(`Payment ${payment.id} status=${payment.status}; awaiting terminal state.`)
@@ -95,6 +112,7 @@ export async function POST(request: Request) {
       sendEmail,
       fetchCustomer: (customerId) => fetchMollieCustomer(customerId, mollie),
       createSubscription: (p) => createMonthlySubscription(p, mollie, webhookSecret),
+      ownerEmail: process.env.CONTACT_EMAIL,
     })
 
     const level = result.reason === 'ok' ? 'log' : result.reason === 'missing-email' || result.reason === 'unmatched' ? 'warn' : 'error'

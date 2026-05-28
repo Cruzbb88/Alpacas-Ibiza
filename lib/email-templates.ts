@@ -273,6 +273,48 @@ ${unsubscribeFooter}
  * @param portalUrl  The Stripe portal session URL (already same-origin via SITE_BASE_URL).
  *                   Trusted input — generated server-side by stripe.billingPortal.sessions.create().
  */
+/**
+ * Email containing one-click cancel links for a donor's Mollie subscription(s).
+ *
+ * Mollie has no hosted billing portal — donors can't self-serve from a Mollie-
+ * branded page the way Stripe Customer Portal allows. We replace that flow
+ * with a token-gated cancel link: this email is the side-channel, the link
+ * carries an HMAC-signed (customerId, subscriptionId) capability, and
+ * /api/mollie-manage/cancel verifies + calls mollie.customers_subscriptions.cancel().
+ *
+ * Same email-oracle closure as the Stripe billing-portal email: response
+ * shape of the request endpoint is identical for subscriber vs non-subscriber,
+ * so attackers cannot enumerate via the request route.
+ *
+ * One entry per active subscription (donors usually have one; safe upper bound
+ * is small — Mollie rate-limits us before this becomes a render-size problem).
+ */
+export function buildMollieManageEmail(input: {
+    subscriptions: Array<{
+        id: string
+        amount: string
+        interval: string
+        cancelUrl: string
+    }>
+}): { subject: string; html: string } {
+    const subject = 'Manage your Alpacas Ibiza adoption'
+    const rows = input.subscriptions.map(s => `
+        <div style="margin:24px 0;padding:16px;border:1px solid #eee;border-radius:8px">
+            <p style="margin:0;font-size:12px;color:#888">Subscription <code>${escapeHtml(s.id)}</code></p>
+            <p style="margin:6px 0 12px;font-size:16px;font-weight:600">${escapeHtml(s.amount)} every ${escapeHtml(s.interval)}</p>
+            <a href="${escapeHtml(s.cancelUrl)}" style="display:inline-block;padding:10px 20px;background:#a44;color:#fff;text-decoration:none;border-radius:6px;font-size:14px;font-weight:600">Cancel this subscription</a>
+            <p style="margin-top:12px;font-size:12px;color:#888">Link valid for 7 days. You can also reply to this email — we read every message.</p>
+        </div>
+    `).join('')
+    const html = emailLayout(`
+<h2 style="color:${BRAND.primary}">Manage your adoption</h2>
+<p>You asked for a link to manage your Alpacas Ibiza adoption. We found the following active subscription${input.subscriptions.length === 1 ? '' : 's'} on your Mollie account:</p>
+${rows}
+<p style="color:#888;font-size:13px;margin-top:24px">If you didn't request this, you can ignore this email — the link does nothing once it expires.</p>
+`)
+    return { subject, html }
+}
+
 export function buildBillingPortalEmail(portalUrl: string): { subject: string; html: string } {
     const subject = 'Manage your Alpacas Ibiza adoption'
     const html = emailLayout(`

@@ -57,6 +57,12 @@ This file holds two catalogs that PRACTICES doesn't: the in-code failsafe map (w
 | Mollie webhook URL-path secret matched constant-time via `safeEqual()` | [app/api/mollie-webhook/route.ts](app/api/mollie-webhook/route.ts) | Mollie has no HMAC sigs — URL secret is layer 1, server-side payment fetch (`payments.get`) is layer 2 |
 | `molliePaymentProvider.createCheckoutSession` fail-quiet on missing config | [lib/integrations/payment-mollie.ts](lib/integrations/payment-mollie.ts) `createCheckoutSession()` | returns `{unconfigured:true, fallbackUrl}` — caller redirects to mailto (mirrors Stripe direct) |
 | `molliePaymentProvider.verifyWebhook` fail-CLOSED if secret/key unset | [lib/integrations/payment-mollie.ts](lib/integrations/payment-mollie.ts) `verifyWebhook()` | returns `{ok:false}` — no silent webhook pass-through |
+| Mollie webhook routes payment.failed → handleMolliePaymentFailed (donor + owner emails) | [app/api/mollie-webhook/route.ts](app/api/mollie-webhook/route.ts) → [lib/payment-handlers.ts](lib/payment-handlers.ts) `handleMolliePaymentFailed()` | SEPA fails are recoverable; donor gets manage-link, owner gets structured notification. Both fail-quiet. NEVER throws (webhook returns 200 so Mollie does not duplicate-notify). |
+| `handleMolliePaymentPaid` owner notification on monthly-first + yearly-oneoff | [lib/payment-handlers.ts](lib/payment-handlers.ts) `handleMolliePaymentPaid()` | parity with Stripe — third email to ownerEmail summarising tier/amount/alpaca/donor; tri-state `ownerNotified` result (true/false/null). Fail-quiet. |
+| `handleMollieSubscriptionCanceled` owner notification when sub is canceled via /api/mollie-manage/cancel | [lib/payment-handlers.ts](lib/payment-handlers.ts) `handleMollieSubscriptionCanceled()` | Mirrors `handleStripeSubscriptionDeleted` shape. Fail-quiet on send. NEVER throws. |
+| `/api/mollie-manage` 503 only if `MOLLIE_API_KEY` unset (fail-CLOSED); every other path returns silent 200 | [app/api/mollie-manage/route.ts](app/api/mollie-manage/route.ts) | Same email-oracle closure as the Stripe billing-portal route — response never reveals customer existence. Honeypot + IP/email rate-limits + Turnstile + email side-channel. |
+| `/api/mollie-manage/cancel` token-gated; verifyMollieCancelToken → mollie.customers_subscriptions.cancel | [app/api/mollie-manage/cancel/route.ts](app/api/mollie-manage/cancel/route.ts) | HMAC-signed (customerId, subscriptionId) capability, 7-day TTL, scope='cancel'. Renders HTML success/error page (no JSON dump). 400 on missing token / 410 on expired / 503 on SDK missing / 502 on Mollie API error / 200 on cancel + owner notify. |
+| `lib/mollie-manage-token.ts` cancel-action token uses same `NEWSLETTER_SIGNING_KEY → NEXTAUTH_SECRET` fallback | [lib/mollie-manage-token.ts](lib/mollie-manage-token.ts) | Tier 1 key always available — never silently broken. Scope guard prevents cross-use with newsletter tokens. |
 | Adopt-a-Paca price constants single source | [lib/config.ts](lib/config.ts) `ADOPT_PRICE_MONTHLY_EUR` / `ADOPT_PRICE_YEARLY_EUR` | defaults 75/900 (live-verified); env override only for staging tests (Rule 6) |
 | Welcome email send is fail-quiet on both webhooks | [app/api/stripe-webhook/route.ts](app/api/stripe-webhook/route.ts) + [app/api/mollie-webhook/route.ts](app/api/mollie-webhook/route.ts) | try/catch around `sendEmail` — webhook still returns 200 so processor doesn't retry-spam donor with duplicate welcomes |
 | Discount-codes email is fail-quiet (separate try/catch after welcome) | [app/api/stripe-webhook/route.ts](app/api/stripe-webhook/route.ts) | codes failure never affects welcome delivery or webhook 200 response; `buildAdoptDiscountCodesEmail` gracefully degrades to placeholder text when env vars unset |
@@ -133,6 +139,8 @@ This file holds two catalogs that PRACTICES doesn't: the in-code failsafe map (w
 
 **Tier 1 — MUST set before prod** (site breaks or is unsafe):
 `RESEND_API_KEY`, `CONTACT_EMAIL`, `NEXTAUTH_SECRET`, `ADMIN_USERNAME`, `ADMIN_PASSWORD`, `NEXTAUTH_URL`, `FAREHARBOR_WEBHOOK_SECRET`, `CRON_SECRET`
+
+**Default vendor (per ADR 019): Mollie.** Stripe is the fallback; set `PAYMENT_VENDOR=stripe` to switch.
 
 **Tier 2 — fail-open / graceful** (site works, feature dark until set):
 - `TURNSTILE_SECRET_KEY` + `NEXT_PUBLIC_TURNSTILE_SITE_KEY` → forms unprotected (visible prod warn)

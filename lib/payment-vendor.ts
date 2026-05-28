@@ -231,17 +231,23 @@ function mollieAdapter(): PaymentAdapter {
 
 /**
  * Read PAYMENT_VENDOR from env and return the appropriate adapter.
- * Defaults to mailto if unset or unrecognised.
  *
- * One-line activation for the owner:
- *   PAYMENT_VENDOR=stripe   → swap adopt CTA to Stripe Checkout (Strategy D)
- *   PAYMENT_VENDOR=fareharbor → swap adopt CTA to FareHarbor
- *   PAYMENT_VENDOR=mollie   → swap adopt CTA to Mollie
+ * Default flipped to `mollie` per ADR 019 — Mollie SEPA Direct Debit costs
+ * ~€0.25 per €75/mo charge vs Stripe's ~€1.75, saving ~€18/yr per donor
+ * (~€1,800/yr at 100 donors). The Mollie adapter still falls back gracefully
+ * to mailto if MOLLIE_API_KEY / MOLLIE_WEBHOOK_SECRET are unset, so the
+ * one-liner activation flow is preserved.
+ *
+ * Owner one-line overrides:
+ *   PAYMENT_VENDOR=mollie     → DEFAULT — Mollie checkout (low fees, SEPA)
+ *   PAYMENT_VENDOR=stripe     → Stripe Checkout (Strategy D, higher fees)
+ *   PAYMENT_VENDOR=fareharbor → FareHarbor passthrough
+ *   PAYMENT_VENDOR=mailto     → contact-only fallback (no live payments)
  *
  * PAYMENT_VENDOR=stripe-connect is blocked until tenant #1 signs (see above).
  */
 export function getPaymentAdapter(): PaymentAdapter {
-  const vendor = (process.env.PAYMENT_VENDOR ?? 'mailto') as PaymentVendor
+  const vendor = (process.env.PAYMENT_VENDOR ?? 'mollie') as PaymentVendor
 
   switch (vendor) {
     case 'stripe':
@@ -250,10 +256,10 @@ export function getPaymentAdapter(): PaymentAdapter {
       return stripeConnectVendorGuardAdapter()
     case 'fareharbor':
       return fareharborAdapter()
-    case 'mollie':
-      return mollieAdapter()
     case 'mailto':
-    default:
       return mailtoAdapter
+    case 'mollie':
+    default:
+      return mollieAdapter()
   }
 }

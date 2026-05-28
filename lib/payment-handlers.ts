@@ -451,12 +451,24 @@ export interface MolliePaidDeps {
   sendEmail: SendEmailFn
   fetchCustomer: FetchMollieCustomerFn
   createSubscription: CreateMollieSubscriptionFn
+  /**
+   * When set, send an owner-facing notification on monthly-first + yearly-oneoff
+   * (the flows that represent a NEW adopter). Mirrors handleStripeCheckoutCompleted
+   * — owner needs immediate visibility on new revenue. Fail-quiet on send error;
+   * webhook still returns 200 to avoid Mollie retry duplicating the donor email.
+   */
+  ownerEmail?: string
 }
 
 export interface MolliePaidResult {
   flow: 'monthly-first' | 'yearly-oneoff' | 'recurring-renewal' | 'unmatched'
   welcomeSent: boolean
   subscriptionCreated: boolean
+  /**
+   * Owner-notification tri-state. `null` when deps.ownerEmail was unset;
+   * `true`/`false` reflects send success when it was set.
+   */
+  ownerNotified: boolean | null
   reason: 'ok' | 'missing-email' | 'welcome-send-failed' | 'subscription-failed' | 'unmatched'
   meta: { paymentId: string; tier?: string; email?: string | null }
 }
@@ -493,16 +505,21 @@ export async function handleMolliePaymentPaid(
         flow: 'monthly-first',
         welcomeSent: false,
         subscriptionCreated: true,
+        ownerNotified: deps.ownerEmail ? false : null,
         reason: 'missing-email',
         meta: { paymentId: payment.id, tier, email: null },
       }
     }
 
-    const welcomeSent = await sendMollieWelcomeQuiet(deps.sendEmail, payment, 'monthly', customer.email, customer.name)
+    const [welcomeSent, ownerNotified] = await Promise.all([
+      sendMollieWelcomeQuiet(deps.sendEmail, payment, 'monthly', customer.email, customer.name),
+      sendMollieOwnerNotifyQuiet(deps.sendEmail, deps.ownerEmail, payment, 'monthly', customer.email, customer.name),
+    ])
     return {
       flow: 'monthly-first',
       welcomeSent,
       subscriptionCreated: true,
+      ownerNotified,
       reason: welcomeSent ? 'ok' : 'welcome-send-failed',
       meta: { paymentId: payment.id, tier, email: customer.email },
     }
@@ -527,15 +544,20 @@ export async function handleMolliePaymentPaid(
         flow: 'yearly-oneoff',
         welcomeSent: false,
         subscriptionCreated: false,
+        ownerNotified: deps.ownerEmail ? false : null,
         reason: 'missing-email',
         meta: { paymentId: payment.id, tier, email: null },
       }
     }
-    const welcomeSent = await sendMollieWelcomeQuiet(deps.sendEmail, payment, 'yearly', payment.billingEmail, null)
+    const [welcomeSent, ownerNotified] = await Promise.all([
+      sendMollieWelcomeQuiet(deps.sendEmail, payment, 'yearly', payment.billingEmail, null),
+      sendMollieOwnerNotifyQuiet(deps.sendEmail, deps.ownerEmail, payment, 'yearly', payment.billingEmail, null),
+    ])
     return {
       flow: 'yearly-oneoff',
       welcomeSent,
       subscriptionCreated: false,
+      ownerNotified,
       reason: welcomeSent ? 'ok' : 'welcome-send-failed',
       meta: { paymentId: payment.id, tier, email: payment.billingEmail },
     }
@@ -547,6 +569,7 @@ export async function handleMolliePaymentPaid(
       flow: 'recurring-renewal',
       welcomeSent: false,
       subscriptionCreated: false,
+      ownerNotified: null,
       reason: 'ok',
       meta: { paymentId: payment.id, tier },
     }
@@ -556,6 +579,7 @@ export async function handleMolliePaymentPaid(
     flow: 'unmatched',
     welcomeSent: false,
     subscriptionCreated: false,
+    ownerNotified: null,
     reason: 'unmatched',
     meta: { paymentId: payment.id, tier },
   }
@@ -585,6 +609,275 @@ async function sendMollieWelcomeQuiet(
     return true
   } catch {
     return false
+  }
+}
+
+async function sendMollieOwnerNotifyQuiet(
+  sendEmail: SendEmailFn,
+  ownerEmail: string | undefined,
+  payment: MolliePaymentLike,
+  tier: 'monthly' | 'yearly',
+  donorEmail: string,
+  donorName: string | null,
+): Promise<boolean | null> {
+  if (!ownerEmail) return null
+  try {
+    const alpacaName = findAlpacaName(payment.metadata?.alpaca ?? null)
+    const tierLabel = tier === 'yearly' ? 'yearly €900' : 'monthly €75/mo'
+    const subject = alpacaName
+      ? `[Adopt-a-Paca] New ${tierLabel} adoption — ${alpacaName} (Mollie)`
+      : `[Adopt-a-Paca] New ${tierLabel} adoption (Mollie)`
+    const alpacaRow = alpacaName
+      ? `<tr><td style="padding:6px 0"><strong>Adopted alpaca:</strong></td><td style="padding:6px 0">${escapeHtml(alpacaName)}</td></tr>`
+      : `<tr><td style="padding:6px 0"><strong>Adopted alpaca:</strong></td><td style="padding:6px 0;color:#a44">Pick for me — match within a few days</td></tr>`
+    await sendEmail({
+      to: ownerEmail,
+      subject,
+      html: `
+        <div style="font-family:sans-serif;max-width:600px;margin:0 auto;color:#2d2d2d;padding:16px">
+          <h2 style="color:#556B2F">🦙 New Adopt-a-Paca subscriber (Mollie)</h2>
+          <p>Welcome the new adopter and queue up their certificate + welcome pack.</p>
+          <table style="width:100%;border-collapse:collapse;font-size:14px;margin-top:12px">
+            <tr><td style="padding:6px 0"><strong>Tier:</strong></td><td style="padding:6px 0">${escapeHtml(tier === 'yearly' ? 'Yearly (€900 prepaid)' : 'Monthly (€75/month recurring via SEPA)')}</td></tr>
+            ${alpacaRow}
+            <tr><td style="padding:6px 0"><strong>Donor email:</strong></td><td style="padding:6px 0">${escapeHtml(donorEmail)}</td></tr>
+            <tr><td style="padding:6px 0"><strong>Donor name:</strong></td><td style="padding:6px 0">${escapeHtml(donorName ?? '—')}</td></tr>
+            <tr><td style="padding:6px 0"><strong>Mollie payment:</strong></td><td style="padding:6px 0"><code>${escapeHtml(payment.id)}</code></td></tr>
+          </table>
+          <p style="margin-top:16px;color:#666;font-size:13px">Donor has already received the welcome email; discount-codes follow within 48h.</p>
+        </div>
+      `.trim(),
+    })
+    return true
+  } catch {
+    return false
+  }
+}
+
+// ── Mollie payment.failed handler ────────────────────────────────────────────
+
+export interface MollieFailedDeps {
+  sendEmail: SendEmailFn
+  fetchCustomer: FetchMollieCustomerFn
+  /** When set, owner receives a structured notification per failed charge. */
+  ownerEmail?: string
+}
+
+export interface MollieFailedResult {
+  donorNotified: boolean
+  ownerNotified: boolean | null
+  reason:
+    | 'ok'
+    | 'not-adoption'
+    | 'missing-donor-email'
+    | 'donor-send-failed'
+    | 'send-failed'
+  meta: {
+    paymentId: string
+    customerId?: string | null
+    sequenceType?: string | null
+    tier?: string | null
+  }
+}
+
+/**
+ * Handle Mollie's payment.failed event for Adopt-a-Paca recurring charges.
+ *
+ * SEPA mandates fail when an account closes or has insufficient funds. Mollie
+ * does not auto-retry SEPA the way Stripe Smart Retries does — the owner
+ * usually has to reach out to the donor with a payment-update link.
+ *
+ * Sends:
+ *   1. Donor email: "Your monthly support payment didn't go through" with a
+ *      link to the subscription-management endpoint to update payment.
+ *   2. Owner email: structured notification (when ownerEmail provided).
+ *
+ * Fail-quiet on both sends. NEVER throws — webhook returns 200 so Mollie
+ * does not duplicate-notify on its retry cadence.
+ */
+export async function handleMolliePaymentFailed(
+  payment: MolliePaymentLike,
+  deps: MollieFailedDeps,
+): Promise<MollieFailedResult> {
+  const meta = {
+    paymentId: payment.id,
+    customerId: payment.customerId ?? null,
+    sequenceType: payment.sequenceType ?? null,
+    tier: payment.metadata?.tier ?? null,
+  }
+
+  if (payment.metadata?.product !== 'adopt-a-paca') {
+    return { donorNotified: false, ownerNotified: null, reason: 'not-adoption', meta }
+  }
+
+  let donorEmail: string | null = null
+  let donorName: string | null = null
+  if (payment.customerId) {
+    const c = await deps.fetchCustomer(payment.customerId)
+    donorEmail = c.email
+    donorName = c.name
+  } else if (payment.billingEmail) {
+    donorEmail = payment.billingEmail
+  }
+
+  if (!donorEmail) {
+    return {
+      donorNotified: false,
+      ownerNotified: deps.ownerEmail ? false : null,
+      reason: 'missing-donor-email',
+      meta,
+    }
+  }
+
+  const donorHtml = buildMollieDonorPaymentFailedHtml(payment, donorName)
+  const ownerHtml = buildMollieOwnerPaymentFailedHtml(payment, donorEmail, donorName)
+
+  const [donorResult, ownerResult] = await Promise.allSettled([
+    deps.sendEmail({
+      to: donorEmail,
+      subject: 'Action needed: your Adopt-a-Paca payment didn\'t go through',
+      html: donorHtml,
+    }),
+    deps.ownerEmail
+      ? deps.sendEmail({
+          to: deps.ownerEmail,
+          subject: `[Adopt-a-Paca] SEPA payment failed — ${payment.id}`,
+          html: ownerHtml,
+        })
+      : Promise.resolve({ id: null }),
+  ])
+
+  const donorNotified = donorResult.status === 'fulfilled'
+  const ownerNotified = deps.ownerEmail ? ownerResult.status === 'fulfilled' : null
+
+  if (!donorNotified) return { donorNotified, ownerNotified, reason: 'donor-send-failed', meta }
+  if (deps.ownerEmail && ownerNotified === false) {
+    return { donorNotified, ownerNotified, reason: 'send-failed', meta }
+  }
+  return { donorNotified, ownerNotified, reason: 'ok', meta }
+}
+
+function buildMollieDonorPaymentFailedHtml(payment: MolliePaymentLike, donorName: string | null): string {
+  const greeting = donorName ? `Hi ${escapeHtml(donorName)},` : 'Hi there,'
+  const updateUrl = `${(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://alpacasibiza.com').replace(/\/$/, '')}/en/adopt#manage`
+  return `
+    <div style="font-family:sans-serif;max-width:600px;margin:0 auto;color:#2d2d2d;padding:16px">
+      <p>${greeting}</p>
+      <p>Your monthly Adopt-a-Paca SEPA payment didn't go through this time. This usually means the bank flagged the direct-debit charge or your account balance was low at the moment we tried.</p>
+      <p style="margin-top:16px">
+        <a href="${escapeHtml(updateUrl)}" style="display:inline-block;background:#556B2F;color:#fff;padding:12px 24px;border-radius:6px;text-decoration:none">Manage your adoption</a>
+      </p>
+      <p style="margin-top:16px;color:#666;font-size:13px">If we don't hear from you within a few days, your adoption will pause and we'll keep your alpaca's spot open while we get in touch.</p>
+      <hr style="border:none;border-top:1px solid #eee;margin:24px 0" />
+      <p style="color:#999;font-size:12px">Alpacas Ibiza · info@alpacasibiza.com</p>
+    </div>
+  `.trim()
+}
+
+function buildMollieOwnerPaymentFailedHtml(payment: MolliePaymentLike, donorEmail: string, donorName: string | null): string {
+  return `
+    <div style="font-family:sans-serif;max-width:600px;margin:0 auto;color:#2d2d2d;padding:16px">
+      <h2 style="color:#a44">Adopt-a-Paca SEPA payment failed (Mollie)</h2>
+      <table style="width:100%;border-collapse:collapse;font-size:14px">
+        <tr><td style="padding:6px 0">Payment:</td><td><code>${escapeHtml(payment.id)}</code></td></tr>
+        <tr><td style="padding:6px 0">Customer:</td><td><code>${escapeHtml(payment.customerId ?? '—')}</code></td></tr>
+        <tr><td style="padding:6px 0">Sequence type:</td><td>${escapeHtml(payment.sequenceType ?? '—')}</td></tr>
+        <tr><td style="padding:6px 0">Donor email:</td><td>${escapeHtml(donorEmail)}</td></tr>
+        <tr><td style="padding:6px 0">Donor name:</td><td>${escapeHtml(donorName ?? '—')}</td></tr>
+      </table>
+      <p style="margin-top:16px">Mollie does not auto-retry SEPA the way Stripe Smart Retries does. The donor was emailed a portal link to update their payment method; if they don't act within a few days, consider a personal follow-up before the subscription auto-pauses.</p>
+    </div>
+  `.trim()
+}
+
+// ── Mollie subscription.canceled handler ─────────────────────────────────────
+
+export interface MollieSubscriptionCanceledShape {
+  id: string
+  customerId?: string | null
+  status?: string
+  canceledAt?: string | null
+  metadata?: {
+    product?: string
+    tier?: string
+    seedPaymentId?: string
+  } | null
+}
+
+export interface MollieSubscriptionCanceledDeps {
+  sendEmail: SendEmailFn
+  fetchCustomer: FetchMollieCustomerFn
+  ownerEmail?: string
+}
+
+export interface MollieSubscriptionCanceledResult {
+  ownerNotified: boolean
+  reason: 'ok' | 'not-adoption' | 'missing-owner-email' | 'send-failed'
+  meta: {
+    subscriptionId: string
+    customerId?: string | null
+    tier?: string | null
+    donorEmail?: string | null
+  }
+}
+
+/**
+ * Handle Mollie's subscription.canceled event for Adopt-a-Paca.
+ *
+ * Emits a single owner-only notification so the owner can decide whether
+ * outreach makes sense. Mollie doesn't expose a structured cancel-reason field
+ * the way Stripe does — owner must follow up to learn why.
+ *
+ * Fail-quiet on send; NEVER throws.
+ */
+export async function handleMollieSubscriptionCanceled(
+  subscription: MollieSubscriptionCanceledShape,
+  deps: MollieSubscriptionCanceledDeps,
+): Promise<MollieSubscriptionCanceledResult> {
+  const tier = subscription.metadata?.tier ?? null
+  const meta = {
+    subscriptionId: subscription.id,
+    customerId: subscription.customerId ?? null,
+    tier,
+    donorEmail: null as string | null,
+  }
+
+  const product = subscription.metadata?.product
+  if (product != null && product !== 'adopt-a-paca') {
+    return { ownerNotified: false, reason: 'not-adoption', meta }
+  }
+
+  if (!deps.ownerEmail) {
+    return { ownerNotified: false, reason: 'missing-owner-email', meta }
+  }
+
+  let donorEmail: string | null = null
+  if (subscription.customerId) {
+    const c = await deps.fetchCustomer(subscription.customerId)
+    donorEmail = c.email
+  }
+  meta.donorEmail = donorEmail
+
+  try {
+    await deps.sendEmail({
+      to: deps.ownerEmail,
+      subject: `[Adopt-a-Paca] Mollie subscription canceled — ${subscription.id}`,
+      html: `
+        <div style="font-family:sans-serif;max-width:600px;margin:0 auto;color:#2d2d2d;padding:16px">
+          <h2 style="color:#a44">Adopt-a-Paca subscription canceled (Mollie)</h2>
+          <table style="width:100%;border-collapse:collapse;font-size:14px">
+            <tr><td style="padding:6px 0">Subscription:</td><td><code>${escapeHtml(subscription.id)}</code></td></tr>
+            <tr><td style="padding:6px 0">Customer:</td><td><code>${escapeHtml(subscription.customerId ?? '—')}</code></td></tr>
+            <tr><td style="padding:6px 0">Tier:</td><td>${escapeHtml(tier ?? '—')}</td></tr>
+            <tr><td style="padding:6px 0">Donor email:</td><td>${escapeHtml(donorEmail ?? '—')}</td></tr>
+          </table>
+          <p style="margin-top:16px;color:#666;font-size:13px">Mollie doesn't surface a structured cancel reason — you'll need to follow up to learn why. The donor's adoption is now ended; no further SEPA charges will be made.</p>
+        </div>
+      `.trim(),
+    })
+    return { ownerNotified: true, reason: 'ok', meta }
+  } catch {
+    return { ownerNotified: false, reason: 'send-failed', meta }
   }
 }
 

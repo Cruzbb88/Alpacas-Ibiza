@@ -1,0 +1,12 @@
+{
+  "$comment": "Project-scoped MCP servers. Loaded by Claude Code when run inside this repo. The Mollie MCP server exposes Payments, Customers, Subscriptions, Mandates, Invoices, Settlements, Webhooks APIs so Claude can inspect + manage Adopt-a-Paca payment data once MOLLIE_API_KEY is set in the local env. See https://docs.mollie.com/docs/mollie-mcp-server.",
+  "mcpServers": {
+    "mollie": {
+      "command": "npx",
+      "args": ["-y", "@mollie/mcp-server"],
+      "env": {
+        "MOLLIE_API_KEY": "${MOLLIE_API_KEY}"
+      }
+    }
+  }
+}
