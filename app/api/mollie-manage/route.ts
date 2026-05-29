@@ -153,6 +153,12 @@ export async function POST(request: Request) {
   }
   const activeSubs = cancellableSubs
 
+  // Donor locale defaults to body-supplied or 'en'. The old HTML route at
+  // /api/mollie-manage/status is still reachable as a fallback for any
+  // already-delivered emails that point at it; new emails point at the
+  // React portal at /[locale]/my-adoption.
+  const portalLocale = typeof body?.locale === 'string' && /^[a-z]{2}$/.test(body.locale) ? body.locale : 'en'
+
   try {
     const { subject, html } = buildMollieManageEmail({
       subscriptions: activeSubs.map(s => {
@@ -163,7 +169,7 @@ export async function POST(request: Request) {
           id: s.id,
           amount: `${s.amount.value} ${s.amount.currency}`,
           interval: s.interval,
-          statusUrl: `${SITE_BASE_URL}/api/mollie-manage/status?token=${encodeURIComponent(statusToken)}`,
+          statusUrl: `${SITE_BASE_URL}/${portalLocale}/my-adoption?token=${encodeURIComponent(statusToken)}`,
           updatePaymentUrl: `${SITE_BASE_URL}/api/mollie-manage/update-payment?token=${encodeURIComponent(updateToken)}`,
           cancelUrl: `${SITE_BASE_URL}/api/mollie-manage/cancel?token=${encodeURIComponent(cancelToken)}`,
         }
