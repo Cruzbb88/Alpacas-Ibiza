@@ -1,4 +1,3 @@
-import { NextResponse } from 'next/server'
 import { getMollieClient } from '@/lib/integrations/payment-mollie'
 import { requireEnvOrReturn503 } from '@/lib/route-helpers'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
@@ -10,6 +9,34 @@ import {
 import { getFailureCount } from '@/lib/payment-failure-tracker'
 import { SITE_BASE_URL } from '@/lib/config'
 import { escapeHtml } from '@/lib/html'
+import { htmlMollieManagePage } from '@/lib/mollie-html-response'
+
+const STATUS_CSS = `
+  h1{font-size:26px;margin:0 0 8px}
+  h2{font-size:16px;font-weight:600;color:#555;margin:24px 0 8px;text-transform:uppercase;letter-spacing:.05em}
+  .grid{display:grid;grid-template-columns:140px 1fr;gap:8px 16px;font-size:14px}
+  .grid dt{color:#666}
+  .grid dd{margin:0;font-weight:500}
+  .badge{display:inline-block;padding:2px 10px;border-radius:99px;font-size:12px;font-weight:600;text-transform:uppercase}
+  .badge.active{background:#dcedc8;color:#33691e}
+  .badge.pending{background:#fff8e1;color:#7a5500}
+  .badge.suspended{background:#ffccbc;color:#bf360c}
+  .badge.canceled{background:#eceff1;color:#455a64}
+  .actions{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+  .btn{display:inline-block;padding:10px 18px;border-radius:8px;text-decoration:none;font-size:14px;font-weight:600}
+  .btn.primary{background:#556B2F;color:#fff}
+  .btn.primary:hover{background:#445525}
+  .btn.danger{background:#fff;color:#a44;border:1px solid #a44}
+  .btn.danger:hover{background:#fff3f3}
+  .alert{background:#fff8e1;border-left:4px solid #ffb300;padding:12px 14px;margin:16px 0;color:#7a5500;font-size:14px;border-radius:0 6px 6px 0}
+`.trim()
+
+function htmlPage(title: string, body: string, status: number) {
+  return htmlMollieManagePage(title, body, status, {
+    extraCss: STATUS_CSS,
+    mainMaxWidthPx: 640,
+  })
+}
 
 /**
  * GET /api/mollie-manage/status?token=<status-signed-token>
@@ -31,50 +58,6 @@ import { escapeHtml } from '@/lib/html'
  *   - Mollie API down   → 502 with "Try again" page
  *   - Otherwise         → 200 with status page
  */
-
-function htmlPage(title: string, body: string, status: number): NextResponse {
-  const html = `<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<title>${title} — Alpacas Ibiza</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="robots" content="noindex,nofollow" />
-<style>
-  body{font-family:system-ui,sans-serif;background:#f9f9f9;color:#2d2d2d;margin:0;padding:48px 24px;line-height:1.5}
-  main{max-width:640px;margin:0 auto;background:#fff;border-radius:12px;padding:32px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
-  h1{color:#556B2F;font-size:26px;margin:0 0 8px}
-  h2{font-size:16px;font-weight:600;color:#555;margin:24px 0 8px;text-transform:uppercase;letter-spacing:.05em}
-  a{color:#556B2F}
-  .muted{color:#888;font-size:13px;margin-top:24px}
-  .grid{display:grid;grid-template-columns:140px 1fr;gap:8px 16px;font-size:14px}
-  .grid dt{color:#666}
-  .grid dd{margin:0;font-weight:500}
-  .badge{display:inline-block;padding:2px 10px;border-radius:99px;font-size:12px;font-weight:600;text-transform:uppercase}
-  .badge.active{background:#dcedc8;color:#33691e}
-  .badge.pending{background:#fff8e1;color:#7a5500}
-  .badge.suspended{background:#ffccbc;color:#bf360c}
-  .badge.canceled{background:#eceff1;color:#455a64}
-  .actions{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
-  .btn{display:inline-block;padding:10px 18px;border-radius:8px;text-decoration:none;font-size:14px;font-weight:600}
-  .btn.primary{background:#556B2F;color:#fff}
-  .btn.primary:hover{background:#445525}
-  .btn.danger{background:#fff;color:#a44;border:1px solid #a44}
-  .btn.danger:hover{background:#fff3f3}
-  .alert{background:#fff8e1;border-left:4px solid #ffb300;padding:12px 14px;margin:16px 0;color:#7a5500;font-size:14px;border-radius:0 6px 6px 0}
-</style>
-</head>
-<body><main>${body}<p class="muted">Alpacas Ibiza · <a href="mailto:info@alpacasibiza.com">info@alpacasibiza.com</a> · <a href="${SITE_BASE_URL}">${SITE_BASE_URL}</a></p></main></body>
-</html>`
-  return new NextResponse(html, {
-    status,
-    headers: {
-      'Content-Type': 'text/html; charset=utf-8',
-      'Cache-Control': 'no-store',
-      'X-Robots-Tag': 'noindex, nofollow',
-    },
-  })
-}
 
 function formatMolliDate(value: string | undefined | null): string {
   if (!value) return '—'

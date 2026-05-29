@@ -1,24 +1,28 @@
 import { NextResponse } from 'next/server'
 import { sendEmail } from '@/lib/mailer'
-import { safeEqual } from '@/lib/secrets'
 import { buildOwnerMrrDigestEmail } from '@/lib/email-templates'
 import { _internalGetStoreSnapshot } from '@/lib/payment-failure-tracker'
 import { getMollieClient } from '@/lib/integrations/payment-mollie'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
+import { verifyCronSecret } from '@/lib/cron-auth'
 
 /**
- * GET /api/owner-mrr-digest?secret=<CRON_SECRET>
+ * GET /api/owner-mrr-digest   (Authorization: Bearer <CRON_SECRET>)
  *
- * Weekly MRR digest sent to the owner every Monday 09:00 CET.
- * Vercel Cron makes GET requests; the secret is carried via the ?secret= query
- * param (Vercel also auto-injects an Authorization: Bearer header when
- * CRON_SECRET is set — both patterns accepted, mirroring owner-digest).
+ * Weekly MRR digest sent to the owner every Monday 06:00 UTC.
+ * Vercel Cron auto-injects `Authorization: Bearer ${CRON_SECRET}` when
+ * CRON_SECRET is set in env, so we accept ONLY the Bearer header. The
+ * ?secret= query fallback was removed because query strings are routinely
+ * logged by edge proxies and analytics — a leaked CRON_SECRET would let
+ * anyone trigger the digest, spamming the owner.
  *
  * Data sources:
  *   - Mollie top-level subscriptions.iterate() — same pattern + cap as
  *     app/admin/analytics/subscriptions/page.tsx (intentional duplication;
  *     see build instructions comment).
- *   - lib/payment-failure-tracker — in-memory dunning counters.
+ *   - lib/payment-failure-tracker — in-memory dunning counters. The email
+ *     surfaces a cold-start caveat because the counters reset on Vercel
+ *     instance restart (ADR 001 in-memory persistence).
  *
  * Fail-quiet on send errors: returns 200 to prevent Vercel cron retries
  * (which would re-send the digest). All send failures are logged to stderr.
@@ -27,12 +31,8 @@ export async function GET(request: Request) {
     const reqId = getRequestId(request)
     const log = makeRequestLogger('owner-mrr-digest', reqId)
 
-    // ── Auth gate (mirrors owner-digest) ────────────────────────────────────
-    const expected = process.env.CRON_SECRET
-    const authHeader = request.headers.get('authorization') || ''
-    const bearer = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null
-    const got = bearer ?? new URL(request.url).searchParams.get('secret')
-    if (!expected || !safeEqual(got, expected)) {
+    // ── Auth gate — Bearer header ONLY. See header comment for rationale. ──
+    if (!verifyCronSecret(request)) {
         return attachRequestId(
             NextResponse.json({ error: 'Unauthorized' }, { status: 401 }),
             reqId,
@@ -54,13 +54,26 @@ export async function GET(request: Request) {
         process.env.CONTACT_EMAIL ??
         'info@alpacasibiza.com'
 
-    // ── Week window (UTC) ────────────────────────────────────────────────────
+    // ── ISO-week window (UTC, Mon→Mon) ───────────────────────────────────────
+    // Cron fires Monday 06:00 UTC. The digest covers the JUST-COMPLETED
+    // calendar week: previous Monday 00:00 UTC (inclusive) → this Monday
+    // 00:00 UTC (exclusive). Previously this was a rolling 7-day window
+    // (now - 7d → now), which drifted by 6 hours per week and produced
+    // ragged week labels like "Mon 26 May 06:00 → Mon 2 Jun 06:00".
     const now = new Date()
-    const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+    const dayOfWeekMonZero = (now.getUTCDay() + 6) % 7 // Mon=0..Sun=6
+    const thisWeekMondayMs = Date.UTC(
+        now.getUTCFullYear(),
+        now.getUTCMonth(),
+        now.getUTCDate() - dayOfWeekMonZero,
+    )
+    const weekStartMs = thisWeekMondayMs - 7 * 24 * 60 * 60 * 1000
+    const weekEndMs = thisWeekMondayMs
     const fmtDate = (d: Date) =>
-        d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
-    const weekStart = fmtDate(weekAgo)
-    const weekEnd = fmtDate(now)
+        d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'UTC' })
+    const weekStart = fmtDate(new Date(weekStartMs))
+    // weekEnd label = Sunday (last day of window), one ms before Mon 00:00.
+    const weekEnd = fmtDate(new Date(weekEndMs - 1))
 
     // ── Mollie subscription iteration (cap 500, same as subscriptions page) ──
     type SubRaw = {
@@ -154,9 +167,6 @@ export async function GET(request: Request) {
         return v
     }
 
-    const ms7d = 7 * 24 * 60 * 60 * 1000
-    const nowMs = now.getTime()
-
     let activeCount = 0
     let mrr = 0
     let newCount7d = 0
@@ -167,11 +177,26 @@ export async function GET(request: Request) {
             activeCount++
             mrr += monthlyContribution(r)
         }
-        if (r.createdAt && nowMs - new Date(r.createdAt).getTime() <= ms7d) {
-            newCount7d++
+        // newCount7d: subs whose createdAt falls inside [weekStart, weekEnd).
+        // Exclude rows where status === 'canceled' AND canceledAt < weekStart —
+        // those are "created during a prior week, canceled before this week
+        // even began" stragglers that would inflate 'new' without ever
+        // contributing to canceled (canceledCount7d's own filter excludes them).
+        if (r.createdAt) {
+            const createdMs = new Date(r.createdAt).getTime()
+            if (createdMs >= weekStartMs && createdMs < weekEndMs) {
+                const canceledBeforeWindow =
+                    r.status === 'canceled' &&
+                    r.canceledAt &&
+                    new Date(r.canceledAt).getTime() < weekStartMs
+                if (!canceledBeforeWindow) newCount7d++
+            }
         }
-        if (r.canceledAt && nowMs - new Date(r.canceledAt).getTime() <= ms7d) {
-            canceledCount7d++
+        if (r.canceledAt) {
+            const canceledMs = new Date(r.canceledAt).getTime()
+            if (canceledMs >= weekStartMs && canceledMs < weekEndMs) {
+                canceledCount7d++
+            }
         }
     }
 
@@ -191,6 +216,9 @@ export async function GET(request: Request) {
     ).length
 
     // ── Build + send email ───────────────────────────────────────────────────
+    // Always surface the dunning cold-start advisory. Owner sees the digest
+    // weekly; they need a recurring reminder that the figure reflects only
+    // failures seen since the most recent Vercel restart.
     const { subject, html } = buildOwnerMrrDigestEmail({
         mrr,
         arr,
@@ -202,6 +230,7 @@ export async function GET(request: Request) {
         actionRequiredCount,
         weekStart,
         weekEnd,
+        dunningColdStartCaveat: true,
     })
 
     try {

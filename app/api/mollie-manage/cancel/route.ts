@@ -1,4 +1,3 @@
-import { NextResponse } from 'next/server'
 import type { MollieClient } from '@mollie/api-client'
 import { getMollieClient } from '@/lib/integrations/payment-mollie'
 import { requireEnvOrReturn503 } from '@/lib/route-helpers'
@@ -7,6 +6,17 @@ import { verifyMollieCancelToken } from '@/lib/mollie-manage-token'
 import { handleMollieSubscriptionCanceled } from '@/lib/payment-handlers'
 import { sendEmail } from '@/lib/mailer'
 import { SITE_BASE_URL } from '@/lib/config'
+import { htmlMollieManagePage } from '@/lib/mollie-html-response'
+import { isSameOriginPost } from '@/lib/same-origin-guard'
+
+const CANCEL_CSS = `
+  button.danger{background:#a44;color:#fff;border:0;padding:12px 24px;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer}
+  button.danger:hover{background:#933}
+`.trim()
+
+function htmlPage(title: string, body: string, status: number) {
+  return htmlMollieManagePage(title, body, status, { extraCss: CANCEL_CSS })
+}
 
 /**
  * /api/mollie-manage/cancel?token=<signed-token>
@@ -41,38 +51,6 @@ async function fetchMollieCustomer(
   } catch {
     return { email: null, name: null }
   }
-}
-
-function htmlPage(title: string, body: string, status: number): NextResponse {
-  const html = `<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<title>${title} — Alpacas Ibiza</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="robots" content="noindex,nofollow" />
-<style>
-  body{font-family:system-ui,sans-serif;background:#f9f9f9;color:#2d2d2d;margin:0;padding:48px 24px;line-height:1.5}
-  main{max-width:560px;margin:0 auto;background:#fff;border-radius:12px;padding:32px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
-  h1{color:#556B2F;font-size:24px;margin:0 0 16px}
-  a{color:#556B2F}
-  .muted{color:#888;font-size:13px;margin-top:24px}
-  form{margin-top:24px}
-  button.danger{background:#a44;color:#fff;border:0;padding:12px 24px;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer}
-  button.danger:hover{background:#933}
-  a.cancel{display:inline-block;margin-left:12px;color:#888;font-size:14px}
-</style>
-</head>
-<body><main>${body}<p class="muted">Alpacas Ibiza · <a href="mailto:info@alpacasibiza.com">info@alpacasibiza.com</a> · <a href="${SITE_BASE_URL}">${SITE_BASE_URL}</a></p></main></body>
-</html>`
-  return new NextResponse(html, {
-    status,
-    headers: {
-      'Content-Type': 'text/html; charset=utf-8',
-      'Cache-Control': 'no-store',
-      'X-Robots-Tag': 'noindex, nofollow',
-    },
-  })
 }
 
 /**
@@ -117,14 +95,9 @@ export async function POST(request: Request) {
   const reqId = getRequestId(request)
   const log = makeRequestLogger('mollie-manage-cancel', reqId)
 
-  // CSRF defence: a leaked cancel token (forwarded email, log scrape, browser
-  // history) is replayable from any cross-origin form unless we check the
-  // Origin header. Same-origin POSTs from our own GET-rendered form pass; a
-  // rogue <form action="https://alpacasibiza.com/api/mollie-manage/cancel">
-  // hosted on attacker.com gets blocked.
-  const origin = request.headers.get('origin')
-  if (origin && origin !== SITE_BASE_URL) {
-    log.warn('Cross-origin POST blocked', { origin })
+  // CSRF defence: see lib/same-origin-guard.ts header for rationale.
+  if (!isSameOriginPost(request)) {
+    log.warn('Cross-origin POST blocked', { origin: request.headers.get('origin') })
     return attachRequestId(htmlPage('Blocked', `<h1>Blocked</h1><p>This request did not originate from alpacasibiza.com.</p>`, 400), reqId)
   }
 

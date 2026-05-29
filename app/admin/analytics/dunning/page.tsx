@@ -1,11 +1,10 @@
 import { getServerSession } from 'next-auth/next'
 import { redirect } from 'next/navigation'
 import { auth } from '@/app/api/auth/[...nextauth]/route'
-import {
-  listAtRiskDonors,
-  listActionRequiredDonors,
-  type DunningEntry,
-} from '@/lib/payment-failure-tracker-readers'
+import { _internalGetStoreSnapshot } from '@/lib/payment-failure-tracker'
+import { type DunningEntry } from '@/lib/payment-failure-tracker-readers'
+import { Kpi } from '@/components/admin/Kpi'
+import { adminTh as th, adminTd as td } from '@/lib/admin-styles'
 
 export const metadata = {
   title: 'Dunning — Admin',
@@ -46,55 +45,6 @@ function suggestedAction(severity: DunningEntry['severity']): string {
 // ---------------------------------------------------------------------------
 // Sub-components
 // ---------------------------------------------------------------------------
-
-const th: React.CSSProperties = {
-  textAlign: 'left',
-  padding: '10px 12px',
-  borderBottom: '1px solid #e5e7eb',
-  fontWeight: 600,
-  color: '#374151',
-}
-const td: React.CSSProperties = {
-  padding: '10px 12px',
-  borderBottom: '1px solid #f3f4f6',
-  color: '#111827',
-}
-
-function Kpi({ label, value, negative }: { label: string; value: string; negative?: boolean }) {
-  return (
-    <div
-      style={{
-        background: '#fff',
-        borderRadius: 10,
-        padding: 16,
-        border: '1px solid #e5e7eb',
-        boxShadow: '0 1px 2px rgba(0,0,0,0.03)',
-      }}
-    >
-      <div
-        style={{
-          fontSize: 11,
-          textTransform: 'uppercase',
-          letterSpacing: 1,
-          color: '#6b7280',
-          marginBottom: 6,
-        }}
-      >
-        {label}
-      </div>
-      <div
-        style={{
-          fontSize: 28,
-          fontWeight: 700,
-          color: negative ? '#a44' : '#111827',
-          lineHeight: 1.1,
-        }}
-      >
-        {value}
-      </div>
-    </div>
-  )
-}
 
 function SeverityBadge({ severity }: { severity: DunningEntry['severity'] }) {
   const styles: Record<DunningEntry['severity'], React.CSSProperties> = {
@@ -192,8 +142,13 @@ export default async function AdminDunningPage() {
   const session = await getServerSession(auth)
   if (!session) redirect('/admin/login')
 
-  const actionRequired = listActionRequiredDonors()
-  const atRisk = listAtRiskDonors().filter((e) => e.severity === 'at-risk')
+  // Single snapshot read. Each call to _internalGetStoreSnapshot triggers a
+  // TTL purge — calling it twice (once per severity) doubles that cost and,
+  // worse, opens a window where the second call sees a freshly-purged entry
+  // the first call still listed. One read, partition in memory.
+  const snapshot = _internalGetStoreSnapshot() as ReadonlyArray<DunningEntry>
+  const actionRequired = snapshot.filter((e) => e.severity === 'action-required')
+  const atRisk = snapshot.filter((e) => e.severity === 'at-risk')
 
   const allAtRisk = [...actionRequired, ...atRisk]
   const oldest = oldestEntry(allAtRisk)
@@ -225,9 +180,27 @@ export default async function AdminDunningPage() {
           ↻ Refresh
         </a>
       </div>
-      <p style={{ color: '#6b7280', marginBottom: 24 }}>
+      <p style={{ color: '#6b7280', marginBottom: 16 }}>
         At-risk (2+ failures) and action-required (3+ failures) donors. Refreshes on every load.
       </p>
+
+      {/* Cold-start advisory */}
+      <div
+        style={{
+          background: '#fffbeb',
+          borderLeft: '4px solid #d97706',
+          padding: '12px 16px',
+          marginBottom: 24,
+          fontSize: 13,
+          color: '#78350f',
+          borderRadius: 6,
+        }}
+      >
+        <strong>⚠️ Cold-start caveat.</strong> Failure counters live in this Vercel
+        instance&apos;s memory (ADR 001). A recent deploy, idle-recycle, or cron warm-up resets
+        them — donors who failed before that restart will be missing from the lists below.
+        Before marking a donor lapsed, cross-check Mollie&apos;s charge log directly.
+      </div>
 
       {/* KPI strip */}
       <div

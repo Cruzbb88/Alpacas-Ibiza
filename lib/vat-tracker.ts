@@ -75,7 +75,10 @@ if (process.env.NODE_ENV !== 'production') {
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 function pruneOldYears(currentYear: number): void {
-  const cutoff = currentYear - RETENTION_YEARS
+  // Keep N most-recent years (currentYear, currentYear-1, …, currentYear-(N-1)).
+  // Previous code used `year < currentYear - RETENTION_YEARS` which kept 8 years
+  // (off-by-one). EU OSS retention is N=7; this now keeps exactly 7.
+  const cutoff = currentYear - RETENTION_YEARS + 1
   for (const year of _store.keys()) {
     if (year < cutoff) _store.delete(year)
   }
@@ -115,8 +118,11 @@ export function recordSale(
     ? new Date(yearEpoch).getUTCFullYear()
     : new Date().getUTCFullYear()
 
-  // Idempotency: if we've already processed this attempt, no-op.
-  const dedupKey = `${year}:${countryISO2}:${attemptId}`
+  // Idempotency: dedup key is `country:attemptId` ONLY — must NOT include year,
+  // because a Mollie webhook retry that straddles the Dec 31 → Jan 1 boundary
+  // would otherwise resolve to a different year and double-count the sale into
+  // both years' buckets. The (country, attemptId) tuple is globally unique.
+  const dedupKey = `${countryISO2}:${attemptId}`
   if (_attempts.has(dedupKey)) return
 
   pruneOldYears(year)

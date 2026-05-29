@@ -10,11 +10,37 @@
  * skipped. Never throws — if it did, it would break the webhook handler's
  * fail-quiet contract and potentially trigger payment-processor retries.
  *
- * Uses lib/fetch.ts fetchWithTimeout (5 s AbortController) for every outbound
- * HTTP call.
+ * Uses lib/fetch.ts fetchWithTimeout — 2 s ceiling for every outbound HTTP
+ * call. Tightened from 5 s because the webhook handler awaits ownerSendPromise
+ * before responding 200 to the payment processor (Stripe / Mollie). At 5 s, a
+ * single dead notification channel would stall every webhook for 5 s, eating
+ * into the processor's 10 s response window and risking retry storms.
  */
 
 import { fetchWithTimeout } from './fetch.ts'
+
+/**
+ * Per-channel HTTP timeout. Keep this strictly below the gap between the
+ * webhook handler's wall-clock and the payment processor's hard deadline.
+ * Stripe = 10 s, Mollie = 15 s. We want notify to fail loudly + fast, not
+ * silently delay the webhook.
+ */
+const NOTIFY_TIMEOUT_MS = 2000
+
+/**
+ * Strip secrets out of an error string before it's logged. Telegram bot
+ * tokens appear in the request URL; Slack webhook URLs are themselves
+ * bearer-equivalent. fetch error messages occasionally embed the full URL
+ * verbatim, which would leak the secret to Vercel logs (and downstream
+ * to anyone with log-read access).
+ */
+function sanitizeErrorForLog(err: unknown): string {
+  const raw = err instanceof Error ? err.message : String(err)
+  return raw
+    .replace(/https:\/\/api\.telegram\.org\/bot[A-Za-z0-9:_-]+/g, 'https://api.telegram.org/bot[REDACTED]')
+    .replace(/https:\/\/hooks\.slack\.com\/services\/\S+/g, 'https://hooks.slack.com/services/[REDACTED]')
+    .replace(/https:\/\/discord\.com\/api\/webhooks\/\S+/g, 'https://discord.com/api/webhooks/[REDACTED]')
+}
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -86,7 +112,7 @@ async function sendSlack(
       headers: { 'Content-Type': 'application/json' },
       body,
     },
-    5000,
+    NOTIFY_TIMEOUT_MS,
   )
 
   if (!res.ok) {
@@ -124,7 +150,7 @@ async function sendTelegram(
       headers: { 'Content-Type': 'application/json' },
       body,
     },
-    5000,
+    NOTIFY_TIMEOUT_MS,
   )
 
   if (!res.ok) {
@@ -145,7 +171,7 @@ async function sendGenericWebhook(
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(input satisfies EscalationNotification),
     },
-    5000,
+    NOTIFY_TIMEOUT_MS,
   )
 
   if (!res.ok) {
@@ -179,19 +205,19 @@ export async function notifyOwnerOnEscalation(
   await Promise.all([
     slackUrl
       ? sendSlack(slackUrl, input).catch((err: unknown) => {
-          console.error('[owner-notify] Slack send failed', { err })
+          console.error('[owner-notify] Slack send failed', { err: sanitizeErrorForLog(err) })
         })
       : Promise.resolve(),
 
     telegramToken && telegramChatId
       ? sendTelegram(telegramToken, telegramChatId, input).catch((err: unknown) => {
-          console.error('[owner-notify] Telegram send failed', { err })
+          console.error('[owner-notify] Telegram send failed', { err: sanitizeErrorForLog(err) })
         })
       : Promise.resolve(),
 
     genericUrl
       ? sendGenericWebhook(genericUrl, input).catch((err: unknown) => {
-          console.error('[owner-notify] Generic webhook send failed', { err })
+          console.error('[owner-notify] Generic webhook send failed', { err: sanitizeErrorForLog(err) })
         })
       : Promise.resolve(),
   ])

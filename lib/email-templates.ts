@@ -380,6 +380,13 @@ export interface OwnerMrrDigestInput {
     actionRequiredCount: number
     weekStart: string
     weekEnd: string
+    /**
+     * When true, append a "cold-start may under-report" advisory below the
+     * dunning section. The dunning counters live in the per-Vercel-instance
+     * memory store; a recent deploy/restart resets them. ADR 001 in-memory
+     * persistence tradeoff — owner needs to know when the digest could lie.
+     */
+    dunningColdStartCaveat?: boolean
 }
 
 /**
@@ -396,7 +403,7 @@ export interface OwnerMrrDigestInput {
 export function buildOwnerMrrDigestEmail(
     input: OwnerMrrDigestInput,
 ): { subject: string; html: string } {
-    const { mrr, arr, activeCount, newCount7d, canceledCount7d, churnPct, atRiskCount, actionRequiredCount, weekStart, weekEnd } = input
+    const { mrr, arr, activeCount, newCount7d, canceledCount7d, churnPct, atRiskCount, actionRequiredCount, weekStart, weekEnd, dunningColdStartCaveat } = input
     const subject = `[Alpacas Ibiza] Weekly herd revenue digest — ${weekStart} to ${weekEnd}`
 
     const kpiCell = (label: string, value: string, highlight = false) =>
@@ -438,6 +445,7 @@ export function buildOwnerMrrDigestEmail(
 
 <h3 style="margin-top:28px;margin-bottom:8px">Dunning</h3>
 ${dunningSection}
+${dunningColdStartCaveat ? `<p style="color:#888;font-size:11px;margin-top:8px;font-style:italic">Dunning counters reset on each Vercel restart (in-memory store, ADR 001). If you deployed this week, the counts above may under-report — cross-check the Mollie dashboard.</p>` : ''}
 
 <p style="color:#aaa;font-size:11px;margin-top:24px">Full details: <a href="https://alpacasibiza.com/admin/analytics/subscriptions" style="color:#aaa">subscriptions dashboard</a></p>
 `)

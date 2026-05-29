@@ -2,6 +2,8 @@ import { getServerSession } from 'next-auth/next'
 import { redirect } from 'next/navigation'
 import { auth } from '@/app/api/auth/[...nextauth]/route'
 import { getYearSnapshot, type CountryRow, type YearSnapshot } from '@/lib/vat-tracker'
+import { Kpi } from '@/components/admin/Kpi'
+import { adminTh as th, adminTd as td } from '@/lib/admin-styles'
 
 export const metadata = {
   title: 'VAT OSS tracking — Admin',
@@ -43,22 +45,25 @@ function getBannerStatus(crossBorderEurMinor: number): BannerStatus {
   const thresholdMinor = OSS_THRESHOLD_EUR * 100
   const pct = crossBorderEurMinor / thresholdMinor
   if (pct >= 1) return 'red'
-  if (pct >= 0.75) return 'amber'
+  // Amber threshold lowered from 75% to 60% per resonance-finder 2026-05-29:
+  // AEAT OSS registration takes 4-6 weeks; 60% gives the owner a full billing
+  // cycle of warning before the legal deadline becomes urgent.
+  if (pct >= 0.60) return 'amber'
   return 'green'
 }
 
 const BANNER_CONFIG: Record<BannerStatus, { bg: string; border: string; color: string; label: string }> = {
   green: { bg: '#f0fdf4', border: '#16a34a', color: '#15803d', label: 'Comfortable headroom — no action needed' },
-  amber: { bg: '#fffbeb', border: '#d97706', color: '#92400e', label: 'Monitor — approaching OSS threshold (75–100%)' },
+  amber: { bg: '#fffbeb', border: '#d97706', color: '#92400e', label: 'Monitor — approaching OSS threshold (60–100%)' },
   red:   { bg: '#fef2f2', border: '#dc2626', color: '#991b1b', label: 'OSS registration required — threshold exceeded' },
 }
 
 // ── Year selector helpers ─────────────────────────────────────────────────────
 
-/** Return the last 3 calendar years including the current one. */
+/** Return 5 calendar years (current through current-4) to cover AEAT's 4-year audit window. */
 function getAvailableYears(): number[] {
-  const current = new Date().getFullYear()
-  return [current, current - 1, current - 2]
+  const current = new Date().getUTCFullYear()
+  return [current, current - 1, current - 2, current - 3, current - 4]
 }
 
 // ── Page ──────────────────────────────────────────────────────────────────────
@@ -72,7 +77,11 @@ export default async function AdminVatPage({ searchParams }: PageProps) {
   if (!session) redirect('/admin/login')
 
   const hasMollie = Boolean(process.env.MOLLIE_API_KEY)
-  const currentYear = new Date().getFullYear()
+  // Use UTC year to match recordSale's getUTCFullYear() bucketing. Without
+  // this, a Spanish midnight payment (00:30 CET = 23:30 UTC prev day) would
+  // be filed in the prior UTC year but the page would default to the new
+  // local year, hiding the sale until the owner manually changes the selector.
+  const currentYear = new Date().getUTCFullYear()
 
   // Year from query param (year selector), default to current year.
   const rawYear = searchParams?.year
@@ -107,6 +116,16 @@ export default async function AdminVatPage({ searchParams }: PageProps) {
         threshold for calendar year {selectedYear}. Spain (ES) sales are domestic; all other EU member states count
         toward the threshold.
       </p>
+
+      {/* COLD-START WARNING — this is the highest-priority finding from crystal-ball 2026-05-29.
+          The VAT store is in-memory + process-scoped; a Vercel cold-start mid-year zeroes
+          the YTD totals. Owner could miss €10k OSS registration based on a stale empty view. */}
+      <div style={{ background: '#fffbeb', borderLeft: '4px solid #d97706', padding: 16, marginBottom: 24, color: '#7c3007', fontSize: 14 }}>
+        <strong>⚠️ Cold-start caveat.</strong> This dashboard tracks payments in-memory per Vercel instance.
+        After a server restart (deploy, cron warm-up, idle-recycle), the YTD totals shown here may UNDERSTATE actual revenue.
+        Before making OSS-registration decisions, cross-check this view against the Mollie dashboard.
+        Upgrade trigger: when YTD cross-border &gt; €5,000, persist this tracker to Vercel KV per ADR 011.
+      </div>
 
       {/* No Mollie key banner */}
       {!hasMollie && (
@@ -268,37 +287,3 @@ export default async function AdminVatPage({ searchParams }: PageProps) {
 
 // ── Shared styles (match subscriptions/page.tsx exactly) ─────────────────────
 
-const th: React.CSSProperties = {
-  textAlign: 'left',
-  padding: '10px 12px',
-  borderBottom: '1px solid #e5e7eb',
-  fontWeight: 600,
-  color: '#374151',
-}
-
-const td: React.CSSProperties = {
-  padding: '10px 12px',
-  borderBottom: '1px solid #f3f4f6',
-  color: '#111827',
-}
-
-// ── Kpi component (identical shape to subscriptions/page.tsx) ─────────────────
-
-function Kpi({ label, value, negative }: { label: string; value: string; negative?: boolean }) {
-  return (
-    <div style={{
-      background: '#fff',
-      borderRadius: 10,
-      padding: 16,
-      border: '1px solid #e5e7eb',
-      boxShadow: '0 1px 2px rgba(0,0,0,0.03)',
-    }}>
-      <div style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, color: '#6b7280', marginBottom: 6 }}>
-        {label}
-      </div>
-      <div style={{ fontSize: 28, fontWeight: 700, color: negative ? '#a44' : '#111827', lineHeight: 1.1 }}>
-        {value}
-      </div>
-    </div>
-  )
-}

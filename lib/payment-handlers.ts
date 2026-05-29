@@ -185,23 +185,6 @@ export async function handleStripeCheckoutCompleted(
   // violates the "NEVER throws" contract documented at the top of the function.
   // Three independent sends — donor welcome + donor discount-codes + owner notify.
   // All fail-quiet. Owner notify only fires when ownerEmail is provided.
-  const ownerSendPromise = deps.ownerEmail
-    ? (async () =>
-        deps.sendEmail({
-          to: deps.ownerEmail,
-          subject: buildOwnerAdoptionSubject(tier, alpacaName ?? null),
-          html: buildOwnerAdoptionNotificationHtml({
-            tier,
-            sessionId: session.id,
-            donorEmail: email,
-            donorName: name ?? null,
-            alpacaName,
-            amountTotal: session.amount_total ?? null,
-            currency: session.currency ?? null,
-          }),
-        }))()
-    : Promise.resolve(null)
-
   // Gift fields from metadata — route welcome to recipient when present.
   const giftRecipientEmail = typeof session.metadata?.gift_recipient_email === 'string' && session.metadata.gift_recipient_email.length > 0
     ? session.metadata.gift_recipient_email
@@ -210,6 +193,32 @@ export async function handleStripeCheckoutCompleted(
   const giftSenderName = session.metadata?.gift_sender_name ?? null
   const giftMessage = session.metadata?.gift_message ?? null
   const giftSendDate = session.metadata?.gift_send_date ?? null
+  const isGiftPurchase = giftRecipientEmail !== null && giftMessage !== null
+
+  const ownerSendPromise = deps.ownerEmail
+    ? (async () =>
+        deps.sendEmail({
+          to: deps.ownerEmail,
+          subject: buildOwnerAdoptionSubject(tier, alpacaName ?? null, isGiftPurchase),
+          html: buildOwnerAdoptionNotificationHtml({
+            tier,
+            sessionId: session.id,
+            donorEmail: email,
+            donorName: name ?? null,
+            alpacaName,
+            amountTotal: session.amount_total ?? null,
+            currency: session.currency ?? null,
+            gift: isGiftPurchase
+              ? {
+                  recipientEmail: giftRecipientEmail!,
+                  recipientName: giftRecipientName,
+                  senderName: giftSenderName,
+                  sendDate: giftSendDate,
+                }
+              : null,
+          }),
+        }))()
+    : Promise.resolve(null)
 
   // Determine scheduledAt for the welcome when buyer chose a future send date.
   // Falls back to immediate when sendDate is absent or not a future date.
@@ -220,7 +229,7 @@ export async function handleStripeCheckoutCompleted(
     return !isNaN(sendMs) && sendMs > nowMs ? new Date(sendMs).toISOString() : undefined
   })()
 
-  const isGiftWelcome = giftRecipientEmail !== null && giftMessage !== null
+  const isGiftWelcome = isGiftPurchase
 
   const [welcomeResult, codesResult, ownerResult] = await Promise.allSettled([
     (async () =>
@@ -272,11 +281,16 @@ export async function handleStripeCheckoutCompleted(
   return { welcomeSent, codesScheduled, ownerNotified, reason: 'ok', codesScheduledAt, meta }
 }
 
-function buildOwnerAdoptionSubject(tier: 'monthly' | 'yearly', alpacaName: string | null): string {
+function buildOwnerAdoptionSubject(
+  tier: 'monthly' | 'yearly',
+  alpacaName: string | null,
+  isGift: boolean,
+): string {
   const tierLabel = tier === 'yearly' ? 'yearly €900' : 'monthly €75/mo'
+  const prefix = isGift ? '[Adopt-a-Paca] 🎁 GIFT' : '[Adopt-a-Paca]'
   return alpacaName
-    ? `[Adopt-a-Paca] New ${tierLabel} adoption — ${alpacaName}`
-    : `[Adopt-a-Paca] New ${tierLabel} adoption`
+    ? `${prefix} New ${tierLabel} adoption — ${alpacaName}`
+    : `${prefix} New ${tierLabel} adoption`
 }
 
 function buildOwnerAdoptionNotificationHtml(input: {
@@ -287,6 +301,12 @@ function buildOwnerAdoptionNotificationHtml(input: {
   alpacaName: string | null
   amountTotal: number | null
   currency: string | null
+  gift: {
+    recipientEmail: string
+    recipientName: string | null
+    senderName: string | null
+    sendDate: string | null
+  } | null
 }): string {
   const tierLine = input.tier === 'yearly' ? 'Yearly (€900 prepaid)' : 'Monthly (€75/month recurring)'
   const amount = formatStripeAmount(input.amountTotal, input.currency)
@@ -294,19 +314,32 @@ function buildOwnerAdoptionNotificationHtml(input: {
   const alpacaRow = input.alpacaName
     ? `<tr><td style="padding:6px 0"><strong>Adopted alpaca:</strong></td><td style="padding:6px 0">${escapeHtml(input.alpacaName)}</td></tr>`
     : `<tr><td style="padding:6px 0"><strong>Adopted alpaca:</strong></td><td style="padding:6px 0;color:#a44">Pick for me — match within a few days</td></tr>`
+  const giftBlock = input.gift
+    ? `
+      <h3 style="color:#a04;margin-top:20px">🎁 This is a gift purchase</h3>
+      <table style="width:100%;border-collapse:collapse;font-size:14px">
+        <tr><td style="padding:6px 0"><strong>Recipient name:</strong></td><td style="padding:6px 0">${escapeHtml(input.gift.recipientName ?? '—')}</td></tr>
+        <tr><td style="padding:6px 0"><strong>Recipient email:</strong></td><td style="padding:6px 0">${escapeHtml(input.gift.recipientEmail)}</td></tr>
+        <tr><td style="padding:6px 0"><strong>From (sender):</strong></td><td style="padding:6px 0">${escapeHtml(input.gift.senderName ?? input.donorName ?? '—')}</td></tr>
+        <tr><td style="padding:6px 0"><strong>Welcome email scheduled:</strong></td><td style="padding:6px 0">${escapeHtml(input.gift.sendDate ?? 'today (immediate)')}</td></tr>
+      </table>
+      <p style="margin-top:8px;color:#666;font-size:13px">Welcome email is being sent to the recipient, NOT the buyer. Certificate + welcome pack should be addressed to the recipient name above.</p>
+    `
+    : ''
   return `
     <div style="font-family:sans-serif;max-width:600px;margin:0 auto;color:#2d2d2d;padding:16px">
-      <h2 style="color:#556B2F">🦙 New Adopt-a-Paca subscriber</h2>
+      <h2 style="color:#556B2F">🦙 New Adopt-a-Paca subscriber${input.gift ? ' (gift)' : ''}</h2>
       <p>Welcome the new adopter and queue up their certificate + welcome pack.</p>
       <table style="width:100%;border-collapse:collapse;font-size:14px;margin-top:12px">
         <tr><td style="padding:6px 0"><strong>Tier:</strong></td><td style="padding:6px 0">${escapeHtml(tierLine)}</td></tr>
         <tr><td style="padding:6px 0"><strong>Amount:</strong></td><td style="padding:6px 0">${escapeHtml(amount)} ${escapeHtml(currency)}</td></tr>
         ${alpacaRow}
-        <tr><td style="padding:6px 0"><strong>Donor email:</strong></td><td style="padding:6px 0">${escapeHtml(input.donorEmail)}</td></tr>
-        <tr><td style="padding:6px 0"><strong>Donor name:</strong></td><td style="padding:6px 0">${escapeHtml(input.donorName ?? '—')}</td></tr>
+        <tr><td style="padding:6px 0"><strong>${input.gift ? 'Buyer email:' : 'Donor email:'}</strong></td><td style="padding:6px 0">${escapeHtml(input.donorEmail)}</td></tr>
+        <tr><td style="padding:6px 0"><strong>${input.gift ? 'Buyer name:' : 'Donor name:'}</strong></td><td style="padding:6px 0">${escapeHtml(input.donorName ?? '—')}</td></tr>
         <tr><td style="padding:6px 0"><strong>Stripe session:</strong></td><td style="padding:6px 0"><code>${escapeHtml(input.sessionId)}</code></td></tr>
       </table>
-      <p style="margin-top:16px;color:#666;font-size:13px">Donor has already received the welcome email and will get discount codes within ~5 minutes.</p>
+      ${giftBlock}
+      <p style="margin-top:16px;color:#666;font-size:13px">${input.gift ? 'Recipient' : 'Donor'} has already received the welcome email${input.gift ? '' : ' and will get discount codes within ~5 minutes'}.</p>
     </div>
   `.trim()
 }
@@ -814,28 +847,52 @@ async function sendMollieOwnerNotifyQuiet(
   if (!ownerEmail) return null
   try {
     const alpacaName = findAlpacaName(payment.metadata?.alpaca ?? null)
+    const meta = payment.metadata
+    const giftRecipientEmail = typeof meta?.gift_recipient_email === 'string' && meta.gift_recipient_email.length > 0
+      ? meta.gift_recipient_email
+      : null
+    const giftRecipientName = meta?.gift_recipient_name ?? null
+    const giftSenderName = meta?.gift_sender_name ?? null
+    const giftMessage = meta?.gift_message ?? null
+    const giftSendDate = meta?.gift_send_date ?? null
+    const isGift = giftRecipientEmail !== null && giftMessage !== null
+
     const tierLabel = tier === 'yearly' ? 'yearly €900' : 'monthly €75/mo'
+    const prefix = isGift ? '[Adopt-a-Paca] 🎁 GIFT' : '[Adopt-a-Paca]'
     const subject = alpacaName
-      ? `[Adopt-a-Paca] New ${tierLabel} adoption — ${alpacaName} (Mollie)`
-      : `[Adopt-a-Paca] New ${tierLabel} adoption (Mollie)`
+      ? `${prefix} New ${tierLabel} adoption — ${alpacaName} (Mollie)`
+      : `${prefix} New ${tierLabel} adoption (Mollie)`
     const alpacaRow = alpacaName
       ? `<tr><td style="padding:6px 0"><strong>Adopted alpaca:</strong></td><td style="padding:6px 0">${escapeHtml(alpacaName)}</td></tr>`
       : `<tr><td style="padding:6px 0"><strong>Adopted alpaca:</strong></td><td style="padding:6px 0;color:#a44">Pick for me — match within a few days</td></tr>`
+    const giftBlock = isGift
+      ? `
+        <h3 style="color:#a04;margin-top:20px">🎁 This is a gift purchase</h3>
+        <table style="width:100%;border-collapse:collapse;font-size:14px">
+          <tr><td style="padding:6px 0"><strong>Recipient name:</strong></td><td style="padding:6px 0">${escapeHtml(giftRecipientName ?? '—')}</td></tr>
+          <tr><td style="padding:6px 0"><strong>Recipient email:</strong></td><td style="padding:6px 0">${escapeHtml(giftRecipientEmail!)}</td></tr>
+          <tr><td style="padding:6px 0"><strong>From (sender):</strong></td><td style="padding:6px 0">${escapeHtml(giftSenderName ?? donorName ?? '—')}</td></tr>
+          <tr><td style="padding:6px 0"><strong>Welcome email scheduled:</strong></td><td style="padding:6px 0">${escapeHtml(giftSendDate ?? 'today (immediate)')}</td></tr>
+        </table>
+        <p style="margin-top:8px;color:#666;font-size:13px">Welcome email is being sent to the recipient, NOT the buyer. Certificate + welcome pack should be addressed to the recipient name above.</p>
+      `
+      : ''
     await sendEmail({
       to: ownerEmail,
       subject,
       html: `
         <div style="font-family:sans-serif;max-width:600px;margin:0 auto;color:#2d2d2d;padding:16px">
-          <h2 style="color:#556B2F">🦙 New Adopt-a-Paca subscriber (Mollie)</h2>
+          <h2 style="color:#556B2F">🦙 New Adopt-a-Paca subscriber${isGift ? ' (gift)' : ''} (Mollie)</h2>
           <p>Welcome the new adopter and queue up their certificate + welcome pack.</p>
           <table style="width:100%;border-collapse:collapse;font-size:14px;margin-top:12px">
             <tr><td style="padding:6px 0"><strong>Tier:</strong></td><td style="padding:6px 0">${escapeHtml(tier === 'yearly' ? 'Yearly (€900 prepaid)' : 'Monthly (€75/month recurring via SEPA)')}</td></tr>
             ${alpacaRow}
-            <tr><td style="padding:6px 0"><strong>Donor email:</strong></td><td style="padding:6px 0">${escapeHtml(donorEmail)}</td></tr>
-            <tr><td style="padding:6px 0"><strong>Donor name:</strong></td><td style="padding:6px 0">${escapeHtml(donorName ?? '—')}</td></tr>
+            <tr><td style="padding:6px 0"><strong>${isGift ? 'Buyer email:' : 'Donor email:'}</strong></td><td style="padding:6px 0">${escapeHtml(donorEmail)}</td></tr>
+            <tr><td style="padding:6px 0"><strong>${isGift ? 'Buyer name:' : 'Donor name:'}</strong></td><td style="padding:6px 0">${escapeHtml(donorName ?? '—')}</td></tr>
             <tr><td style="padding:6px 0"><strong>Mollie payment:</strong></td><td style="padding:6px 0"><code>${escapeHtml(payment.id)}</code></td></tr>
           </table>
-          <p style="margin-top:16px;color:#666;font-size:13px">Donor has already received the welcome email; discount-codes follow within 48h.</p>
+          ${giftBlock}
+          <p style="margin-top:16px;color:#666;font-size:13px">${isGift ? 'Recipient' : 'Donor'} has already received the welcome email${isGift ? '' : '; discount-codes follow within 48h'}.</p>
         </div>
       `.trim(),
     })

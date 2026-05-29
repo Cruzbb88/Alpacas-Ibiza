@@ -2,6 +2,8 @@ import { getServerSession } from 'next-auth/next'
 import { redirect } from 'next/navigation'
 import { auth } from '@/app/api/auth/[...nextauth]/route'
 import { getMollieClient } from '@/lib/integrations/payment-mollie'
+import { Kpi } from '@/components/admin/Kpi'
+import { adminTh as th, adminTd as td } from '@/lib/admin-styles'
 
 export const metadata = {
   title: 'Subscriptions — Admin',
@@ -311,14 +313,3 @@ export default async function AdminSubscriptionsPage() {
   )
 }
 
-const th: React.CSSProperties = { textAlign: 'left', padding: '10px 12px', borderBottom: '1px solid #e5e7eb', fontWeight: 600, color: '#374151' }
-const td: React.CSSProperties = { padding: '10px 12px', borderBottom: '1px solid #f3f4f6', color: '#111827' }
-
-function Kpi({ label, value, negative }: { label: string; value: string; negative?: boolean }) {
-  return (
-    <div style={{ background: '#fff', borderRadius: 10, padding: 16, border: '1px solid #e5e7eb', boxShadow: '0 1px 2px rgba(0,0,0,0.03)' }}>
-      <div style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, color: '#6b7280', marginBottom: 6 }}>{label}</div>
-      <div style={{ fontSize: 28, fontWeight: 700, color: negative ? '#a44' : '#111827', lineHeight: 1.1 }}>{value}</div>
-    </div>
-  )
-}

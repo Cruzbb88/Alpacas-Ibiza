@@ -208,15 +208,22 @@ export async function POST(request: Request) {
     // major-unit EUR string (e.g. "75.00"); customerCountry comes from the
     // billingAddress block when set, else null → vat-recorder normalises to 'XX'.
     // Fire-and-forget — recordVatFromPayment never throws.
-    const billingCountry = (payment as unknown as {
-      billingAddress?: { country?: string }
-    }).billingAddress?.country
-    recordVatFromPayment({
-      amountEur: (payment as unknown as { amount?: { value?: string } }).amount?.value ?? '0',
-      customerCountry: billingCountry,
-      attemptId: payment.id,
-      yearEpoch: Date.now(),
-    })
+    //
+    // EXCLUDE re-mandate verification charges (metadata.action === 'update-payment'):
+    // those payments are intercepted earlier in this route and never reach here in
+    // the normal case, but if seedSubscriptionId is missing the guard falls through
+    // and they'd be counted as real VAT-relevant sales — they're not.
+    if (payment.metadata?.action !== 'update-payment') {
+      const billingCountry = (payment as unknown as {
+        billingAddress?: { country?: string }
+      }).billingAddress?.country
+      recordVatFromPayment({
+        amountEur: (payment as unknown as { amount?: { value?: string } }).amount?.value ?? '0',
+        customerCountry: billingCountry,
+        attemptId: payment.id,
+        yearEpoch: Date.now(),
+      })
+    }
     // Mark processed only AFTER the handler completes. A handler that
     // returned an error reason (welcome-send-failed etc.) is still considered
     // "processed" — we don't want Mollie retries to re-send the welcome to
