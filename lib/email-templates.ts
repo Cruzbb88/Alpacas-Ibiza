@@ -459,6 +459,113 @@ ${dunningColdStartCaveat ? `<p style="color:#888;font-size:11px;margin-top:8px;f
     return { subject, html }
 }
 
+// ── Adopt quarterly update (retention newsletter to active adopters) ────────
+
+export interface AdoptQuarterlyUpdateInput {
+    /** Donor display name — RAW (will be HTML-escaped here). Empty → "Hi there". */
+    name?: string | null
+    /** Display name of the adopted alpaca — RAW. null/empty → "your matched alpaca" copy. */
+    alpacaName?: string | null
+    /** Pre-escaped variant of alpacaName for direct interpolation in subject + body (caller may pass escaped to skip double-escape). When omitted, name-based escaping is performed internally. */
+    escapedAlpacaName?: string | null
+    /** "Q1 2026" etc. — computed by the route from now.getUTCMonth(). */
+    quarterLabel: string
+    /** Two-letter locale slug for the /${locale}/gifts deeplink. Defaults to 'en'. */
+    locale?: string | null
+    /**
+     * Optional pre-escaped HTML block injected into the "What's new on the farm" section.
+     * Caller is responsible for escaping any user-controlled values inside (Rule 5).
+     * Absent → a placeholder paragraph is rendered with an editor note.
+     */
+    farmNewsHtml?: string
+}
+
+/**
+ * Builds the quarterly "your alpaca update" email sent to every active adopter
+ * on Jan 1 / Apr 1 / Jul 1 / Oct 1 at 09:00 UTC via /api/adopt-quarterly-update.
+ *
+ * Subject: "🦙 ${quarterLabel} update from ${alpacaName} and the Alpacas Ibiza herd"
+ *
+ * Sections (top → bottom):
+ *   1. Greeting (escapedName when present, "Hi there" otherwise)
+ *   2. "What's new on the farm" — placeholder paragraph or farmNewsHtml
+ *   3. Photo placeholder (TODO marker for CMS / per-quarter env)
+ *   4. "Your alpaca ${alpacaName}" — personalised note. When alpacaName is null
+ *      the copy degrades to "your matched alpaca" so we never leak "null".
+ *   5. Share-a-friend CTA → /${locale}/gifts
+ *
+ * Caller MUST also pass replyTo to sendEmail(). List-Unsubscribe is omitted —
+ * these are transactional adoption-update emails exempt under CAN-SPAM § 5(a).
+ * Adopters manage their subscription via the billing portal link in the email footer.
+ */
+export function buildAdoptQuarterlyUpdateEmail(
+    input: AdoptQuarterlyUpdateInput,
+): { subject: string; html: string } {
+    const { quarterLabel, farmNewsHtml } = input
+    const safeQuarterLabel = escapeHtml(quarterLabel)
+    const locale = (input.locale && input.locale.length > 0) ? input.locale : 'en'
+    const safeLocale = escapeHtml(locale)
+
+    // Allow caller to pre-escape (escapedAlpacaName) or pass raw (alpacaName).
+    // Both null/empty → null sentinel → "your matched alpaca" copy.
+    const safeAlpacaName = input.escapedAlpacaName
+        ? input.escapedAlpacaName
+        : (input.alpacaName ? escapeHtml(input.alpacaName) : null)
+
+    // Subject: when alpacaName is unknown, fall back to a generic but warm phrase.
+    const alpacaForSubject = safeAlpacaName ?? 'your alpaca'
+    const subject = `🦙 ${safeQuarterLabel} update from ${alpacaForSubject} and the Alpacas Ibiza herd`
+
+    const safeName = input.name ? escapeHtml(input.name) : ''
+    const greeting = safeName ? `Hi ${safeName},` : 'Hi there,'
+
+    // Farm news: caller-supplied HTML or placeholder. Editor note explains source.
+    const farmNewsBlock = farmNewsHtml
+        ? farmNewsHtml
+        : `<p>It's been a busy ${safeQuarterLabel} on the farm — new arrivals, a fresh shearing season, and plenty of stories from the paddock. A full update with photos follows below.</p>
+<!-- OWNER_INPUT: per-quarter copy will be injected here once the CMS lands. -->`
+
+    // Photo placeholder block — kept simple so Mail clients don't blow up on
+    // missing assets. Owner replaces the <img> src per quarter; until then we
+    // render an inline caption only.
+    const photoBlock = `
+<div style="margin:24px 0;text-align:center;padding:24px;background:${BRAND.secondary};border-radius:8px;color:#666;font-style:italic">
+  <!-- OWNER_INPUT: paste hosted photo URL for ${safeQuarterLabel} here -->
+  📷 A new photo of the herd for ${safeQuarterLabel} will appear in this space.
+</div>`
+
+    // Personal alpaca block: present alpaca name when known, generic copy otherwise.
+    const alpacaBlock = safeAlpacaName
+        ? `<h3 style="margin-top:24px;color:${BRAND.primary}">Your alpaca ${safeAlpacaName}</h3>
+<p><strong>${safeAlpacaName}</strong> has been part of the herd's quiet rhythm this quarter. Thanks to your adoption, ${safeAlpacaName} stays fed, brushed, and roaming the paddocks of Es Currals.</p>`
+        : `<h3 style="margin-top:24px;color:${BRAND.primary}">Your matched alpaca</h3>
+<p>Your matched alpaca has been part of the herd's quiet rhythm this quarter. Thanks to your adoption, they stay fed, brushed, and roaming the paddocks of Es Currals.</p>`
+
+    const giftsUrl = `${SITE_BASE_URL_INLINE}/${safeLocale}/gifts`
+    const shareBlock = `
+<h3 style="margin-top:28px;color:${BRAND.primary}">Share the herd with a friend</h3>
+<p>If someone in your life would love their own alpaca to follow, a gift adoption is a small thing that lands big. We'll handle the welcome email, photo, and certificate.</p>
+<div style="text-align:center;margin:20px 0">
+  <a href="${giftsUrl}" style="display:inline-block;padding:12px 24px;background:${BRAND.primary};color:#fff;text-decoration:none;border-radius:8px;font-weight:600;font-size:15px">Send an alpaca gift</a>
+</div>`
+
+    const html = emailLayout(`
+<h2 style="color:${BRAND.primary}">${greeting} 🦙</h2>
+<p style="color:#666;margin-top:-4px">A ${safeQuarterLabel} note from Es Currals Alpacas Ibiza.</p>
+
+<h3 style="margin-top:24px;color:${BRAND.primary}">What's new on the farm</h3>
+${farmNewsBlock}
+${photoBlock}
+
+${alpacaBlock}
+${shareBlock}
+
+<p style="color:#888;font-size:12px;margin-top:24px">You're receiving this update because you're an active Adopt-a-Paca supporter. Reply to this email any time — we read every message. To pause or cancel your adoption, use the billing portal link in your welcome email.</p>
+`)
+
+    return { subject, html }
+}
+
 export function buildBillingPortalEmail(portalUrl: string): { subject: string; html: string } {
     const subject = 'Manage your Alpacas Ibiza adoption'
     const html = emailLayout(`

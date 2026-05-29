@@ -50,15 +50,19 @@ dropping these signals. Donors lapse without any notification.
 
 ### 3. Cron dead-man's switch (Healthchecks.io free tier)
 
-**What**: `vercel.json` cron fires `/api/owner-digest` Mon 09:00 UTC and
-`/api/owner-mrr-digest` Mon 06:00 UTC. If Vercel stops firing them
+**What**: `vercel.json` cron fires `/api/owner-digest` Mon 09:00 UTC,
+`/api/owner-mrr-digest` Mon 06:00 UTC, and `/api/adopt-quarterly-update`
+Jan 1 / Apr 1 / Jul 1 / Oct 1 at 09:00 UTC. If Vercel stops firing them
 (quota, env-var drop, plan downgrade) **nothing alerts**. Owner notices
-weeks later when the Monday email doesn't land.
+weeks later when the Monday email doesn't land — or for the quarterly,
+notices a full quarter later that adopters got nothing.
 
 **Why**: A silent cron is worse than no cron — owner builds a mental model
-"I get my weekly MRR" and starts ignoring the absence.
+"I get my weekly MRR" and starts ignoring the absence. For the quarterly
+adopter update the stakes are higher: a missed send is a retention hit
+across the entire active-adopter cohort.
 
-**Code is ready** (`lib/heartbeat.ts` + wired into both cron routes).
+**Code is ready** (`lib/heartbeat.ts` + wired into all three cron routes).
 Owner action required:
 
 1. Sign up at `https://healthchecks.io` (free tier — 20 checks)
@@ -66,10 +70,14 @@ Owner action required:
 3. Add ping URL to Vercel env: `HEARTBEAT_OWNER_MRR_DIGEST_URL=https://hc-ping.com/<uuid>`
 4. Create check "owner-digest" with cron pattern `0 9 * * 1` + 1h grace
 5. Add ping URL: `HEARTBEAT_OWNER_DIGEST_URL=https://hc-ping.com/<uuid>`
-6. Trigger the cron manually via the Vercel cron tab + confirm Healthchecks turns green.
+6. Create check "adopt-quarterly-update" with cron pattern `0 9 1 1,4,7,10 *` + 24h grace (quarterly schedule needs a wider window than weekly)
+7. Add ping URL: `HEARTBEAT_ADOPT_QUARTERLY_UPDATE_URL=https://hc-ping.com/<uuid>`
+8. Trigger each cron manually via the Vercel cron tab + confirm Healthchecks turns green.
 
 When env vars are unset (preview/dev), `pingHeartbeat()` is a no-op so
-nothing leaks to the wrong check.
+nothing leaks to the wrong check. The quarterly route deliberately does
+NOT ping the heartbeat when `MOLLIE_API_KEY` is unset — that path is a
+configuration gap that should alert via the dead-man's switch.
 
 ---
 

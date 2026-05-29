@@ -25,6 +25,7 @@ const HEARTBEAT_TIMEOUT_MS = 2000
 const HEARTBEAT_ENV_KEYS: Record<string, string> = {
   'owner-digest': 'HEARTBEAT_OWNER_DIGEST_URL',
   'owner-mrr-digest': 'HEARTBEAT_OWNER_MRR_DIGEST_URL',
+  'adopt-quarterly-update': 'HEARTBEAT_ADOPT_QUARTERLY_UPDATE_URL',
 }
 
 /**

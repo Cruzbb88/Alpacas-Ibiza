@@ -21,6 +21,29 @@ import { findAlpacaName } from './data/alpacas.ts'
 import { SITE_BASE_URL } from './config.ts'
 import { recordFailure, resetFailures, type FailureSeverity } from './payment-failure-tracker.ts'
 import { notifyOwnerOnEscalation } from './owner-notify.ts'
+import { emit } from './events.ts'
+
+/**
+ * Convert Stripe minor units (cents) → EUR major (75.00) for event payloads.
+ * Returns null when source is null/undefined. Currency-aware: zero-decimal
+ * currencies (JPY etc.) are already in major units; we treat the rest as cents.
+ */
+function stripeAmountToEurMajor(
+  amountMinor: number | null | undefined,
+  currency: string | null | undefined,
+): number | null {
+  if (amountMinor == null) return null
+  const cur = (currency ?? 'eur').toLowerCase()
+  if (ZERO_DECIMAL_CURRENCIES.has(cur)) return amountMinor
+  return amountMinor / 100
+}
+
+/** Parse Mollie's "75.00" decimal string into a number for event payloads. */
+function mollieAmountToNumber(amountValue: string | null | undefined): number | null {
+  if (!amountValue) return null
+  const n = Number.parseFloat(amountValue)
+  return Number.isFinite(n) ? n : null
+}
 
 // ── Stripe checkout.session.completed handler ────────────────────────────────
 
@@ -289,6 +312,43 @@ export async function handleStripeCheckoutCompleted(
     ? ownerResult.status === 'fulfilled'
     : null
 
+  // ── Domain event emit (additive — see lib/events.ts) ───────────────────────
+  // Fan a normalized event so VAT recorder + future DB upserter + analytics
+  // subscribers don't have to be wired inline. We emit even when welcome
+  // failed — subscribers like VAT/analytics still want to record the
+  // successful charge; the email failure is a separate concern.
+  try {
+    const amountEur = stripeAmountToEurMajor(session.amount_total, session.currency)
+    emit({
+      type: 'adoption.completed',
+      vendor: 'stripe',
+      paymentId: session.id,
+      customerId: typeof session.customer === 'string' ? session.customer : null,
+      customerEmail: email,
+      tier,
+      alpacaSlug: session.metadata?.alpaca ?? null,
+      isGift: isGiftPurchase,
+      amountEur,
+      customerCountry: null, // Stripe Checkout `customer_details.address` not in our minimal shape
+      locale: null,
+    })
+    if (isGiftPurchase && giftRecipientEmail) {
+      emit({
+        type: 'gift.sent',
+        vendor: 'stripe',
+        paymentId: session.id,
+        recipientEmail: giftRecipientEmail,
+        recipientName: giftRecipientName,
+        senderName: giftSenderName ?? name ?? null,
+        tier,
+        alpacaSlug: session.metadata?.alpaca ?? null,
+      })
+    }
+  } catch {
+    // emit() is documented as never-throws, but belt-and-braces — webhook
+    // 200 contract must NEVER be compromised by event-bus wiring.
+  }
+
   // Welcome failure dominates — codes alone is not enough since welcome carries
   // the primary confirmation. Both branches collapse to welcome-send-failed.
   if (!welcomeSent) {
@@ -497,6 +557,20 @@ export async function handleStripeInvoicePaymentFailed(
       })
     } catch {}
   }
+
+  // Domain event emit — additive. Subscribers may push to Slack, CRM, etc.
+  try {
+    emit({
+      type: 'payment.failed',
+      vendor: 'stripe',
+      paymentId: invoice.id,
+      customerId: typeof invoice.customer === 'string' ? invoice.customer : null,
+      customerEmail: donorEmail ?? null,
+      severity,
+      failureCount,
+      tier: null, // not surfaced on the Invoice shape today
+    })
+  } catch {}
 
   if (!deps.ownerEmail && !donorNotified) {
     return { donorNotified, ownerNotified, severity, failureCount, reason: 'send-failed', meta }
@@ -724,6 +798,7 @@ export async function handleMolliePaymentPaid(
       sendMollieWelcomeQuiet(deps.sendEmail, payment, 'monthly', customer.email, customer.name),
       sendMollieOwnerNotifyQuiet(deps.sendEmail, deps.ownerEmail, payment, 'monthly', customer.email, customer.name),
     ])
+    emitMollieAdoptionEvents(payment, 'monthly', customer.email)
     return {
       flow: 'monthly-first',
       welcomeSent,
@@ -763,6 +838,7 @@ export async function handleMolliePaymentPaid(
       sendMollieWelcomeQuiet(deps.sendEmail, payment, 'yearly', payment.billingEmail, null),
       sendMollieOwnerNotifyQuiet(deps.sendEmail, deps.ownerEmail, payment, 'yearly', payment.billingEmail, null),
     ])
+    emitMollieAdoptionEvents(payment, 'yearly', payment.billingEmail)
     return {
       flow: 'yearly-oneoff',
       welcomeSent,
@@ -793,6 +869,54 @@ export async function handleMolliePaymentPaid(
     reason: 'unmatched',
     meta: { paymentId: payment.id, tier },
   }
+}
+
+/**
+ * Emit `adoption.completed` (+ `gift.sent` when applicable) for a successful
+ * Mollie payment. Centralised so the monthly-first and yearly-oneoff branches
+ * stay in sync on field extraction. NEVER throws — emit() catches per-subscriber.
+ *
+ * NOTE: amountEur cannot be read from the minimal MolliePaymentLike shape
+ * (the SDK's `amount.value` isn't on our interface). We pass null; subscribers
+ * that need the amount can be wired with a fuller payload in a future spec.
+ */
+function emitMollieAdoptionEvents(
+  payment: MolliePaymentLike,
+  tier: 'monthly' | 'yearly',
+  customerEmail: string | null,
+): void {
+  try {
+    const meta = payment.metadata
+    const giftRecipientEmail = typeof meta?.gift_recipient_email === 'string' && meta.gift_recipient_email.length > 0
+      ? meta.gift_recipient_email
+      : null
+    const isGift = giftRecipientEmail !== null && typeof meta?.gift_message === 'string'
+    emit({
+      type: 'adoption.completed',
+      vendor: 'mollie',
+      paymentId: payment.id,
+      customerId: payment.customerId ?? null,
+      customerEmail,
+      tier,
+      alpacaSlug: meta?.alpaca ?? null,
+      isGift,
+      amountEur: null,
+      customerCountry: null,
+      locale: null,
+    })
+    if (isGift && giftRecipientEmail) {
+      emit({
+        type: 'gift.sent',
+        vendor: 'mollie',
+        paymentId: payment.id,
+        recipientEmail: giftRecipientEmail,
+        recipientName: meta?.gift_recipient_name ?? null,
+        senderName: meta?.gift_sender_name ?? null,
+        tier,
+        alpacaSlug: meta?.alpaca ?? null,
+      })
+    }
+  } catch {}
 }
 
 async function sendMollieWelcomeQuiet(
@@ -1078,6 +1202,22 @@ export async function handleMolliePaymentFailed(
     } catch {}
   }
 
+  try {
+    emit({
+      type: 'payment.failed',
+      vendor: 'mollie',
+      paymentId: payment.id,
+      customerId: payment.customerId ?? null,
+      customerEmail: donorEmail,
+      severity,
+      failureCount,
+      tier:
+        payment.metadata?.tier === 'monthly' || payment.metadata?.tier === 'yearly'
+          ? payment.metadata.tier
+          : null,
+    })
+  } catch {}
+
   if (!donorNotified) return { donorNotified, ownerNotified, severity, failureCount, reason: 'donor-send-failed', meta }
   if (deps.ownerEmail && ownerNotified === false) {
     return { donorNotified, ownerNotified, severity, failureCount, reason: 'send-failed', meta }
@@ -1255,6 +1395,17 @@ export async function handleMollieSubscriptionCanceled(
         </div>
       `.trim(),
     })
+    try {
+      emit({
+        type: 'subscription.canceled',
+        vendor: 'mollie',
+        subscriptionId: subscription.id,
+        customerId: subscription.customerId ?? null,
+        customerEmail: donorEmail,
+        tier: tier === 'monthly' || tier === 'yearly' ? tier : null,
+        reason: null, // Mollie does not surface a structured cancel reason
+      })
+    } catch {}
     return { ownerNotified: true, reason: 'ok', meta }
   } catch {
     return { ownerNotified: false, reason: 'send-failed', meta }
@@ -1337,6 +1488,20 @@ export async function handleStripeSubscriptionDeleted(
       subject: `[Adopt-a-Paca] Subscription cancelled — ${subscription.id}`,
       html: buildOwnerSubscriptionDeletedHtml(subscription),
     })
+    try {
+      emit({
+        type: 'subscription.canceled',
+        vendor: 'stripe',
+        subscriptionId: subscription.id,
+        customerId: typeof subscription.customer === 'string' ? subscription.customer : null,
+        customerEmail: null, // not on the minimal Subscription shape
+        tier:
+          subscription.metadata?.tier === 'monthly' || subscription.metadata?.tier === 'yearly'
+            ? subscription.metadata.tier
+            : null,
+        reason: subscription.cancellation_details?.reason ?? null,
+      })
+    } catch {}
     return { ownerNotified: true, reason: 'ok', meta }
   } catch {
     return { ownerNotified: false, reason: 'send-failed', meta }

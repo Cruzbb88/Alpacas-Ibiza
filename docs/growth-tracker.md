@@ -427,7 +427,100 @@ CLAUDE.md table lists corrected values as "OWNER REVIEW NEEDED".
 
 ---
 
-## 13. Stripe SDK any-cast hardening (renamed from item 6)
+## 13. Member portal as a React SPA at /account
+
+**Where:** `app/api/mollie-manage/status/route.ts` today renders the donor's
+subscription summary as a server-rendered HTML page with inline CSS. The
+URL is delivered via email with a `status`-scoped capability token.
+
+**Status:** Functional and shipped. Looks 2015 vs. industry peers (Patreon,
+Memberful, Substack) who run member portals as React SPAs at `/account`.
+
+**Why deferred:** A React member-portal SPA only delivers user-visible
+value when paired with the embedded-checkout migration (#15 below). Building
+it separately = ~3 days of work that duplicates what the existing
+mollie-manage/status page already does, without changing donor outcomes.
+
+**Trigger to revisit:**
+- The embedded-checkout migration kicks off (these two ship together so the
+  member experience stays consistent across signup + manage).
+- Or: first paying donor explicitly reports the HTML portal looks dated.
+- Or: a second subscription product launches (one-off donations, gift cards
+  as a separate SKU) — at that point a single dashboard becomes necessary.
+
+**What to do when triggered:**
+1. Create `app/[locale]/account/page.tsx` accepting `?token=<status-scoped>`.
+2. Move subscription-fetch logic from
+   `app/api/mollie-manage/status/route.ts` into `lib/donor-portal-data.ts`
+   so both the existing HTML route and the new React page share one source
+   of truth.
+3. Add an `/api/account/auth/request-link` that emails a fresh
+   portal-session token (separate scope from cancel/update-payment).
+4. Wrap the status / cancel / update-payment flows into a single React
+   shell with tab navigation.
+
+---
+
+## 14. In-process event bus → durable queue
+
+**Where:** `lib/events.ts` (added in this session, item #3 of architectural
+shifts) is in-process. Subscribers fire synchronously in
+`Promise.allSettled` so one slow subscriber slows the webhook response.
+
+**Status:** Sufficient at current scale. Shipped as additive — webhook
+handlers still do everything inline AND emit events. Migration from
+inline-to-subscriber is gradual.
+
+**Why deferred:** A durable queue (Inngest free tier, Vercel Queues when
+they're GA, or a simple `events` table in the new Postgres DB) is the
+proper long-term shape — survives Lambda cold start, retries failed
+subscribers, gives observable timelines. Today's in-process bus is
+fine for the next 50-200 donors.
+
+**Trigger to revisit:**
+- A subscriber needs to do > 200ms of work (e.g. generate a PDF receipt,
+  call a slow third-party API). At that point synchronous fan-out
+  cripples webhook latency.
+- A subscriber needs to retry on failure (e.g. mail to a temporarily-down
+  Resend doesn't get a second try today; the event is lost).
+
+**What to do when triggered:**
+1. Sign up Inngest free tier OR provision a Postgres `events` table.
+2. Replace `emit()` body with `inngest.send({ name, data: event })` OR
+   `INSERT INTO events (...)` + a worker that polls.
+3. Subscriber registration stays unchanged — subscribers run in the worker
+   instead of inline.
+4. Add Inngest dashboard URL to admin-only links.
+
+---
+
+## 15. Embedded checkout (Stripe Elements / Mollie Components)
+
+**Where:** `app/api/checkout/route.ts` + `app/api/mollie-checkout/route.ts`
+do server-side 303-redirects to processor-hosted checkout pages.
+
+**Status:** Functional. Industry-standard hosted-redirect flow. Converts
+~15-25% lower than embedded checkouts per Stripe's published data on
+their own customers.
+
+**Why deferred:** Adopt page is the highest-traffic conversion surface in
+the app. Botched migration = direct revenue loss. Owner sign-off needed
+on the UX direction. See `docs/embedded-checkout-migration.md` for the
+full 5-stage migration plan.
+
+**Trigger to revisit:**
+- First month with > 50 distinct adopt-page sessions in GA4 funnel
+  (analytics-events catalog ships in this session).
+- Or: a Safari intelligent-tracking change breaks the hosted-redirect
+  return URL flow.
+- Or: a competitor moves to embedded and the conversion-rate gap becomes
+  visible.
+
+**What to do when triggered:** see `docs/embedded-checkout-migration.md`.
+
+---
+
+## 16. Stripe SDK any-cast hardening (renamed from item 6 → 10 → 13 → 16)
 
 **Where:** Any place that still uses the `stripeFactory(...)` runtime-import
 pattern without `import type { Stripe } from 'stripe'`.
