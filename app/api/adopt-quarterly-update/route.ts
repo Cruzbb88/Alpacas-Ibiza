@@ -7,7 +7,7 @@ import { verifyCronSecret } from '@/lib/cron-auth'
 import { pingHeartbeat } from '@/lib/heartbeat'
 import { getQuarterLabel } from '@/lib/quarterly-update'
 import { isValidEmail } from '@/lib/validate-email'
-import { SITE_BASE_URL } from '@/lib/config'
+import { getQuarterlyContent, markQuarterlySent } from '@/lib/quarterly-content-store'
 
 /**
  * GET /api/adopt-quarterly-update  (Authorization: Bearer <CRON_SECRET>)
@@ -59,6 +59,15 @@ export async function GET(request: Request) {
     // ── Quarter label derivation (UTC; cron fires at 09:00 UTC) ──────────────
     const now = new Date()
     const quarterLabel = getQuarterLabel(now)
+
+    // ── Owner-composed farm news for this quarter ────────────────────────────
+    // Read from the in-memory content store populated by the
+    // /admin/quarterly-update page. When the owner has not composed a draft
+    // (cold start, forgot to write), the email-template falls back to its
+    // placeholder copy so the cron does not refuse to fire — partial value
+    // beats silence.
+    const composedContent = getQuarterlyContent(quarterLabel)
+    const farmNewsHtml = composedContent?.newsHtml
 
     // ── Mollie API key gate ──────────────────────────────────────────────────
     const apiKey = process.env.MOLLIE_API_KEY
@@ -172,6 +181,7 @@ export async function GET(request: Request) {
             alpacaName: r.alpacaName,
             quarterLabel,
             locale: r.locale,
+            ...(farmNewsHtml ? { farmNewsHtml } : {}),
         })
 
         // List-Unsubscribe omitted: these are transactional adoption-update emails,
@@ -214,14 +224,23 @@ export async function GET(request: Request) {
         failed,
         capped,
         iterationError,
+        composedContent: composedContent ? 'owner-draft' : 'placeholder',
     })
+
+    // Mark this quarter as sent in the content store so the admin compose
+    // page shows "✅ sent at <timestamp>" instead of "draft only." Only marks
+    // when there WAS composed content — placeholder sends are not "real" Q
+    // updates and should still be replaceable next deploy.
+    if (composedContent) {
+        markQuarterlySent(quarterLabel, now)
+    }
 
     // Heartbeat: ping the watchdog AFTER the batch resolves so Healthchecks.io
     // marks this run green. Fire-and-forget — no-op when env var unset.
     pingHeartbeat('adopt-quarterly-update')
 
     return attachRequestId(
-        NextResponse.json({ ok: true, sent, failed, capped }),
+        NextResponse.json({ ok: true, sent, failed, capped, usedComposedContent: !!composedContent }),
         reqId,
     )
 }
