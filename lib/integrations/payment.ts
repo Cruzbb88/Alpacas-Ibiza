@@ -66,6 +66,20 @@ export interface CreateCheckoutOpts {
    * (findAlpacaName from lib/data/alpacas) — providers do not re-validate.
    */
   alpacaSlug?: string
+  /**
+   * Optional gift metadata collected by the 4-step gift wizard.
+   * When present, the welcome email is sent to `recipientEmail` instead of
+   * the buyer, addressed to the recipient with the sender's personal message.
+   * All values are pre-validated and truncated to 500 chars by the route handler.
+   */
+  gift?: {
+    recipientEmail: string
+    recipientName: string
+    senderName: string
+    message: string
+    /** ISO yyyy-mm-dd or undefined (= send today). */
+    sendDate?: string
+  }
 }
 
 // ── Result types ───────────────────────────────────────────────────────────────

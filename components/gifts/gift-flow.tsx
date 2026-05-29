@@ -91,7 +91,24 @@ export function GiftFlow({ copy, checkoutHrefByType }: GiftFlowProps) {
   const canAdvanceFromStep2 =
     message.trim().length > 0 &&
     (sendDateMode === 'today' || sendDateValue.length > 0)
-  const checkoutHref = checkoutHrefByType[giftType]
+
+  // Build the final checkout URL by appending gift recipient fields as query
+  // params. Only appended on step 3 (when the user clicks "Open checkout").
+  // Truncate message to 500 chars (matches server-side cap).
+  const baseHref = checkoutHrefByType[giftType]
+  const checkoutHref: string = (() => {
+    const params = new URLSearchParams({
+      gift_recipient_name: recipientName.trim(),
+      gift_recipient_email: recipientEmail.trim(),
+      gift_sender_name: senderName.trim(),
+      gift_message: message.slice(0, 500),
+      ...(sendDateMode === 'future' && sendDateValue
+        ? { gift_send_date: sendDateValue }
+        : {}),
+    })
+    const separator = baseHref.includes('?') ? '&' : '?'
+    return `${baseHref}${separator}${params.toString()}`
+  })()
 
   // Today's date in YYYY-MM-DD using the buyer's LOCAL timezone for the
   // `min` attribute on the date picker. `toISOString()` returns UTC, which

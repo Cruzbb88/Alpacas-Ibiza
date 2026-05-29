@@ -10,7 +10,8 @@ import { tenantMetadata } from '@/lib/tenants/metadata'
 import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
 import { PageSection } from '@/components/layout'
 import { getOgImage } from '@/lib/og-images'
-import { AlpacaSearchFilter, filterAlpacas } from '@/components/alpacas/alpaca-search-filter'
+import { AlpacaSearchFilter } from '@/components/alpacas/alpaca-search-filter'
+import { filterAlpacas, parseListParam } from '@/lib/alpacas/filter'
 import { AlpacaFunFactCarousel } from '@/components/alpacas/alpaca-fun-fact-carousel'
 
 export async function generateMetadata({
@@ -53,9 +54,9 @@ export default async function AlpacasPage({
     // Server-side filter mirrors AlpacaSearchFilter's client-side logic.
     // URL params `?p=`, `?c=`, `?b=` are comma-joined keyword lists.
     const filters = {
-        p: p ? p.split(',').filter(Boolean) : [],
-        c: c ? c.split(',').filter(Boolean) : [],
-        b: b ? b.split(',').filter(Boolean) : [],
+        p: parseListParam(p),
+        c: parseListParam(c),
+        b: parseListParam(b),
     }
     const filtered = filterAlpacas(animals, filters)
 

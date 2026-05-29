@@ -17,6 +17,7 @@ import {
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
 import { isAlreadyProcessed, markProcessed } from '@/lib/webhook-idempotency'
 import { resetFailures } from '@/lib/payment-failure-tracker'
+import { recordVatFromPayment } from '@/lib/vat-recorder'
 
 /**
  * POST /api/mollie-webhook?secret=<MOLLIE_WEBHOOK_SECRET>
@@ -203,6 +204,19 @@ export async function POST(request: Request) {
     if (level === 'warn') log.warn(msg, result.meta)
     else if (level === 'error') log.error(msg, result.meta)
     else log.info(msg, result.meta)
+    // Record toward EU VAT-OSS threshold. Mollie payment.amount.value is the
+    // major-unit EUR string (e.g. "75.00"); customerCountry comes from the
+    // billingAddress block when set, else null → vat-recorder normalises to 'XX'.
+    // Fire-and-forget — recordVatFromPayment never throws.
+    const billingCountry = (payment as unknown as {
+      billingAddress?: { country?: string }
+    }).billingAddress?.country
+    recordVatFromPayment({
+      amountEur: (payment as unknown as { amount?: { value?: string } }).amount?.value ?? '0',
+      customerCountry: billingCountry,
+      attemptId: payment.id,
+      yearEpoch: Date.now(),
+    })
     // Mark processed only AFTER the handler completes. A handler that
     // returned an error reason (welcome-send-failed etc.) is still considered
     // "processed" — we don't want Mollie retries to re-send the welcome to

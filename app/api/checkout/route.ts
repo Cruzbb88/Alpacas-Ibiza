@@ -5,6 +5,51 @@ import { extractLocaleFromReferer, requireEnvOrReturn503 } from '@/lib/route-hel
 import { isAdoptTier, type AdoptTier } from '@/lib/payment-vendor'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
 import { findAlpacaName } from '@/lib/data/alpacas'
+import { isValidEmail } from '@/lib/validate-email'
+
+/** ISO yyyy-mm-dd date pattern for gift_send_date validation. */
+const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}$/
+
+/** Stripe metadata values are capped at 500 chars each. */
+function capAt500(s: string): string {
+  return s.slice(0, 500)
+}
+
+interface GiftFields {
+  gift_recipient_email: string
+  gift_recipient_name: string
+  gift_sender_name: string
+  gift_message: string
+  gift_send_date?: string
+}
+
+/**
+ * Parse and validate gift_* params from URL search params or request body.
+ * Returns GiftFields when all required fields are valid; null otherwise.
+ * Drops the entire gift block when any required field is missing or invalid.
+ */
+function parseGiftFields(
+  raw: Record<string, string | null | undefined>,
+): GiftFields | null {
+  const recipientEmail = (raw.gift_recipient_email ?? '').trim()
+  const recipientName = (raw.gift_recipient_name ?? '').trim()
+  const senderName = (raw.gift_sender_name ?? '').trim()
+  const message = capAt500((raw.gift_message ?? '').trim())
+  const sendDate = (raw.gift_send_date ?? '').trim()
+
+  if (!isValidEmail(recipientEmail)) return null
+  if (recipientName.length === 0) return null
+  // senderName is optional but we capture it when present
+  const validSendDate = sendDate && ISO_DATE_RE.test(sendDate) ? sendDate : undefined
+
+  return {
+    gift_recipient_email: capAt500(recipientEmail),
+    gift_recipient_name: capAt500(recipientName),
+    gift_sender_name: capAt500(senderName),
+    gift_message: message,
+    ...(validSendDate ? { gift_send_date: validSendDate } : {}),
+  }
+}
 
 /**
  * POST /api/checkout
@@ -43,16 +88,31 @@ async function handleCheckout(request: Request, method: 'GET' | 'POST') {
 
   let tier: AdoptTier | null = null
   let alpacaSlugRaw: string | null = null
+  let giftFields: GiftFields | null = null
   if (method === 'GET') {
     const url = new URL(request.url)
     const raw = url.searchParams.get('tier')
     if (isAdoptTier(raw)) tier = raw
     alpacaSlugRaw = url.searchParams.get('alpaca')
+    giftFields = parseGiftFields({
+      gift_recipient_email: url.searchParams.get('gift_recipient_email'),
+      gift_recipient_name: url.searchParams.get('gift_recipient_name'),
+      gift_sender_name: url.searchParams.get('gift_sender_name'),
+      gift_message: url.searchParams.get('gift_message'),
+      gift_send_date: url.searchParams.get('gift_send_date'),
+    })
   } else {
     try {
       const body = await request.json()
       if (isAdoptTier(body?.tier)) tier = body.tier
       if (typeof body?.alpaca === 'string') alpacaSlugRaw = body.alpaca
+      giftFields = parseGiftFields({
+        gift_recipient_email: typeof body?.gift_recipient_email === 'string' ? body.gift_recipient_email : undefined,
+        gift_recipient_name: typeof body?.gift_recipient_name === 'string' ? body.gift_recipient_name : undefined,
+        gift_sender_name: typeof body?.gift_sender_name === 'string' ? body.gift_sender_name : undefined,
+        gift_message: typeof body?.gift_message === 'string' ? body.gift_message : undefined,
+        gift_send_date: typeof body?.gift_send_date === 'string' ? body.gift_send_date : undefined,
+      })
     } catch {
       return attachRequestId(NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 }), reqId)
     }
@@ -106,6 +166,7 @@ async function handleCheckout(request: Request, method: 'GET' | 'POST') {
         product: 'adopt-a-paca',
         tier,
         ...(alpacaSlug ? { alpaca: alpacaSlug } : {}),
+        ...(giftFields ?? {}),
       },
     })
     if (!session.url) {

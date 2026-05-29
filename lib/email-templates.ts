@@ -130,20 +130,33 @@ export interface WelcomeAdoptionInput {
      * `metadata.alpaca` on the payment provider by findAlpacaName().
      */
     escapedAlpacaName?: string
+    /**
+     * When present, the email is addressed to the gift recipient rather than
+     * the buyer. The welcome copy is adjusted accordingly and the personal
+     * message from the sender is rendered in a blockquote.
+     *
+     * All values are HTML-escaped by the caller (escapeHtml).
+     */
+    gift?: {
+        /** HTML-escaped name of the person who sent the gift. */
+        fromName: string
+        /** HTML-escaped personal message from the buyer. */
+        message: string
+    }
 }
 
-export function welcomeAdoptionSubject(tier: AdoptTier): string {
+export function welcomeAdoptionSubject(tier: AdoptTier, isGift?: boolean): string {
+    if (isGift) {
+        return tier === 'yearly'
+            ? "You've been gifted a yearly alpaca adoption"
+            : "You've been gifted a monthly alpaca adoption"
+    }
     return tier === 'yearly'
         ? 'Welcome to the herd — your yearly adoption is active'
         : 'Welcome to the herd — your monthly adoption is active'
 }
 
 export function welcomeAdoptionEmailHtml(opts: WelcomeAdoptionInput): string {
-    // Truthy check covers undefined, null, and empty string — falls back to "Hi there".
-    const greeting = opts.escapedName ? `Hi ${opts.escapedName},` : 'Hi there,'
-    const tierCopy = opts.tier === 'yearly'
-        ? 'Your €900 yearly adoption (12 months coverage) is active.'
-        : 'Your €75/month adoption is active.'
     const paymentLine = opts.paymentRef
         ? `Payment ref (${opts.processor}): ${opts.paymentRef}`
         : `Payment processor: ${opts.processor}`
@@ -152,6 +165,39 @@ export function welcomeAdoptionEmailHtml(opts: WelcomeAdoptionInput): string {
     const alpacaLine = opts.escapedAlpacaName
         ? `<p style="margin-top:8px"><strong>Your adopted alpaca: ${opts.escapedAlpacaName}.</strong> We'll send a photo and intro story within a few days.</p>`
         : `<p style="margin-top:8px">We'll match you with one of the herd this week and send a photo and intro story.</p>`
+
+    // ── Gift path: addressed to the recipient, not the buyer ─────────────────
+    if (opts.gift) {
+        const recipientGreeting = opts.escapedName ? `Hi ${opts.escapedName},` : 'Hi there,'
+        const tierCopy = opts.tier === 'yearly'
+            ? 'a yearly adoption (12 months coverage)'
+            : 'a monthly adoption'
+        return emailLayout(`
+            <p>${recipientGreeting}</p>
+            <p>You've been gifted ${tierCopy} at Es Currals Alpacas Ibiza by <strong>${opts.gift.fromName}</strong>.</p>
+            <blockquote style="border-left:3px solid #556B2F;margin:16px 0;padding:12px 16px;background:#f9f5ec;color:#444;font-style:italic;">
+              &ldquo;${opts.gift.message}&rdquo;
+            </blockquote>
+            <p>Your adoption is now active — here's what to expect:</p>
+            ${alpacaLine}
+            <p>Over your adoption year you'll receive:</p>
+            <ul>
+              <li>An adoption certificate with your sponsored alpaca's name</li>
+              <li>Two complimentary farm tours during your year</li>
+              <li>A welcome gift bundle (calendar, planner, herd photo)</li>
+              <li>One photoshoot session with your alpaca</li>
+              <li>A package of Alcaca natural fertilizer shipped each season</li>
+            </ul>
+            <p style="color:#888;font-size:12px;margin-top:24px">${paymentLine}</p>
+        `)
+    }
+
+    // ── Standard path: addressed to the buyer ────────────────────────────────
+    // Truthy check covers undefined, null, and empty string — falls back to "Hi there".
+    const greeting = opts.escapedName ? `Hi ${opts.escapedName},` : 'Hi there,'
+    const tierCopy = opts.tier === 'yearly'
+        ? 'Your €900 yearly adoption (12 months coverage) is active.'
+        : 'Your €75/month adoption is active.'
     return emailLayout(`
         <p>${greeting}</p>
         <p>Thank you for joining the herd at Es Currals Alpacas Ibiza. ${tierCopy}</p>
@@ -318,6 +364,84 @@ export function buildMollieManageEmail(input: {
 ${rows}
 <p style="color:#888;font-size:13px;margin-top:24px">If you didn't request this, you can ignore this email — the link does nothing once it expires.</p>
 `)
+    return { subject, html }
+}
+
+// ── Owner weekly MRR digest ──────────────────────────────────────────────────
+
+export interface OwnerMrrDigestInput {
+    mrr: number
+    arr: number
+    activeCount: number
+    newCount7d: number
+    canceledCount7d: number
+    churnPct: number
+    atRiskCount: number
+    actionRequiredCount: number
+    weekStart: string
+    weekEnd: string
+}
+
+/**
+ * Owner-facing weekly herd revenue digest.
+ *
+ * Subject: "[Alpacas Ibiza] Weekly herd revenue digest — {weekStart} to {weekEnd}"
+ * Sections:
+ *   1. KPI grid: MRR, ARR, active, new7d, canceled7d, churn%
+ *   2. Dunning attention block: at-risk + action-required counts with link
+ *
+ * All values are numbers/strings computed server-side — no user-controlled
+ * strings pass through here, so no escapeHtml needed.
+ */
+export function buildOwnerMrrDigestEmail(
+    input: OwnerMrrDigestInput,
+): { subject: string; html: string } {
+    const { mrr, arr, activeCount, newCount7d, canceledCount7d, churnPct, atRiskCount, actionRequiredCount, weekStart, weekEnd } = input
+    const subject = `[Alpacas Ibiza] Weekly herd revenue digest — ${weekStart} to ${weekEnd}`
+
+    const kpiCell = (label: string, value: string, highlight = false) =>
+        `<td style="padding:16px;text-align:center;background:${highlight ? '#fff3cd' : BRAND.secondary};border-radius:8px;min-width:100px">
+          <div style="font-size:22px;font-weight:700;color:${BRAND.primary}">${value}</div>
+          <div style="font-size:11px;color:#666;margin-top:4px;text-transform:uppercase;letter-spacing:0.5px">${label}</div>
+        </td>`
+
+    const dunningSection = (atRiskCount > 0 || actionRequiredCount > 0)
+        ? `<div style="margin:24px 0;padding:16px;border-left:4px solid ${actionRequiredCount > 0 ? '#a44' : '#ffb300'};background:${actionRequiredCount > 0 ? '#fff3f3' : '#fff8e1'}">
+            <strong style="color:${actionRequiredCount > 0 ? '#a44' : '#7a5500'}">Dunning attention needed</strong>
+            <ul style="margin:8px 0;padding-left:20px;color:#444">
+              ${atRiskCount > 0 ? `<li>${atRiskCount} donor${atRiskCount === 1 ? '' : 's'} at-risk (2 consecutive failures)</li>` : ''}
+              ${actionRequiredCount > 0 ? `<li>${actionRequiredCount} donor${actionRequiredCount === 1 ? '' : 's'} action-required (3+ consecutive failures)</li>` : ''}
+            </ul>
+            <a href="https://alpacasibiza.com/admin/analytics/dunning" style="display:inline-block;padding:8px 16px;background:${BRAND.primary};color:#fff;text-decoration:none;border-radius:6px;font-size:13px">View dunning dashboard</a>
+          </div>`
+        : `<p style="color:#888;font-size:13px">No dunning issues this week.</p>`
+
+    const html = emailLayout(`
+<h2 style="color:${BRAND.primary}">Weekly herd revenue digest</h2>
+<p style="color:#888;font-size:13px;margin-top:-8px">${weekStart} — ${weekEnd}</p>
+
+<h3 style="margin-top:24px;margin-bottom:12px">This week</h3>
+<table style="width:100%;border-collapse:separate;border-spacing:8px 0">
+  <tr>
+    ${kpiCell('MRR', `€${mrr.toFixed(2)}`)}
+    ${kpiCell('ARR', `€${arr.toFixed(0)}`)}
+    ${kpiCell('Active', activeCount.toString())}
+  </tr>
+</table>
+<table style="width:100%;border-collapse:separate;border-spacing:8px 0;margin-top:8px">
+  <tr>
+    ${kpiCell('New (7d)', `+${newCount7d}`, newCount7d > 0)}
+    ${kpiCell('Canceled (7d)', canceledCount7d > 0 ? `−${canceledCount7d}` : '0', false)}
+    ${kpiCell('Churn %', `${churnPct.toFixed(1)}%`, churnPct > 5)}
+  </tr>
+</table>
+
+<h3 style="margin-top:28px;margin-bottom:8px">Dunning</h3>
+${dunningSection}
+
+<p style="color:#aaa;font-size:11px;margin-top:24px">Full details: <a href="https://alpacasibiza.com/admin/analytics/subscriptions" style="color:#aaa">subscriptions dashboard</a></p>
+`)
+
     return { subject, html }
 }
 

@@ -10,6 +10,7 @@ import { importStripe } from '@/lib/integrations/stripe-sdk'
 import { requireEnvOrReturn503 } from '@/lib/route-helpers'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
 import { isAlreadyProcessed, markProcessed } from '@/lib/webhook-idempotency'
+import { recordVatFromPayment } from '@/lib/vat-recorder'
 
 /**
  * POST /api/stripe-webhook
@@ -120,6 +121,15 @@ export async function POST(request: Request) {
             handlerResult.meta,
           )
         }
+        // Record toward EU VAT-OSS threshold. session.customer_details.address.country
+        // is the billing-address ISO-2 captured by Stripe Checkout; recordVatFromPayment
+        // normalises null/undefined to 'XX' and is fully fire-and-forget (never throws).
+        recordVatFromPayment({
+          amountEur: (session.amount_total ?? 0) / 100,
+          customerCountry: session.customer_details?.address?.country ?? undefined,
+          attemptId: session.id,
+          yearEpoch: Date.now(),
+        })
         // TODO: persist adoption record to DB when DB is wired (assign alpaca, etc.)
         break
       }

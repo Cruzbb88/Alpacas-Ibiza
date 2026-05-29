@@ -148,3 +148,43 @@ export function __resetPaymentFailureTracker(): void {
   _store.clear()
   _attempts.clear()
 }
+
+/**
+ * @internal — admin dunning dashboard only. DO NOT call from webhook handlers
+ * or application logic. Returns a read-only snapshot of the in-memory store
+ * with severity derived from the current count. Cold-start caveat: process-
+ * scoped store (ADR 001) resets on Lambda restart.
+ */
+export function _internalGetStoreSnapshot(): ReadonlyArray<{
+  vendor: 'stripe' | 'mollie'
+  customerId: string
+  count: number
+  lastFailureAt: number
+  lastSuccessAt: number | null
+  severity: 'first' | 'at-risk' | 'action-required'
+}> {
+  const now = Date.now()
+  purge(now)
+  const result: Array<{
+    vendor: 'stripe' | 'mollie'
+    customerId: string
+    count: number
+    lastFailureAt: number
+    lastSuccessAt: number | null
+    severity: 'first' | 'at-risk' | 'action-required'
+  }> = []
+  for (const [key, entry] of _store) {
+    const colonIdx = key.indexOf(':')
+    const vendor = key.slice(0, colonIdx) as 'stripe' | 'mollie'
+    const customerId = key.slice(colonIdx + 1)
+    result.push({
+      vendor,
+      customerId,
+      count: entry.count,
+      lastFailureAt: entry.lastFailureAt,
+      lastSuccessAt: entry.lastSuccessAt,
+      severity: severityFor(entry.count),
+    })
+  }
+  return result
+}

@@ -208,6 +208,17 @@ export function molliePaymentProvider(opts?: {
             tier,
             tenantId: checkoutOpts.tenantId,
             ...(checkoutOpts.alpacaSlug ? { alpaca: checkoutOpts.alpacaSlug } : {}),
+            ...(checkoutOpts.gift
+              ? {
+                  gift_recipient_email: checkoutOpts.gift.recipientEmail,
+                  gift_recipient_name: checkoutOpts.gift.recipientName,
+                  gift_sender_name: checkoutOpts.gift.senderName,
+                  gift_message: checkoutOpts.gift.message,
+                  ...(checkoutOpts.gift.sendDate
+                    ? { gift_send_date: checkoutOpts.gift.sendDate }
+                    : {}),
+                }
+              : {}),
           },
         }
 

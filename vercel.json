@@ -4,6 +4,10 @@
     {
       "path": "/api/owner-digest",
       "schedule": "0 9 * * MON"
+    },
+    {
+      "path": "/api/owner-mrr-digest",
+      "schedule": "0 8 * * 1"
     }
   ]
 }

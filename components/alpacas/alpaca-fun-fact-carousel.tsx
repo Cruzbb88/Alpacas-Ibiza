@@ -16,7 +16,7 @@
  * the carousel just vanishes from the page rather than showing empty state.
  */
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import type { Locale } from '@/i18n.config'
 import type { AnimalEntity } from '@/lib/integrations/content-types'
@@ -38,10 +38,12 @@ export function AlpacaFunFactCarousel({
   heading,
 }: AlpacaFunFactCarouselProps) {
   const translate = t(locale)
-  const facts = animals.filter((a): a is AnimalEntity & { fun_fact: string } => Boolean(a.fun_fact))
+  const facts = useMemo(
+    () => animals.filter((a): a is AnimalEntity & { fun_fact: string } => Boolean(a.fun_fact)),
+    [animals],
+  )
   const [index, setIndex] = useState(0)
   const [paused, setPaused] = useState(false)
-  const rafRef = useRef<number | null>(null)
 
   // Auto-rotate — pauses when document hidden, when user hovers/focuses, or
   // when prefers-reduced-motion is set.
@@ -68,9 +70,14 @@ export function AlpacaFunFactCarousel({
     return () => document.removeEventListener('visibilitychange', onVis)
   }, [])
 
+  // Clamp index when facts list shrinks (e.g. UNMAPPED phase update)
+  useEffect(() => {
+    if (index >= facts.length && facts.length > 0) setIndex(0)
+  }, [facts.length, index])
+
   if (facts.length === 0) return null
 
-  const current = facts[index]
+  const current = facts[index] ?? facts[0]
   const headingText = heading ?? translate('alpacas.funFacts.heading', 'Did you know?')
   const prevLabel = translate('alpacas.funFacts.prev', 'Previous fun fact')
   const nextLabel = translate('alpacas.funFacts.next', 'Next fun fact')

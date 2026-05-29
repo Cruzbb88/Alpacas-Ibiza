@@ -28,7 +28,7 @@
  */
 
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useTransition } from 'react'
+import { useMemo, useRef, useTransition } from 'react'
 import type { Locale } from '@/i18n.config'
 import { t } from '@/lib/translations'
 
@@ -49,7 +49,10 @@ export function AdoptGiftAdoption({ locale, heading }: AdoptGiftAdoptionProps) {
   const giftDeliver = searchParams?.get('gift_deliver') ?? ''
   const isGift = giftName.length > 0 || giftEmail.length > 0 || giftDeliver.length > 0
 
-  const today = new Date().toISOString().slice(0, 10)
+  // Computed once per client mount; avoids per-render UTC drift near midnight.
+  const today = useMemo(() => new Date().toISOString().slice(0, 10), [])
+
+  const pendingRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   function updateParam(key: 'gift_name' | 'gift_email' | 'gift_deliver', value: string) {
     const params = new URLSearchParams(searchParams?.toString() ?? '')
@@ -60,8 +63,13 @@ export function AdoptGiftAdoption({ locale, heading }: AdoptGiftAdoptionProps) {
     }
     const qs = params.toString()
     startTransition(() => {
-      router.push(`/${locale}/adopt${qs ? `?${qs}` : ''}`, { scroll: false })
+      router.replace(`/${locale}/adopt${qs ? `?${qs}` : ''}`, { scroll: false })
     })
+  }
+
+  function debouncedUpdate(key: 'gift_name' | 'gift_email', value: string) {
+    if (pendingRef.current) clearTimeout(pendingRef.current)
+    pendingRef.current = setTimeout(() => updateParam(key, value), 300)
   }
 
   function resetGift() {
@@ -71,7 +79,7 @@ export function AdoptGiftAdoption({ locale, heading }: AdoptGiftAdoptionProps) {
     params.delete('gift_deliver')
     const qs = params.toString()
     startTransition(() => {
-      router.push(`/${locale}/adopt${qs ? `?${qs}` : ''}`, { scroll: false })
+      router.replace(`/${locale}/adopt${qs ? `?${qs}` : ''}`, { scroll: false })
     })
   }
 
@@ -120,7 +128,7 @@ export function AdoptGiftAdoption({ locale, heading }: AdoptGiftAdoptionProps) {
               type="text"
               required={isGift}
               value={giftName}
-              onChange={(e) => updateParam('gift_name', e.target.value)}
+              onChange={(e) => debouncedUpdate('gift_name', e.target.value)}
               placeholder={translate('adopt.gift.namePlaceholder', 'e.g. Marta')}
               maxLength={80}
               className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-foreground/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
@@ -134,7 +142,7 @@ export function AdoptGiftAdoption({ locale, heading }: AdoptGiftAdoptionProps) {
             <input
               type="email"
               value={giftEmail}
-              onChange={(e) => updateParam('gift_email', e.target.value)}
+              onChange={(e) => debouncedUpdate('gift_email', e.target.value)}
               placeholder={translate('adopt.gift.emailPlaceholder', 'marta@example.com')}
               maxLength={254}
               className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-foreground/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"

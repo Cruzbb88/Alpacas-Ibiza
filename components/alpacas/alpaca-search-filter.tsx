@@ -25,14 +25,12 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useTransition } from 'react'
 import type { Locale } from '@/i18n.config'
 import { t } from '@/lib/translations'
-
-export const FILTER_PERSONALITIES = ['calm', 'playful', 'bold', 'shy', 'sociable', 'independent'] as const
-export const FILTER_COLORS = ['white', 'grey', 'brown', 'mixed'] as const
-export const FILTER_BREEDS = ['huacaya', 'suri'] as const
-
-export type PersonalityFilter = typeof FILTER_PERSONALITIES[number]
-export type ColorFilter = typeof FILTER_COLORS[number]
-export type BreedFilter = typeof FILTER_BREEDS[number]
+import {
+  FILTER_PERSONALITIES,
+  FILTER_COLORS,
+  FILTER_BREEDS,
+  parseListParam,
+} from '@/lib/alpacas/filter'
 
 interface AlpacaSearchFilterProps {
   locale: Locale
@@ -166,42 +164,6 @@ function FilterFieldset({ legend, options, active, translate, labelPrefix, onTog
   )
 }
 
-function parseListParam(raw: string | null | undefined): string[] {
-  if (!raw) return []
-  return raw.split(',').map((s) => s.trim()).filter(Boolean)
-}
-
 function capitalize(s: string): string {
   return s.charAt(0).toUpperCase() + s.slice(1)
-}
-
-/**
- * Apply the URL filter state to an animal roster. Exported so the server-side
- * listing page can use the same logic without duplicating it client-side.
- *
- * Matching is case-insensitive substring on personality/color/breed strings.
- * Empty filter set on a dimension = no filter for that dimension (passes through).
- */
-export function filterAlpacas<T extends { personality?: string | null; color?: string | null; breed?: string | null }>(
-  animals: ReadonlyArray<T>,
-  filters: { p?: string[]; c?: string[]; b?: string[] },
-): T[] {
-  const personalities = (filters.p ?? []).map((s) => s.toLowerCase())
-  const colors = (filters.c ?? []).map((s) => s.toLowerCase())
-  const breeds = (filters.b ?? []).map((s) => s.toLowerCase())
-  return animals.filter((a) => {
-    if (personalities.length > 0) {
-      const p = (a.personality ?? '').toLowerCase()
-      if (!personalities.some((needle) => p.includes(needle))) return false
-    }
-    if (colors.length > 0) {
-      const c = (a.color ?? '').toLowerCase()
-      if (!colors.some((needle) => c.includes(needle))) return false
-    }
-    if (breeds.length > 0) {
-      const b = (a.breed ?? '').toLowerCase()
-      if (!breeds.some((needle) => b.includes(needle))) return false
-    }
-    return true
-  })
 }

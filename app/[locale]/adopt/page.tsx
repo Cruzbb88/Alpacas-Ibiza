@@ -323,6 +323,7 @@ export default async function AdoptPage({
             {/* FAQ — addresses the cancel/visit/gift questions every competitor's adopt page covers */}
             <PageSection bg="muted" width="narrow" className="border-t border-border">
                 <FAQ
+                    emitSchema={true}
                     title={translate('adopt.faqTitle')}
                     subtitle={translate('adopt.faqSubtitle')}
                     items={[

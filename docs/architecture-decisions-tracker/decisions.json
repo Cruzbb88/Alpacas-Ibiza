@@ -1,0 +1,45 @@
+{
+  "decisions": [
+    {
+      "id": "ADR-019",
+      "title": "Mollie primary, Stripe fallback",
+      "captured": "2026-05-28",
+      "revisit_after": "2026-11-28",
+      "revisit_trigger": "Hit 200 active monthly subscribers or first non-EEA tenant signs",
+      "supersedes": ["ADR-015"],
+      "doc_path": "docs/adr/019-mollie-primary-stripe-fallback.md",
+      "decay_signals": [
+        "donor count past 200",
+        "non-EEA tenant inbound",
+        "Stripe Tax becomes free below €5k volume"
+      ]
+    },
+    {
+      "id": "ADR-020",
+      "title": "Mollie Connect for tenant revenue",
+      "captured": "2026-05-29",
+      "revisit_after": "2027-05-29",
+      "revisit_trigger": "Mollie raises €2 application-fee cap OR Stripe ships a Connect feature without Mollie parity",
+      "supersedes_partial": ["ADR-015 stripe-connect deferral"],
+      "doc_path": "docs/adr/020-mollie-connect-for-tenants.md",
+      "decay_signals": [
+        "Mollie cap unchanged + tenant fee >€2",
+        "Tenant #1 is non-EEA",
+        "Stripe Issuing/Treasury becomes a tenant requirement"
+      ]
+    },
+    {
+      "id": "SDK-SHAPE-RULE-2026-05-28",
+      "title": "Never use type X = any at SDK boundaries",
+      "captured": "2026-05-28",
+      "revisit_after": "never",
+      "revisit_trigger": "Permanent rule — only revisit if a new SDK has no published TS types",
+      "supersedes": [],
+      "doc_path": "CLAUDE.md (SDK-shape rule section)",
+      "decay_signals": [
+        "new `: any` cast in lib/integrations/ or app/api/",
+        "new @typescript-eslint/no-explicit-any eslint-disable in payment paths"
+      ]
+    }
+  ]
+}

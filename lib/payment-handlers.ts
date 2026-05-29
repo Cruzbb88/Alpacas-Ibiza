@@ -20,6 +20,7 @@ import { escapeHtml } from './html.ts'
 import { findAlpacaName } from './data/alpacas.ts'
 import { SITE_BASE_URL } from './config.ts'
 import { recordFailure, resetFailures, type FailureSeverity } from './payment-failure-tracker.ts'
+import { notifyOwnerOnEscalation } from './owner-notify.ts'
 
 // ── Stripe checkout.session.completed handler ────────────────────────────────
 
@@ -34,7 +35,16 @@ export interface StripeCheckoutSessionLike {
   subscription?: string | null
   amount_total?: number | null
   currency?: string | null
-  metadata?: { tier?: 'monthly' | 'yearly' | string; alpaca?: string } | null
+  metadata?: {
+    tier?: 'monthly' | 'yearly' | string
+    alpaca?: string
+    /** Gift recipient fields — set when buyer purchased via the gift wizard. */
+    gift_recipient_email?: string
+    gift_recipient_name?: string
+    gift_sender_name?: string
+    gift_message?: string
+    gift_send_date?: string
+  } | null
   customer_details?: {
     email?: string | null
     name?: string | null
@@ -192,18 +202,49 @@ export async function handleStripeCheckoutCompleted(
         }))()
     : Promise.resolve(null)
 
+  // Gift fields from metadata — route welcome to recipient when present.
+  const giftRecipientEmail = typeof session.metadata?.gift_recipient_email === 'string' && session.metadata.gift_recipient_email.length > 0
+    ? session.metadata.gift_recipient_email
+    : null
+  const giftRecipientName = session.metadata?.gift_recipient_name ?? null
+  const giftSenderName = session.metadata?.gift_sender_name ?? null
+  const giftMessage = session.metadata?.gift_message ?? null
+  const giftSendDate = session.metadata?.gift_send_date ?? null
+
+  // Determine scheduledAt for the welcome when buyer chose a future send date.
+  // Falls back to immediate when sendDate is absent or not a future date.
+  const welcomeScheduledAt = ((): string | undefined => {
+    if (!giftSendDate) return undefined
+    const sendMs = Date.parse(giftSendDate)
+    const nowMs = (deps.now ?? Date.now)()
+    return !isNaN(sendMs) && sendMs > nowMs ? new Date(sendMs).toISOString() : undefined
+  })()
+
+  const isGiftWelcome = giftRecipientEmail !== null && giftMessage !== null
+
   const [welcomeResult, codesResult, ownerResult] = await Promise.allSettled([
     (async () =>
       deps.sendEmail({
-        to: email,
-        subject: welcomeAdoptionSubject(tier),
+        to: isGiftWelcome ? giftRecipientEmail! : email,
+        subject: welcomeAdoptionSubject(tier, isGiftWelcome),
         html: welcomeAdoptionEmailHtml({
-          escapedName: name ? escapeHtml(name) : undefined,
+          escapedName: isGiftWelcome
+            ? (giftRecipientName ? escapeHtml(giftRecipientName) : undefined)
+            : (name ? escapeHtml(name) : undefined),
           tier,
           processor: 'Stripe',
           paymentRef: session.id,
           escapedAlpacaName: alpacaName ? escapeHtml(alpacaName) : undefined,
+          ...(isGiftWelcome
+            ? {
+                gift: {
+                  fromName: giftSenderName ? escapeHtml(giftSenderName) : escapeHtml(name ?? ''),
+                  message: escapeHtml(giftMessage!),
+                },
+              }
+            : {}),
         }),
+        ...(welcomeScheduledAt ? { scheduledAt: welcomeScheduledAt } : {}),
       }))(),
     (async () =>
       deps.sendEmail({
@@ -389,6 +430,22 @@ export async function handleStripeInvoicePaymentFailed(
   const donorNotified = donorResult.status === 'fulfilled'
   const ownerNotified = deps.ownerEmail ? ownerResult.status === 'fulfilled' : false
 
+  if (severity === 'at-risk' || severity === 'action-required') {
+    try {
+      void notifyOwnerOnEscalation({
+        vendor: 'stripe',
+        customerId: typeof invoice.customer === 'string' && invoice.customer.length > 0
+          ? invoice.customer
+          : `unknown:${invoice.id}`,
+        failureCount,
+        severity,
+        donorEmail: donorEmail ?? undefined,
+        donorName: invoice.customer_name ?? undefined,
+        paymentRef: invoice.id,
+      })
+    } catch {}
+  }
+
   if (!deps.ownerEmail && !donorNotified) {
     return { donorNotified, ownerNotified, severity, failureCount, reason: 'send-failed', meta }
   }
@@ -506,6 +563,13 @@ export interface MolliePaymentLike {
     action?: 'update-payment' | string
     /** Subscription ID to relink when action === 'update-payment'. */
     seedSubscriptionId?: string
+    /** Gift recipient fields — set when buyer purchased via the gift wizard. */
+    gift_recipient_email?: string
+    gift_recipient_name?: string
+    gift_sender_name?: string
+    gift_message?: string
+    /** ISO yyyy-mm-dd or absent (= send today). */
+    gift_send_date?: string
   } | null
   /** Mollie one-off payments set billingEmail at create-time. */
   billingEmail?: string | null
@@ -685,20 +749,53 @@ async function sendMollieWelcomeQuiet(
   tier: 'monthly' | 'yearly',
   email: string,
   name: string | null,
+  nowMs?: number,
 ): Promise<boolean> {
   try {
     const alpacaName = findAlpacaName(payment.metadata?.alpaca ?? null)
+    const meta = payment.metadata
+
+    // Gift fields — route welcome to recipient when present.
+    const giftRecipientEmail = typeof meta?.gift_recipient_email === 'string' && meta.gift_recipient_email.length > 0
+      ? meta.gift_recipient_email
+      : null
+    const giftRecipientName = meta?.gift_recipient_name ?? null
+    const giftSenderName = meta?.gift_sender_name ?? null
+    const giftMessage = meta?.gift_message ?? null
+    const giftSendDate = meta?.gift_send_date ?? null
+
+    const isGiftWelcome = giftRecipientEmail !== null && giftMessage !== null
+
+    // Scheduled send for future gift dates.
+    const welcomeScheduledAt = ((): string | undefined => {
+      if (!giftSendDate) return undefined
+      const sendMs = Date.parse(giftSendDate)
+      const now = nowMs ?? Date.now()
+      return !isNaN(sendMs) && sendMs > now ? new Date(sendMs).toISOString() : undefined
+    })()
+
     await sendEmail({
-      to: email,
-      subject: welcomeAdoptionSubject(tier),
+      to: isGiftWelcome ? giftRecipientEmail! : email,
+      subject: welcomeAdoptionSubject(tier, isGiftWelcome),
       html: welcomeAdoptionEmailHtml({
-        escapedName: name ? escapeHtml(name) : undefined,
+        escapedName: isGiftWelcome
+          ? (giftRecipientName ? escapeHtml(giftRecipientName) : undefined)
+          : (name ? escapeHtml(name) : undefined),
         tier,
         processor: 'Mollie',
         paymentRef: payment.id,
         escapedAlpacaName: alpacaName ? escapeHtml(alpacaName) : undefined,
+        ...(isGiftWelcome
+          ? {
+              gift: {
+                fromName: giftSenderName ? escapeHtml(giftSenderName) : escapeHtml(name ?? ''),
+                message: escapeHtml(giftMessage!),
+              },
+            }
+          : {}),
       }),
       listUnsubscribeUrl: `mailto:${process.env.CONTACT_EMAIL ?? 'info@alpacasibiza.com'}?subject=unsubscribe`,
+      ...(welcomeScheduledAt ? { scheduledAt: welcomeScheduledAt } : {}),
     })
     return true
   } catch {
@@ -887,6 +984,20 @@ export async function handleMolliePaymentFailed(
 
   const donorNotified = donorResult.status === 'fulfilled'
   const ownerNotified = deps.ownerEmail ? ownerResult.status === 'fulfilled' : null
+
+  if (severity === 'at-risk' || severity === 'action-required') {
+    try {
+      void notifyOwnerOnEscalation({
+        vendor: 'mollie',
+        customerId: payment.customerId ?? `unknown:${payment.id}`,
+        failureCount,
+        severity,
+        donorEmail: donorEmail ?? undefined,
+        donorName: donorName ?? undefined,
+        paymentRef: payment.id,
+      })
+    } catch {}
+  }
 
   if (!donorNotified) return { donorNotified, ownerNotified, severity, failureCount, reason: 'donor-send-failed', meta }
   if (deps.ownerEmail && ownerNotified === false) {

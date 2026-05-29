@@ -299,3 +299,4 @@ GOOGLE_PLACES_PLACE_ID=
 - Cloudflare Turnstile site registration (5 min online)
 - Vercel account + domain DNS access
 - Resend domain verification
+- **Gift adoption end-to-end wiring** — `AdoptGiftAdoption` captures recipient name/email/delivery-date into URL params, but the checkout adapters don't yet thread them into Stripe/Mollie metadata, and the welcome email template doesn't have a "gift" variant. Owner decisions needed: (a) should the certificate show donor or recipient name? (b) does the welcome go to recipient on delivery date, or to donor immediately? (c) does cancellation cascade if the recipient declines? See `handoff/PEER_REVIEW_2026-05-29-mollie-management.md` for context.
