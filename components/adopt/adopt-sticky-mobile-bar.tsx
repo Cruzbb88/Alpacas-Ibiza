@@ -25,6 +25,7 @@ import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import type { Locale } from '@/i18n.config'
 import { t } from '@/lib/translations'
+import { trackEvent } from '@/lib/client-track'
 
 interface AdoptStickyMobileBarProps {
   locale: Locale
@@ -36,6 +37,10 @@ interface AdoptStickyMobileBarProps {
   /** Hide threshold in px — below this scroll Y the bar is always hidden
    *  (donor is at top of page, primary CTA is in view). Default 600. */
   showAfterY?: number
+  /** Analytics-only metadata (mirror of the server-side adopt page state). */
+  alpacaSlug?: string | null
+  processor?: 'stripe' | 'mollie' | 'mailto' | 'fareharbor' | 'unknown'
+  isGift?: boolean
 }
 
 const SCROLL_DELTA_PX = 12 // minimum movement to count as a direction change
@@ -47,7 +52,25 @@ export function AdoptStickyMobileBar({
   monthlyPriceShort,
   yearlyPriceShort,
   showAfterY = 600,
+  alpacaSlug = null,
+  processor = 'unknown',
+  isGift = false,
 }: AdoptStickyMobileBarProps) {
+  // Tracking shared between both buttons — onClick fires tier-selected +
+  // checkout-started so we can compare conversion path between sticky / card / cta.
+  function trackStickyClick(tier: 'monthly' | 'yearly') {
+    try {
+      trackEvent('adopt_tier_selected', { tier, source: 'sticky' })
+      trackEvent('adopt_checkout_started', {
+        tier,
+        alpaca_slug: alpacaSlug,
+        processor,
+        is_gift: isGift,
+      })
+    } catch {
+      // Never block navigation on analytics failure.
+    }
+  }
   const translate = t(locale)
   const monthlyLabel = monthlyPriceShort ?? translate('adopt.sticky.monthlyShort', '€75/mo')
   const yearlyLabel = yearlyPriceShort ?? translate('adopt.sticky.yearlyShort', '€900/yr')
@@ -91,6 +114,7 @@ export function AdoptStickyMobileBar({
       role="region"
       aria-label={regionLabel}
       aria-hidden={!visible}
+      inert={!visible}
       className={
         'md:hidden fixed inset-x-0 bottom-0 z-40 px-3 pb-[max(env(safe-area-inset-bottom),12px)] pt-3 ' +
         'bg-background/95 backdrop-blur border-t border-border ' +
@@ -101,6 +125,7 @@ export function AdoptStickyMobileBar({
       <div className="flex gap-2 max-w-screen-sm mx-auto">
         <Link
           href={yearlyUrl}
+          onClick={() => trackStickyClick('yearly')}
           className="flex-1 inline-flex items-center justify-center rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
           aria-label={`${adoptVerb} — ${yearlyLabel}`}
         >
@@ -109,6 +134,7 @@ export function AdoptStickyMobileBar({
         </Link>
         <Link
           href={monthlyUrl}
+          onClick={() => trackStickyClick('monthly')}
           className="flex-1 inline-flex items-center justify-center rounded-lg border border-primary px-4 py-3 text-sm font-semibold text-primary hover:bg-primary/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
           aria-label={`${adoptVerb} — ${monthlyLabel}`}
         >

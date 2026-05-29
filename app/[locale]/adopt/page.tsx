@@ -10,6 +10,7 @@ import { toJsonLd, adoptAPacaServiceSchema } from '@/lib/structured-data'
 import { GradientPageHero, PageSection, OwnerConfirmBanner } from '@/components/layout'
 import { BillingPortalLink } from '@/components/billing-portal-link'
 import { AdoptTierCard } from '@/components/adopt/adopt-tier-card'
+import { TierComparison } from '@/components/adopt/tier-comparison'
 import { AdoptBenefitsList } from '@/components/adopt/adopt-benefits-list'
 import { AdoptionTimeline } from '@/components/adopt/adoption-timeline'
 import { AdopterCounter } from '@/components/adopt/adopter-counter'
@@ -22,10 +23,14 @@ import { ALPACAS, findAlpacaName } from '@/lib/data/alpacas'
 import { AlpacaPicker } from '@/components/adopt/alpaca-picker'
 import { AdoptGiftAdoption } from '@/components/adopt/adopt-gift-adoption'
 import { AdoptThankYou } from '@/components/adopt-thank-you'
+import { AdoptPageTracker } from '@/components/adopt/adopt-page-tracker'
+import { AdoptCheckoutLink } from '@/components/adopt/adopt-checkout-link'
 import { FAQ } from '@/components/faq'
 import { TestimonialsWall } from '@/components/testimonials-wall'
+import { GoogleReviewsWall } from '@/components/google-reviews-wall'
 import { getTenant } from '@/lib/tenants/server'
 import { getOgImage } from '@/lib/og-images'
+import { getActiveAdopterCount } from '@/lib/adopters/count'
 
 export async function generateMetadata({
     params,
@@ -54,6 +59,19 @@ export async function generateMetadata({
     }
 }
 
+// Narrow PaymentVendor → the analytics processor union. 'stripe-connect' is
+// rolled into 'stripe' (same processor downstream) and 'unconfigured' becomes
+// 'mailto' (the fallback CTA destination). Keeps GA4 reports clean.
+function normalizeProcessor(
+  v: import('@/lib/payment-vendor').PaymentVendor,
+): 'stripe' | 'mollie' | 'mailto' | 'fareharbor' | 'unknown' {
+  if (v === 'stripe' || v === 'stripe-connect') return 'stripe'
+  if (v === 'mollie') return 'mollie'
+  if (v === 'fareharbor') return 'fareharbor'
+  if (v === 'mailto' || v === 'unconfigured') return 'mailto'
+  return 'unknown'
+}
+
 // TODO: OWNER_CONFIRMED — prices (€75/mo, €900/yr) and all 9 benefits sourced from live site
 // VERIFICATION_RESULTS.md #10. Owner must confirm before launch: (a) prices unchanged,
 // (b) benefits bundle migrates 1:1, (c) existing subscriber grandfathering policy.
@@ -75,10 +93,18 @@ export default async function AdoptPage({
     searchParams,
 }: {
     params: Promise<{ locale: Locale }>
-    searchParams: Promise<{ checkout?: string; tier?: string; portal?: string; alpaca?: string }>
+    searchParams: Promise<{
+        checkout?: string
+        tier?: string
+        portal?: string
+        alpaca?: string
+        gift_name?: string
+        gift_email?: string
+        gift_deliver?: string
+    }>
 }) {
     const { locale } = await params
-    const { checkout, alpaca: alpacaParam } = await searchParams
+    const { checkout, alpaca: alpacaParam, gift_name, gift_email, gift_deliver } = await searchParams
     const translate = t(locale)
     const tenant = await getTenant()
 
@@ -87,8 +113,20 @@ export default async function AdoptPage({
     // checkout routes as a second line of defence.
     const selectedAlpacaSlug = findAlpacaName(alpacaParam ?? null) ? (alpacaParam as string) : null
 
+    // Fetch live adopter count server-side; fail-quiet (returns 0 on error / unconfigured).
+    const { count: adoptedCount } = await getActiveAdopterCount()
+
     const paymentAdapter = getPaymentAdapter()
-    const adoptOpts = selectedAlpacaSlug ? { alpaca: selectedAlpacaSlug } : undefined
+    const hasGiftFields = Boolean(gift_name || gift_email || gift_deliver)
+    const adoptOpts: import('@/lib/payment-vendor').AdoptCheckoutOpts | undefined =
+        (selectedAlpacaSlug || hasGiftFields)
+            ? {
+                  alpaca: selectedAlpacaSlug ?? undefined,
+                  ...(gift_name ? { giftName: gift_name } : {}),
+                  ...(gift_email ? { giftEmail: gift_email } : {}),
+                  ...(gift_deliver ? { giftDeliver: gift_deliver } : {}),
+              }
+            : undefined
     const monthlyUrl = paymentAdapter.buildAdoptCheckoutUrl('monthly', adoptOpts) ?? `mailto:info@alpacasibiza.com?subject=Adopt%20an%20Alpaca%20enquiry`
     const yearlyUrl  = paymentAdapter.buildAdoptCheckoutUrl('yearly', adoptOpts)  ?? `mailto:info@alpacasibiza.com?subject=Adopt%20an%20Alpaca%20enquiry`
 
@@ -180,6 +218,9 @@ export default async function AdoptPage({
             {/* Marketing content — hidden when checkout=success (donor already converted) */}
             {!isSuccess && (
             <>
+            {/* GA4 page-view fire — invisible client component; only renders in the
+                marketing path so the success/cancelled events stay isolated. */}
+            <AdoptPageTracker locale={locale} />
             <PageBreadcrumbs
                 locale={locale}
                 homeLabel={translate('nav.home') || 'Home'}
@@ -192,10 +233,10 @@ export default async function AdoptPage({
                 subtitle={translate('adopt.subtitle')}
             />
 
-            {/* Social proof — herd availability counter. `adopted={0}` until the
-                adoption DB lands; AdopterCounter degrades gracefully ("plenty available"). */}
+            {/* Social proof — herd availability counter. Live count from payment
+                vendor (Stripe / Mollie); degrades gracefully to 0 when unconfigured. */}
             <PageSection bg="default" width="narrow" className="pt-12 pb-2">
-                <AdopterCounter locale={locale} total={ALPACAS.length} adopted={0} />
+                <AdopterCounter locale={locale} total={ALPACAS.length} adopted={adoptedCount} />
             </PageSection>
 
             {/* Personality quiz — donors with no preference can answer 3 questions and
@@ -223,6 +264,61 @@ export default async function AdoptPage({
                 <AdoptGiftAdoption locale={locale} />
             </PageSection>
 
+            {/* Tier comparison table — richer decision aid above the quick-checkout cards.
+                Donors who want detail use this; those who want fast checkout use the cards below. */}
+            <PageSection bg="default" width="narrow" className="py-16 pb-0">
+                <TierComparison
+                    title={translate('adopt.comparisonTitle') || 'Compare plans'}
+                    subtitle={translate('adopt.comparisonSubtitle') || undefined}
+                    monthlyLabel={translate('adopt.monthly') || 'Monthly'}
+                    yearlyLabel={translate('adopt.yearly') || 'Yearly'}
+                    monthlyPrice={translate('adopt.monthlyPrice') || '€75 / month'}
+                    yearlyPrice={translate('adopt.yearlyPrice') || '€900 / year'}
+                    yearlyBadge={translate('adopt.yearlyTierBadge') || undefined}
+                    monthlyCtaLabel={translate('adopt.monthlyCtaLabel') || 'Adopt monthly'}
+                    yearlyCtaLabel={translate('adopt.yearlyCtaLabel') || 'Adopt yearly'}
+                    monthlyHref={monthlyUrl}
+                    yearlyHref={yearlyUrl}
+                    features={[
+                        {
+                            label: translate('adopt.feature.certificate') || 'Digital adoption certificate',
+                            monthly: true,
+                            yearly: true,
+                        },
+                        {
+                            label: translate('adopt.feature.updates') || 'Monthly alpaca photo & updates',
+                            monthly: true,
+                            yearly: true,
+                        },
+                        {
+                            label: translate('adopt.feature.farmTour') || 'Farm tour invitation',
+                            monthly: true,
+                            yearly: true,
+                        },
+                        {
+                            label: translate('adopt.feature.weavingDiscount') || '10% Wishfulfilling Weaving discount',
+                            monthly: true,
+                            yearly: true,
+                        },
+                        {
+                            label: translate('adopt.feature.shopDiscount') || '15% Farm Shop discount',
+                            monthly: true,
+                            yearly: true,
+                        },
+                        {
+                            label: translate('adopt.feature.fertilizer') || 'Alpaca fertilizer bag',
+                            monthly: false,
+                            yearly: true,
+                        },
+                        {
+                            label: translate('adopt.feature.photoshoot') || 'Professional alpaca photoshoot',
+                            monthly: false,
+                            yearly: true,
+                        },
+                    ]}
+                />
+            </PageSection>
+
             {/* Pricing tiers — extracted to AdoptTierCard (monthly + yearly variants).
                 Both cards link to checkout URLs already built with the alpaca slug. */}
             <PageSection bg="default" width="narrow" className="py-16">
@@ -236,6 +332,9 @@ export default async function AdoptPage({
                         priceLabel={translate('adopt.monthlyPrice')}
                         checkoutUrl={monthlyUrl}
                         subLabel={translate('adopt.monthlyTierTagline')}
+                        alpacaSlug={selectedAlpacaSlug}
+                        processor={normalizeProcessor(paymentAdapter.vendor)}
+                        isGift={hasGiftFields}
                     />
                     <AdoptTierCard
                         locale={locale}
@@ -244,6 +343,9 @@ export default async function AdoptPage({
                         checkoutUrl={yearlyUrl}
                         subLabel={translate('adopt.yearlyTierTagline')}
                         popularBadge={translate('adopt.yearlyTierBadge')}
+                        alpacaSlug={selectedAlpacaSlug}
+                        processor={normalizeProcessor(paymentAdapter.vendor)}
+                        isGift={hasGiftFields}
                     />
                 </div>
             </PageSection>
@@ -285,18 +387,28 @@ export default async function AdoptPage({
                     {translate('adopt.ctaSubtext')}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                    <a
+                    <AdoptCheckoutLink
                         href={monthlyUrl}
+                        tier="monthly"
+                        source="cta"
+                        alpacaSlug={selectedAlpacaSlug}
+                        processor={normalizeProcessor(paymentAdapter.vendor)}
+                        isGift={hasGiftFields}
                         className="inline-block rounded-lg bg-primary px-8 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-colors"
                     >
                         {translate('adopt.ctaLabel')} — Monthly
-                    </a>
-                    <a
+                    </AdoptCheckoutLink>
+                    <AdoptCheckoutLink
                         href={yearlyUrl}
+                        tier="yearly"
+                        source="cta"
+                        alpacaSlug={selectedAlpacaSlug}
+                        processor={normalizeProcessor(paymentAdapter.vendor)}
+                        isGift={hasGiftFields}
                         className="inline-block rounded-lg border border-primary px-8 py-3 text-sm font-semibold text-primary hover:bg-primary/5 transition-colors"
                     >
                         {translate('adopt.ctaLabel')} — Yearly
-                    </a>
+                    </AdoptCheckoutLink>
                 </div>
             </PageSection>
 
@@ -311,6 +423,13 @@ export default async function AdoptPage({
                     receiptIncluded={translate('adopt.trustReceiptIncluded')}
                     acceptedLabel={translate('adopt.trustAcceptedLabel')}
                 />
+            </PageSection>
+
+            {/* Google Reviews wall — live trust signal. Fail-quiet when keys unset.
+                Renders between TrustSignals and TestimonialsWall so it's the first
+                real social proof a donor sees above the fold. */}
+            <PageSection width="narrow" className="py-10 border-t border-border">
+                <GoogleReviewsWall heading="What our adopters say on Google" />
             </PageSection>
 
             {/* Social proof — fail-quiet, renders null until owner adds testimonials with status:'live' */}
@@ -350,6 +469,9 @@ export default async function AdoptPage({
                     yearlyHref={yearlyUrl}
                     alpacaName={selectedAlpacaSlug ? findAlpacaName(selectedAlpacaSlug) : null}
                     alpacaPickedNote={translate('adopt.repeatAlpacaNote')}
+                    alpacaSlug={selectedAlpacaSlug}
+                    processor={normalizeProcessor(paymentAdapter.vendor)}
+                    isGift={hasGiftFields}
                 />
             </PageSection>
 
@@ -381,6 +503,9 @@ export default async function AdoptPage({
                     locale={locale}
                     monthlyUrl={monthlyUrl}
                     yearlyUrl={yearlyUrl}
+                    alpacaSlug={selectedAlpacaSlug}
+                    processor={normalizeProcessor(paymentAdapter.vendor)}
+                    isGift={hasGiftFields}
                 />
             )}
         </>

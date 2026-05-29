@@ -5,12 +5,15 @@ import { t } from '@/lib/translations'
 import type { Locale } from '@/i18n.config'
 import { TurnstileWidget } from '@/components/turnstile-widget'
 import { HoneypotField } from '@/components/honeypot-field'
+import { trackEvent } from '@/lib/client-track'
 
 interface NewsletterFormProps {
   locale: Locale
+  /** Where on the site the form lives. Used as `source` for GA4 funnel reports. */
+  source?: string
 }
 
-export function NewsletterForm({ locale }: NewsletterFormProps) {
+export function NewsletterForm({ locale, source = 'footer' }: NewsletterFormProps) {
   const [email, setEmail] = useState('')
   const [captchaToken, setCaptchaToken] = useState('')
   const [honeypot, setHoneypot] = useState('')
@@ -24,6 +27,13 @@ export function NewsletterForm({ locale }: NewsletterFormProps) {
     if (!email) return
     setStatus('sending')
     setError(null)
+    // GA4: fire attempted BEFORE the request so we can compare attempt→success
+    // ratio (drop-off due to Turnstile / honeypot / server 429).
+    try {
+      trackEvent('newsletter_signup_attempted', { source })
+    } catch {
+      // Never block the form on analytics failure.
+    }
 
     try {
       const res = await fetch(`/api/newsletter`, {
@@ -37,6 +47,11 @@ export function NewsletterForm({ locale }: NewsletterFormProps) {
       }
       setStatus('success')
       setEmail('')
+      try {
+        trackEvent('newsletter_signup_succeeded', { source })
+      } catch {
+        // Swallow.
+      }
     } catch (err: any) {
       setStatus('error')
       setError(err.message)

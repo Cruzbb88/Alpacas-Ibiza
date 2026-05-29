@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import { AdoptCheckoutLink } from './adopt-checkout-link'
 
 interface RepeatCtaProps {
   /** Big headline that closes the page — translated by caller. */
@@ -15,6 +15,10 @@ interface RepeatCtaProps {
   alpacaName?: string | null
   /** Localised "you picked X" copy template. Caller substitutes the name. */
   alpacaPickedNote?: string
+  /** Analytics-only metadata (source='repeat' is fixed inside the component). */
+  alpacaSlug?: string | null
+  processor?: 'stripe' | 'mollie' | 'mailto' | 'fareharbor' | 'unknown'
+  isGift?: boolean
 }
 
 /**
@@ -33,6 +37,9 @@ export function RepeatCta({
   yearlyHref,
   alpacaName,
   alpacaPickedNote,
+  alpacaSlug = null,
+  processor = 'unknown',
+  isGift = false,
 }: RepeatCtaProps) {
   return (
     <section
@@ -60,18 +67,28 @@ export function RepeatCta({
       )}
 
       <div className="flex flex-col sm:flex-row gap-3 justify-center mt-6">
-        <Link
+        <AdoptCheckoutLink
           href={monthlyHref}
+          tier="monthly"
+          source="repeat"
+          alpacaSlug={alpacaSlug}
+          processor={processor}
+          isGift={isGift}
           className="inline-flex justify-center rounded-lg border border-primary px-8 py-3 text-sm font-semibold text-primary hover:bg-primary/5 transition-colors"
         >
           {monthlyCtaLabel}
-        </Link>
-        <Link
+        </AdoptCheckoutLink>
+        <AdoptCheckoutLink
           href={yearlyHref}
+          tier="yearly"
+          source="repeat"
+          alpacaSlug={alpacaSlug}
+          processor={processor}
+          isGift={isGift}
           className="inline-flex justify-center rounded-lg bg-primary px-8 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-colors shadow-sm"
         >
           {yearlyCtaLabel}
-        </Link>
+        </AdoptCheckoutLink>
       </div>
     </section>
   )

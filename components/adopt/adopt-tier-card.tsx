@@ -1,3 +1,5 @@
+'use client'
+
 /**
  * AdoptTierCard — single pricing tier card for the /adopt page.
  *
@@ -12,11 +14,17 @@
  * Caller supplies the checkout URL (already-built by getPaymentAdapter().
  * buildAdoptCheckoutUrl()). When the URL is `mailto:` (provider unconfigured),
  * the card still renders correctly — the donor lands in their mail client.
+ *
+ * Tracks two GA4 events on click:
+ *   - adopt_tier_selected { tier, source: 'card' }
+ *   - adopt_checkout_started { tier, alpaca_slug, processor, is_gift }
+ * Tracking calls are wrapped — they never block the navigation or throw.
  */
 
 import Link from 'next/link'
 import type { Locale } from '@/i18n.config'
 import { t } from '@/lib/translations'
+import { trackEvent } from '@/lib/client-track'
 
 export type AdoptTier = 'monthly' | 'yearly'
 
@@ -33,6 +41,12 @@ interface AdoptTierCardProps {
   subLabel?: string
   /** Override the CTA button text. */
   ctaLabel?: string
+  /** Alpaca slug currently selected (for analytics — also already in the URL). */
+  alpacaSlug?: string | null
+  /** Active payment processor, surfaced from the server adapter (for analytics). */
+  processor?: 'stripe' | 'mollie' | 'mailto' | 'fareharbor' | 'unknown'
+  /** Whether the donor has gift fields filled (for analytics). */
+  isGift?: boolean
 }
 
 export function AdoptTierCard({
@@ -43,6 +57,9 @@ export function AdoptTierCard({
   popularBadge,
   subLabel,
   ctaLabel,
+  alpacaSlug = null,
+  processor = 'unknown',
+  isGift = false,
 }: AdoptTierCardProps) {
   const translate = t(locale)
   const isYearly = tier === 'yearly'
@@ -96,6 +113,23 @@ export function AdoptTierCard({
 
       <Link
         href={checkoutUrl}
+        onClick={() => {
+          // Fire both tier-selected and checkout-started — donor has committed
+          // to this tier and is about to leave the page for the processor.
+          // Wrapped: trackEvent itself try/catches, but belt-and-braces against
+          // an upstream throw still keeps the nav working.
+          try {
+            trackEvent('adopt_tier_selected', { tier, source: 'card' })
+            trackEvent('adopt_checkout_started', {
+              tier,
+              alpaca_slug: alpacaSlug,
+              processor,
+              is_gift: isGift,
+            })
+          } catch {
+            // Never block navigation on analytics failure.
+          }
+        }}
         className={
           'mt-auto inline-flex w-full justify-center rounded-lg px-6 py-3 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 ' +
           (isYearly

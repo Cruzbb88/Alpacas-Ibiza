@@ -28,9 +28,10 @@
  */
 
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useMemo, useRef, useTransition } from 'react'
+import { useEffect, useMemo, useRef, useTransition } from 'react'
 import type { Locale } from '@/i18n.config'
 import { t } from '@/lib/translations'
+import { trackEvent } from '@/lib/client-track'
 
 interface AdoptGiftAdoptionProps {
   locale: Locale
@@ -48,6 +49,48 @@ export function AdoptGiftAdoption({ locale, heading }: AdoptGiftAdoptionProps) {
   const giftEmail = searchParams?.get('gift_email') ?? ''
   const giftDeliver = searchParams?.get('gift_deliver') ?? ''
   const isGift = giftName.length > 0 || giftEmail.length > 0 || giftDeliver.length > 0
+
+  // ── Analytics ───────────────────────────────────────────────────────────
+  // adopt_gift_toggled fires whenever the URL state flips between gift / not.
+  // adopt_gift_fields_completed fires once the donor has filled the required
+  // name field AND at least one optional channel (send date OR email/message).
+  // Refs guard against duplicate fires while the user keeps typing.
+  const lastGiftEnabledRef = useRef<boolean | null>(null)
+  const completedFiredRef = useRef(false)
+
+  useEffect(() => {
+    if (lastGiftEnabledRef.current !== isGift) {
+      lastGiftEnabledRef.current = isGift
+      try {
+        trackEvent('adopt_gift_toggled', { enabled: isGift })
+      } catch {
+        // Never break the form on analytics failure.
+      }
+      // Reset completion guard when the gift mode toggles back off so a
+      // future re-enable can re-fire the "completed" event.
+      if (!isGift) completedFiredRef.current = false
+    }
+  }, [isGift])
+
+  useEffect(() => {
+    if (!isGift || completedFiredRef.current) return
+    // "Completed" = name present + at least one of (send date, message-channel).
+    // No literal `message` field exists today, so we model giftEmail as the
+    // message/contact channel boolean for this event.
+    const hasSendDate = giftDeliver.length > 0
+    const hasMessage = giftEmail.length > 0
+    if (giftName.length > 0 && (hasSendDate || hasMessage)) {
+      completedFiredRef.current = true
+      try {
+        trackEvent('adopt_gift_fields_completed', {
+          has_send_date: hasSendDate,
+          has_message: hasMessage,
+        })
+      } catch {
+        // Swallow.
+      }
+    }
+  }, [isGift, giftName, giftEmail, giftDeliver])
 
   // Computed once per client mount; avoids per-render UTC drift near midnight.
   const today = useMemo(() => new Date().toISOString().slice(0, 10), [])

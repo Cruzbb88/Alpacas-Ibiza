@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useTransition } from 'react'
 import { ALPACAS } from '@/lib/data/alpacas'
+import { trackEvent } from '@/lib/client-track'
 
 interface AlpacaPickerProps {
   /** Current locale — used to keep the URL on the same locale tree. */
@@ -42,7 +43,7 @@ export function AlpacaPicker({
   const searchParams = useSearchParams()
   const [isPending, startTransition] = useTransition()
 
-  function setAlpaca(nextSlug: string | null) {
+  function setAlpaca(nextSlug: string | null, position: number) {
     const params = new URLSearchParams(searchParams?.toString() ?? '')
     if (nextSlug) {
       params.set('alpaca', nextSlug)
@@ -51,6 +52,16 @@ export function AlpacaPicker({
     }
     const qs = params.toString()
     const url = `/${locale}/adopt${qs ? `?${qs}` : ''}${nextSlug ? '#cta' : ''}`
+    // Fire BEFORE the transition — tracking is sync, navigation isn't time-critical
+    // here. position=-1 indicates the "Pick for me" / clear selection tile.
+    try {
+      trackEvent('adopt_alpaca_picked', {
+        alpaca_slug: nextSlug,
+        position,
+      })
+    } catch {
+      // Never block the picker on analytics failure.
+    }
     startTransition(() => {
       router.push(url, { scroll: false })
     })
@@ -69,10 +80,10 @@ export function AlpacaPicker({
         {/* "Pick for me" tile — distinct visual treatment so donors aren't anchored to one alpaca */}
         <button
           type="button"
-          onClick={() => setAlpaca(null)}
+          onClick={() => setAlpaca(null, -1)}
           aria-pressed={selectedSlug === null}
           className={
-            'rounded-lg border p-3 text-center text-sm transition-colors flex flex-col items-center justify-center gap-1 ' +
+            'rounded-lg border p-3 text-center text-sm transition-colors flex flex-col items-center justify-center gap-1 min-h-11 ' +
             (selectedSlug === null
               ? 'bg-primary text-primary-foreground border-primary'
               : 'bg-card border-border hover:border-primary/40 text-foreground')
@@ -82,17 +93,17 @@ export function AlpacaPicker({
           <span className="font-medium leading-tight">{randomLabel}</span>
         </button>
 
-        {ALPACAS.map((a) => {
+        {ALPACAS.map((a, idx) => {
           const isSelected = selectedSlug === a.id
           return (
             <button
               key={a.id}
               type="button"
-              onClick={() => setAlpaca(isSelected ? null : a.id)}
+              onClick={() => setAlpaca(isSelected ? null : a.id, idx)}
               aria-pressed={isSelected}
               aria-label={isSelected ? `Deselect ${a.name}` : `Select ${a.name}`}
               className={
-                'rounded-lg border p-3 text-center text-sm transition-colors flex flex-col items-center justify-center gap-1 ' +
+                'rounded-lg border p-3 text-center text-sm transition-colors flex flex-col items-center justify-center gap-1 min-h-11 ' +
                 (isSelected
                   ? 'bg-primary text-primary-foreground border-primary'
                   : 'bg-card border-border hover:border-primary/40 text-foreground')
