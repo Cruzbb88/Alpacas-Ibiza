@@ -3,7 +3,11 @@
  * All schema objects are locale-aware via string params.
  */
 
-const BASE_URL = 'https://alpacasibiza.com'
+// Mirror of SITE_BASE_URL in lib/config.ts — kept inline because
+// structured-data.ts must stay free of @/ path-alias imports (required for
+// node:test compatibility). If lib/config.ts changes the env fallback,
+// update this too.
+const BASE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://alpacasibiza.com').replace(/\/$/, '')
 
 /** Default FareHarbor booking URL — mirrors FAREHARBOR_BOOKING_URL in lib/config.ts.
  *  Inlined here to keep structured-data.ts free of @/ path-alias imports
@@ -34,7 +38,7 @@ export function organizationSchema(tenant?: OrganizationSchemaTenant) {
         '@type': 'Organization',
         name: 'Alpacas Ibiza',
         url: BASE_URL,
-        logo: `${BASE_URL}/images/logo.webp`,
+        logo: `${BASE_URL}/placeholder-logo.svg`,
         sameAs,
         contactPoint: {
             '@type': 'ContactPoint',
@@ -57,7 +61,7 @@ export function localBusinessSchema() {
         url: BASE_URL,
         telephone: '+32475586544',
         email: 'info@alpacasibiza.com',
-        image: `${BASE_URL}/images/hero-alpacas.webp`,
+        image: `${BASE_URL}/placeholder.svg`,
         priceRange: '€€',
         currenciesAccepted: 'EUR',
         paymentAccepted: 'Cash, Credit Card',
@@ -135,7 +139,7 @@ export function touristTripSchema(opts?: {
         description:
             'Meet and feed our alpacas, learn about their care and wool production, and enjoy a unique eco-tourism experience in the heart of Ibiza. Suitable for all ages.',
         url: `${BASE_URL}/en/tours`,
-        image: `${BASE_URL}/images/tour-alpacas.webp`,
+        image: `${BASE_URL}/placeholder.svg`,
         touristType: ['Family', 'Solo', 'Couple', 'Group'],
         offers,
         provider: {
@@ -537,8 +541,45 @@ export function shopCategoryItemListSchema(opts: {
     }
 }
 
+// ─── BreadcrumbList (locale-aware convenience wrapper) ────────────────────────
+
+/**
+ * Schema.org BreadcrumbList — emitted alongside any PageBreadcrumbs render.
+ * `crumbs` is the same array passed to PageBreadcrumbs; `homeLabel` is the
+ * label for the first item; `locale` defines the URL prefix.
+ */
+export function breadcrumbListSchema(opts: {
+    locale: string
+    homeLabel: string
+    crumbs: ReadonlyArray<{ name: string; path: string }>
+}) {
+    const items = [
+        {
+            '@type': 'ListItem',
+            position: 1,
+            name: opts.homeLabel,
+            item: `${BASE_URL}/${opts.locale}`,
+        },
+        ...opts.crumbs.map((c, i) => ({
+            '@type': 'ListItem',
+            position: i + 2,
+            name: c.name,
+            item: `${BASE_URL}/${opts.locale}/${c.path}`,
+        })),
+    ]
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: items,
+    }
+}
+
 // ─── Helper: inject as <script> tag string ────────────────────────────────────
 
+/**
+ * Serialise a schema object for use in a <script type="application/ld+json"> tag.
+ * Escapes </script> sequences so injected JSON cannot break the surrounding HTML.
+ */
 export function toJsonLd(schema: object) {
-    return JSON.stringify(schema)
+    return JSON.stringify(schema).replace(/<\/script>/gi, '<\\/script>')
 }

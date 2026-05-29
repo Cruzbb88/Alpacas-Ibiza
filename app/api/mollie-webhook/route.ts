@@ -167,13 +167,17 @@ export async function POST(request: Request) {
         // Refund the verification charge so donor isn't out the money for a sub
         // that no longer exists. Mollie payments support a refunds.create call.
         try {
+          // Full refund of the verification charge. The dead `tier === 'yearly'`
+          // ternary previously here both arms resolved to `undefined` (=
+          // "refund full amount") — Mollie's SDK interprets omitting `amount`
+          // as a full refund, which is the correct behaviour either way:
+          // verification charges are small token amounts, refund 100%.
+          // Peer review 2026-05-29 flagged this ambiguity; cleaning to make
+          // the intent explicit.
           await (mollie as unknown as {
             payments: { refunds: { create: (args: unknown) => Promise<unknown> } }
           }).payments.refunds.create({
             paymentId: payment.id,
-            amount: payment.metadata?.tier === 'yearly'
-              ? undefined
-              : undefined,
           })
         } catch (refundErr) {
           log.error(`update-payment: refund failed for canceled-sub case`, { message: refundErr instanceof Error ? refundErr.message : String(refundErr), paymentId: payment.id })

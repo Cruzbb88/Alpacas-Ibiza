@@ -6,6 +6,12 @@
 
 import { escapeHtml } from './html.ts'
 
+// Canonical site origin for absolute links inside email HTML. Mirrors
+// SITE_BASE_URL in lib/config.ts (kept inline because email-templates.ts is
+// used by node:test runs that bypass the @/ alias). Update both when the env
+// fallback changes.
+const SITE_BASE_URL_INLINE = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://alpacasibiza.com').replace(/\/$/, '')
+
 const BRAND = {
     name: 'Alpacas Ibiza',
     primary: '#556B2F',
@@ -285,7 +291,7 @@ export function buildNewsletterConfirmEmail(
     confirmUrl: string,
     unsubscribeUrl?: string,
 ): { subject: string; html: string } {
-    const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://alpacasibiza.com').replace(/\/$/, '')
+    const siteUrl = SITE_BASE_URL_INLINE
     const unsubscribeFooter = unsubscribeUrl
         ? `<p style="color:#aaa;font-size:11px;margin-top:24px;border-top:1px solid #eee;padding-top:16px">
 You're receiving this because you subscribed at <a href="${siteUrl}" style="color:#aaa">${siteUrl}</a>.
@@ -419,7 +425,7 @@ export function buildOwnerMrrDigestEmail(
               ${atRiskCount > 0 ? `<li>${atRiskCount} donor${atRiskCount === 1 ? '' : 's'} at-risk (2 consecutive failures)</li>` : ''}
               ${actionRequiredCount > 0 ? `<li>${actionRequiredCount} donor${actionRequiredCount === 1 ? '' : 's'} action-required (3+ consecutive failures)</li>` : ''}
             </ul>
-            <a href="https://alpacasibiza.com/admin/analytics/dunning" style="display:inline-block;padding:8px 16px;background:${BRAND.primary};color:#fff;text-decoration:none;border-radius:6px;font-size:13px">View dunning dashboard</a>
+            <a href="${SITE_BASE_URL_INLINE}/admin/analytics/dunning" style="display:inline-block;padding:8px 16px;background:${BRAND.primary};color:#fff;text-decoration:none;border-radius:6px;font-size:13px">View dunning dashboard</a>
           </div>`
         : `<p style="color:#888;font-size:13px">No dunning issues this week.</p>`
 

@@ -24,8 +24,10 @@ describe('isSameOriginPost', () => {
     assert.equal(isSameOriginPost(req(SITE_BASE_URL)), true)
   })
 
-  it('allows POST with NO Origin header (some same-origin browser behaviours, curl)', () => {
-    assert.equal(isSameOriginPost(req(null)), true)
+  it('REJECTS POST with NO Origin header (token-replay defence per peer-review 2026-05-29)', () => {
+    // Prior bug: allow-on-missing let curl-with-leaked-token POST the cancel
+    // endpoint and proceed. Modern browsers always send Origin on POST.
+    assert.equal(isSameOriginPost(req(null)), false)
   })
 
   it('rejects POST from attacker.com origin', () => {

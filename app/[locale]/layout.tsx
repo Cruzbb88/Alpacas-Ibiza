@@ -20,7 +20,7 @@ import { NavProgressBar } from '@/components/nav-progress-bar'
 import { MobileStickyBookingBar } from '@/components/mobile-sticky-booking-bar'
 import { VercelInstrumentation } from '@/components/vercel-instrumentation'
 
-const BASE_URL = 'https://alpacasibiza.com'
+import { SITE_BASE_URL as BASE_URL } from '@/lib/config'
 
 export async function generateStaticParams() {
     return i18nConfig.locales.map((locale) => ({ locale }))

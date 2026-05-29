@@ -1,10 +1,28 @@
 import { NextResponse } from 'next/server'
 import { fetchWithTimeout } from '@/lib/fetch'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
+import { rateLimit, getClientIp } from '@/lib/rate-limit'
 
 export async function GET(request: Request) {
     const reqId = getRequestId(request)
     const log = makeRequestLogger('availability', reqId)
+
+    // IP rate-limit: protects FareHarbor's API quota from being exhausted by
+    // a single abuser. 30 req/min covers legitimate dashboard refresh +
+    // SPA polling with headroom; an attacker hitting 100/s blows past this
+    // and gets 429 before any FareHarbor call.
+    const ip = getClientIp(request)
+    const rl = rateLimit({ key: `availability:${ip}`, limit: 30, windowMs: 60 * 1000 })
+    if (!rl.allowed) {
+        log.warn('IP rate-limit hit', { ip, retryAfterSec: Math.ceil(rl.resetMs / 1000) })
+        return attachRequestId(
+            NextResponse.json(
+                { error: 'Too many requests' },
+                { status: 429, headers: { 'Retry-After': String(Math.ceil(rl.resetMs / 1000)) } },
+            ),
+            reqId,
+        )
+    }
 
     const appKey = process.env.FAREHARBOR_APP_KEY
     const userKey = process.env.FAREHARBOR_USER_KEY

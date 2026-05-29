@@ -23,12 +23,13 @@ import { tenantMetadata } from '@/lib/tenants/metadata'
 import { breadcrumbSchema, toJsonLd } from '@/lib/structured-data'
 import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
 import { findPost, livePosts } from '@/lib/data/journal'
+import { getOgImage } from '@/lib/og-images'
 import { ReadingProgress } from '@/components/reading-progress'
 import { ShareButtons } from '@/components/share-buttons'
 import { JournalToc, type TocItem } from '@/components/journal-toc'
 import { JournalCard } from '@/components/journal-card'
 
-const BASE_URL = 'https://alpacasibiza.com'
+import { SITE_BASE_URL as BASE_URL } from '@/lib/config'
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -84,7 +85,7 @@ export async function generateMetadata({
   if (!post) return {}
 
   const tenant = await getTenant()
-  return tenantMetadata(tenant, {
+  const base = tenantMetadata(tenant, {
     locale,
     route: `/journal/${slug}`,
     titleOverride: `${post.title} | Alpacas Ibiza Journal`,
@@ -97,6 +98,15 @@ export async function generateMetadata({
       tags: [post.category],
     },
   })
+  // Use per-post hero image when available; fall back to the journal default OG image.
+  const ogImage = post.heroImage
+    ? { url: `${tenant.siteUrl}${post.heroImage}`, width: 1200, height: 630, alt: post.heroAlt ?? post.title }
+    : getOgImage('journal', `${post.title} – Alpacas Ibiza Journal`)
+  return {
+    ...base,
+    openGraph: { ...base.openGraph, images: [ogImage] },
+    twitter: { ...base.twitter, images: [ogImage.url] },
+  }
 }
 
 // ── Page ─────────────────────────────────────────────────────────────────────

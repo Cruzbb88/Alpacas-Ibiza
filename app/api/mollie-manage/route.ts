@@ -14,6 +14,7 @@ import {
   signMollieStatusToken,
   signMollieUpdatePaymentToken,
 } from '@/lib/mollie-manage-token'
+import { maskCustomerId } from '@/lib/log-pii'
 
 /**
  * POST /api/mollie-manage
@@ -147,7 +148,7 @@ export async function POST(request: Request) {
   }
 
   if (cancellableSubs.length === 0) {
-    log.info('mollie-manage: no cancellable subs for customer', { customerId })
+    log.info('mollie-manage: no cancellable subs for customer', { customer: maskCustomerId(customerId) })
     return attachRequestId(GENERIC_OK(), reqId)
   }
   const activeSubs = cancellableSubs

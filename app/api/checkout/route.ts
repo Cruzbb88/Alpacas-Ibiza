@@ -6,6 +6,7 @@ import { isAdoptTier, type AdoptTier } from '@/lib/payment-vendor'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
 import { findAlpacaName } from '@/lib/data/alpacas'
 import { parseGiftFields, type ParsedGiftFields } from '@/lib/gift-fields'
+import { rateLimit, getClientIp } from '@/lib/rate-limit'
 
 /** Stripe metadata shape — snake_case keys, expected by lib/payment-handlers Stripe path. */
 interface StripeGiftMetadata {
@@ -56,6 +57,23 @@ export async function POST(request: Request) {
 async function handleCheckout(request: Request, method: 'GET' | 'POST') {
   const reqId = getRequestId(request)
   const log = makeRequestLogger('checkout', reqId)
+
+  // IP rate-limit: each Stripe session.create costs an API call + creates a
+  // session object. Without a limit an attacker can burn API quota / cause
+  // Stripe-side throttling and break checkout for real donors. Matches the
+  // billing-portal route's 3/5min ceiling.
+  const ip = getClientIp(request)
+  const rl = rateLimit({ key: `checkout:${ip}`, limit: 3, windowMs: 5 * 60 * 1000 })
+  if (!rl.allowed) {
+    log.warn('IP rate-limit hit', { ip, retryAfterSec: Math.ceil(rl.resetMs / 1000) })
+    return attachRequestId(
+      NextResponse.json(
+        { error: 'Too many requests' },
+        { status: 429, headers: { 'Retry-After': String(Math.ceil(rl.resetMs / 1000)) } },
+      ),
+      reqId,
+    )
+  }
 
   const secretGate = requireEnvOrReturn503('STRIPE_SECRET_KEY', 'Payment system not configured')
   if (secretGate) return attachRequestId(secretGate, reqId)

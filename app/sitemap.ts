@@ -1,8 +1,9 @@
 import type { MetadataRoute } from 'next'
 import { i18nConfig } from '@/i18n.config'
 import { listJournalPostsNewest } from '@/lib/data/journal-posts'
-
-const BASE_URL = 'https://alpacasibiza.com'
+import { SITE_BASE_URL as BASE_URL } from '@/lib/config'
+import { getTenant } from '@/lib/tenants/server'
+import { getProviders } from '@/lib/integrations'
 
 const routes = [
     '',           // homepage
@@ -13,9 +14,18 @@ const routes = [
     '/shop/woven',
     '/shop/commission',
     '/shop/alcaca',
+    '/alpacas',
+    '/experiences',
     '/experiences/corporate-team-building',
     '/experiences/romantic-sunset',
     '/experiences/family-farm-days',
+    '/gifts',
+    '/media',
+    '/press',
+    '/sustainability',
+    '/weddings',
+    '/workshops',
+    '/yoga',
     '/privacy',
     '/terms',
     '/cookies',
@@ -24,7 +34,7 @@ const routes = [
     '/journal',   // journal index
 ]
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const entries: MetadataRoute.Sitemap = []
 
     for (const locale of i18nConfig.locales) {
@@ -41,6 +51,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
                 },
             })
         }
+    }
+
+    // Dynamic alpaca detail pages — one per alpaca per locale (84 entries total)
+    const tenant = await getTenant()
+    const providers = getProviders(tenant)
+    const animals = providers.content.listAnimals()
+    for (const animal of animals) {
+        entries.push({
+            url: `${BASE_URL}/en/alpacas/${animal.id}`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.7,
+            alternates: {
+                languages: Object.fromEntries(
+                    i18nConfig.locales.map((l) => [l, `${BASE_URL}/${l}/alpacas/${animal.id}`])
+                ),
+            },
+        })
     }
 
     // Dynamic journal post entries — one per post per locale

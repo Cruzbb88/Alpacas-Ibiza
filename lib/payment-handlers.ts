@@ -240,6 +240,12 @@ export async function handleStripeCheckoutCompleted(
 
   const isGiftWelcome = isGiftPurchase
 
+  // Gmail/Yahoo 2026 bulk-sender rules require both List-Unsubscribe and
+  // a working reply-to on transactional commercial mail like adoption welcomes.
+  // Mollie path already sets these (line ~810); Stripe path was missing them.
+  const contactEmail = process.env.CONTACT_EMAIL ?? 'info@alpacasibiza.com'
+  const stripeListUnsubscribeUrl = `mailto:${contactEmail}?subject=unsubscribe`
+
   const [welcomeResult, codesResult, ownerResult] = await Promise.allSettled([
     (async () =>
       deps.sendEmail({
@@ -262,11 +268,15 @@ export async function handleStripeCheckoutCompleted(
               }
             : {}),
         }),
+        replyTo: contactEmail,
+        listUnsubscribeUrl: stripeListUnsubscribeUrl,
         ...(welcomeScheduledAt ? { scheduledAt: welcomeScheduledAt } : {}),
       }))(),
     (async () =>
       deps.sendEmail({
         to: email,
+        replyTo: contactEmail,
+        listUnsubscribeUrl: stripeListUnsubscribeUrl,
         scheduledAt: codesScheduledAt,
         ...buildAdoptDiscountCodesEmail({ name: name ?? '' }),
       }))(),

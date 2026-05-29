@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
+import { rateLimit, getClientIp } from '@/lib/rate-limit'
 
 /**
  * GET /api/google-reviews
@@ -38,6 +39,22 @@ interface ReviewSummary {
 export async function GET(request: Request) {
     const reqId = getRequestId(request)
     const log = makeRequestLogger('google-reviews', reqId)
+
+    // IP rate-limit: each non-cached request hits Google Places API which is
+    // billed per call. 30 req/min is plenty for legitimate page loads + ISR
+    // backfill; an attacker burning quota gets 429 before any Google call.
+    const ip = getClientIp(request)
+    const rl = rateLimit({ key: `google-reviews:${ip}`, limit: 30, windowMs: 60 * 1000 })
+    if (!rl.allowed) {
+        log.warn('IP rate-limit hit', { ip, retryAfterSec: Math.ceil(rl.resetMs / 1000) })
+        return attachRequestId(
+            NextResponse.json(
+                { error: 'Too many requests' },
+                { status: 429, headers: { 'Retry-After': String(Math.ceil(rl.resetMs / 1000)) } },
+            ),
+            reqId,
+        )
+    }
 
     const apiKey = process.env.GOOGLE_PLACES_API_KEY
     const placeId = process.env.GOOGLE_PLACES_PLACE_ID

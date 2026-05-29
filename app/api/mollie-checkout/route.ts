@@ -4,9 +4,10 @@ import { SITE_BASE_URL } from '@/lib/config'
 import { isAdoptTier, type AdoptTier } from '@/lib/payment-vendor'
 import { extractLocaleFromReferer, requireEnvOrReturn503 } from '@/lib/route-helpers'
 import { isValidEmail } from '@/lib/validate-email'
-import { getRequestId, attachRequestId } from '@/lib/request-id'
+import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
 import { findAlpacaName } from '@/lib/data/alpacas'
 import { parseGiftFields, type ParsedGiftFields } from '@/lib/gift-fields'
+import { rateLimit, getClientIp } from '@/lib/rate-limit'
 
 /**
  * GET  /api/mollie-checkout?tier=monthly|yearly
@@ -37,6 +38,22 @@ export async function POST(request: Request) {
 
 async function handleCheckout(request: Request, method: 'GET' | 'POST') {
   const reqId = getRequestId(request)
+  const log = makeRequestLogger('mollie-checkout', reqId)
+
+  // IP rate-limit: each Mollie payments.create costs an API call + creates a
+  // payment object. Same 3/5min ceiling as Stripe checkout for parity.
+  const ip = getClientIp(request)
+  const rl = rateLimit({ key: `mollie-checkout:${ip}`, limit: 3, windowMs: 5 * 60 * 1000 })
+  if (!rl.allowed) {
+    log.warn('IP rate-limit hit', { ip, retryAfterSec: Math.ceil(rl.resetMs / 1000) })
+    return attachRequestId(
+      NextResponse.json(
+        { error: 'Too many requests' },
+        { status: 429, headers: { 'Retry-After': String(Math.ceil(rl.resetMs / 1000)) } },
+      ),
+      reqId,
+    )
+  }
 
   const apiKeyGate = requireEnvOrReturn503('MOLLIE_API_KEY', 'Payment system not configured')
   if (apiKeyGate) return attachRequestId(apiKeyGate, reqId)

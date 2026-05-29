@@ -1,6 +1,5 @@
 import { breadcrumbSchema, toJsonLd } from '@/lib/structured-data'
-
-const BASE_URL = 'https://alpacasibiza.com'
+import { SITE_BASE_URL as BASE_URL } from '@/lib/config'
 
 export interface BreadcrumbCrumb {
     /** Display name */

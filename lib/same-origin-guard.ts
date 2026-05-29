@@ -21,18 +21,25 @@ import { SITE_BASE_URL } from './config.ts'
 /**
  * Validate that this POST originated from our own site.
  *
- * @returns true when allowed (origin missing OR matches SITE_BASE_URL),
- *          false when the request must be rejected.
+ * @returns true when Origin header is present AND matches SITE_BASE_URL,
+ *          false otherwise (missing OR mismatched).
  *
- * Missing Origin header (some same-origin form posts in older browsers, or
- * curl) is allowed — strict-rejecting absent Origin would break the donor's
- * "click the form button" flow from the GET-rendered confirmation page when
- * a browser elides the header on same-origin navigations. The Origin check
- * defends against ATTACKER-ORIGINED forms, which always carry the attacker
- * domain in this header.
+ * STRICT: a missing Origin header is REJECTED. Peer review 2026-05-29 flagged
+ * the prior "allow-on-missing" behaviour as a token-replay bypass: an
+ * attacker who scraped a capability token (forwarded email, log harvest)
+ * could `curl -X POST` the cancel/update-payment endpoint with no Origin
+ * header and the route would proceed. Modern browsers always include Origin
+ * on cross-origin POSTs AND on same-origin POSTs from form submissions; the
+ * only callers that omit it are non-browser clients (curl, postman, server-
+ * to-server) — which legitimate donors never use for these flows.
+ *
+ * Same-origin GET-rendered forms inside the mollie-manage flow rely on the
+ * browser auto-injecting Origin on POST. If a real-world same-origin browser
+ * is ever found to elide Origin, downgrade to a Sec-Fetch-Site === 'same-origin'
+ * fallback check — do NOT re-introduce the missing-Origin allow.
  */
 export function isSameOriginPost(request: Request): boolean {
   const origin = request.headers.get('origin')
-  if (!origin) return true
+  if (!origin) return false
   return origin === SITE_BASE_URL
 }

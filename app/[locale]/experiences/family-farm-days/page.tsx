@@ -8,7 +8,7 @@ import { t } from '@/lib/translations'
 import { localBusinessSchema, faqPageSchema, toJsonLd } from '@/lib/structured-data'
 import type { Locale } from '@/i18n.config'
 
-const BASE_URL = 'https://alpacasibiza.com'
+import { SITE_BASE_URL as BASE_URL } from '@/lib/config'
 
 export async function generateMetadata({
     params,

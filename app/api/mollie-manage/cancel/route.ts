@@ -8,6 +8,7 @@ import { sendEmail } from '@/lib/mailer'
 import { SITE_BASE_URL } from '@/lib/config'
 import { htmlMollieManagePage } from '@/lib/mollie-html-response'
 import { isSameOriginPost } from '@/lib/same-origin-guard'
+import { maskCustomerId } from '@/lib/log-pii'
 
 const CANCEL_CSS = `
   button.danger{background:#a44;color:#fff;border:0;padding:12px 24px;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer}
@@ -144,7 +145,8 @@ export async function POST(request: Request) {
       canceledAt?: string | Date
       metadata?: { product?: string; tier?: string; seedPaymentId?: string } | null
     } | undefined
-    log.info('subscription canceled', { customerId: payload.customerId, subscriptionId: payload.subscriptionId })
+    // PII-masked log per GDPR Recital 26 — Mollie customerId is pseudonymous PII.
+    log.info('subscription canceled', { customer: maskCustomerId(payload.customerId), subscriptionId: payload.subscriptionId })
 
     try {
       const cancelledAtIso =
