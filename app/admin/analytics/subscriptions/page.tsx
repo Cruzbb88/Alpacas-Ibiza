@@ -4,6 +4,7 @@ import { auth } from '@/app/api/auth/[...nextauth]/route'
 import { getMollieClient } from '@/lib/integrations/payment-mollie'
 import { Kpi } from '@/components/admin/Kpi'
 import { adminTh as th, adminTd as td } from '@/lib/admin-styles'
+import { listActiveSubscriptionsFromDb } from '@/lib/db/read-subscriptions'
 
 export const metadata = {
   title: 'Subscriptions — Admin',
@@ -195,7 +196,37 @@ export default async function AdminSubscriptionsPage() {
   const session = await getServerSession(auth)
   if (!session) redirect('/admin/login')
 
-  const { rows, fetchError, hasMollie } = await fetchAllSubscriptions()
+  // Prefer the local DB mirror when DATABASE_URL is set. Returns null when
+  // the DB layer is dormant (no DATABASE_URL) or a transient error fired —
+  // both cases fall through to the existing Mollie-iteration path so this
+  // page never goes dark when the DB is unavailable.
+  const dbRows = await listActiveSubscriptionsFromDb()
+  const sourceMode: 'db' | 'mollie' = dbRows ? 'db' : 'mollie'
+
+  let rows: SubscriptionRow[]
+  let fetchError: string | null
+  let hasMollie: boolean
+  if (dbRows) {
+    rows = dbRows.map((r) => ({
+      id: r.vendorSubscriptionId,
+      customerId: r.customerEmail ?? r.customerId, // surface email when present, fall back to local id
+      status: r.status,
+      amountValue: r.amountEur,
+      amountCurrency: r.amountCurrency,
+      interval: r.interval,
+      tier: r.tier,
+      createdAt: r.createdAt,
+      canceledAt: r.canceledAt,
+      nextPaymentDate: null, // DB schema doesn't snapshot next charge; Mollie path retains it
+    }))
+    fetchError = null
+    hasMollie = true // suppress the "Mollie unavailable" banner — DB is authoritative
+  } else {
+    const fetched = await fetchAllSubscriptions()
+    rows = fetched.rows
+    fetchError = fetched.fetchError
+    hasMollie = fetched.hasMollie
+  }
 
   const buckets = computeBuckets(rows)
   const activeRows = rows.filter((r) => isActive(r.status))
@@ -219,8 +250,17 @@ export default async function AdminSubscriptionsPage() {
   return (
     <div style={{ fontFamily: 'system-ui, sans-serif', maxWidth: 1100, margin: '0 auto', padding: '32px 16px' }}>
       <h1 style={{ fontSize: 28, fontWeight: 700, marginBottom: 8 }}>Adopt-a-Paca subscriptions</h1>
-      <p style={{ color: '#6b7280', marginBottom: 24 }}>
+      <p style={{ color: '#6b7280', marginBottom: 8 }}>
         Mollie-side view of the herd's recurring revenue. Refreshes on every load.
+      </p>
+      {/*
+       * Source indicator — surfaces which read path served this page so the
+       * owner can verify the DB mirror is being preferred after DATABASE_URL
+       * is provisioned. "Source: DB" = local Postgres mirror; "Source: Mollie
+       * live" = per-request Mollie iteration (DB dormant or errored).
+       */}
+      <p style={{ color: sourceMode === 'db' ? '#15803d' : '#a16207', marginBottom: 24, fontSize: 13 }}>
+        Source: {sourceMode === 'db' ? 'DB (local Postgres mirror)' : 'Mollie live (no DB configured)'}
       </p>
 
       {!hasMollie && (

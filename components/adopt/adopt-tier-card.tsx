@@ -25,6 +25,7 @@ import Link from 'next/link'
 import type { Locale } from '@/i18n.config'
 import { t } from '@/lib/translations'
 import { trackEvent } from '@/lib/client-track'
+import { ConsentNotice } from '@/components/legal/consent-notice'
 
 export type AdoptTier = 'monthly' | 'yearly'
 
@@ -140,6 +141,17 @@ export function AdoptTierCard({
       >
         {cta}
       </Link>
+
+      {/*
+       * GDPR Art. 13 + CAN-SPAM § 5(a): adopt checkout is a transactional
+       * flow — the click itself is the consent action — but we still owe the
+       * donor an inline disclosure of the legal basis BEFORE submission.
+       * No checkbox, no block on click; this is information only.
+       */}
+      <ConsentNotice
+        locale={locale}
+        actionLabel={translate('legal.adoptAction', 'adopting')}
+      />
     </article>
   )
 }

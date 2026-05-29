@@ -72,6 +72,13 @@ export interface EventParamsMap {
   adopt_checkout_cancelled: {
     tier: 'monthly' | 'yearly'
   }
+  // Embedded-checkout funnel resolution (Stage 1-2 migration). Fires only when
+  // CHECKOUT_MODE=embedded is active; hosted-redirect path leaves these dark.
+  adopt_payment_field_focused: Record<string, never>
+  adopt_payment_confirmed: {
+    tier: 'monthly' | 'yearly'
+    processor: 'stripe'
+  }
   newsletter_signup_attempted: {
     source: string
   }
@@ -95,6 +102,8 @@ export const EVENT_CATEGORY: Record<EventName, EventCategory> = {
   adopt_checkout_started: 'checkout',
   adopt_checkout_succeeded: 'checkout',
   adopt_checkout_cancelled: 'checkout',
+  adopt_payment_field_focused: 'checkout',
+  adopt_payment_confirmed: 'checkout',
   newsletter_signup_attempted: 'engagement',
   newsletter_signup_succeeded: 'engagement',
 }
@@ -109,6 +118,8 @@ interface AnalyticsWindow {
   gtag?: unknown
   dataLayer?: { push?: unknown } | unknown
 }
+
+import { hasAnalyticsConsent } from './consent-gate.ts'
 
 function getAnalyticsWindow(): AnalyticsWindow | null {
   if (typeof window === 'undefined') return null
@@ -133,6 +144,13 @@ function getAnalyticsWindow(): AnalyticsWindow | null {
 export function trackEvent<E extends EventName>(name: E, params: EventParams<E>): void {
   const w = getAnalyticsWindow()
   if (!w) return
+
+  // Consent gate (PECR): callers may fire trackEvent unconditionally; we
+  // check the cookie-consent state here and silently no-op when the user
+  // hasn't affirmatively consented. Defensive belt-and-braces — the
+  // existing Consent Mode v2 in cookie-consent.tsx already gates the GA
+  // pixel itself, this gate prevents the network round-trip too.
+  if (!hasAnalyticsConsent()) return
 
   // Add category as a regular param so GA4 reports can filter on it.
   const enrichedParams: Record<string, unknown> = {

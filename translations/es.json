@@ -446,6 +446,7 @@
     "privacy": "Política de Privacidad",
     "terms": "Términos de Servicio",
     "cookies": "Política de Cookies",
+    "impressum": "__UNTRANSLATED__: Legal notice",
     "copyright": "Todos los derechos reservados."
   },
   "homepage": {
@@ -729,6 +730,22 @@
     ],
     "lastUpdated": "Última actualización: Febrero 2024. Contacta hello@alpacasibiza.com para preguntas sobre cookies."
   },
+  "impressum": {
+    "title": "__UNTRANSLATED__: Legal notice — Alpacas Ibiza",
+    "intro": "__UNTRANSLATED__: In compliance with Spanish Law 34/2002 on Information Society Services and Electronic Commerce (LSSI-CE) Article 10 and equivalent European disclosure obligations, the following identification information is provided about the operator of this website.",
+    "companyName": "__UNTRANSLATED__: Company name",
+    "companyNameValue": "__UNTRANSLATED__: Registered legal name of the operating company (e.g. \"Alpacas Ibiza S.L.\"). Must match what is registered with the Registro Mercantil.",
+    "registeredAddress": "__UNTRANSLATED__: Registered address",
+    "registeredAddressValue": "__UNTRANSLATED__: Full registered office address (street, postal code, city, province, country) as recorded with the Registro Mercantil.",
+    "taxId": "__UNTRANSLATED__: Tax ID (CIF)",
+    "taxIdValue": "__UNTRANSLATED__: Spanish CIF / NIF / VAT number assigned by the Agencia Tributaria (e.g. \"B12345678\").",
+    "contactEmail": "__UNTRANSLATED__: Contact",
+    "hostingProvider": "__UNTRANSLATED__: Hosting provider",
+    "hostingProviderValue": "__UNTRANSLATED__: Vercel Inc., USA",
+    "disputeResolutionHeading": "__UNTRANSLATED__: Dispute resolution",
+    "disputeResolutionBody": "__UNTRANSLATED__: Under Regulation (EU) 524/2013, the European Commission provides a platform for online dispute resolution (ODR) where consumers resident in the EU may submit complaints arising from online purchases. The platform is available at the link below. We are willing but not obliged to participate in dispute-resolution proceedings before a consumer arbitration board.",
+    "lastUpdated": "__UNTRANSLATED__: Last updated: February 2024. Contact hello@alpacasibiza.com for legal notice enquiries."
+  },
   "notFound": {
     "title": "Página no encontrada",
     "subtitle": "Esta página parece haberse escapado como una de nuestras alpacas. Te ayudamos a encontrar lo que buscas.",
@@ -868,7 +885,21 @@
     "repeatBody": "__UNTRANSLATED__: Adopt today and you'll get the welcome email within minutes. Your certificate and gift bundle ship next week.",
     "repeatAlpacaNote": "__UNTRANSLATED__: You picked {name} — they'll appear on your certificate.",
     "repeatMonthlyCta": "__UNTRANSLATED__: Adopt monthly — €75",
-    "repeatYearlyCta": "__UNTRANSLATED__: Adopt yearly — €900"
+    "repeatYearlyCta": "__UNTRANSLATED__: Adopt yearly — €900",
+    "gift": {
+      "heading": "__UNTRANSLATED__: Adopting for someone else?",
+      "sub": "__UNTRANSLATED__: Make this a gift — we'll personalise the certificate and time the welcome to arrive on the date you choose.",
+      "nameLabel": "__UNTRANSLATED__: Recipient name",
+      "emailLabel": "__UNTRANSLATED__: Recipient email (optional)",
+      "deliverLabel": "__UNTRANSLATED__: Deliver the welcome on",
+      "namePlaceholder": "__UNTRANSLATED__: e.g. Marta",
+      "emailPlaceholder": "__UNTRANSLATED__: marta@example.com",
+      "deliverHint": "__UNTRANSLATED__: Leave blank to send the welcome immediately after checkout.",
+      "activeBadge": "__UNTRANSLATED__: Gift mode active — for {name}",
+      "expandHint": "__UNTRANSLATED__: Click to personalise as a gift",
+      "confirmation": "__UNTRANSLATED__: Your tier buttons above will checkout as a gift.",
+      "reset": "__UNTRANSLATED__: Remove gift details"
+    }
   },
   "sitemap": {
     "metaTitle": "__UNTRANSLATED__: Site Map | Alpacas Ibiza",
@@ -917,7 +948,38 @@
   "alpacas": {
     "title": "__UNTRANSLATED__: Meet Our Alpacas",
     "subtitle": "__UNTRANSLATED__: Get to know the herd at Es Currals — 14 individuals, each with their own personality.",
-    "adoptCta": "__UNTRANSLATED__: Adopt me"
+    "adoptCta": "__UNTRANSLATED__: Adopt me",
+    "funFacts": {
+      "heading": "__UNTRANSLATED__: Did you know?",
+      "prev": "__UNTRANSLATED__: Previous fun fact",
+      "next": "__UNTRANSLATED__: Next fun fact"
+    },
+    "filter": {
+      "personality": "__UNTRANSLATED__: Personality",
+      "color": "__UNTRANSLATED__: Colour",
+      "breed": "__UNTRANSLATED__: Breed",
+      "showing": "__UNTRANSLATED__: Showing {match} of {total}",
+      "clearAll": "__UNTRANSLATED__: Clear all filters",
+      "noMatches": "__UNTRANSLATED__: No alpacas match those filters. Try clearing one.",
+      "personalityOption": {
+        "calm": "__UNTRANSLATED__: Calm",
+        "playful": "__UNTRANSLATED__: Playful",
+        "bold": "__UNTRANSLATED__: Bold",
+        "shy": "__UNTRANSLATED__: Shy",
+        "sociable": "__UNTRANSLATED__: Sociable",
+        "independent": "__UNTRANSLATED__: Independent"
+      },
+      "colorOption": {
+        "white": "__UNTRANSLATED__: White",
+        "grey": "__UNTRANSLATED__: Grey",
+        "brown": "__UNTRANSLATED__: Brown",
+        "mixed": "__UNTRANSLATED__: Mixed"
+      },
+      "breedOption": {
+        "huacaya": "__UNTRANSLATED__: Huacaya",
+        "suri": "__UNTRANSLATED__: Suri"
+      }
+    }
   },
   "yoga": {
     "title": "__UNTRANSLATED__: Alpaca Yoga",
@@ -1162,5 +1224,14 @@
       "howItWorksTitle": "__UNTRANSLATED__: How it works",
       "howItWorksText": "__UNTRANSLATED__: Choose a tour, pay securely, and we send a branded voucher by email to the recipient. They pick a date that works for them and book through the same system."
     }
+  },
+  "legal": {
+    "consentBy": "__UNTRANSLATED__: By {action} you agree to our",
+    "consentTerms": "__UNTRANSLATED__: Terms",
+    "consentPrivacy": "__UNTRANSLATED__: Privacy Policy",
+    "marketingConsent": "__UNTRANSLATED__: I agree to receive Alpacas Ibiza updates and accept the [Privacy Policy].",
+    "marketingConsentRequired": "__UNTRANSLATED__: Please tick this box to subscribe.",
+    "adoptAction": "__UNTRANSLATED__: adopting",
+    "giftAction": "__UNTRANSLATED__: completing your gift"
   }
 }

@@ -22,9 +22,13 @@ import { RepeatCta } from '@/components/adopt/repeat-cta'
 import { ALPACAS, findAlpacaName } from '@/lib/data/alpacas'
 import { AlpacaPicker } from '@/components/adopt/alpaca-picker'
 import { AdoptGiftAdoption } from '@/components/adopt/adopt-gift-adoption'
+import { CampaignBanner } from '@/components/adopt/campaign-banner'
+import { ReferralAppliedBanner } from '@/components/adopt/referral-applied-banner'
 import { AdoptThankYou } from '@/components/adopt-thank-you'
 import { AdoptPageTracker } from '@/components/adopt/adopt-page-tracker'
 import { AdoptCheckoutLink } from '@/components/adopt/adopt-checkout-link'
+import { EmbeddedCheckout } from '@/components/adopt/embedded-checkout'
+import { getCheckoutMode } from '@/lib/checkout-mode'
 import { FAQ } from '@/components/faq'
 import { TestimonialsWall } from '@/components/testimonials-wall'
 import { GoogleReviewsWall } from '@/components/google-reviews-wall'
@@ -117,6 +121,12 @@ export default async function AdoptPage({
     const { count: adoptedCount } = await getActiveAdopterCount()
 
     const paymentAdapter = getPaymentAdapter()
+    // Stage 1-2 of embedded checkout migration. When CHECKOUT_MODE=embedded AND
+    // the active vendor is Stripe, we render <EmbeddedCheckout /> below the tier
+    // cards in addition to the hosted-redirect CTAs (Stage 2 = additive; Stage 5
+    // = hosted CTAs removed). Default 'hosted' → no behavioural change.
+    const checkoutMode = getCheckoutMode()
+    const showEmbedded = checkoutMode === 'embedded' && paymentAdapter.vendor === 'stripe'
     const hasGiftFields = Boolean(gift_name || gift_email || gift_deliver)
     const adoptOpts: import('@/lib/payment-vendor').AdoptCheckoutOpts | undefined =
         (selectedAlpacaSlug || hasGiftFields)
@@ -232,6 +242,22 @@ export default async function AdoptPage({
                 title={translate('adopt.title')}
                 subtitle={translate('adopt.subtitle')}
             />
+
+            {/* Referral discount banner — shown when ?referral=ALPACA-XXXXXX is in the URL.
+                Client component; Suspense required by Next.js for useSearchParams in static build.
+                Renders null when referral param is absent or malformed. */}
+            <PageSection bg="default" width="narrow" className="pt-8 pb-0">
+                <Suspense fallback={null}>
+                    <ReferralAppliedBanner />
+                </Suspense>
+            </PageSection>
+
+            {/* Campaign banner — impact-multiplier trust signal (Heifer-style).
+                Reads ADOPT_CAMPAIGN_HEADLINE + ADOPT_CAMPAIGN_SUBLINE + ADOPT_CAMPAIGN_END_DATE.
+                Renders null if any required var is unset or end date has passed (auto-expiry). */}
+            <PageSection bg="default" width="narrow" className="pt-4 pb-0">
+                <CampaignBanner locale={locale} />
+            </PageSection>
 
             {/* Social proof — herd availability counter. Live count from payment
                 vendor (Stripe / Mollie); degrades gracefully to 0 when unconfigured. */}
@@ -349,6 +375,28 @@ export default async function AdoptPage({
                     />
                 </div>
             </PageSection>
+
+            {/* Embedded Stripe Elements — Stage 2 of embedded checkout migration.
+                Renders ONLY when CHECKOUT_MODE=embedded AND PAYMENT_VENDOR=stripe.
+                Hosted-redirect CTAs above stay visible during the additive rollout
+                so donors keep their existing path. Stage 5 will remove the hosted
+                CTAs once A/B confirms embedded wins. */}
+            {showEmbedded && (
+                <PageSection bg="default" width="narrow" className="py-12 border-t border-border">
+                    <h2 className="text-2xl font-bold text-foreground text-center mb-2">
+                        {translate('adopt.embeddedHeading') || 'Pay securely without leaving the page'}
+                    </h2>
+                    <p className="text-sm text-foreground/70 text-center mb-8">
+                        {translate('adopt.embeddedSubtext') || 'Card or SEPA — your payment never leaves alpacasibiza.com.'}
+                    </p>
+                    <EmbeddedCheckout
+                        tier="monthly"
+                        alpacaSlug={selectedAlpacaSlug}
+                        isGift={hasGiftFields}
+                        locale={locale}
+                    />
+                </PageSection>
+            )}
 
             {/* What you'll receive — visual donor journey timeline */}
             <PageSection width="narrow" className="py-12 border-t border-border">

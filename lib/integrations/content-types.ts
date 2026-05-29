@@ -71,6 +71,20 @@ export interface AnimalEntity extends ContentEntityBase {
    * null = UNMAPPED (shows bioComingSoon translation key).
    */
   readonly localizedBio?: AlpacaBio | null
+  /**
+   * Additional public image URLs shown to donors in the my-adoption portal
+   * gallery, separate from the canonical hero `image`.
+   *
+   * Follows the same `image: string | null` UNMAPPED convention: omit the
+   * field or set to null until the owner supplies real photos. NEVER invent
+   * paths — the donor-portal gallery component renders an empty-state hint
+   * ("More photos coming soon…") when this is null/empty.
+   *
+   * Each entry pairs a `src` (public URL like `/images/alpacas/<id>-2.webp`)
+   * with an `alt` for screen readers. Keeping the shape richer than
+   * `string[]` lets the owner caption seasonal shots without losing a11y.
+   */
+  readonly gallery?: ReadonlyArray<{ readonly src: string; readonly alt: string }> | null
 }
 
 /**

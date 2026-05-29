@@ -30,6 +30,7 @@ const routes = [
     '/privacy',
     '/terms',
     '/cookies',
+    '/impressum', // LSSI-CE Art. 10 legal notice — required for EU-targeted commercial site (indexable)
     '/press-kit',
     '/sitemap',   // human-readable site map
     '/journal',   // journal index

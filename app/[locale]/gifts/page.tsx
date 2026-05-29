@@ -9,6 +9,7 @@ import { getPaymentAdapter, ADOPT_FALLBACK_MAILTO } from '@/lib/payment-vendor'
 import { getFareHarborEmbedUrl } from '@/lib/config'
 import type { Metadata } from 'next'
 import { buildLocaleAlternates } from '@/lib/i18n-metadata'
+import { getOgImage } from '@/lib/og-images'
 
 export async function generateMetadata({
     params,
@@ -17,12 +18,24 @@ export async function generateMetadata({
 }): Promise<Metadata> {
     const { locale } = await params
     const tr = t(locale)
+    const ogImage = getOgImage('alpacas', 'Gift a Visit to Alpacas Ibiza')
     return {
         title: tr('gifts.meta.title') || 'Gift a Visit — Alpacas Ibiza',
         description:
             tr('gifts.meta.description') ||
             'Give someone a memorable day with our alpaca herd. Gift vouchers valid for any of our tours.',
         alternates: buildLocaleAlternates(locale, 'gifts'),
+        openGraph: {
+            title: tr('gifts.meta.title') || 'Gift a Visit — Alpacas Ibiza',
+            description:
+                tr('gifts.meta.description') ||
+                'Give someone a memorable day with our alpaca herd. Gift vouchers valid for any of our tours.',
+            images: [ogImage],
+        },
+        twitter: {
+            card: 'summary_large_image',
+            images: [ogImage.url],
+        },
     }
 }
 
@@ -107,6 +120,8 @@ export default async function GiftsPage({
             >
                 <GiftFlow
                     checkoutHrefByType={giftCheckoutHrefByType}
+                    locale={locale}
+                    consentActionLabel={translate('legal.giftAction') || 'completing your gift'}
                     copy={{
                         heading: translate('gifts.flow.heading') || 'Send the gift of alpacas',
                         subheading:

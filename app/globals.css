@@ -157,6 +157,13 @@ body {
   }
 }
 
+/* Donor-portal photo gallery: 2-col mobile → 4-col at >= 720px container width. */
+@media (min-width: 720px) {
+  .donor-portal-gallery {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+}
+
 @media print {
   /* Hide nav, footer, banners, interactive UI */
   header, footer, nav,

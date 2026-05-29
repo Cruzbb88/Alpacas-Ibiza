@@ -318,6 +318,15 @@ export function Footer({
                 {tr('footer.cookies')}
               </Link>
             </li>
+            <li aria-hidden="true">·</li>
+            <li>
+              <Link
+                href={`/${locale}/impressum`}
+                className="hover:text-foreground"
+              >
+                {tr('footer.impressum', 'Legal notice')}
+              </Link>
+            </li>
           </ul>
         </div>
       </div>

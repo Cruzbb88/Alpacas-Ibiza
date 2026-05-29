@@ -27,6 +27,26 @@ function makeDataLayer(): { entries: DataLayerEntry[]; push: (e: DataLayerEntry)
 // `window` is declared in lib.dom; cast to any to swap it for test stubs.
 const G = globalThis as unknown as { window: unknown }
 
+/**
+ * Stub localStorage with consent='accepted' so the consent-gate in
+ * trackEvent does not no-op these tests. The consent-gate reads
+ * localStorage.getItem('ai_cookie_consent_v1') — tests verify the
+ * gtag/dataLayer dispatch path, not the consent gate (which has its own
+ * test surface via cookie-consent.tsx behaviour).
+ */
+function makeAcceptedConsentLocalStorage(): Storage {
+  const map = new Map<string, string>()
+  map.set('ai_cookie_consent_v1', 'accepted')
+  return {
+    getItem: (k: string) => map.get(k) ?? null,
+    setItem: (k: string, v: string) => map.set(k, v),
+    removeItem: (k: string) => { map.delete(k) },
+    clear: () => map.clear(),
+    key: (i: number) => Array.from(map.keys())[i] ?? null,
+    get length() { return map.size },
+  }
+}
+
 beforeEach(() => {
   G.window = undefined
 })
@@ -46,7 +66,7 @@ describe('trackEvent — server (no window)', () => {
 describe('trackEvent — gtag available', () => {
   it('calls window.gtag with event name and params', () => {
     const { calls, fn } = makeGtag()
-    G.window = { gtag: fn }
+    G.window = { gtag: fn, localStorage: makeAcceptedConsentLocalStorage() }
     trackEvent('adopt_tier_selected', { tier: 'monthly', source: 'card' })
     assert.equal(calls.length, 1)
     assert.equal(calls[0].command, 'event')
@@ -57,7 +77,7 @@ describe('trackEvent — gtag available', () => {
 
   it('adds event_category as a param', () => {
     const { calls, fn } = makeGtag()
-    G.window = { gtag: fn }
+    G.window = { gtag: fn, localStorage: makeAcceptedConsentLocalStorage() }
     trackEvent('adopt_checkout_started', {
       tier: 'yearly',
       alpaca_slug: 'paco',
@@ -69,7 +89,7 @@ describe('trackEvent — gtag available', () => {
 
   it('preserves null alpaca_slug (does not stringify or drop)', () => {
     const { calls, fn } = makeGtag()
-    G.window = { gtag: fn }
+    G.window = { gtag: fn, localStorage: makeAcceptedConsentLocalStorage() }
     trackEvent('adopt_alpaca_picked', { alpaca_slug: null, position: -1 })
     assert.equal(calls[0].params.alpaca_slug, null)
     assert.equal(calls[0].params.position, -1)
@@ -78,7 +98,7 @@ describe('trackEvent — gtag available', () => {
   it('prefers gtag over dataLayer when both are available', () => {
     const { calls, fn } = makeGtag()
     const dl = makeDataLayer()
-    G.window = { gtag: fn, dataLayer: dl }
+    G.window = { gtag: fn, dataLayer: dl, localStorage: makeAcceptedConsentLocalStorage() }
     trackEvent('newsletter_signup_succeeded', { source: 'footer' })
     assert.equal(calls.length, 1)
     assert.equal(dl.entries.length, 0)
@@ -90,7 +110,7 @@ describe('trackEvent — gtag available', () => {
 describe('trackEvent — dataLayer fallback', () => {
   it('falls back to window.dataLayer.push when gtag is missing', () => {
     const dl = makeDataLayer()
-    G.window = { dataLayer: dl }
+    G.window = { dataLayer: dl, localStorage: makeAcceptedConsentLocalStorage() }
     trackEvent('newsletter_signup_attempted', { source: 'footer' })
     assert.equal(dl.entries.length, 1)
     assert.equal(dl.entries[0].event, 'newsletter_signup_attempted')
@@ -100,7 +120,7 @@ describe('trackEvent — dataLayer fallback', () => {
 
   it('falls back when gtag is not a function', () => {
     const dl = makeDataLayer()
-    G.window = { gtag: 'not-a-function', dataLayer: dl }
+    G.window = { gtag: 'not-a-function', dataLayer: dl, localStorage: makeAcceptedConsentLocalStorage() }
     trackEvent('adopt_gift_toggled', { enabled: true })
     assert.equal(dl.entries.length, 1)
     assert.equal(dl.entries[0].event, 'adopt_gift_toggled')

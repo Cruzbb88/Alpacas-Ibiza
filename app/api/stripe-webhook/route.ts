@@ -6,11 +6,17 @@ import {
   handleStripeInvoicePaymentFailed,
   handleStripeSubscriptionDeleted,
 } from '@/lib/payment-handlers'
+import { handleStripeCheckoutExpired } from '@/lib/payment-handlers-recovery'
 import { importStripe } from '@/lib/integrations/stripe-sdk'
 import { requireEnvOrReturn503 } from '@/lib/route-helpers'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
 import { isAlreadyProcessed, markProcessed } from '@/lib/webhook-idempotency'
 import { recordVatFromPayment } from '@/lib/vat-recorder'
+import {
+  upsertCustomerFromStripe,
+  recordPaymentEvent,
+  softDeleteSubscriptionFromStripe,
+} from '@/lib/db/upsert-from-webhook'
 
 /**
  * POST /api/stripe-webhook
@@ -130,7 +136,35 @@ export async function POST(request: Request) {
           attemptId: session.id,
           yearEpoch: Date.now(),
         })
-        // TODO: persist adoption record to DB when DB is wired (assign alpaca, etc.)
+        // DB mirror (fire-and-forget). Webhook response timing is load-bearing
+        // — Stripe retries on non-2xx, which would re-fire the welcome email.
+        // getDb() returns null when DATABASE_URL is unset → both helpers are
+        // a no-op. Customer upsert first (FK chain), then the event log.
+        const stripeCustomerId =
+          typeof session.customer === 'string' ? session.customer : null
+        const checkoutDedupKey = `stripe:${event.id}`
+        void (async () => {
+          try {
+            if (stripeCustomerId) {
+              await upsertCustomerFromStripe({
+                id: stripeCustomerId,
+                email: session.customer_details?.email ?? null,
+                name: session.customer_details?.name ?? null,
+              })
+            }
+            await recordPaymentEvent({
+              vendor: 'stripe',
+              eventType: 'checkout.session.completed',
+              customerId: stripeCustomerId ? `stripe_${stripeCustomerId}` : null,
+              payload: session,
+              idempotencyKey: checkoutDedupKey,
+            })
+          } catch (dbErr) {
+            log.error('db mirror (stripe checkout.session.completed) threw', {
+              message: dbErr instanceof Error ? dbErr.message : String(dbErr),
+            })
+          }
+        })().catch(() => { /* swallowed — inner try/catch already logged */ })
         break
       }
 
@@ -163,6 +197,21 @@ export async function POST(request: Request) {
         const msg = `invoice.payment_failed handler reason=${failedResult.reason}`
         if (level === 'warn') log.warn(msg, failedResult.meta)
         else log.error(msg, failedResult.meta)
+        // DB mirror — append-only event log (fire-and-forget). No customer
+        // upsert: by the time invoice.payment_failed fires the customer was
+        // already mirrored via checkout.session.completed (or the row simply
+        // doesn't exist yet, which the event log will reveal on replay).
+        const failedCustomerId =
+          typeof invoice.customer === 'string' ? invoice.customer : null
+        void recordPaymentEvent({
+          vendor: 'stripe',
+          eventType: 'invoice.payment_failed',
+          customerId: failedCustomerId ? `stripe_${failedCustomerId}` : null,
+          payload: invoice,
+          idempotencyKey: `stripe:${event.id}`,
+        }).catch((err) => log.error('db.recordPaymentEvent(invoice.payment_failed) threw', {
+          message: err instanceof Error ? err.message : String(err),
+        }))
         break
       }
 
@@ -180,6 +229,61 @@ export async function POST(request: Request) {
           log.info(msg, cancelResult.meta)
         } else {
           log.warn(msg, cancelResult.meta)
+        }
+        // DB mirror (fire-and-forget): soft-delete the subscription row +
+        // append the event. Schema has no deleted_at on subscriptions; the
+        // helper sets status='canceled' + canceled_at=now() instead.
+        const deletedSubId = subscription.id
+        const deletedCustomerId =
+          typeof subscription.customer === 'string' ? subscription.customer : null
+        void (async () => {
+          try {
+            await softDeleteSubscriptionFromStripe(deletedSubId)
+            await recordPaymentEvent({
+              vendor: 'stripe',
+              eventType: 'customer.subscription.deleted',
+              customerId: deletedCustomerId ? `stripe_${deletedCustomerId}` : null,
+              subscriptionId: `stripe_${deletedSubId}`,
+              payload: subscription,
+              idempotencyKey: `stripe:${event.id}`,
+            })
+          } catch (dbErr) {
+            log.error('db mirror (stripe customer.subscription.deleted) threw', {
+              message: dbErr instanceof Error ? dbErr.message : String(dbErr),
+            })
+          }
+        })().catch(() => { /* swallowed — inner try/catch already logged */ })
+        break
+      }
+
+      case 'checkout.session.expired': {
+        // Recovery email: donor opened Stripe Checkout but didn't pay.
+        // Stripe fires this ~24 h after the session expires (per Stripe docs).
+        // Pure handler — fail-quiet on send error (webhook always returns 200).
+        // Idempotency: handled by isAlreadyProcessed guard above (event.id key).
+        const session = event.data.object
+        log.info('checkout.session.expired', {
+          id:     session.id,
+          tier:   session.metadata?.tier,
+          locale: session.locale,
+          email:  session.customer_details?.email,
+        })
+        const recoveryResult = await handleStripeCheckoutExpired(
+          session as unknown as Parameters<typeof handleStripeCheckoutExpired>[0],
+          { sendEmail, log },
+        )
+        if (recoveryResult.ok && recoveryResult.sent) {
+          log.info('[recovery] checkout.session.expired — recovery email sent', { sessionId: session.id })
+        } else if (recoveryResult.ok && !recoveryResult.sent) {
+          log.info('[recovery] checkout.session.expired — skipped', {
+            sessionId: session.id,
+            skipReason: recoveryResult.skipReason,
+          })
+        } else {
+          log.warn('[recovery] checkout.session.expired — send failed (fail-quiet)', {
+            sessionId: session.id,
+            error: recoveryResult.error,
+          })
         }
         break
       }

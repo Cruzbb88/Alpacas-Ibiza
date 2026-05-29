@@ -93,12 +93,13 @@ export default async function SitemapPage({ params }: { params: Promise<{ locale
                 { label: tr('sitemap.linkPrivacy', 'Privacy Policy'), href: p('/privacy') },
                 { label: tr('sitemap.linkTerms', 'Terms of Service'), href: p('/terms') },
                 { label: tr('sitemap.linkCookies', 'Cookie Policy'), href: p('/cookies') },
+                { label: tr('sitemap.linkImpressum', 'Legal notice'), href: p('/impressum') },
                 { label: tr('sitemap.linkSitemap', 'Site Map'), href: p('/sitemap') },
             ],
         },
     ]
 
-    // Total link count: Visit(7) + Shop(5) + Adopt(1) + About(3) + Media(3) + Contact(1) + Legal(4) = 24
+    // Total link count: Visit(7) + Shop(5) + Adopt(1) + About(3) + Media(3) + Contact(1) + Legal(5) = 25
 
     return (
         <main>

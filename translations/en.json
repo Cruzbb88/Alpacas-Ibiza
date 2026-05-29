@@ -585,6 +585,7 @@
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
     "cookies": "Cookie Policy",
+    "impressum": "Legal notice",
     "copyright": "All rights reserved."
   },
   "privacy": {
@@ -729,6 +730,22 @@
     ],
     "lastUpdated": "Last updated: February 2024. Contact hello@alpacasibiza.com for cookie questions."
   },
+  "impressum": {
+    "title": "Legal notice — Alpacas Ibiza",
+    "intro": "In compliance with Spanish Law 34/2002 on Information Society Services and Electronic Commerce (LSSI-CE) Article 10 and equivalent European disclosure obligations, the following identification information is provided about the operator of this website.",
+    "companyName": "Company name",
+    "companyNameValue": "__UNTRANSLATED__: Registered legal name of the operating company (e.g. \"Alpacas Ibiza S.L.\"). Must match what is registered with the Registro Mercantil.",
+    "registeredAddress": "Registered address",
+    "registeredAddressValue": "__UNTRANSLATED__: Full registered office address (street, postal code, city, province, country) as recorded with the Registro Mercantil.",
+    "taxId": "Tax ID (CIF)",
+    "taxIdValue": "__UNTRANSLATED__: Spanish CIF / NIF / VAT number assigned by the Agencia Tributaria (e.g. \"B12345678\").",
+    "contactEmail": "Contact",
+    "hostingProvider": "Hosting provider",
+    "hostingProviderValue": "Vercel Inc., USA",
+    "disputeResolutionHeading": "Dispute resolution",
+    "disputeResolutionBody": "Under Regulation (EU) 524/2013, the European Commission provides a platform for online dispute resolution (ODR) where consumers resident in the EU may submit complaints arising from online purchases. The platform is available at the link below. We are willing but not obliged to participate in dispute-resolution proceedings before a consumer arbitration board.",
+    "lastUpdated": "Last updated: February 2024. Contact hello@alpacasibiza.com for legal notice enquiries."
+  },
   "notFound": {
     "title": "Page Not Found",
     "subtitle": "This page seems to have wandered off like one of our alpacas. Let's help you find what you're looking for.",
@@ -848,7 +865,21 @@
     "successTierYearly": "yearly",
     "canceledBody": "No worries — your adoption was not processed. You can try again any time.",
     "ownerConfirmHeader": "Owner action required before launch",
-    "ownerConfirmBody": "The items below are owner-blocked. Replace the empty-string placeholders with confirmed content."
+    "ownerConfirmBody": "The items below are owner-blocked. Replace the empty-string placeholders with confirmed content.",
+    "gift": {
+      "heading": "Adopting for someone else?",
+      "sub": "Make this a gift — we'll personalise the certificate and time the welcome to arrive on the date you choose.",
+      "nameLabel": "Recipient name",
+      "emailLabel": "Recipient email (optional)",
+      "deliverLabel": "Deliver the welcome on",
+      "namePlaceholder": "e.g. Marta",
+      "emailPlaceholder": "marta@example.com",
+      "deliverHint": "Leave blank to send the welcome immediately after checkout.",
+      "activeBadge": "Gift mode active — for {name}",
+      "expandHint": "Click to personalise as a gift",
+      "confirmation": "Your tier buttons above will checkout as a gift.",
+      "reset": "Remove gift details"
+    }
   },
   "journal": {
     "title": "Journal",
@@ -917,7 +948,38 @@
   "alpacas": {
     "title": "Meet Our Alpacas",
     "subtitle": "Get to know the herd at Es Currals — 14 individuals, each with their own personality.",
-    "adoptCta": "Adopt me"
+    "adoptCta": "Adopt me",
+    "funFacts": {
+      "heading": "Did you know?",
+      "prev": "Previous fun fact",
+      "next": "Next fun fact"
+    },
+    "filter": {
+      "personality": "Personality",
+      "color": "Colour",
+      "breed": "Breed",
+      "showing": "Showing {match} of {total}",
+      "clearAll": "Clear all filters",
+      "noMatches": "No alpacas match those filters. Try clearing one.",
+      "personalityOption": {
+        "calm": "Calm",
+        "playful": "Playful",
+        "bold": "Bold",
+        "shy": "Shy",
+        "sociable": "Sociable",
+        "independent": "Independent"
+      },
+      "colorOption": {
+        "white": "White",
+        "grey": "Grey",
+        "brown": "Brown",
+        "mixed": "Mixed"
+      },
+      "breedOption": {
+        "huacaya": "Huacaya",
+        "suri": "Suri"
+      }
+    }
   },
   "yoga": {
     "title": "Alpaca Yoga",
@@ -1162,5 +1224,14 @@
       "howItWorksTitle": "How it works",
       "howItWorksText": "Choose a tour, pay securely, and we send a branded voucher by email to the recipient. They pick a date that works for them and book through the same system."
     }
+  },
+  "legal": {
+    "consentBy": "By {action} you agree to our",
+    "consentTerms": "Terms",
+    "consentPrivacy": "Privacy Policy",
+    "marketingConsent": "I agree to receive Alpacas Ibiza updates and accept the [Privacy Policy].",
+    "marketingConsentRequired": "Please tick this box to subscribe.",
+    "adoptAction": "adopting",
+    "giftAction": "completing your gift"
   }
 }

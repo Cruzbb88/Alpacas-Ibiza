@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import { Gift, Mail, MessageSquare, Check } from 'lucide-react'
+import type { Locale } from '@/i18n.config'
+import { ConsentNotice } from '@/components/legal/consent-notice'
 
 export type GiftType = 'tour' | 'adoption-monthly' | 'adoption-yearly' | 'shop-credit'
 
@@ -43,6 +45,18 @@ interface GiftFlowCopy {
 interface GiftFlowProps {
   copy: GiftFlowCopy
   /**
+   * Active locale, threaded down so the final-step ConsentNotice can link
+   * to the correct `/${locale}/terms` and `/${locale}/privacy` pages.
+   * Optional for back-compat; defaults to 'en' if not supplied.
+   */
+  locale?: Locale
+  /**
+   * Optional override for the verb phrase used in the ConsentNotice on the
+   * final step (e.g. "completing your gift"). Caller passes a translated
+   * string; falls back to an English default if absent.
+   */
+  consentActionLabel?: string
+  /**
    * Pre-computed checkout URL per gift type. Caller (a server component) builds
    * the map and passes it in — keeps the wizard fully serializable + lets the
    * page decide vendor routing (Stripe for adoption tiers, FareHarbor for
@@ -71,7 +85,12 @@ type Step = 0 | 1 | 2 | 3
  * the wizard stays agnostic of how each gift type routes (FareHarbor / Stripe
  * / Mollie / mailto fallback).
  */
-export function GiftFlow({ copy, checkoutHrefByType }: GiftFlowProps) {
+export function GiftFlow({
+  copy,
+  checkoutHrefByType,
+  locale = 'en',
+  consentActionLabel,
+}: GiftFlowProps) {
   const [step, setStep] = useState<Step>(0)
   const [giftType, setGiftType] = useState<GiftType>('tour')
   const [recipientName, setRecipientName] = useState('')
@@ -293,26 +312,40 @@ export function GiftFlow({ copy, checkoutHrefByType }: GiftFlowProps) {
 
       {/* Step 3 — review */}
       {step === 3 && (
-        <div className="rounded-2xl border border-border bg-card p-6 mb-8">
-          <p className="text-xs uppercase tracking-wider text-foreground/50 mb-1">
-            {copy.reviewTitle}
-          </p>
-          <p className="text-xl font-bold text-foreground mb-4">
-            {copy.giftTypes[giftType].title}
-          </p>
-          <dl className="text-sm space-y-2">
-            <Row label={copy.reviewGiftFor}>
-              {recipientName} ({recipientEmail})
-            </Row>
-            <Row label={copy.reviewFrom}>{senderName}</Row>
-            <Row label={copy.reviewSendDate}>
-              {sendDateMode === 'today' ? copy.sendDateTodayOption : sendDateValue}
-            </Row>
-            <Row label={copy.messageLabel}>
-              <span className="italic text-foreground/80">&ldquo;{message}&rdquo;</span>
-            </Row>
-          </dl>
-        </div>
+        <>
+          <div className="rounded-2xl border border-border bg-card p-6 mb-4">
+            <p className="text-xs uppercase tracking-wider text-foreground/50 mb-1">
+              {copy.reviewTitle}
+            </p>
+            <p className="text-xl font-bold text-foreground mb-4">
+              {copy.giftTypes[giftType].title}
+            </p>
+            <dl className="text-sm space-y-2">
+              <Row label={copy.reviewGiftFor}>
+                {recipientName} ({recipientEmail})
+              </Row>
+              <Row label={copy.reviewFrom}>{senderName}</Row>
+              <Row label={copy.reviewSendDate}>
+                {sendDateMode === 'today' ? copy.sendDateTodayOption : sendDateValue}
+              </Row>
+              <Row label={copy.messageLabel}>
+                <span className="italic text-foreground/80">&ldquo;{message}&rdquo;</span>
+              </Row>
+            </dl>
+          </div>
+          {/*
+           * GDPR Art. 13 + CAN-SPAM § 5(a): final-step disclosure before the
+           * buyer leaves for the processor (Stripe / FareHarbor / mailto).
+           * Information only — the checkout click itself is the consent
+           * action for this transactional flow.
+           */}
+          <div className="mb-8">
+            <ConsentNotice
+              locale={locale}
+              actionLabel={consentActionLabel ?? 'completing your gift'}
+            />
+          </div>
+        </>
       )}
 
       {/* Nav buttons */}

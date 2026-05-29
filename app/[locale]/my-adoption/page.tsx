@@ -7,6 +7,8 @@ import { fetchDonorPortalData } from '@/lib/donor-portal-data'
 import { getTenant } from '@/lib/tenants/server'
 import { getProviders } from '@/lib/integrations'
 import { PortalErrorState } from './error-state'
+import { PhotoGallery } from '@/components/donor-portal/photo-gallery'
+import { PaymentHistoryTable } from '@/components/donor-portal/payment-history-table'
 
 export const metadata = {
   title: 'Your adoption — Alpacas Ibiza',
@@ -68,6 +70,13 @@ export default async function MyAdoptionPage({
   const animal = result.subscription.alpacaSlug
     ? animals.find((a) => a.id === result.subscription.alpacaSlug) ?? null
     : null
+
+  // Resolve gallery photos. The AnimalEntity.gallery field is optional and
+  // null/undefined = UNMAPPED (owner hasn't supplied photos yet). NEVER
+  // invent paths — pass an empty array so PhotoGallery shows its
+  // empty-state hint instead of broken <img> tags.
+  const galleryPhotos = (animal?.gallery ?? []).map((g) => ({ src: g.src, alt: g.alt }))
+  const galleryAlpacaName = result.alpacaDisplayName ?? animal?.name ?? 'your alpaca'
 
   const statusLabel = result.subscription.status
   const isLive = result.isLive
@@ -212,6 +221,11 @@ export default async function MyAdoptionPage({
         )}
       </section>
 
+      {/* Photo gallery — always-rendered surface so donors see what's coming
+          even before the owner uploads shots. Empty array → soft empty state.
+          NEVER invent photo paths (Failsafe Rule 5). */}
+      <PhotoGallery photos={galleryPhotos} alpacaName={galleryAlpacaName} />
+
       {/* Latest quarterly farm news — sneak preview from the admin compose page */}
       {result.latestQuarter && (
         <section style={{ background: '#fff', border: '1px solid #e4e4e7', borderRadius: 12, padding: 24, marginBottom: 24 }}>
@@ -231,6 +245,10 @@ export default async function MyAdoptionPage({
           />
         </section>
       )}
+
+      {/* Payment history — always rendered. Empty array → "first payment in
+          progress" hint, which is the right message for a fresh donor. */}
+      <PaymentHistoryTable payments={result.paymentHistory} locale={locale} />
 
       <footer style={{ marginTop: 32, padding: 16, borderTop: '1px solid #e4e4e7', fontSize: 12, color: '#a1a1aa' }}>
         Need help? Reply to your welcome email or write to{' '}

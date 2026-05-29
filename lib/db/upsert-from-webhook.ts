@@ -27,7 +27,7 @@
  * `<vendor>_evt_<timestamp>_<hash>` so the same idempotency_key from two
  * deliveries collides on the unique index even when the synthetic id differs.
  */
-import { sql } from 'drizzle-orm'
+import { sql, eq } from 'drizzle-orm'
 import { getDb } from './client.ts'
 import {
   customers,
@@ -60,6 +60,44 @@ export interface MollieCustomerShape {
   id: string
   email?: string | null
   name?: string | null
+}
+
+// ── Stripe shapes (minimal — match the SDK surface we actually read) ─────────
+//
+// Same rationale as MollieCustomerShape above: we don't import `stripe`'s
+// types because the SDK is dynamically loaded in the route. The Stripe Checkout
+// session / customer / subscription objects are massive — we mirror only the
+// fields the upsert helpers actually use.
+
+export interface StripeCustomerShape {
+  id: string
+  email?: string | null
+  name?: string | null
+}
+
+export interface StripeSubscriptionShape {
+  id: string
+  customer: string
+  status: string
+  /**
+   * Stripe items[].price.unit_amount is in MINOR units already (cents). When
+   * caller already knows the recurring amount, pass it through; otherwise we
+   * default to 0 (the row is still useful for status + customer linkage).
+   */
+  amountMinor?: number | null
+  currency?: string | null
+  /**
+   * 'month' | 'year' — Stripe Price.recurring.interval. When known, used by
+   * deriveTierFromStripeInterval; otherwise we fall back to metadata.tier.
+   */
+  interval?: 'month' | 'year' | string | null
+  canceledAt?: number | string | null
+  metadata?: {
+    product?: string
+    tier?: 'monthly' | 'yearly'
+    alpacaSlug?: string
+    giftRecipientEmail?: string
+  } | null
 }
 
 export interface MollieSubscriptionShape {
@@ -117,6 +155,23 @@ function deriveTier(
   if (!interval) return 'monthly'
   const lower = interval.toLowerCase()
   if (lower.includes('year') || lower.includes('12 month')) return 'yearly'
+  return 'monthly'
+}
+
+/**
+ * Stripe Price.recurring.interval is 'month' | 'year'. Same metadata-tier
+ * override rule as Mollie — metadata wins when present (someone can ship a
+ * yearly tier at a monthly cadence for a promo and we'd want to honour the
+ * label).
+ */
+function deriveTierFromStripeInterval(
+  metadataTier: 'monthly' | 'yearly' | undefined,
+  interval: string | null | undefined,
+): 'monthly' | 'yearly' {
+  if (metadataTier === 'monthly' || metadataTier === 'yearly') return metadataTier
+  if (!interval) return 'monthly'
+  const lower = interval.toLowerCase()
+  if (lower.includes('year')) return 'yearly'
   return 'monthly'
 }
 
@@ -230,6 +285,157 @@ export async function upsertSubscriptionFromMollie(
   }
 }
 
+// ── upsertCustomerFromStripe ─────────────────────────────────────────────────
+
+/**
+ * Idempotently mirror a Stripe customer into the local customers table.
+ *
+ * Mirrors `upsertCustomerFromMollie`: returns the local customer id
+ * (`stripe_<id>`) on success, null when the DB is unavailable.
+ *
+ * Email is lowercased for case-insensitive email-indexed lookups in admin
+ * dashboards. ON CONFLICT DO UPDATE so a returning customer with an updated
+ * email/name (e.g. they edited it in the Stripe billing portal) gets the
+ * mirror refreshed.
+ */
+export async function upsertCustomerFromStripe(
+  customer: StripeCustomerShape,
+): Promise<string | null> {
+  const db = getDb()
+  if (!db) return null
+
+  const id = localCustomerId('stripe', customer.id)
+  const email = typeof customer.email === 'string' ? customer.email.toLowerCase() : null
+  const name = typeof customer.name === 'string' ? customer.name : null
+
+  const row: NewCustomer = {
+    id,
+    vendor: 'stripe',
+    vendorCustomerId: customer.id,
+    email,
+    name,
+  }
+
+  try {
+    await db
+      .insert(customers)
+      .values(row)
+      .onConflictDoUpdate({
+        target: customers.id,
+        set: {
+          email,
+          name,
+          updatedAt: sql`now()`,
+        },
+      })
+    return id
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    log.error(`upsertCustomerFromStripe failed for ${customer.id}`, { message })
+    return null
+  }
+}
+
+// ── upsertSubscriptionFromStripe ─────────────────────────────────────────────
+
+/**
+ * Idempotently mirror a Stripe subscription. Caller upserts the customer
+ * FIRST so the FK doesn't reject (mirrors the Mollie helper's contract).
+ *
+ * `canceledAt` arrives from Stripe as a Unix epoch (seconds) on
+ * customer.subscription.deleted events, but we accept ISO strings too in
+ * case a caller pre-formatted. `failureCount` is NOT touched here — that's
+ * payment-failure-tracker's mirror column.
+ */
+export async function upsertSubscriptionFromStripe(
+  sub: StripeSubscriptionShape,
+): Promise<string | null> {
+  const db = getDb()
+  if (!db) return null
+
+  const id = localSubscriptionId('stripe', sub.id)
+  const customerId = localCustomerId('stripe', sub.customer)
+  const amountEurMinor = typeof sub.amountMinor === 'number' && Number.isFinite(sub.amountMinor)
+    ? sub.amountMinor
+    : 0
+  const tier = deriveTierFromStripeInterval(sub.metadata?.tier, sub.interval ?? null)
+  const canceledAt = stripeTimestampToDate(sub.canceledAt)
+
+  const row: NewSubscription = {
+    id,
+    customerId,
+    vendor: 'stripe',
+    vendorSubscriptionId: sub.id,
+    status: sub.status,
+    tier,
+    amountEurMinor,
+    alpacaSlug: sub.metadata?.alpacaSlug ?? null,
+    giftRecipientEmail: sub.metadata?.giftRecipientEmail ?? null,
+    canceledAt,
+  }
+
+  try {
+    await db
+      .insert(subscriptions)
+      .values(row)
+      .onConflictDoUpdate({
+        target: subscriptions.id,
+        set: {
+          status: sub.status,
+          amountEurMinor,
+          tier,
+          alpacaSlug: row.alpacaSlug,
+          giftRecipientEmail: row.giftRecipientEmail,
+          canceledAt,
+        },
+      })
+    return id
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    log.error(`upsertSubscriptionFromStripe failed for ${sub.id}`, { message })
+    return null
+  }
+}
+
+// ── softDeleteSubscription ───────────────────────────────────────────────────
+
+/**
+ * Mark a subscription as deleted on a `customer.subscription.deleted` event.
+ *
+ * Schema has no `deleted_at` column on `subscriptions` — only `canceled_at`
+ * and `status`. We set `status='canceled'` + `canceled_at=now()` if not
+ * already populated. This is the closest the current schema gets to a
+ * soft-delete: the row stays for accounting retention, but admin queries
+ * filtering on `status='active'` will exclude it.
+ *
+ * Idempotent: if the subscription doesn't exist (event landed before any
+ * other webhook upserted it), the UPDATE is a no-op. The caller has already
+ * recordPaymentEvent'd the raw event log; reconstruction can replay from
+ * there later.
+ */
+export async function softDeleteSubscriptionFromStripe(
+  stripeSubscriptionId: string,
+): Promise<string | null> {
+  const db = getDb()
+  if (!db) return null
+
+  const id = localSubscriptionId('stripe', stripeSubscriptionId)
+  try {
+    await db
+      .update(subscriptions)
+      .set({
+        status: 'canceled',
+        canceledAt: sql`coalesce(${subscriptions.canceledAt}, now())`,
+      })
+      .where(eq(subscriptions.id, id))
+    return id
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    log.error(`softDeleteSubscriptionFromStripe failed for ${stripeSubscriptionId}`, { message })
+    return null
+  }
+}
+
 // ── recordPaymentEvent ───────────────────────────────────────────────────────
 
 export interface RecordPaymentEventArgs {
@@ -306,6 +512,22 @@ export async function recordPaymentEvent(
 function safeParseDate(iso: string): Date | null {
   const d = new Date(iso)
   return Number.isNaN(d.getTime()) ? null : d
+}
+
+/**
+ * Stripe emits timestamps as Unix epoch SECONDS (not ms) on event payloads.
+ * We accept either a number (epoch seconds), a string (ISO 8601), or null.
+ * Returns null on any parse failure rather than throwing — a malformed
+ * canceledAt should soft-fall-back to "unknown" rather than block the upsert.
+ */
+function stripeTimestampToDate(ts: number | string | null | undefined): Date | null {
+  if (ts == null) return null
+  if (typeof ts === 'number') {
+    if (!Number.isFinite(ts)) return null
+    const d = new Date(ts * 1000)
+    return Number.isNaN(d.getTime()) ? null : d
+  }
+  return safeParseDate(ts)
 }
 
 /**

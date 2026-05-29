@@ -55,6 +55,22 @@ export type DonorPortalResult =
       isLive: boolean
       /** Latest quarterly farm-news HTML the owner has composed, or null. */
       latestQuarter: { label: string; newsHtml: string; sentAt: string | null } | null
+      /**
+       * Recent Mollie payments for this customer, newest-first, capped at
+       * MAX_PAYMENT_HISTORY (24 ≈ last 2 years of monthly charges).
+       *
+       * Fail-quiet: iteration errors return [] + console.warn — the portal
+       * still renders the rest of the view-model. Empty array is also the
+       * shape returned when the customer has no recorded payments yet
+       * (first charge mid-flight); UI shows a friendly empty state.
+       */
+      paymentHistory: Array<{
+        id: string
+        amount: { value: string; currency: string }
+        status: string
+        paidAt: string | null
+        method: string | null
+      }>
     }
 
 /** Internal Mollie SDK shape — narrowed to what we read. */
@@ -68,6 +84,88 @@ type MollieSubscription = {
   createdAt?: string
   canceledAt?: string | Date
   metadata?: { tier?: string; alpaca?: string }
+}
+
+/** Narrow shape of the Mollie Payment resource we render. */
+type MolliePaymentRow = {
+  id: string
+  status?: string
+  amount?: { value: string; currency: string }
+  paidAt?: string | Date | null
+  method?: string | null
+}
+
+/**
+ * Cap at 24 ≈ 2 years of monthly charges. Donors who want a longer ledger
+ * are referred to support — keeps the portal lightweight and the table
+ * scannable. See PaymentHistoryTable's "+ N earlier charges" affordance.
+ */
+const MAX_PAYMENT_HISTORY = 24
+
+/**
+ * Iterate Mollie payments for a customer, newest-first, fail-quiet.
+ *
+ * Never throws: the donor portal must still render the subscription + alpaca
+ * even if payment history is unavailable. Mollie's iterate() yields
+ * AsyncIterable<Payment>; we break after 24 to bound memory.
+ *
+ * NOTE: payment IDs are not logged on the success path. On error we log only
+ * the error message + customerId (already part of the verified portal token —
+ * not a new disclosure). If future logging needs payment IDs, route them
+ * through a masking helper (see lib/log-pii.ts when introduced).
+ */
+async function fetchPaymentHistory(
+  mollie: MollieClient,
+  customerId: string,
+): Promise<Array<{ id: string; amount: { value: string; currency: string }; status: string; paidAt: string | null; method: string | null }>> {
+  try {
+    // Mollie SDK exposes `customers.payments.iterate({ customerId })`.
+    // Cast through unknown — the SDK's iterator generics don't expose
+    // the per-call options cleanly, but the shape is documented and
+    // covered by the SDK-shape rule in CLAUDE.md (we narrow what we read).
+    const iter = (mollie as unknown as {
+      customers: {
+        payments: {
+          iterate: (opts: { customerId: string }) => AsyncIterable<MolliePaymentRow>
+        }
+      }
+    }).customers.payments.iterate({ customerId })
+
+    const rows: MolliePaymentRow[] = []
+    for await (const p of iter) {
+      rows.push(p)
+      if (rows.length >= MAX_PAYMENT_HISTORY) break
+    }
+
+    return rows
+      .map((p) => {
+        const paidAtIso =
+          p.paidAt instanceof Date
+            ? p.paidAt.toISOString()
+            : typeof p.paidAt === 'string'
+              ? p.paidAt
+              : null
+        return {
+          id: p.id,
+          amount: p.amount ?? { value: '0.00', currency: 'EUR' },
+          status: p.status ?? 'unknown',
+          paidAt: paidAtIso,
+          method: p.method ?? null,
+        }
+      })
+      .sort((a, b) => {
+        // Newest first; rows without paidAt (pending/failed) sort to the top
+        // so donors see live state above settled history.
+        if (a.paidAt === null && b.paidAt === null) return 0
+        if (a.paidAt === null) return -1
+        if (b.paidAt === null) return 1
+        return b.paidAt.localeCompare(a.paidAt)
+      })
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    console.warn('[donor-portal] payment history iterate failed for customer', customerId, message)
+    return []
+  }
 }
 
 /**
@@ -130,6 +228,12 @@ export async function fetchDonorPortalData(
     ? { label: latest.quarter, newsHtml: latest.newsHtml, sentAt: latest.sentAt }
     : null
 
+  // Payment history — fail-quiet. Skip the call entirely when customerId is
+  // missing (token-payload corruption); empty array is a valid render state.
+  const paymentHistory = payload.customerId
+    ? await fetchPaymentHistory(mollie, payload.customerId)
+    : []
+
   return {
     ok: true,
     customerId: payload.customerId,
@@ -156,5 +260,6 @@ export async function fetchDonorPortalData(
       : null,
     isLive,
     latestQuarter,
+    paymentHistory,
   }
 }

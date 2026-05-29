@@ -5,6 +5,7 @@ import { t } from '@/lib/translations'
 import type { Locale } from '@/i18n.config'
 import { TurnstileWidget } from '@/components/turnstile-widget'
 import { HoneypotField } from '@/components/honeypot-field'
+import { MarketingConsentCheckbox } from '@/components/legal/marketing-consent-checkbox'
 import { trackEvent } from '@/lib/client-track'
 
 interface NewsletterFormProps {
@@ -17,14 +18,32 @@ export function NewsletterForm({ locale, source = 'footer' }: NewsletterFormProp
   const [email, setEmail] = useState('')
   const [captchaToken, setCaptchaToken] = useState('')
   const [honeypot, setHoneypot] = useState('')
+  // PECR / GDPR Art. 7: marketing consent must be un-ticked by default and
+  // captured affirmatively before the address leaves the browser.
+  const [consent, setConsent] = useState(false)
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
   const [error, setError] = useState<string | null>(null)
 
   const translate = t(locale)
 
+  const canSubmit = email.length > 0 && consent && status !== 'sending'
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!email) return
+    if (!consent) {
+      // Belt-and-braces: the submit button is disabled until consent is
+      // ticked, but a synthetic submit (Enter key on the email field while
+      // the checkbox is empty) still routes through here.
+      setStatus('error')
+      setError(
+        translate(
+          'legal.marketingConsentRequired',
+          'Please tick this box to subscribe.',
+        ),
+      )
+      return
+    }
     setStatus('sending')
     setError(null)
     // GA4: fire attempted BEFORE the request so we can compare attempt→success
@@ -35,11 +54,22 @@ export function NewsletterForm({ locale, source = 'footer' }: NewsletterFormProp
       // Never block the form on analytics failure.
     }
 
+    // Capture the moment the donor ticked + submitted so the API (and any
+    // future audit log) has a verifiable consent timestamp per GDPR Art. 7(1)
+    // "controller shall be able to demonstrate that the data subject has
+    // consented". Sent in the POST body; API ignores unknown fields safely.
+    const consentAt = new Date().toISOString()
+
     try {
       const res = await fetch(`/api/newsletter`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, 'cf-turnstile-response': captchaToken, business_name: honeypot }),
+        body: JSON.stringify({
+          email,
+          'cf-turnstile-response': captchaToken,
+          business_name: honeypot,
+          consentAt,
+        }),
       })
       if (!res.ok) {
         const body = await res.json()
@@ -47,6 +77,7 @@ export function NewsletterForm({ locale, source = 'footer' }: NewsletterFormProp
       }
       setStatus('success')
       setEmail('')
+      setConsent(false)
       try {
         trackEvent('newsletter_signup_succeeded', { source })
       } catch {
@@ -59,7 +90,7 @@ export function NewsletterForm({ locale, source = 'footer' }: NewsletterFormProp
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-3">
       <HoneypotField name="business_name" value={honeypot} onChange={setHoneypot} />
       <div className="flex gap-2">
         <input
@@ -72,14 +103,31 @@ export function NewsletterForm({ locale, source = 'footer' }: NewsletterFormProp
         />
         <button
           type="submit"
-          disabled={status === 'sending' || !email}
-          className="px-6 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg font-medium transition-colors disabled:opacity-50"
+          disabled={!canSubmit}
+          aria-describedby={!consent ? 'newsletter-consent-help' : undefined}
+          className="px-6 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {status === 'sending'
             ? translate('sending')
             : translate('newsletter.subscribe')}
         </button>
       </div>
+      <MarketingConsentCheckbox
+        locale={locale}
+        checked={consent}
+        onChange={setConsent}
+        required
+        id="newsletter-marketing-consent"
+        disabled={status === 'sending'}
+      />
+      {!consent && (
+        <p id="newsletter-consent-help" className="text-xs text-foreground/60">
+          {translate(
+            'legal.marketingConsentRequired',
+            'Please tick this box to subscribe.',
+          )}
+        </p>
+      )}
       <TurnstileWidget onToken={setCaptchaToken} />
       {status === 'success' && (
         <p className="text-sm text-green-600">

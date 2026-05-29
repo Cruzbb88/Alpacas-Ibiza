@@ -18,6 +18,11 @@ import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-
 import { isAlreadyProcessed, markProcessed } from '@/lib/webhook-idempotency'
 import { resetFailures } from '@/lib/payment-failure-tracker'
 import { recordVatFromPayment } from '@/lib/vat-recorder'
+import {
+  upsertCustomerFromMollie,
+  upsertSubscriptionFromMollie,
+  recordPaymentEvent,
+} from '@/lib/db/upsert-from-webhook'
 
 /**
  * POST /api/mollie-webhook?secret=<MOLLIE_WEBHOOK_SECRET>
@@ -114,6 +119,17 @@ export async function POST(request: Request) {
       log.error(`${msg} (notification incomplete — accepting event to prevent retry-duplicate)`, failedResult.meta)
     }
     markProcessed(dedupKey)
+    // DB mirror (fire-and-forget). Webhook response timing is load-bearing:
+    // never await, never propagate the error. The .catch() ensures unhandled
+    // promise rejections don't pollute the runtime — getDb()'s null return
+    // makes this a literal no-op when DATABASE_URL is unset.
+    void recordPaymentEvent({
+      vendor: 'mollie',
+      eventType: 'payment.failed',
+      customerId: payment.customerId ? `mollie_${payment.customerId}` : null,
+      payload: payment,
+      idempotencyKey: dedupKey,
+    }).catch((err) => log.error('db.recordPaymentEvent(failed) threw', { message: err instanceof Error ? err.message : String(err) }))
     return attachRequestId(NextResponse.json({ received: true }), reqId)
   }
 
@@ -244,6 +260,87 @@ export async function POST(request: Request) {
     // the donor. The handler's fail-quiet pattern already addresses send
     // failures; what we guard against here is throws + manual replays.
     markProcessed(dedupKey)
+
+    // DB mirror (fire-and-forget). Three writes, sequenced so the FK chain is
+    // satisfied when DATABASE_URL is set: customer → subscription → event.
+    // All wrapped in try/catch (the helpers already log + return null on
+    // error); we additionally .catch() on the void promise so an unexpected
+    // throw never reaches the runtime's unhandledRejection handler.
+    //
+    // Webhook response timing is load-bearing: NEVER await. Mollie retries
+    // on non-2xx and we want the 200 to land while the DB write is in flight.
+    void (async () => {
+      try {
+        if (payment.customerId) {
+          const customer = await fetchMollieCustomer(payment.customerId, mollie)
+          await upsertCustomerFromMollie({
+            id: payment.customerId,
+            email: customer.email,
+            name: customer.name,
+          })
+
+          // Subscription mirror: only meaningful when the paid event led to a
+          // live Mollie subscription. monthly-first → handler just created it
+          // (createMonthlySubscription); recurring-renewal → the sub already
+          // exists. In both cases we can derive the sub id from the Mollie API
+          // if we don't have it on the payment.
+          //
+          // The payment object only carries subscriptionId for recurring/
+          // renewal charges. For monthly-first we don't get it here (the
+          // create call happens inside the handler) — defer to a later cron
+          // reconciliation or the renewal event to populate the sub mirror.
+          const subId = (payment as unknown as { subscriptionId?: string | null }).subscriptionId
+          if (subId && mollie) {
+            try {
+              const fullSub = await mollie.customerSubscriptions.get(subId, {
+                customerId: payment.customerId,
+              })
+              const subLike = fullSub as unknown as {
+                id: string
+                status?: string
+                amount?: { value: string; currency: string } | null
+                interval?: string | null
+                canceledAt?: string | Date | null
+                metadata?: {
+                  product?: string
+                  tier?: 'monthly' | 'yearly'
+                  alpacaSlug?: string
+                  giftRecipientEmail?: string
+                } | null
+              }
+              await upsertSubscriptionFromMollie({
+                id: subLike.id,
+                customerId: payment.customerId,
+                status: subLike.status ?? 'unknown',
+                amount: subLike.amount ?? null,
+                interval: subLike.interval ?? null,
+                canceledAt:
+                  subLike.canceledAt instanceof Date
+                    ? subLike.canceledAt.toISOString()
+                    : (subLike.canceledAt ?? null),
+                metadata: subLike.metadata ?? null,
+              })
+            } catch (subErr) {
+              log.warn('db.upsertSubscriptionFromMollie probe failed', {
+                message: subErr instanceof Error ? subErr.message : String(subErr),
+              })
+            }
+          }
+        }
+
+        await recordPaymentEvent({
+          vendor: 'mollie',
+          eventType: 'payment.paid',
+          customerId: payment.customerId ? `mollie_${payment.customerId}` : null,
+          payload: payment,
+          idempotencyKey: dedupKey,
+        })
+      } catch (dbErr) {
+        log.error('db mirror (mollie payment.paid) threw', {
+          message: dbErr instanceof Error ? dbErr.message : String(dbErr),
+        })
+      }
+    })().catch(() => { /* swallowed — inner try/catch already logged */ })
   } catch (err) {
     // handleMolliePaymentPaid only throws when createSubscription throws.
     // Returning 500 triggers Mollie retry (exponential up to 18h) — desired
