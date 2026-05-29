@@ -172,7 +172,155 @@ DB yet — adding one for this single index would be over-engineering.
 
 ---
 
-## 6. Stripe SDK any-cast hardening
+## 6. Locale-aware donor emails
+
+**Where:**
+- `lib/email-templates.ts` — `welcomeAdoptionEmailHtml`, `welcomeAdoptionSubject`,
+  `buildAdoptDiscountCodesEmail`, `buildMollieManageEmail`, `buildBillingPortalEmail`
+- `lib/payment-handlers.ts` — `buildDonorPaymentFailedHtml`,
+  `buildMollieDonorPaymentFailedHtml`
+
+**Status:** Donor locale is captured at checkout via `extractLocaleFromReferer`
+but only baked into the success/return URL. It is NEVER written into
+Stripe/Mollie payment `metadata`, so every webhook-triggered email is
+English-only regardless of donor language. The reminder + review-request
+templates partially honour locale but only cover EN/DE/ES — IT/NL/FR fall
+through to English.
+
+The `translations/nl.json` file is a stub — the entire `adopt.*` namespace
+plus all `adopt.gift.*` keys are literal `"__UNTRANSLATED__: …"` placeholders.
+NL donors going through the gift flow see those placeholders verbatim.
+
+**Why deferred:** Three orthogonal blockers:
+1. Need human translators for de/it/es/nl/fr versions of every donor email
+   (~6 templates × ~5 languages = 30 copy items).
+2. The translation-key linter / dead-key pruner doesn't exist yet — 139
+   `en.json` keys are currently unused in code; before adding more keys we
+   need to know what's live.
+3. Threading `locale` through every email builder requires a one-PR sweep
+   touching ~12 sites.
+
+**Trigger to revisit:**
+- The first paying NL/IT/FR donor reports the welcome email is "in English."
+- Or: any of `welcomeAdoptionSubject(tier, isGiftWelcome)` callsites needs
+  a third arg for a non-translation reason — at that point we add `locale`
+  along with the new arg.
+
+**What to do when triggered:**
+1. Record `locale` into `metadata` on every checkout route (one line each in
+   `app/api/checkout/route.ts` and `app/api/mollie-checkout/route.ts`).
+2. Read `locale` back in `lib/payment-handlers.ts` from
+   `session.metadata?.locale` / `payment.metadata?.locale`.
+3. Thread it through every email builder as an optional 3rd-arg, defaulting
+   to 'en' so backward-compat holds.
+4. Fill `translations/nl.json` from a translator (currently a stub).
+5. Replace all `adopt.gift.__UNTRANSLATED__` placeholders in de/it/es/nl/fr.
+
+---
+
+## 7. Hard-coded SITE_BASE_URL violations
+
+**Where (13 files):**
+- `app/layout.tsx` (alternates.languages + RSS link)
+- `app/[locale]/layout.tsx`
+- `app/[locale]/journal/[slug]/page.tsx`
+- `app/[locale]/experiences/family-farm-days/page.tsx`
+- `app/[locale]/experiences/corporate-team-building/page.tsx`
+- `app/[locale]/shop/{woven,commission,alcaca}/page.tsx`
+- `app/sitemap.ts`
+- `lib/structured-data.ts` (feeds every JSON-LD breadcrumb)
+- `components/page-breadcrumbs.tsx`
+- `lib/email-templates.ts` (admin dashboard links in owner email)
+
+**Status:** Each hard-codes `https://alpacasibiza.com` literally instead of
+importing `SITE_BASE_URL` from `lib/config.ts`. Per ADR 017, the env-derived
+constant is canonical so a future preview deploy / staging / multi-tenant
+environment can swap host without re-touching 13 files.
+
+**Why deferred:** All are read-only render paths (sitemap, JSON-LD,
+breadcrumbs) — none are payment-critical, and the failure mode of the bug
+"users see alpacasibiza.com in their breadcrumbs from a staging env" is
+visible (not silent) and recoverable.
+
+**Trigger to revisit:**
+- A staging deploy hits one of these pages and the live URLs leak.
+- Multi-tenant lands (ADR 020 implementation) — at that point every literal
+  `alpacasibiza.com` becomes a tenant-bleed risk.
+
+**What to do when triggered:**
+1. One PR sweep: import `SITE_BASE_URL` and replace every literal.
+2. Add a unit test that greps the codebase for `https://alpacasibiza.com`
+   string literals and fails CI if any new ones appear outside the
+   `lib/tenants/` registry.
+
+---
+
+## 8. Tenant ID hard-coded to 'alpacasibiza'
+
+**Where (4 production sites):**
+- `app/api/mollie-checkout/route.ts:149` — `tenantId: 'alpacasibiza'`
+- `app/api/mollie-webhook/route.ts:294` — `tenantId: payment.metadata?.tenantId ?? 'alpacasibiza'`
+- `app/api/mollie-manage/update-payment/route.ts:195` — `tenantId: sub.metadata?.tenantId ?? 'alpacasibiza'`
+- `app/api/availability/route.ts:11` + `app/api/owner-digest/route.ts:36` — `FAREHARBOR_SHORTNAME || 'alpacasibiza'`
+
+**Status:** Single-tenant blocker for Stripe Connect / Mollie Connect
+(ADR 020). The tenant registry at `lib/tenants/server.ts` resolves a host
+to a tenant config but the API routes don't read from it yet.
+
+**Why deferred:** No tenant #2 signed yet. Adding host-derived tenant
+resolution to the API routes is wasted work until a second customer is
+on the platform.
+
+**Trigger to revisit:**
+- Tenant #2 signs an LOI / contract.
+- Or: a need arises to deploy a staging instance on a different domain
+  (e.g. `staging.alpacasibiza.com` vs `alpacasibiza.com`) and the routes
+  start writing wrong tenant metadata.
+
+**What to do when triggered:**
+1. Wire `getTenant(request)` from `lib/tenants/server.ts` into
+   `mollie-checkout/route.ts` line 149 first (the write path).
+2. Remove the `'alpacasibiza'` fallback in `lib/tenants/server.ts`; replace
+   with explicit 404 on unknown host.
+3. Backfill any existing Mollie metadata that's missing `tenantId` via a
+   one-time admin script.
+
+---
+
+## 9. Test coverage gaps (post-1561178 inventory)
+
+The Sonnet 4 review listed 15 uncovered boundaries. Commit AFTER 1561178
+added regression tests for the 6 highest-value (VAT year boundary,
+prune cutoff, Bearer auth, gift message length, sendDate window, sanitize
+error logs). Still uncovered:
+
+- `payment-handlers.ts` gift owner-notify subject prefix (Stripe + Mollie
+  `[Adopt-a-Paca] 🎁 GIFT` prefix has no assertion)
+- `owner-mrr-digest` ISO-week boundary when today IS Monday 00:00 UTC
+  (needs to extract the ISO-week math into a pure helper to test)
+- `owner-mrr-digest` newCount7d 'canceled-before-window' straggler filter
+- `owner-mrr-digest` DST mid-window timezone drift
+- `owner-notify` actual 2s timeout firing (needs fake-timers integration)
+
+**Why deferred:** First batch covers the bugs that would silently break
+EU VAT compliance / lock the donor out of their portal. Remaining items
+are mostly UX edge cases or need ISO-week extraction first.
+
+**Trigger to revisit:**
+- A regression on any of the above ships and gets reported.
+- The `owner-mrr-digest` route is refactored — extract ISO-week to
+  `lib/iso-week.ts` and test pure-function style.
+
+**What to do when triggered:**
+1. Extract `lib/iso-week.ts` exposing `currentIsoWeekUtc(now: Date) → {start, end}`.
+2. Move newCount7d / canceledCount7d filters into pure helpers that take a
+   row + window pair.
+3. Property-test fake-timers around owner-notify with a sentinel pending
+   fetch that never resolves.
+
+---
+
+## 10. Stripe SDK any-cast hardening (renamed from item 6)
 
 **Where:** Any place that still uses the `stripeFactory(...)` runtime-import
 pattern without `import type { Stripe } from 'stripe'`.

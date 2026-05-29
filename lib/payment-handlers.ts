@@ -222,11 +222,20 @@ export async function handleStripeCheckoutCompleted(
 
   // Determine scheduledAt for the welcome when buyer chose a future send date.
   // Falls back to immediate when sendDate is absent or not a future date.
+  //
+  // Buyer picks a date-only `yyyy-mm-dd`. `Date.parse('2026-12-25')` resolves to
+  // 2026-12-25T00:00:00Z = midnight UTC. For European recipients that's
+  // 01:00 CET in winter and 02:00 CEST in summer — the gift would land at
+  // 1 AM the day of, not the morning of. We nudge to 10:00 UTC so the email
+  // arrives 11:00 CET / 12:00 CEST — morning local time across the EU
+  // recipient base regardless of DST.
   const welcomeScheduledAt = ((): string | undefined => {
     if (!giftSendDate) return undefined
     const sendMs = Date.parse(giftSendDate)
     const nowMs = (deps.now ?? Date.now)()
-    return !isNaN(sendMs) && sendMs > nowMs ? new Date(sendMs).toISOString() : undefined
+    if (isNaN(sendMs)) return undefined
+    const morningLocalMs = sendMs + 10 * 60 * 60 * 1000
+    return morningLocalMs > nowMs ? new Date(morningLocalMs).toISOString() : undefined
   })()
 
   const isGiftWelcome = isGiftPurchase
@@ -799,12 +808,15 @@ async function sendMollieWelcomeQuiet(
 
     const isGiftWelcome = giftRecipientEmail !== null && giftMessage !== null
 
-    // Scheduled send for future gift dates.
+    // Scheduled send for future gift dates. See Stripe handler for the
+    // morning-local-time UTC offset rationale (10:00 UTC = 11:00/12:00 CET/CEST).
     const welcomeScheduledAt = ((): string | undefined => {
       if (!giftSendDate) return undefined
       const sendMs = Date.parse(giftSendDate)
       const now = nowMs ?? Date.now()
-      return !isNaN(sendMs) && sendMs > now ? new Date(sendMs).toISOString() : undefined
+      if (isNaN(sendMs)) return undefined
+      const morningLocalMs = sendMs + 10 * 60 * 60 * 1000
+      return morningLocalMs > now ? new Date(morningLocalMs).toISOString() : undefined
     })()
 
     await sendEmail({

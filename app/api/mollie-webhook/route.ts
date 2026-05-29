@@ -88,6 +88,16 @@ export async function POST(request: Request) {
   const mollie = await getMollieClient(apiKey)
 
   // payment.failed → recoverable for SEPA; notify donor + owner via handler.
+  //
+  // CRITICAL fail-quiet contract: we ALWAYS markProcessed + return 200 here,
+  // even when the donor / owner email failed to send. Returning 500 on a
+  // Resend transient outage was the prior bug — Mollie would retry the
+  // payment.failed event ~18h later and re-trigger the donor's "your payment
+  // failed" email, hitting them twice for the same charge. That violates
+  // the same-event-once contract. Missing one email beats double-sending.
+  //
+  // Resend outages are logged loudly so ops can see they happened, but the
+  // event itself is considered "delivered" once we've understood it.
   if (payment.status === 'failed') {
     const failedResult = await handleMolliePaymentFailed(payment, {
       sendEmail,
@@ -97,14 +107,14 @@ export async function POST(request: Request) {
     const msg = `payment.failed handler reason=${failedResult.reason}`
     if (failedResult.reason === 'ok' || failedResult.reason === 'not-adoption') {
       log.info(msg, failedResult.meta)
-      markProcessed(dedupKey)
-      return attachRequestId(NextResponse.json({ received: true }), reqId)
+    } else {
+      // Resend / mailer transient failure, or missing donor email — surface
+      // loudly via log.error so a Vercel log alert can catch a sustained
+      // outage. Do NOT 500: would re-deliver donor/owner notification on retry.
+      log.error(`${msg} (notification incomplete — accepting event to prevent retry-duplicate)`, failedResult.meta)
     }
-    // Transient send failures → 500 so Mollie retries (and we do NOT mark
-    // processed). Mollie's retry cadence will re-deliver the failure event;
-    // next attempt may succeed once Resend recovers.
-    log.warn(msg, failedResult.meta)
-    return attachRequestId(NextResponse.json({ error: 'Retry needed' }, { status: 500 }), reqId)
+    markProcessed(dedupKey)
+    return attachRequestId(NextResponse.json({ received: true }), reqId)
   }
 
   // Other non-paid terminal/transient states log-and-return.

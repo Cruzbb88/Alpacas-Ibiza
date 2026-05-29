@@ -10,6 +10,7 @@ import {
     reviewRequestSubject,
 } from '@/lib/email-templates'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
+import { isAlreadyProcessed, markProcessed } from '@/lib/webhook-idempotency'
 
 /**
  * POST /api/fareharbor-webhook
@@ -102,14 +103,30 @@ export async function POST(request: Request) {
     const locale = (request.headers.get('x-fareharbor-locale') || 'en').toLowerCase()
 
     // ─── booking.cancelled ────────────────────────────────────────────────
+    // Idempotency: FareHarbor can re-deliver the same cancel event on retry.
+    // Without the dedup gate, store.delete fires twice (harmless on missing-key
+    // but pollutes the operational logs) and cancelScheduledEmail re-runs
+    // (Resend no-ops on already-cancelled IDs but the API call still costs).
     if (event === 'booking.cancelled' || event === 'booking.deleted') {
-        const existing = await bookingScheduleStore.get(pk)
-        if (existing) {
-            if (existing.reminderEmailId) await cancelScheduledEmail(existing.reminderEmailId)
-            if (existing.reviewEmailId) await cancelScheduledEmail(existing.reviewEmailId)
-            await bookingScheduleStore.delete(pk)
+        const cancelDedup = `fh:cancelled:${pk}`
+        if (isAlreadyProcessed(cancelDedup)) {
+            return attachRequestId(NextResponse.json({ ok: true, action: 'cancelled', idempotent: true }), reqId)
         }
-        return attachRequestId(NextResponse.json({ ok: true, action: 'cancelled' }), reqId)
+        try {
+            const existing = await bookingScheduleStore.get(pk)
+            if (existing) {
+                if (existing.reminderEmailId) await cancelScheduledEmail(existing.reminderEmailId)
+                if (existing.reviewEmailId) await cancelScheduledEmail(existing.reviewEmailId)
+                await bookingScheduleStore.delete(pk)
+            }
+            markProcessed(cancelDedup)
+            return attachRequestId(NextResponse.json({ ok: true, action: 'cancelled' }), reqId)
+        } catch (err) {
+            // Fail-quiet: a store/mailer throw must NOT 500 (would trigger FareHarbor
+            // retry → re-cancel-emails forever). Log loudly so ops see the breakage.
+            log.error('cancel handler failed; returning 200 to stop FareHarbor retry', { err: String(err), pk })
+            return attachRequestId(NextResponse.json({ ok: true, action: 'cancelled', degraded: true }), reqId)
+        }
     }
 
     // For created / updated we need an email + start_at
@@ -120,12 +137,31 @@ export async function POST(request: Request) {
         return attachRequestId(NextResponse.json({ error: 'Missing availability.start_at' }, { status: 400 }), reqId)
     }
 
+    // Idempotency gate. Dedup key includes startAt so a legitimate "updated to a
+    // NEW startAt" delivery is treated as a fresh event (different key) — re-
+    // scheduling is desired. Re-delivery of the SAME event (same pk, same
+    // startAt) hits the cache and short-circuits.
+    const scheduleDedup = `fh:${event}:${pk}:${startAt}`
+    if (isAlreadyProcessed(scheduleDedup)) {
+        return attachRequestId(
+            NextResponse.json({ ok: true, action: event, idempotent: true, bookingPk: pk }),
+            reqId,
+        )
+    }
+
     // ─── booking.updated: cancel any prior schedules before rescheduling ──
     if (event === 'booking.updated' || event === 'booking.modified') {
-        const existing = await bookingScheduleStore.get(pk)
-        if (existing) {
-            if (existing.reminderEmailId) await cancelScheduledEmail(existing.reminderEmailId)
-            if (existing.reviewEmailId) await cancelScheduledEmail(existing.reviewEmailId)
+        try {
+            const existing = await bookingScheduleStore.get(pk)
+            if (existing) {
+                if (existing.reminderEmailId) await cancelScheduledEmail(existing.reminderEmailId)
+                if (existing.reviewEmailId) await cancelScheduledEmail(existing.reviewEmailId)
+            }
+        } catch (err) {
+            // Don't 500 on store-read or cancel-API failure — that would cause
+            // FareHarbor to retry the update, queueing yet another reminder +
+            // review email on top of the unhealthy state.
+            log.warn('pre-update cancel of prior schedules failed; continuing with reschedule', { err: String(err), pk })
         }
     }
 
@@ -188,13 +224,29 @@ export async function POST(request: Request) {
         }
     }
 
-    await bookingScheduleStore.set({
-        bookingPk: pk,
-        reminderEmailId,
-        reviewEmailId,
-        startAt,
-        customerEmail: email,
-    })
+    try {
+        await bookingScheduleStore.set({
+            bookingPk: pk,
+            reminderEmailId,
+            reviewEmailId,
+            startAt,
+            customerEmail: email,
+        })
+    } catch (err) {
+        // Emails are already scheduled at Resend by this point. Persisting the
+        // schedule IDs to our store is best-effort — if it fails, the booking
+        // is unchanged from the donor's POV but we've lost the handle for a
+        // future cancel/update. Log loudly; do NOT 500 (FareHarbor retry would
+        // re-schedule duplicate emails on top of the existing ones).
+        log.error('bookingScheduleStore.set failed; emails already scheduled at Resend, store handle lost', { err: String(err), pk, reminderEmailId, reviewEmailId })
+    }
+
+    // Mark processed AFTER emails are scheduled + store written (best-effort).
+    // A re-delivery of the same (pk, startAt) tuple now short-circuits at the
+    // top of the route. If FareHarbor genuinely changes the startAt for this
+    // booking (real reschedule), the booking.updated path uses a different key
+    // and runs the full reschedule flow.
+    markProcessed(scheduleDedup)
 
     return attachRequestId(
         NextResponse.json({

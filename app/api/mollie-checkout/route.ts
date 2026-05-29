@@ -6,63 +6,7 @@ import { extractLocaleFromReferer, requireEnvOrReturn503 } from '@/lib/route-hel
 import { isValidEmail } from '@/lib/validate-email'
 import { getRequestId, attachRequestId } from '@/lib/request-id'
 import { findAlpacaName } from '@/lib/data/alpacas'
-
-/** ISO yyyy-mm-dd date pattern for gift_send_date validation. */
-const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}$/
-
-/** Mollie metadata values — truncate to 500 chars each. */
-function capAt500(s: string): string {
-  return s.slice(0, 500)
-}
-
-interface GiftFields {
-  recipientEmail: string
-  recipientName: string
-  senderName: string
-  message: string
-  sendDate?: string
-}
-
-/**
- * Parse and validate gift_* params from a flat string map.
- * Returns GiftFields when required fields are valid; null drops the whole block.
- */
-function parseGiftFields(
-  raw: Record<string, string | null | undefined>,
-): GiftFields | null {
-  const recipientEmail = (raw.gift_recipient_email ?? '').trim()
-  const recipientName = (raw.gift_recipient_name ?? '').trim()
-  const senderName = (raw.gift_sender_name ?? '').trim()
-  const message = capAt500((raw.gift_message ?? '').trim())
-  const sendDate = (raw.gift_send_date ?? '').trim()
-
-  if (!isValidEmail(recipientEmail)) return null
-  if (recipientName.length === 0) return null
-  // Require at least a 2-character message. Empty string is otherwise truthy
-  // and renders as empty quote marks in the gift welcome email. 2 chars is the
-  // shortest meaningful gift message ("xx", "💚", "❤️" etc).
-  if (message.length < 2) return null
-  // Validate sendDate is parseable + within Resend's scheduledAt 30-day cap.
-  // A gift date >30 days out would be silently rejected by Resend and the
-  // recipient would never get the email. Treat invalid → "send today".
-  let validSendDate: string | undefined
-  if (sendDate && ISO_DATE_RE.test(sendDate)) {
-    const parsed = new Date(`${sendDate}T00:00:00Z`)
-    const now = Date.now()
-    const maxSchedule = now + 30 * 24 * 60 * 60 * 1000
-    if (!Number.isNaN(parsed.getTime()) && parsed.getTime() <= maxSchedule && parsed.getTime() >= now - 24 * 60 * 60 * 1000) {
-      validSendDate = sendDate
-    }
-  }
-
-  return {
-    recipientEmail: capAt500(recipientEmail),
-    recipientName: capAt500(recipientName),
-    senderName: capAt500(senderName),
-    message,
-    ...(validSendDate ? { sendDate: validSendDate } : {}),
-  }
-}
+import { parseGiftFields, type ParsedGiftFields } from '@/lib/gift-fields'
 
 /**
  * GET  /api/mollie-checkout?tier=monthly|yearly
@@ -102,7 +46,7 @@ async function handleCheckout(request: Request, method: 'GET' | 'POST') {
   let tier: AdoptTier | null = null
   let customerEmail: string | undefined
   let alpacaSlugRaw: string | null = null
-  let giftFields: GiftFields | null = null
+  let giftFields: ParsedGiftFields | null = null
   if (method === 'GET') {
     const url = new URL(request.url)
     const raw = url.searchParams.get('tier')
