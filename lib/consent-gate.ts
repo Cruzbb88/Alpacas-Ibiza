@@ -42,7 +42,7 @@ const STORAGE_KEY = 'ai_cookie_consent_v1'
  * - Client-side, consent === 'rejected' or null (never answered): false.
  */
 export function hasAnalyticsConsent(): boolean {
-  if (typeof window === 'undefined') return true
+  if (typeof window === 'undefined') return false
   try {
     const v = window.localStorage.getItem(STORAGE_KEY)
     return v === 'accepted'

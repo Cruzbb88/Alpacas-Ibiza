@@ -84,10 +84,18 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: `Unknown alpaca slug: ${alpacaSlug}` }, { status: 400 })
   }
 
-  // ── Validate file type + size ───────────────────────────────────────────────
+  // ── Validate file type + extension ──────────────────────────────────────────
+  // Defence-in-depth: MIME check + extension allowlist. The MIME comes from the
+  // client (spoofable), but combined with the extension allowlist we block SVG/HTML
+  // uploads that could serve as stored-XSS on the public Blob CDN.
+  const ALLOWED_EXTENSIONS = new Set(['jpg', 'jpeg', 'png', 'webp', 'avif'])
   const mime = uploadedFile.type || ''
   if (!mime.startsWith('image/')) {
     return NextResponse.json({ error: 'file must be an image/*' }, { status: 400 })
+  }
+  const ext = (uploadedFile.name || '').split('.').pop()?.toLowerCase() ?? ''
+  if (!ALLOWED_EXTENSIONS.has(ext)) {
+    return NextResponse.json({ error: `extension .${ext} not allowed (use jpg/png/webp/avif)` }, { status: 400 })
   }
   if (uploadedFile.size > MAX_BYTES) {
     return NextResponse.json(
