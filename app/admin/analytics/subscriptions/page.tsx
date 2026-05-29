@@ -45,11 +45,27 @@ function isActive(status: string): boolean {
   return status === 'active' || status === 'pending'
 }
 
-async function fetchAllSubscriptions(): Promise<{
+// Process-scoped 60-second cache. Same pattern as lib/webhook-idempotency.ts.
+// At Mollie's typical ~80ms p50 per page × 10 pages = ~800ms, the first
+// dashboard load per cold-start pays that latency; subsequent admin refreshes
+// within 60s serve from this snapshot. Multi-instance Vercel = per-instance
+// cache (acceptable for admin traffic). Performance-optimizer 2026-05-29.
+interface SnapshotPayload {
   rows: SubscriptionRow[]
   fetchError: string | null
   hasMollie: boolean
-}> {
+}
+const SNAPSHOT_TTL_MS = 60_000
+const globalForSnapshot = globalThis as unknown as {
+  __subsSnapshot?: { value: SnapshotPayload; at: number }
+}
+
+async function fetchAllSubscriptions(): Promise<SnapshotPayload> {
+  const cached = globalForSnapshot.__subsSnapshot
+  if (cached && Date.now() - cached.at < SNAPSHOT_TTL_MS) {
+    return cached.value
+  }
+
   const apiKey = process.env.MOLLIE_API_KEY
   if (!apiKey) {
     return { rows: [], fetchError: 'MOLLIE_API_KEY is not set', hasMollie: false }
@@ -61,8 +77,9 @@ async function fetchAllSubscriptions(): Promise<{
 
   // Page through every subscription across the merchant account. The
   // top-level Subscriptions endpoint (not the customer-scoped one) returns
-  // all subscriptions for the API key's merchant. Cap at 2k to bound wall
-  // clock; owner-level admin is tolerable to refresh periodically.
+  // all subscriptions for the API key's merchant. Cap at 500 (down from 2000
+  // per resonance-finder 2026-05-29): at €75/mo SEPA that's €37.5k MRR which
+  // is years away. The truncation banner below surfaces the cap if hit.
   type SubRaw = {
     id: string
     customerId?: string | null
@@ -83,10 +100,15 @@ async function fetchAllSubscriptions(): Promise<{
     const iter = (mollie as unknown as {
       subscriptions: { iterate: () => AsyncIterable<SubRaw> }
     }).subscriptions.iterate()
+    const ITERATION_CAP = 500
     let i = 0
+    let truncated = false
     for await (const raw of iter) {
       i++
-      if (i > 2000) break
+      if (i > ITERATION_CAP) {
+        truncated = true
+        break
+      }
       rows.push({
         id: raw.id,
         customerId: raw.customerId ?? null,
@@ -103,12 +125,28 @@ async function fetchAllSubscriptions(): Promise<{
         nextPaymentDate: raw.nextPaymentDate ?? null,
       })
     }
+    if (truncated) {
+      // Surface the cap-hit through fetchError so the existing banner renders.
+      // MRR + churn KPIs are based on the partial dataset; the banner makes
+      // that explicit instead of silently understating.
+      const payload: SnapshotPayload = {
+        rows,
+        fetchError: `Iteration capped at ${ITERATION_CAP} subscriptions — KPIs are based on the first ${ITERATION_CAP} only. Bump cap or implement DB snapshot when this trips.`,
+        hasMollie: true,
+      }
+      globalForSnapshot.__subsSnapshot = { value: payload, at: Date.now() }
+      return payload
+    }
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
-    return { rows, fetchError: message, hasMollie: true }
+    const payload: SnapshotPayload = { rows, fetchError: message, hasMollie: true }
+    globalForSnapshot.__subsSnapshot = { value: payload, at: Date.now() }
+    return payload
   }
 
-  return { rows, fetchError: null, hasMollie: true }
+  const payload: SnapshotPayload = { rows, fetchError: null, hasMollie: true }
+  globalForSnapshot.__subsSnapshot = { value: payload, at: Date.now() }
+  return payload
 }
 
 function relativeDay(iso: string | null): string {

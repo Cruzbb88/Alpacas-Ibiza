@@ -22,7 +22,10 @@
  * even if customer IDs reuse prefixes.
  */
 
-const TTL_MS = 60 * 24 * 60 * 60 * 1000 // 60 days
+const TTL_MS = 30 * 24 * 60 * 60 * 1000 // 30 days — aligns with realistic SEPA dunning cycles
+// Attempt-dedup TTL: shorter than the counter TTL. Just needs to outlast the
+// webhook retry window (Stripe ~3d, Mollie ~18h). 4 days is safe.
+const ATTEMPT_TTL_MS = 4 * 24 * 60 * 60 * 1000
 
 interface CounterEntry {
   count: number
@@ -32,45 +35,85 @@ interface CounterEntry {
 
 const globalForStore = globalThis as unknown as {
   __paymentFailureStore?: Map<string, CounterEntry>
+  __paymentFailureAttempts?: Map<string, number>
 }
 const _store: Map<string, CounterEntry> =
   globalForStore.__paymentFailureStore ?? new Map()
+const _attempts: Map<string, number> =
+  globalForStore.__paymentFailureAttempts ?? new Map()
 if (process.env.NODE_ENV !== 'production') {
   globalForStore.__paymentFailureStore = _store
+  globalForStore.__paymentFailureAttempts = _attempts
 }
 
 function purge(now: number): void {
   for (const [k, entry] of _store) {
     if (now - entry.lastFailureAt > TTL_MS) _store.delete(k)
   }
+  for (const [k, ts] of _attempts) {
+    if (now - ts > ATTEMPT_TTL_MS) _attempts.delete(k)
+  }
 }
 
 export type FailureSeverity = 'first' | 'at-risk' | 'action-required'
 
+function severityFor(count: number): FailureSeverity {
+  return count === 1 ? 'first' : count === 2 ? 'at-risk' : 'action-required'
+}
+
 /**
- * Increment the failure count for a customer and return the resulting severity.
+ * Increment the failure count for a customer ONCE per attemptId and return the
+ * resulting severity. Repeated calls with the same attemptId are no-ops that
+ * return the existing count — critical because webhook retries (Stripe ~3d
+ * window, Mollie ~18h) would otherwise re-increment a single failure into
+ * an inflated severity.
  *
- * 1 = 'first'             (normal donor email)
- * 2 = 'at-risk'           (owner gets a warning)
- * 3+ = 'action-required'  (owner needs to follow up; subscription likely lost)
+ * @param vendor      'stripe' | 'mollie'
+ * @param customerId  the customer-id this failure is attributed to
+ * @param attemptId   stable identifier for this failure event (the dedupKey
+ *                    `<vendor>:<paymentId>:failed` from the webhook route is
+ *                    a perfect fit). Same attemptId across retries → no double
+ *                    increment.
  */
-export function recordFailure(vendor: 'stripe' | 'mollie', customerId: string): {
+export function recordFailure(
+  vendor: 'stripe' | 'mollie',
+  customerId: string,
+  attemptId?: string,
+): {
   count: number
   severity: FailureSeverity
+  isFirstRecord: boolean
 } {
   const now = Date.now()
   purge(now)
   const key = `${vendor}:${customerId}`
   const prev = _store.get(key)
+
+  // If this attempt has already been counted, return the existing state
+  // (severity ladder unchanged). This is the load-bearing fix for webhook
+  // retries inflating severity. Without it, a single Resend outage during a
+  // payment.failed delivery turns into an "at-risk" → "action-required"
+  // ladder on the very next Mollie retry.
+  if (attemptId && _attempts.has(`${key}:${attemptId}`)) {
+    const count = prev?.count ?? 0
+    return { count, severity: severityFor(Math.max(1, count)), isFirstRecord: false }
+  }
+
   const count = (prev?.count ?? 0) + 1
   _store.set(key, {
     count,
     lastFailureAt: now,
     lastSuccessAt: prev?.lastSuccessAt ?? null,
   })
-  const severity: FailureSeverity =
-    count === 1 ? 'first' : count === 2 ? 'at-risk' : 'action-required'
-  return { count, severity }
+  if (attemptId) _attempts.set(`${key}:${attemptId}`, now)
+  const severity = severityFor(count)
+  const prevSeverity = (prev?.count ?? 0) === 0 ? null : severityFor(prev!.count)
+  if (prevSeverity !== severity) {
+    console.warn('[payment-failure-tracker] severity transition', {
+      vendor, customerId, count, severity, prevSeverity,
+    })
+  }
+  return { count, severity, isFirstRecord: true }
 }
 
 /**
@@ -85,6 +128,11 @@ export function resetFailures(vendor: 'stripe' | 'mollie', customerId: string): 
     lastFailureAt: prev?.lastFailureAt ?? 0,
     lastSuccessAt: Date.now(),
   })
+  if ((prev?.count ?? 0) > 0) {
+    console.info('[payment-failure-tracker] reset', {
+      vendor, customerId, prevCount: prev?.count,
+    })
+  }
 }
 
 /**
@@ -98,4 +146,5 @@ export function getFailureCount(vendor: 'stripe' | 'mollie', customerId: string)
 /** @internal — for tests */
 export function __resetPaymentFailureTracker(): void {
   _store.clear()
+  _attempts.clear()
 }

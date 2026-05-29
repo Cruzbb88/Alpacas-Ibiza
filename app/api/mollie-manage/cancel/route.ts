@@ -67,7 +67,11 @@ function htmlPage(title: string, body: string, status: number): NextResponse {
 </html>`
   return new NextResponse(html, {
     status,
-    headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' },
+    headers: {
+      'Content-Type': 'text/html; charset=utf-8',
+      'Cache-Control': 'no-store',
+      'X-Robots-Tag': 'noindex, nofollow',
+    },
   })
 }
 
@@ -112,6 +116,17 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   const reqId = getRequestId(request)
   const log = makeRequestLogger('mollie-manage-cancel', reqId)
+
+  // CSRF defence: a leaked cancel token (forwarded email, log scrape, browser
+  // history) is replayable from any cross-origin form unless we check the
+  // Origin header. Same-origin POSTs from our own GET-rendered form pass; a
+  // rogue <form action="https://alpacasibiza.com/api/mollie-manage/cancel">
+  // hosted on attacker.com gets blocked.
+  const origin = request.headers.get('origin')
+  if (origin && origin !== SITE_BASE_URL) {
+    log.warn('Cross-origin POST blocked', { origin })
+    return attachRequestId(htmlPage('Blocked', `<h1>Blocked</h1><p>This request did not originate from alpacasibiza.com.</p>`, 400), reqId)
+  }
 
   const apiKeyGate = requireEnvOrReturn503('MOLLIE_API_KEY', 'Payment system not configured')
   if (apiKeyGate) return attachRequestId(apiKeyGate, reqId)

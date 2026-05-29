@@ -16,6 +16,7 @@ import {
 } from '@/lib/payment-handlers'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
 import { isAlreadyProcessed, markProcessed } from '@/lib/webhook-idempotency'
+import { resetFailures } from '@/lib/payment-failure-tracker'
 
 /**
  * POST /api/mollie-webhook?secret=<MOLLIE_WEBHOOK_SECRET>
@@ -129,17 +130,56 @@ export async function POST(request: Request) {
   ) {
     const seedSubId = payment.metadata.seedSubscriptionId
     const mandateId = typeof payment.mandateId === 'string' ? payment.mandateId : null
+    // CRITICAL: a missing mandateId means we have NOTHING to patch the existing
+    // subscription onto. Returning 500 forces Mollie to retry the webhook — by
+    // the next delivery, mandateId may be populated (Mollie sometimes lags on
+    // populating mandateId for cards / PayPal). NEVER markProcessed in this
+    // branch: would silently lose the relink forever (the original donor flow
+    // is "success" from their POV but the existing subscription is unchanged).
+    if (!mandateId) {
+      log.error(`update-payment: payment ${payment.id} has no mandateId; deferring (will retry on next Mollie delivery)`, { seedSubId })
+      return attachRequestId(NextResponse.json({ error: 'mandateId missing, awaiting Mollie' }, { status: 500 }), reqId)
+    }
     try {
       if (!mollie) throw new Error('mollie-sdk-missing')
-      if (!mandateId) {
-        log.warn(`update-payment: payment ${payment.id} has no mandateId; cannot relink subscription ${seedSubId}`)
-      } else {
-        await mollie.customerSubscriptions.update(seedSubId, {
-          customerId: payment.customerId,
-          mandateId,
-        } as unknown as Parameters<typeof mollie.customerSubscriptions.update>[1])
-        log.info(`update-payment: relinked subscription ${seedSubId} to mandate ${mandateId}`)
+      // Pre-check: if the seed subscription is canceled, the PATCH would 422.
+      // Catching this here means we don't pin Mollie's 18h retry on a perma-422.
+      let seedStatus: string | undefined
+      try {
+        const seedSub = await mollie.customerSubscriptions.get(seedSubId, { customerId: payment.customerId })
+        seedStatus = (seedSub as unknown as { status?: string }).status
+      } catch (probeErr) {
+        log.warn(`update-payment: probe of ${seedSubId} failed (continuing)`, { message: probeErr instanceof Error ? probeErr.message : String(probeErr) })
       }
+      if (seedStatus === 'canceled') {
+        log.warn(`update-payment: seed subscription ${seedSubId} is canceled; refunding the verification payment and skipping relink`)
+        // Refund the verification charge so donor isn't out the money for a sub
+        // that no longer exists. Mollie payments support a refunds.create call.
+        try {
+          await (mollie as unknown as {
+            payments: { refunds: { create: (args: unknown) => Promise<unknown> } }
+          }).payments.refunds.create({
+            paymentId: payment.id,
+            amount: payment.metadata?.tier === 'yearly'
+              ? undefined
+              : undefined,
+          })
+        } catch (refundErr) {
+          log.error(`update-payment: refund failed for canceled-sub case`, { message: refundErr instanceof Error ? refundErr.message : String(refundErr), paymentId: payment.id })
+        }
+        markProcessed(dedupKey)
+        return attachRequestId(NextResponse.json({ received: true, flow: 'update-payment', skipped: 'canceled-sub' }), reqId)
+      }
+      await mollie.customerSubscriptions.update(seedSubId, {
+        customerId: payment.customerId,
+        mandateId,
+      } as unknown as Parameters<typeof mollie.customerSubscriptions.update>[1])
+      log.info(`update-payment: relinked subscription ${seedSubId} to mandate ${mandateId}`)
+      // Reset the failure-tracker counter on successful re-mandate. Without
+      // this, a donor who was at 'at-risk' (2 fails) before fixing their
+      // mandate stays at 2; the next routine renewal would escalate to
+      // 'action-required' on a single new failure.
+      resetFailures('mollie', payment.customerId)
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
       log.error(`update-payment: relink failed for subscription ${seedSubId}`, { message })

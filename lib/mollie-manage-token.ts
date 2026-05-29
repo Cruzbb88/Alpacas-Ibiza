@@ -110,10 +110,16 @@ export function signMollieUpdatePaymentToken(
   })
 }
 
+// CPU-DoS guard: an oversized token forces a multi-megabyte HMAC computation
+// (the HMAC scales with input length). 2048 bytes is generous for our payloads
+// (typically ~250 bytes) and well below memory-pressure territory.
+const MAX_TOKEN_BYTES = 2048
+
 function verifyTokenWithScope(
   token: string,
   expectedScope: MollieManageTokenScope,
 ): MollieManageTokenPayload | null {
+  if (!token || token.length > MAX_TOKEN_BYTES) return null
   try {
     const dot = token.lastIndexOf('.')
     if (dot < 1) return null

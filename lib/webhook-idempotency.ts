@@ -13,7 +13,10 @@
  * Vercel KV.
  */
 
-const TTL_MS = 7 * 24 * 60 * 60 * 1000 // 7 days — longer than Stripe's 3-day retry window
+// 4 days — comfortably longer than Stripe's 3-day retry window (1d buffer for
+// queue/clock drift) and well above Mollie's 18h. Halves in-memory footprint
+// vs the previous 7-day default. Resonance-finder 2026-05-29 finding.
+const TTL_MS = 4 * 24 * 60 * 60 * 1000
 
 const globalForStore = globalThis as unknown as {
   __webhookIdempotencyStore?: Map<string, number>

@@ -2,7 +2,11 @@ import { NextResponse } from 'next/server'
 import { getMollieClient } from '@/lib/integrations/payment-mollie'
 import { requireEnvOrReturn503 } from '@/lib/route-helpers'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
-import { verifyMollieStatusToken } from '@/lib/mollie-manage-token'
+import {
+  verifyMollieStatusToken,
+  signMollieCancelToken,
+  signMollieUpdatePaymentToken,
+} from '@/lib/mollie-manage-token'
 import { getFailureCount } from '@/lib/payment-failure-tracker'
 import { SITE_BASE_URL } from '@/lib/config'
 import { escapeHtml } from '@/lib/html'
@@ -64,7 +68,11 @@ function htmlPage(title: string, body: string, status: number): NextResponse {
 </html>`
   return new NextResponse(html, {
     status,
-    headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' },
+    headers: {
+      'Content-Type': 'text/html; charset=utf-8',
+      'Cache-Control': 'no-store',
+      'X-Robots-Tag': 'noindex, nofollow',
+    },
   })
 }
 
@@ -143,14 +151,26 @@ export async function GET(request: Request) {
     : 'canceled'
 
   // Build status-aware action buttons. Cancelled subs only show "back to site".
-  const tokenEnc = encodeURIComponent(token)
+  //
+  // CRITICAL: reusing the status-scoped token for the cancel/update buttons would
+  // fail scope verification on the destination endpoint (each scope is locked).
+  // Sign fresh action-scoped tokens server-side using the customerId + subscriptionId
+  // from the already-verified status payload. Short TTL (1h) — the donor just
+  // clicked through from the manage email; they should act on these buttons now,
+  // not park them in a tab for a week. Original cancel/update links from the
+  // manage email still carry the canonical 7-day TTL.
   const isLive = sub.status === 'active' || sub.status === 'pending' || sub.status === 'suspended'
-  const cancelUrl = isLive ? `${SITE_BASE_URL}/api/mollie-manage/cancel?token=` : null
-  const updateUrl = isLive ? `${SITE_BASE_URL}/api/mollie-manage/update-payment?token=` : null
+  const oneHourMs = 60 * 60 * 1000
+  const cancelTokenEnc = isLive
+    ? encodeURIComponent(signMollieCancelToken(payload.customerId, payload.subscriptionId, oneHourMs))
+    : null
+  const updateTokenEnc = isLive
+    ? encodeURIComponent(signMollieUpdatePaymentToken(payload.customerId, payload.subscriptionId, oneHourMs))
+    : null
   const actions = isLive
     ? `<div class="actions">
-         ${updateUrl ? `<a class="btn primary" href="${updateUrl}${tokenEnc}">Update payment method</a>` : ''}
-         ${cancelUrl ? `<a class="btn danger" href="${cancelUrl}${tokenEnc}">Cancel adoption</a>` : ''}
+         ${updateTokenEnc ? `<a class="btn primary" href="${SITE_BASE_URL}/api/mollie-manage/update-payment?token=${updateTokenEnc}">Update payment method</a>` : ''}
+         ${cancelTokenEnc ? `<a class="btn danger" href="${SITE_BASE_URL}/api/mollie-manage/cancel?token=${cancelTokenEnc}">Cancel adoption</a>` : ''}
        </div>`
     : `<div class="actions"><a class="btn primary" href="${SITE_BASE_URL}/en/adopt">Adopt again</a></div>`
 

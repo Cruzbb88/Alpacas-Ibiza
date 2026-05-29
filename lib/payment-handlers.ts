@@ -345,8 +345,11 @@ export async function handleStripeInvoicePaymentFailed(
   // earlier visibility into the second+ failure than waiting for cancellation).
   const trackKey = typeof invoice.customer === 'string' && invoice.customer.length > 0
     ? invoice.customer
-    : `invoice:${invoice.id}`
-  const { count: failureCount, severity } = recordFailure('stripe', trackKey)
+    : `unknown:${invoice.id}`
+  // attemptId = invoice.id (stable across Stripe Smart Retries on the same
+  // invoice). Prevents the failure counter from inflating when Stripe re-
+  // delivers the webhook for an existing invoice's next retry attempt.
+  const { count: failureCount, severity } = recordFailure('stripe', trackKey, invoice.id)
 
   if (!donorEmail) {
     return { donorNotified: false, ownerNotified: false, severity, failureCount, reason: 'missing-donor-email', meta }
@@ -820,10 +823,18 @@ export async function handleMolliePaymentFailed(
   }
 
   // Record the failure FIRST so the resulting severity drives owner-email tone,
-  // even when we can't reach the donor. Use payment.id as customer-key fallback
-  // when customerId is missing (rare; donor still gets one tracked attempt).
-  const trackKey = payment.customerId ?? `payment:${payment.id}`
-  const { count: failureCount, severity } = recordFailure('mollie', trackKey)
+  // even when we can't reach the donor.
+  //
+  // When customerId is missing (rare), DO NOT fall back to a payment-id-keyed
+  // counter — that key would never be reset on the donor's next success (which
+  // uses customerId), creating an orphan counter that lingers until TTL purge.
+  // Instead use an explicit `unknown:` namespace so it's clear in logs that
+  // this counter cannot be tied to a recovery event.
+  const trackKey = payment.customerId ?? `unknown:${payment.id}`
+  // attemptId = payment.id is stable across webhook retries for the same event,
+  // so recordFailure won't double-count if a Resend outage forces Mollie to
+  // re-deliver the failed event.
+  const { count: failureCount, severity } = recordFailure('mollie', trackKey, payment.id)
 
   if (!donorEmail) {
     // Donor unreachable but owner still benefits from the escalated context.
@@ -1018,6 +1029,14 @@ export async function handleMollieSubscriptionCanceled(
     return { ownerNotified: false, reason: 'not-adoption', meta }
   }
 
+  // Reset failure-tracker on cancel so a donor who later re-enrols starts
+  // fresh at severity='first'. Without this, a cancelled-then-re-adopted
+  // donor whose old subscription had 2 failures would be flagged 'at-risk'
+  // on their very first new failure.
+  if (subscription.customerId) {
+    resetFailures('mollie', subscription.customerId)
+  }
+
   if (!deps.ownerEmail) {
     return { ownerNotified: false, reason: 'missing-owner-email', meta }
   }
@@ -1110,6 +1129,12 @@ export async function handleStripeSubscriptionDeleted(
   // subscription products in future — skip non-matching metadata silently.
   if (subscription.metadata?.product && subscription.metadata.product !== 'adopt-a-paca') {
     return { ownerNotified: false, reason: 'not-adoption', meta }
+  }
+
+  // Reset failure-tracker on cancel — see handleMollieSubscriptionCanceled
+  // for the matching Mollie-side rationale.
+  if (typeof subscription.customer === 'string' && subscription.customer.length > 0) {
+    resetFailures('stripe', subscription.customer)
   }
 
   if (!deps.ownerEmail) {

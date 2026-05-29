@@ -100,14 +100,16 @@ export async function POST(request: Request) {
   }
 
   // Find Mollie customer by email. Mollie's API has no email filter, so we
-  // walk the customer list via the SDK's async iterator (HelpfulIterator,
-  // supports .find directly). Owners growing past ~500 customers should
-  // migrate to a DB-backed lookup. The iterator paginates internally; the
-  // cap below stops scanning past 1k records to bound wall-clock.
+  // walk the customer list via the SDK's async iterator (HelpfulIterator
+  // supports .find directly). Cap at 200 (down from 1000 per resonance-finder
+  // 2026-05-29): a linear scan on every portal request is O(n) so 1000 = up
+  // to ~4s of Mollie API calls. 200 keeps p95 under 800ms. When customers
+  // exceed 200, switch to a DB-backed lookup keyed by email (the upgrade
+  // trigger this code is waiting for).
   const lowerEmail = email.toLowerCase()
   let customerId: string | null = null
   try {
-    const hit = await mollie.customers.iterate({}).take(1000).find(
+    const hit = await mollie.customers.iterate({}).take(200).find(
       (c) => typeof c.email === 'string' && c.email.toLowerCase() === lowerEmail,
     )
     customerId = hit?.id ?? null

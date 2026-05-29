@@ -15,6 +15,19 @@ export async function POST(request: Request) {
         const body = await request.json()
         const { name, email, subject, message, 'cf-turnstile-response': captchaToken } = body
 
+        // Cap input lengths server-side. Client form has its own limits but a
+        // direct API caller could send a 10MB payload that bypasses all guards
+        // until escapeHtml — wasted CPU + log noise. RFC 5321 email cap is 320.
+        const MAX_NAME = 200, MAX_EMAIL = 320, MAX_SUBJ = 200, MAX_MSG = 4000
+        if (
+            (name && String(name).length > MAX_NAME) ||
+            (email && String(email).length > MAX_EMAIL) ||
+            (subject && String(subject).length > MAX_SUBJ) ||
+            (message && String(message).length > MAX_MSG)
+        ) {
+            return attachRequestId(NextResponse.json({ error: 'Input too long' }, { status: 400 }), reqId)
+        }
+
         if (detectHoneypot(body, 'company_url')) {
             log.warn('Bot submission blocked', { route: '/api/contact' })
             return attachRequestId(NextResponse.json({ success: true }, { status: 200 }), reqId)
