@@ -6,6 +6,11 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  // Canonical URL form is no-trailing-slash (matches buildLocaleAlternates output).
+  // Without this, both /en/tours and /en/tours/ are reachable; the slashed variant
+  // becomes duplicate content with a canonical pointing at the no-slash form.
+  // Per i18n route correctness audit 2026-05-29.
+  trailingSlash: false,
   async headers() {
     // CSP Report-Only per ADR-010: GTM/GA4 use inline beforeInteractive scripts
     // (ADR-006/014), so a strict CSP would break analytics. Report-Only mode

@@ -58,14 +58,18 @@ weeks later when the Monday email doesn't land.
 **Why**: A silent cron is worse than no cron — owner builds a mental model
 "I get my weekly MRR" and starts ignoring the absence.
 
-**Verify**:
+**Code is ready** (`lib/heartbeat.ts` + wired into both cron routes).
+Owner action required:
+
 1. Sign up at `https://healthchecks.io` (free tier — 20 checks)
 2. Create check "owner-mrr-digest" with cron pattern `0 6 * * 1` + 1h grace
-3. Add the ping URL to env: `HEALTHCHECKS_MRR_DIGEST_URL=https://hc-ping.com/<uuid>`
-4. Wire into `app/api/owner-mrr-digest/route.ts` end-of-handler: `fetch(process.env.HEALTHCHECKS_MRR_DIGEST_URL)` (best-effort, no await)
-5. Repeat for owner-digest.
+3. Add ping URL to Vercel env: `HEARTBEAT_OWNER_MRR_DIGEST_URL=https://hc-ping.com/<uuid>`
+4. Create check "owner-digest" with cron pattern `0 9 * * 1` + 1h grace
+5. Add ping URL: `HEARTBEAT_OWNER_DIGEST_URL=https://hc-ping.com/<uuid>`
+6. Trigger the cron manually via the Vercel cron tab + confirm Healthchecks turns green.
 
-**Deferred to growth-tracker**: code change pending env-var availability.
+When env vars are unset (preview/dev), `pingHeartbeat()` is a no-op so
+nothing leaks to the wrong check.
 
 ---
 
@@ -137,22 +141,28 @@ default per PECR.
 
 ### 7. Article 17 deletion (Right to be Forgotten)
 
-**What**: `app/api/gdpr-request/route.ts` currently only emails the owner
-when a deletion request lands. **No actual delete is executed** against
-Stripe (`customers.del`), Mollie (`customers.delete`), the in-memory
-trackers, or the Resend audience.
+**What**: `app/api/gdpr-request/route.ts` now **discovers** Mollie
+customer IDs matching the requesting email (commit-batch this session)
+and surfaces them in the owner email, so the owner has concrete IDs to
+delete. Actual deletion is still manual via the Mollie/Stripe dashboards.
 
 **Why**: Under Article 17, a controller has 1 month to delete OR justify
-refusal. An email-the-owner approach without a documented manual checklist
-will miss systems. Auditor finding.
+refusal. Manual deletion is legally sufficient at current scale; what was
+missing was a way for the owner to find the records — that's now solved
+for Mollie. Stripe + Resend + FareHarbor still require manual lookup.
 
-**Verify**: Owner needs to either:
-1. Wire actual SDK delete calls into the route (code change), OR
-2. Maintain a runbook (`docs/gdpr-deletion-runbook.md`) listing every system
-   to manually purge, with sign-off checklist per request.
+**Verify**: Owner runbook (see `docs/gdpr-deletion-runbook.md` — to be
+written) listing the five systems to check per request:
+1. Mollie — automated discovery in GDPR email (delete via dashboard)
+2. Stripe — search customers by email in dashboard (deferred to growth-tracker #5)
+3. Resend — Audiences → search by email → remove
+4. FareHarbor — search bookings by email → contact FH support for purge
+5. In-memory trackers — `resetFailures()` for the discovered customerId,
+   `__resetVatTracker()` for full wipe (do NOT do this — trackers don't
+   store PII keyed by email so no per-donor delete is required).
 
-Owner-choice. Option 2 is fine at current scale (<50 donors); switch to
-option 1 before 200 donors when manual is no longer practical.
+**Switch to automated deletion** when donor count > 200 or when a
+deletion request is missed past the 30-day window.
 
 ---
 

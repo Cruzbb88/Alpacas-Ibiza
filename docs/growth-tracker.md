@@ -320,7 +320,114 @@ are mostly UX edge cases or need ISO-week extraction first.
 
 ---
 
-## 10. Stripe SDK any-cast hardening (renamed from item 6)
+## 10. Performance — GA4/GTM beforeInteractive + zero dynamic() imports
+
+**Where:**
+- `app/layout.tsx:57-92` — 5 `<Script strategy="beforeInteractive">` blocks
+  loading `gtag.js` (~75KB) + GTM before hydration
+- `app/[locale]/layout.tsx:5-21` — 14 client components mounted on EVERY
+  locale route (Header, Footer, CookieConsent, FloatingWhatsApp ×424L,
+  StickyBookingBar, ScrollTracker, OutboundLinkTracker, WebVitals, etc.)
+- Repo-wide grep for `next/dynamic` returns ZERO production imports.
+
+**Status:** Violates ADR 014 (`ga4-afterinteractive-supersedes-006`). On
+3G mobile the GA4/GTM beforeInteractive load is the #1 LCP killer.
+FloatingWhatsApp, CookieConsent banner, BackToTop, MobileStickyBookingBar
+are all post-load / below-fold and should be `dynamic(…, { ssr: false })`.
+
+**Why deferred:** The fix is mechanical but spans every route's render
+tree — easy to introduce hydration mismatches if rushed. Needs a careful
+A/B against Vercel Speed Insights to confirm LCP improvement on mobile.
+
+**Trigger to revisit:**
+- Vercel Speed Insights p75 mobile LCP > 2.5s (current LCP unknown without
+  build + deploy).
+- Lighthouse mobile score < 70 on `/en/adopt` or `/en/tours`.
+- Before the mobile-first ad campaign goes live (LCP affects ad quality
+  score on Google Ads).
+
+**What to do when triggered:**
+1. Move every `<Script strategy="beforeInteractive">` in `app/layout.tsx`
+   to `afterInteractive`. The Consent Mode default stub MAY stay
+   `beforeInteractive` (it's a tiny synchronous dataLayer init).
+2. Wrap `FloatingWhatsApp`, `CookieConsent`, `BackToTop`,
+   `MobileStickyBookingBar` in `dynamic(() => import(…), { ssr: false })`.
+3. Wrap `AdoptThankYou` (only used on `?checkout=success`) in dynamic on
+   the adopt page.
+4. Add `revalidate = 3600` to journal slug + journal index pages.
+
+---
+
+## 11. SEO — OG image registry + sitemap completeness
+
+**Where:**
+- `lib/og-images.ts:21-36` — `OG_IMAGES` registry empty; every page
+  returns the `placeholder.svg` fallback.
+- `lib/tenants/alpacasibiza.ts:93` — `ogImageUrl: null`.
+- `app/sitemap-news.xml/route.ts` — empty file but advertised from robots.
+- `app/not-found.tsx` — root 404 does `redirect()` (HTTP 307 → 200), not
+  a true 404. Crawler-side soft-404 risk.
+- `lib/structured-data.ts` — `addressRegion: 'Islas Baleares'` vs
+  `'Balearic Islands'` drift; placeholder logos referenced in JSON-LD.
+
+**Status:** Every social share (Facebook / Twitter / LinkedIn / WhatsApp
+preview) renders with a placeholder SVG. Sitemap omits `/adopt` (NOW
+FIXED in commit 1561178's successor). Multiple JSON-LD inconsistencies.
+
+**Why deferred:** OG images need owner-produced photography per route.
+The placeholder is generated but a real OG asset per route requires a
+brand-consistent template + hero shot for each surface (12+ routes).
+
+**Trigger to revisit:**
+- First social-share metric in Vercel analytics shows low CTR on link
+  previews.
+- Before launch: at minimum produce one site-wide OG hero (single image)
+  so every share gets *something* coherent.
+
+**What to do when triggered:**
+1. Add a default OG image to `public/images/og/default.webp` and update
+   `lib/tenants/alpacasibiza.ts:93` from `null` to a path.
+2. Populate `lib/og-images.ts:OG_IMAGES` per high-traffic route
+   (`/adopt`, `/tours`, `/experiences/*`).
+3. Replace `redirect()` in `app/not-found.tsx` with `notFound()` direct
+   call so crawler gets proper 404.
+4. Decide on EN-vs-ES region naming in `lib/structured-data.ts`; pick one
+   and apply across `localBusinessSchema` + `yogaWeeklyEventSchema`.
+
+---
+
+## 12. Accessibility — newsletter label + brand contrast tokens
+
+**Where:**
+- `components/newsletter-form.tsx:50-57` — `<input type="email">` has
+  only `placeholder=`; missing visible-or-sr-only `<label htmlFor>` +
+  `aria-label`.
+- `app/globals.css:21,43` — `--foreground: 210 13% 30%` (3.82:1 contrast)
+  and `--accent: 25 70% 55%` (2.93:1 on white) both fail WCAG 1.4.3.
+
+**Status:** WCAG 1.3.1 / 3.3.2 fail on newsletter form (screen-reader
+hears no label). WCAG 1.4.3 fail on brand tokens.
+
+**Why deferred:** Newsletter label fix is one-liner. The contrast tokens
+need owner / designer sign-off because they change brand voice. The
+CLAUDE.md table lists corrected values as "OWNER REVIEW NEEDED".
+
+**Trigger to revisit:**
+- EU EAA / Directive 2019/882 enforcement (28 June 2025) — accessibility
+  is legally required for EU-targeting public sites.
+- Any user reports trouble using the newsletter form.
+
+**What to do when triggered:**
+1. Add `<label htmlFor="newsletter-email" class="sr-only">` to
+   `components/newsletter-form.tsx`.
+2. Apply the CLAUDE.md-approved `--foreground` and `--accent` lightness
+   values to `app/globals.css` (already documented).
+3. Replace inline skip-link in `app/[locale]/layout.tsx:86-91` with
+   `<SkipToMain />` from `components/skip-to-main.tsx` for i18n correctness.
+
+---
+
+## 13. Stripe SDK any-cast hardening (renamed from item 6)
 
 **Where:** Any place that still uses the `stripeFactory(...)` runtime-import
 pattern without `import type { Stripe } from 'stripe'`.

@@ -57,6 +57,9 @@ import {
   ADOPT_PRICE_YEARLY_EUR,
   SITE_BASE_URL,
 } from '../config.ts'
+import { makeRequestLogger } from '../request-id.ts'
+
+const log = makeRequestLogger('payment-mollie', '')
 
 const FALLBACK_MAILTO =
   'mailto:info@alpacasibiza.com?subject=Adopt%20an%20Alpaca%20enquiry'
@@ -151,22 +154,21 @@ export function molliePaymentProvider(opts?: {
     ): Promise<CheckoutResult> {
       const apiKey = process.env.MOLLIE_API_KEY
       if (!apiKey) {
-        console.warn('[mollie] MOLLIE_API_KEY unset — falling back to mailto.')
+        log.warn('[mollie] MOLLIE_API_KEY unset — falling back to mailto.')
         return { unconfigured: true, fallbackUrl }
       }
 
       const webhookSecret = process.env.MOLLIE_WEBHOOK_SECRET
       if (!webhookSecret) {
-        console.warn(
-          '[mollie] MOLLIE_WEBHOOK_SECRET unset — falling back to mailto. ' +
-            'Recurring subscriptions cannot be created without a verifiable webhook URL.',
+        log.warn(
+          '[mollie] MOLLIE_WEBHOOK_SECRET unset — falling back to mailto. Recurring subscriptions cannot be created without a verifiable webhook URL.',
         )
         return { unconfigured: true, fallbackUrl }
       }
 
       const tier = checkoutOpts.productId
       if (!isAdoptTier(tier)) {
-        console.warn(
+        log.warn(
           `[mollie] productId must be 'monthly' or 'yearly' (received '${tier ?? 'undefined'}') — falling back to mailto.`,
         )
         return { unconfigured: true, fallbackUrl }
@@ -174,9 +176,8 @@ export function molliePaymentProvider(opts?: {
 
       const factory = await importMollie()
       if (!factory) {
-        console.error(
-          '[mollie] @mollie/api-client not installed. ' +
-            'Run: pnpm add @mollie/api-client  (owner-controlled deploy step).',
+        log.error(
+          '[mollie] @mollie/api-client not installed. Run: pnpm add @mollie/api-client  (owner-controlled deploy step).',
         )
         return { unconfigured: true, fallbackUrl }
       }
@@ -255,7 +256,7 @@ export function molliePaymentProvider(opts?: {
             : payment._links?.checkout?.href
 
         if (!checkoutUrl) {
-          console.error(
+          log.error(
             '[mollie] Payment created but no checkout URL returned',
             { id: payment.id },
           )
@@ -265,7 +266,7 @@ export function molliePaymentProvider(opts?: {
         return { url: checkoutUrl }
       } catch (err) {
         const message = err instanceof Error ? err.message : String(err)
-        console.error('[mollie] Payment creation failed:', message)
+        log.error('[mollie] Payment creation failed:', { message })
         return { unconfigured: true, fallbackUrl }
       }
     },
@@ -295,13 +296,13 @@ export function molliePaymentProvider(opts?: {
     ): Promise<WebhookResult> {
       const apiKey = process.env.MOLLIE_API_KEY
       if (!apiKey) {
-        console.error(
+        log.error(
           '[mollie] MOLLIE_API_KEY unset — returning ok:false (fail-closed).',
         )
         return { ok: false }
       }
       if (!process.env.MOLLIE_WEBHOOK_SECRET) {
-        console.error(
+        log.error(
           '[mollie] MOLLIE_WEBHOOK_SECRET unset — returning ok:false (fail-closed).',
         )
         return { ok: false }
@@ -311,7 +312,7 @@ export function molliePaymentProvider(opts?: {
       const params = new URLSearchParams(rawBody)
       const paymentId = params.get('id')
       if (!paymentId || !/^(tr|sub)_[A-Za-z0-9]+$/.test(paymentId)) {
-        console.warn(
+        log.warn(
           `[mollie] Webhook rejected — invalid or missing id (got '${paymentId ?? 'null'}').`,
         )
         return { ok: false }
@@ -319,7 +320,7 @@ export function molliePaymentProvider(opts?: {
 
       const factory = await importMollie()
       if (!factory) {
-        console.error(
+        log.error(
           '[mollie] @mollie/api-client not installed — cannot verify webhook.',
         )
         return { ok: false }
@@ -338,7 +339,7 @@ export function molliePaymentProvider(opts?: {
         }
       } catch (err) {
         const message = err instanceof Error ? err.message : String(err)
-        console.warn(
+        log.warn(
           `[mollie] Webhook payment fetch failed for ${paymentId}: ${message}`,
         )
         return { ok: false }

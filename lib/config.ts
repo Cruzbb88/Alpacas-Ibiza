@@ -1,4 +1,8 @@
 
+import { makeRequestLogger } from './request-id.ts'
+
+const log = makeRequestLogger('config', '')
+
 // central config helpers for environment-driven constants
 
 /**
@@ -29,7 +33,7 @@ export const ADOPT_PRICE_YEARLY_EUR: number =
 // explicitly set, so prod with a misconfigured env falls back to a demo account
 // silently instead of visibly failing.
 if (typeof window === 'undefined' && process.env.NODE_ENV === 'production' && !process.env.NEXT_PUBLIC_FAREHARBOR_SHORTNAME) {
-    console.warn('[fareharbor] NEXT_PUBLIC_FAREHARBOR_SHORTNAME unset in production — falling back to hardcoded default. Check your deploy env vars.')
+    log.warn('[fareharbor] NEXT_PUBLIC_FAREHARBOR_SHORTNAME unset in production — falling back to hardcoded default. Check your deploy env vars.')
 }
 
 /**

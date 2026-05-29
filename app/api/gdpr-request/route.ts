@@ -6,6 +6,8 @@ import { isValidEmail } from '@/lib/validate-email'
 import { detectHoneypot } from '@/lib/honeypot'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
 import { escapeHtml } from '@/lib/html'
+import { getMollieClient } from '@/lib/integrations/payment-mollie'
+import { maskCustomerId } from '@/lib/log-pii'
 
 /**
  * POST /api/gdpr-request
@@ -85,6 +87,36 @@ export async function POST(request: Request) {
   const escapedDetails = escapeHtml(details)
   const escapedType = type.toUpperCase()
 
+  // Best-effort data-discovery for the owner email. This is NOT a deletion —
+  // it just answers "what records exist for this email?" so the owner can
+  // quickly find the IDs to act on within the 30-day Article 17 window. All
+  // SDK calls wrapped in try/catch — a failure here must not break the
+  // user-facing acknowledgement. Mollie iteration is capped at 200 (same
+  // ceiling as /api/mollie-manage) to bound owner-facing latency.
+  let mollieDiscovery = ''
+  try {
+    const apiKey = process.env.MOLLIE_API_KEY
+    if (apiKey) {
+      const mollie = await getMollieClient(apiKey)
+      if (mollie) {
+        const lowerEmail = email.toLowerCase()
+        const hit = await mollie.customers.iterate({}).take(200).find(
+          (c) => typeof c.email === 'string' && c.email.toLowerCase() === lowerEmail,
+        )
+        if (hit?.id) {
+          mollieDiscovery = `<p><strong>Mollie customer found:</strong> <code>${escapeHtml(hit.id)}</code><br/>
+            Delete via Mollie dashboard → Customers → ${escapeHtml(hit.id)} → Delete (cascades subscriptions).</p>`
+          log.info('gdpr-request: mollie match', { customer: maskCustomerId(hit.id) })
+        } else {
+          mollieDiscovery = '<p><em>No Mollie customer found for this email (scanned latest 200).</em></p>'
+        }
+      }
+    }
+  } catch (err) {
+    log.warn('mollie discovery failed', { err: String(err) })
+    mollieDiscovery = '<p><em>Mollie discovery failed — check dashboard manually.</em></p>'
+  }
+
   try {
     await sendEmail({
       to: TO_EMAIL,
@@ -97,11 +129,14 @@ export async function POST(request: Request) {
           <p><strong>Email:</strong> <a href="mailto:${escapedEmail}">${escapedEmail}</a></p>
           ${details ? `<p><strong>Additional details:</strong></p><p style="white-space:pre-wrap">${escapedDetails}</p>` : ''}
           <hr />
+          <h3 style="color:#556B2F;font-size:14px">Data discovery</h3>
+          ${mollieDiscovery}
+          <p><em>Stripe / FareHarbor / Resend / GA still require manual lookup — see
+          <code>docs/gdpr-deletion-runbook.md</code>.</em></p>
+          <hr />
           <p style="color:#888;font-size:12px">
-            Legal deadline: respond within 30 days (GDPR Articles 12, 15, 17). Without a customer DB,
-            data sources to check: Resend (newsletter subscribers, email log), FareHarbor (booking history
-            if API access is set up), Google Analytics (anonymized), Stripe / Mollie (Adopt-a-Paca
-            subscribers if any). Reply directly to the requester at the email above.
+            Legal deadline: respond within 30 days (GDPR Articles 12, 15, 17).
+            Reply directly to the requester at the email above when fulfilled.
           </p>
           <p style="color:#888;font-size:10px">Request ID: ${reqId}</p>
         </div>

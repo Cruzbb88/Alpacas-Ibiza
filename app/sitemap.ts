@@ -9,6 +9,7 @@ const routes = [
     '',           // homepage
     '/tours',
     '/about',
+    '/adopt',     // primary conversion page — was missing per SEO audit 2026-05-29
     '/contact',
     '/shop',
     '/shop/woven',

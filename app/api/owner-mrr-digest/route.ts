@@ -5,6 +5,7 @@ import { _internalGetStoreSnapshot } from '@/lib/payment-failure-tracker'
 import { getMollieClient } from '@/lib/integrations/payment-mollie'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
 import { verifyCronSecret } from '@/lib/cron-auth'
+import { pingHeartbeat } from '@/lib/heartbeat'
 
 /**
  * GET /api/owner-mrr-digest   (Authorization: Bearer <CRON_SECRET>)
@@ -249,6 +250,10 @@ export async function GET(request: Request) {
         // Fail-quiet: log but return 200 so Vercel cron doesn't retry.
         // A retry would re-send the same digest — worse than a missed send.
         log.error('sendEmail failed', { err: String(err) })
+        // Ping heartbeat anyway: the cron itself fired and reached this code
+        // path, so the dead-man's switch should not alarm. The send-fail is
+        // surfaced via log.error for ops review.
+        pingHeartbeat('owner-mrr-digest')
         return attachRequestId(
             NextResponse.json({
                 ok: true,
@@ -261,6 +266,9 @@ export async function GET(request: Request) {
         )
     }
 
+    // Heartbeat: ping the external watchdog AFTER successful send so
+    // Healthchecks.io marks this run green. No-op when env var unset.
+    pingHeartbeat('owner-mrr-digest')
     return attachRequestId(
         NextResponse.json({
             ok: true,

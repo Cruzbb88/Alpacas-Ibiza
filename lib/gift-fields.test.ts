@@ -48,16 +48,20 @@ describe('parseGiftFields — required fields', () => {
 })
 
 describe('parseGiftFields — message length boundary', () => {
-  it('rejects empty message', () => {
-    assert.equal(parseGiftFields({ ...VALID_RAW, gift_message: '' }), null)
+  it('accepts empty message (simplified gift_name/email/deliver form has no message field)', () => {
+    const out = parseGiftFields({ ...VALID_RAW, gift_message: '' })
+    assert.ok(out)
+    assert.equal(out!.message, '')
   })
 
-  it('rejects 1-char message', () => {
+  it('rejects 1-char message (when provided must be substantive)', () => {
     assert.equal(parseGiftFields({ ...VALID_RAW, gift_message: 'x' }), null)
   })
 
-  it('rejects whitespace-only message (trim collapses to 0 chars)', () => {
-    assert.equal(parseGiftFields({ ...VALID_RAW, gift_message: '   ' }), null)
+  it('accepts whitespace-only message (trim collapses to 0 chars, treated as no-message)', () => {
+    const out = parseGiftFields({ ...VALID_RAW, gift_message: '   ' })
+    assert.ok(out)
+    assert.equal(out!.message, '')
   })
 
   it('accepts EXACTLY 2-char message ("xx")', () => {

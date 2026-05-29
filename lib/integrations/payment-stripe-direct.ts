@@ -24,6 +24,9 @@
 import type { PaymentProvider, CheckoutResult, WebhookResult, CreateCheckoutOpts } from './payment'
 import { importStripe } from './stripe-sdk.ts'
 import { ADOPT_FALLBACK_MAILTO } from '../payment-vendor.ts'
+import { makeRequestLogger } from '../request-id.ts'
+
+const log = makeRequestLogger('payment-stripe-direct', '')
 
 const FALLBACK_MAILTO = ADOPT_FALLBACK_MAILTO
 
@@ -39,22 +42,22 @@ export function stripeDirectPaymentProvider(opts?: {
     async createCheckoutSession(checkoutOpts: CreateCheckoutOpts): Promise<CheckoutResult> {
       const secretKey = process.env.STRIPE_SECRET_KEY
       if (!secretKey) {
-        console.warn(
-          '[stripe-direct] STRIPE_SECRET_KEY unset — falling back to mailto.'
+        log.warn(
+          '[stripe-direct] STRIPE_SECRET_KEY unset — falling back to mailto.',
         )
         return { unconfigured: true, fallbackUrl }
       }
 
       if (!checkoutOpts.productId) {
-        console.warn(
-          '[stripe-direct] productId (Stripe Price ID) not provided — falling back to mailto.'
+        log.warn(
+          '[stripe-direct] productId (Stripe Price ID) not provided — falling back to mailto.',
         )
         return { unconfigured: true, fallbackUrl }
       }
 
       const stripeFactory = await importStripe()
       if (!stripeFactory) {
-        console.error('[stripe-direct] stripe SDK not installed. Run: pnpm add stripe')
+        log.error('[stripe-direct] stripe SDK not installed. Run: pnpm add stripe')
         return { unconfigured: true, fallbackUrl }
       }
       const stripe = stripeFactory(secretKey, { apiVersion: '2024-06-20' })
@@ -89,8 +92,8 @@ export function stripeDirectPaymentProvider(opts?: {
       // Fail-CLOSED: if secret unset, reject all webhooks.
       const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
       if (!webhookSecret) {
-        console.error(
-          '[stripe-direct] STRIPE_WEBHOOK_SECRET unset — returning ok:false (fail-closed).'
+        log.error(
+          '[stripe-direct] STRIPE_WEBHOOK_SECRET unset — returning ok:false (fail-closed).',
         )
         return { ok: false }
       }
@@ -113,7 +116,7 @@ export function stripeDirectPaymentProvider(opts?: {
         return { ok: true, event }
       } catch (err) {
         const message = err instanceof Error ? err.message : String(err)
-        console.warn('[stripe-direct] Webhook signature verification failed:', message)
+        log.warn('[stripe-direct] Webhook signature verification failed:', { message })
         return { ok: false }
       }
     },

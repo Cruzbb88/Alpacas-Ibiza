@@ -4,6 +4,7 @@ import { fetchWithTimeout } from '@/lib/fetch'
 import { safeEqual } from '@/lib/secrets'
 import { escapeHtml } from '@/lib/html'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
+import { pingHeartbeat } from '@/lib/heartbeat'
 
 /**
  * GET /api/owner-digest?secret=<CRON_SECRET>
@@ -51,6 +52,7 @@ export async function GET(request: Request) {
                 `,
                 listUnsubscribeUrl: `mailto:${process.env.CONTACT_EMAIL ?? 'info@alpacasibiza.com'}?subject=unsubscribe`,
             })
+            pingHeartbeat('owner-digest')
             return attachRequestId(NextResponse.json({ sent: true, mode: 'fallback' }), reqId)
         } catch (err) {
             log.error('fallback send failed', { err: String(err) })
@@ -151,6 +153,7 @@ export async function GET(request: Request) {
             listUnsubscribeUrl: `mailto:${process.env.CONTACT_EMAIL ?? 'info@alpacasibiza.com'}?subject=unsubscribe`,
         })
 
+        pingHeartbeat('owner-digest')
         return attachRequestId(
             NextResponse.json({
                 sent: true,
