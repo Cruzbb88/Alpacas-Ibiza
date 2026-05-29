@@ -83,23 +83,40 @@ configuration gap that should alert via the dead-man's switch.
 
 ### 4. Resend bounce + complaint webhook
 
-**What**: Resend exposes `email.bounced`, `email.delivery_delayed`,
-`email.complained` webhook events. **None wired** in this codebase.
-Repeated sends to a hard-bounced address (typo'd gift recipient) keep
-firing on every Stripe/Mollie retry → erodes domain reputation → all
-mail goes to spam.
+**Code is ready.** `app/api/resend-webhook/route.ts` receives bounce +
+complaint events with Svix-style signature verification (replay window,
+constant-time HMAC compare, fail-CLOSED on missing secret).
+`lib/email-suppression.ts` holds the in-memory suppression list with
+precedence rules (complaint > hard-bounce > manual). `lib/mailer.ts`
+checks suppression before EVERY send and short-circuits when the
+recipient is on the list — never reaches Resend's API.
 
 **Why**: Sender reputation is hard to recover. A 5% bounce rate on a new
-domain is enough for Gmail to start spam-foldering EVERY email.
+domain is enough for Gmail to start spam-foldering EVERY email. Without
+suppression, every Mollie/Stripe webhook retry re-sends to a typo'd
+recipient and racks up bounces.
 
-**Verify**:
-1. Add `POST /api/resend-webhook` route reading bounce / complaint events
-2. Maintain a suppression list (in-memory ok at current volume; KV later)
-3. Skip `sendEmail` to suppressed addresses; log + return null id
-4. Sign up Resend dashboard → Webhooks → Add Endpoint pointing at the route
+**Owner action required:**
 
-**Deferred to growth-tracker**: code change pending Resend webhook signing
-secret env var.
+1. Resend dashboard → Webhooks → Add Endpoint.
+2. URL: `https://alpacasibiza.com/api/resend-webhook`
+3. Select events: `email.bounced` AND `email.complained` (skip the rest
+   for now — we ignore delivered/opened/clicked).
+4. Copy the signing secret (starts with `whsec_`) and set it in Vercel
+   env as `RESEND_WEBHOOK_SECRET`.
+5. Resend dashboard → click "Send test event" → confirm the route returns
+   200 (only ack — no suppression action on a test payload).
+
+When `RESEND_WEBHOOK_SECRET` is unset the route returns 503 (fail-CLOSED)
+so an attacker can't drive the suppression list without the secret.
+
+**Cold-start caveat:** suppression list lives in process-scoped memory
+per ADR 001. After a Vercel restart, newly-bounced addresses could be
+re-sent to ONE TIME before Resend's next bounce event re-flags them.
+Acceptable: one extra bounce per restart is far better than the uncapped
+firehose without any suppression. Upgrade trigger: persistent reputation
+damage observed → migrate to `email_suppressions` table (growth-tracker
+#1 KV/DB migration path).
 
 ---
 

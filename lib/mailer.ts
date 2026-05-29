@@ -1,4 +1,5 @@
 import { Resend } from 'resend'
+import { isSuppressed, getSuppression } from './email-suppression.ts'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 const DEFAULT_TO = process.env.CONTACT_EMAIL ?? 'info@alpacasibiza.com'
@@ -45,6 +46,19 @@ export async function sendEmail({
     listUnsubscribeUrl,
     attachments,
 }: SendEmailOptions): Promise<{ id: string | null }> {
+    // Suppression gate — protect sender reputation. /api/resend-webhook adds
+    // bounced + complained addresses to the in-memory suppression store;
+    // every subsequent send to that address is skipped here BEFORE the
+    // Resend API call so we don't rack up bounce count + cost.
+    // The owner CONTACT_EMAIL fallback is never suppressed (admin notifications
+    // must always go through; the owner can unsuppress their own address via
+    // a future admin page if it ever lands in the store).
+    if (to !== DEFAULT_TO && isSuppressed(to)) {
+        const entry = getSuppression(to)
+        console.warn(`[mailer] skipping send to suppressed address: reason=${entry?.reason ?? 'unknown'}, subject="${subject}"`)
+        return { id: null }
+    }
+
     // Build List-Unsubscribe headers when a per-recipient URL is supplied.
     // Resend accepts `headers: Record<string, string>` on the email payload.
     const listUnsubscribeHeaders: Record<string, string> = listUnsubscribeUrl
