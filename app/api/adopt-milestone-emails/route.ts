@@ -151,9 +151,29 @@ export async function GET(request: Request) {
             const milestone = getDonorMilestone(createdDate, now)
             if (milestone === null) continue
 
-            const email = raw.metadata?.donorEmail ?? null
+            // Mollie subscription metadata does NOT carry the donor email
+            // (webhook writes only product/tier/tenantId/seedPaymentId). The
+            // donor email lives on the customer record — fetch it on demand.
+            // Skip if customerId missing (degenerate orphan sub).
+            if (!raw.customerId) {
+                log.warn('Skipping milestone for sub with no customerId', { subId: raw.id, milestone })
+                continue
+            }
+            let email: string | null = null
+            let donorName: string | null = null
+            try {
+                const customer = await mollie.customers.get(raw.customerId)
+                email = typeof customer?.email === 'string' ? customer.email : null
+                donorName = typeof customer?.name === 'string' ? customer.name : null
+            } catch (custErr) {
+                log.warn('mollie.customers.get failed — skipping recipient', {
+                    subId: raw.id,
+                    message: custErr instanceof Error ? custErr.message : String(custErr),
+                })
+                continue
+            }
             if (!email) {
-                log.warn('Skipping milestone for active subscription with no donorEmail in metadata', {
+                log.warn('Skipping milestone — customer has no email on file', {
                     subId: raw.id,
                     milestone,
                 })

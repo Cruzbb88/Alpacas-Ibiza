@@ -9,6 +9,7 @@ import { localBusinessSchema, faqPageSchema, toJsonLd } from '@/lib/structured-d
 import type { Locale } from '@/i18n.config'
 
 import { SITE_BASE_URL as BASE_URL } from '@/lib/config'
+import { getProductBookingUrl } from '@/lib/fareharbor-products'
 
 export async function generateMetadata({
     params,
@@ -79,7 +80,7 @@ export default async function FamilyPage({ params }: { params: Promise<{ locale:
                 subtitle={translate('family.subtitle')}
                 cta={{
                     label: translate('family.cta'),
-                    href: 'https://fareharbor.com/embeds/book/alpacasibiza/?full-items=yes',
+                    href: getProductBookingUrl('family-farm-days'),
                 }}
                 backgroundImage="/images/family-hero.webp"
             />

@@ -126,10 +126,17 @@ export async function POST(request: Request) {
   let tier: AdoptTier | null = null
   let alpacaSlugRaw: string | null = null
   let giftFields: ParsedGiftFields | null = null
+  let referredBy: string | null = null
   try {
     const body = await request.json()
     if (isAdoptTier(body?.tier)) tier = body.tier
     if (typeof body?.alpaca === 'string') alpacaSlugRaw = body.alpaca
+    // Embedded path was silently dropping ?ref= attribution — hosted route
+    // writes metadata.referredBy but the intent route omitted it.
+    if (typeof body?.ref === 'string') {
+      const { verifyReferralCode } = await import('@/lib/referral-codes')
+      referredBy = verifyReferralCode(body.ref)
+    }
     // Mirror the Stripe intent route: accept gift as nested object OR flat gift_*.
     if (body?.gift && typeof body.gift === 'object') {
       giftFields = parseGiftFields({
@@ -198,6 +205,7 @@ export async function POST(request: Request) {
         tier,
         checkout_mode: 'embedded',
         ...(alpacaSlug ? { alpaca: alpacaSlug } : {}),
+        ...(referredBy ? { referredBy } : {}),
         ...(giftFields ? toMollieGiftMetadata(giftFields) : {}),
       },
     }

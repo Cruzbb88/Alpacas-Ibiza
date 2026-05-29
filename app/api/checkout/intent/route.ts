@@ -8,6 +8,7 @@ import { parseGiftFields, type ParsedGiftFields } from '@/lib/gift-fields'
 import { rateLimit, getClientIp } from '@/lib/rate-limit'
 import { ADOPT_PRICE_MONTHLY_EUR, ADOPT_PRICE_YEARLY_EUR } from '@/lib/config'
 import { isEmbeddedCheckout } from '@/lib/checkout-mode'
+import { verifyReferralCode } from '@/lib/referral-codes'
 
 /**
  * POST /api/checkout/intent
@@ -103,10 +104,15 @@ export async function POST(request: Request) {
   let tier: AdoptTier | null = null
   let alpacaSlugRaw: string | null = null
   let giftFields: ParsedGiftFields | null = null
+  let referredBy: string | null = null
   try {
     const body = await request.json()
     if (isAdoptTier(body?.tier)) tier = body.tier
     if (typeof body?.alpaca === 'string') alpacaSlugRaw = body.alpaca
+    // Embedded path was silently dropping ?ref= attribution — the hosted
+    // route writes metadata.referredBy but the intent route omitted it.
+    // Now reads the same `ref` field client passes in the JSON body.
+    if (typeof body?.ref === 'string') referredBy = verifyReferralCode(body.ref)
     // Embedded path accepts gift fields as a nested object (parsed once on the
     // client) OR as the flat gift_* shape (parity with hosted route).
     if (body?.gift && typeof body.gift === 'object') {
@@ -171,6 +177,7 @@ export async function POST(request: Request) {
         tier,
         checkout_mode: 'embedded',
         ...(alpacaSlug ? { alpaca: alpacaSlug } : {}),
+        ...(referredBy ? { referredBy } : {}),
         ...(giftFields ? toStripeGiftMetadata(giftFields) : {}),
       },
     })

@@ -133,15 +133,35 @@ export async function GET(request: Request) {
             }
             if (raw.status !== 'active') continue
 
-            const email = raw.metadata?.donorEmail ?? null
+            // Mollie subscription metadata does NOT carry donor email — the
+            // webhook writes only {product, tier, tenantId, seedPaymentId}.
+            // Fetch the donor email + name from the customer record. Skip
+            // orphan subs (no customerId) and customers with no email on file.
+            if (!raw.customerId) {
+                log.warn('Skipping quarterly send: sub has no customerId', { subId: raw.id })
+                continue
+            }
+            let email: string | null = null
+            let donorName: string | null = null
+            try {
+                const customer = await mollie.customers.get(raw.customerId)
+                email = typeof customer?.email === 'string' ? customer.email : null
+                donorName = typeof customer?.name === 'string' ? customer.name : null
+            } catch (custErr) {
+                log.warn('mollie.customers.get failed — skipping recipient', {
+                    subId: raw.id,
+                    message: custErr instanceof Error ? custErr.message : String(custErr),
+                })
+                continue
+            }
             if (!email) {
-                log.warn('Skipping active subscription with no donorEmail in metadata', { subId: raw.id })
+                log.warn('Skipping quarterly send: customer has no email on file', { subId: raw.id })
                 continue
             }
             recipients.push({
                 subId: raw.id,
                 email,
-                donorName: raw.metadata?.donorName ?? null,
+                donorName,
                 alpacaName: raw.metadata?.alpacaName ?? null,
                 locale: raw.metadata?.locale ?? 'en',
             })
@@ -244,3 +264,6 @@ export async function GET(request: Request) {
         reqId,
     )
 }
+
+// Vercel cron sends POST; GET is kept so manual triggers via browser/curl still work.
+export const POST = GET

@@ -388,7 +388,18 @@ export default async function MyAdoptionPage({
           </div>
           <div
             style={{ color: '#3f3f46', fontSize: 14, lineHeight: 1.6 }}
-            dangerouslySetInnerHTML={{ __html: result.latestQuarter.newsHtml }}
+            // Belt-and-braces sanitiser: strip <script> blocks + inline event
+            // handlers before injecting. Source today is admin-composed
+            // (admin-gated save route already strips these), but this guard
+            // means a future CMS / DB swap can't bypass the policy by
+            // accident. Mirrors the strip in /api/admin/quarterly-update.
+            dangerouslySetInnerHTML={{
+              __html: result.latestQuarter.newsHtml
+                .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+                .replace(/\son\w+\s*=\s*"[^"]*"/gi, '')
+                .replace(/\son\w+\s*=\s*'[^']*'/gi, '')
+                .replace(/\son\w+\s*=\s*[^\s>]+/gi, ''),
+            }}
           />
         </section>
       )}

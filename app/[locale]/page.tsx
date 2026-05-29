@@ -273,7 +273,7 @@ export default async function Home({ params }: { params: Promise<{ locale: Local
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href="https://fareharbor.com/embeds/book/alpacasibiza/?full-items=yes"
+              href={FAREHARBOR_BOOKING_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center px-6 py-3 bg-accent hover:bg-accent/90 text-accent-foreground rounded-lg font-medium transition-colors"

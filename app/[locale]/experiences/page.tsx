@@ -64,7 +64,9 @@ const EXPERIENCES: ReadonlyArray<ExperienceRowSpec> = [
     icon: '🦙',
     duration: '90 min',
     groupSize: 'Up to 6',
-    priceFrom: '€45 / person',
+    // €30 — verified live per lib/config.ts TOUR_BASE_PRICE_EUR. Was €45
+    // (invented) which contradicted /tours and broke trust on click-through.
+    priceFrom: 'From €30 / person',
     vibe: 'classic',
     vibeLabelKey: 'experiences.vibe.classic',
     includes: [
@@ -82,7 +84,9 @@ const EXPERIENCES: ReadonlyArray<ExperienceRowSpec> = [
     icon: '🧘',
     duration: '75 min',
     groupSize: 'Up to 6',
-    priceFrom: '€55 / person',
+    // €30 — verified live per lib/config.ts YOGA_PRICE_EUR. Was €55
+    // (invented) which contradicted /yoga page.
+    priceFrom: 'From €30 / person',
     vibe: 'wellness',
     vibeLabelKey: 'experiences.vibe.wellness',
     includes: [
@@ -100,7 +104,9 @@ const EXPERIENCES: ReadonlyArray<ExperienceRowSpec> = [
     icon: '🧶',
     duration: '3 hours',
     groupSize: 'Up to 8',
-    priceFrom: '€120 / person',
+    // /workshops page shows "Contact for pricing" — Rule 5 (never invent
+    // prices). Was €120 invented; now matches child page.
+    priceFrom: 'Contact for pricing',
     vibe: 'creative',
     vibeLabelKey: 'experiences.vibe.creative',
     includes: [
@@ -118,7 +124,8 @@ const EXPERIENCES: ReadonlyArray<ExperienceRowSpec> = [
     icon: '🌅',
     duration: '2 hours',
     groupSize: '2 guests',
-    priceFrom: '€180 / couple',
+    // Was €180 invented (no owner source). Rule 5: never guess.
+    priceFrom: 'On request',
     vibe: 'romantic',
     vibeLabelKey: 'experiences.vibe.romantic',
     includes: [
@@ -136,7 +143,8 @@ const EXPERIENCES: ReadonlyArray<ExperienceRowSpec> = [
     icon: '👨‍👩‍👧‍👦',
     duration: 'Half day',
     groupSize: 'Family group',
-    priceFrom: '€140 / family',
+    // Was €140 invented (no owner source). Rule 5: never guess.
+    priceFrom: 'On request',
     vibe: 'family',
     vibeLabelKey: 'experiences.vibe.family',
     includes: [

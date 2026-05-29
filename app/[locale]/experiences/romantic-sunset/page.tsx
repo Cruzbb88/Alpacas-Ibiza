@@ -1,8 +1,11 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { Hero } from '@/components/hero'
 import { Button } from '@/components/ui/button'
 import { t } from '@/lib/translations'
 import { buildLocaleAlternates } from '@/lib/i18n-metadata'
+import { getOgImage } from '@/lib/og-images'
+import { getProductBookingUrl } from '@/lib/fareharbor-products'
 
 export async function generateMetadata({
     params,
@@ -11,9 +14,22 @@ export async function generateMetadata({
 }): Promise<Metadata> {
     const { locale } = await params
     const tr = t(locale as any)
+    const ogImage = getOgImage('alpacas', 'Romantic Sunset Experience – Alpacas Ibiza')
     return {
         title: tr('romantic.title'),
+        description:
+            'A private sunset walk with alpacas at Es Currals, Ibiza. Perfect for couples — cava, tapas, and a professional photographer included.',
         alternates: buildLocaleAlternates(locale, 'experiences/romantic-sunset'),
+        openGraph: {
+            title: tr('romantic.title'),
+            description:
+                'Private golden-hour walk through the alpaca paddocks with cava, tapas, and photography.',
+            images: [ogImage],
+        },
+        twitter: {
+            card: 'summary_large_image',
+            images: [ogImage.url],
+        },
     }
 }
 
@@ -28,9 +44,10 @@ export default async function RomanticPage({ params }: { params: Promise<{ local
                 subtitle={translate('romantic.subtitle')}
                 cta={{
                     label: translate('romantic.cta'),
-                    href: 'https://fareharbor.com/embeds/book/alpacasibiza/?full-items=yes',
+                    // Use canonical per-tour resolver — fail-open to base
+                    // calendar when FAREHARBOR_ITEM_ROMANTIC_SUNSET unset.
+                    href: getProductBookingUrl('romantic-sunset'),
                 }}
-                backgroundImage="/images/sunset-bg.jpg" // Placeholder
             />
 
             <section className="w-full py-16 md:py-24 px-4 bg-background">
@@ -68,13 +85,14 @@ export default async function RomanticPage({ params }: { params: Promise<{ local
                         <p className="text-foreground/70 mb-6">
                             {translate('romantic.proposalText')}
                         </p>
-                        <Button className="bg-accent text-accent-foreground hover:bg-accent/90">
-                            {translate('romantic.proposalCta')}
+                        <Button asChild className="bg-accent text-accent-foreground hover:bg-accent/90">
+                            <Link href={`/${locale}/contact?subject=Proposal+inquiry`}>
+                                {translate('romantic.proposalCta')}
+                            </Link>
                         </Button>
                     </div>
-                    <div className="flex-1 h-64 bg-muted animate-pulse rounded-lg flex items-center justify-center text-muted-foreground">
-                        {/* Placeholder for Proposal Image */}
-                        Proposal Image
+                    <div className="flex-1 h-64 bg-gradient-to-br from-rose-100 via-orange-100 to-amber-100 rounded-lg flex items-center justify-center text-5xl">
+                        💍
                     </div>
                 </div>
             </section>
