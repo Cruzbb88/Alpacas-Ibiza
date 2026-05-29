@@ -208,7 +208,14 @@ export function molliePaymentProvider(opts?: {
             product: 'adopt-a-paca',
             tier,
             tenantId: checkoutOpts.tenantId,
+            ...(checkoutOpts.locale ? { locale: checkoutOpts.locale } : {}),
             ...(checkoutOpts.alpacaSlug ? { alpaca: checkoutOpts.alpacaSlug } : {}),
+            // Referrer attribution — written here so the resulting
+            // Subscription (created in the webhook on payment.paid via
+            // metadata copy) carries it forward for the admin referrals
+            // dashboard. The mollie-webhook handler is expected to forward
+            // payment.metadata.referredBy onto the Subscription metadata.
+            ...(checkoutOpts.referredBy ? { referredBy: checkoutOpts.referredBy } : {}),
             ...(checkoutOpts.gift
               ? {
                   gift_recipient_email: checkoutOpts.gift.recipientEmail,

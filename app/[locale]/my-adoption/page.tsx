@@ -6,9 +6,13 @@ import { getMollieClient } from '@/lib/integrations/payment-mollie'
 import { fetchDonorPortalData } from '@/lib/donor-portal-data'
 import { getTenant } from '@/lib/tenants/server'
 import { getProviders } from '@/lib/integrations'
+import { t } from '@/lib/translations'
 import { PortalErrorState } from './error-state'
 import { PhotoGallery } from '@/components/donor-portal/photo-gallery'
 import { PaymentHistoryTable } from '@/components/donor-portal/payment-history-table'
+import { ShareCTA } from '@/components/donor-portal/share-cta'
+import { generateReferralCode } from '@/lib/referral-codes'
+import { ReferralCodeBadge } from './referral-code-badge'
 
 export const metadata = {
   title: 'Your adoption — Alpacas Ibiza',
@@ -37,6 +41,10 @@ export const revalidate = 0
  * fix lands in one place.
  *
  * NOINDEX: page renders donor-specific data with a token in the URL.
+ *
+ * i18n: page-level labels are translated via t(locale) → translations/{locale}.json
+ * `portal.*` namespace. Companion components in components/donor-portal/*
+ * remain English-only this round (separate work stream).
  */
 export default async function MyAdoptionPage({
   params,
@@ -47,6 +55,7 @@ export default async function MyAdoptionPage({
 }) {
   const { locale } = await params
   const { token } = await searchParams
+  const translate = t(locale)
 
   // No token at all → bounce to the adopt page where they can request a fresh
   // portal email. We don't render an error state for the literally-empty case
@@ -78,6 +87,39 @@ export default async function MyAdoptionPage({
   const galleryPhotos = (animal?.gallery ?? []).map((g) => ({ src: g.src, alt: g.alt }))
   const galleryAlpacaName = result.alpacaDisplayName ?? animal?.name ?? 'your alpaca'
 
+  // ── Referral code + share URL ─────────────────────────────────────────────
+  // Deterministic per-donor code derived from the Mollie customerId via HMAC.
+  // Same input → same code, so the link the donor pasted into Instagram last
+  // month still points back to them. generateReferralCode runs server-side
+  // (NEWSLETTER_SIGNING_KEY is server-only); we pass the result down to a
+  // client component for the analytics impression.
+  //
+  // Wrapped in try/catch: a missing signing key (dev misconfig) MUST NOT
+  // break the donor portal. Fall back to no badge rather than crash the
+  // whole page.
+  let referralCode: string | null = null
+  try {
+    referralCode = generateReferralCode(result.customerId)
+  } catch (err) {
+    // Tier 1 NEXTAUTH_SECRET fallback should always be set in prod; this
+    // path is reachable only in misconfigured dev environments.
+    console.warn('[my-adoption] generateReferralCode failed:', err instanceof Error ? err.message : String(err))
+  }
+
+  // Build the share URL with `?ref=<code>` appended NON-DESTRUCTIVELY so any
+  // existing `?alpaca=<slug>` stays intact (URLSearchParams merges cleanly).
+  // We deliberately mirror the URL the ShareCTA builds — same path, same
+  // alpaca param — and only add the ref tag on top.
+  const baseShareSearch = new URLSearchParams()
+  if (result.subscription.alpacaSlug) {
+    baseShareSearch.set('alpaca', result.subscription.alpacaSlug)
+  }
+  if (referralCode) {
+    baseShareSearch.set('ref', referralCode)
+  }
+  const shareQueryString = baseShareSearch.toString()
+  const referralShareUrl = `${SITE_BASE_URL}/${locale}/share-adoption${shareQueryString ? `?${shareQueryString}` : ''}`
+
   const statusLabel = result.subscription.status
   const isLive = result.isLive
   const statusColor =
@@ -95,7 +137,7 @@ export default async function MyAdoptionPage({
     <main style={{ fontFamily: 'system-ui, sans-serif', maxWidth: 720, margin: '0 auto', padding: '32px 16px', color: '#27272a' }}>
       <header style={{ marginBottom: 24 }}>
         <h1 style={{ fontSize: 32, fontWeight: 700, margin: 0, color: '#556B2F' }}>
-          Your adoption
+          {translate('portal.title')}
         </h1>
         <p style={{ color: '#71717a', margin: '4px 0 0' }}>
           <span style={{ background: statusBg, color: statusColor, padding: '2px 10px', borderRadius: 99, fontSize: 12, fontWeight: 600, textTransform: 'uppercase' }}>
@@ -107,7 +149,7 @@ export default async function MyAdoptionPage({
 
       {result.failureCount >= 2 && (
         <div style={{ background: '#fef3c7', borderLeft: '4px solid #d97706', padding: '12px 16px', marginBottom: 24, borderRadius: 6, fontSize: 14, color: '#78350f' }}>
-          <strong>Heads up — {result.failureCount} recent payment failures.</strong> Your adoption will pause if we can&apos;t collect soon. Use the &ldquo;Update payment&rdquo; button below to fix it.
+          <strong>{translate('portal.failureWarningPrefix').replace('{count}', String(result.failureCount))}</strong> {translate('portal.failureWarningSuffix')}
         </div>
       )}
 
@@ -128,16 +170,16 @@ export default async function MyAdoptionPage({
         ) : (
           <div style={{ background: 'linear-gradient(135deg, #ecfccb 0%, #d9f99d 100%)', padding: 48, textAlign: 'center', color: '#365314', fontSize: 14 }}>
             <div style={{ fontSize: 48, marginBottom: 8 }}>🦙</div>
-            <strong>Photo coming soon.</strong> The owner is gathering portraits — your welcome packet has one too.
+            <strong>{translate('portal.photoComingSoon')}</strong>
           </div>
         )}
         <div style={{ padding: 20 }}>
           <h2 style={{ fontSize: 22, fontWeight: 600, margin: 0, color: '#556B2F' }}>
-            {result.alpacaDisplayName ?? animal?.name ?? 'Your matched alpaca'}
+            {result.alpacaDisplayName ?? animal?.name ?? translate('portal.matchedAlpacaFallback')}
           </h2>
           {!result.alpacaDisplayName && (
             <p style={{ color: '#a1a1aa', fontSize: 13, marginTop: 4, fontStyle: 'italic' }}>
-              You let us pick — we&apos;ll match you to one of the herd within a few days and update this page.
+              {translate('portal.weWillPick')}
             </p>
           )}
           {animal?.bio && (
@@ -147,12 +189,12 @@ export default async function MyAdoptionPage({
           )}
           {animal && !animal.bio && (
             <p style={{ color: '#71717a', fontSize: 13, marginTop: 12, fontStyle: 'italic' }}>
-              Bio coming soon — the owner is collecting personality notes from the herd.
+              {translate('portal.bioComingSoon')}
             </p>
           )}
           {animal?.personality && (
             <p style={{ marginTop: 12, fontSize: 13, color: '#52525b' }}>
-              <strong>Personality:</strong> {animal.personality}
+              <strong>{translate('portal.personalityLabel')}</strong> {animal.personality}
             </p>
           )}
         </div>
@@ -161,22 +203,22 @@ export default async function MyAdoptionPage({
       {/* Subscription summary — the practical info. */}
       <section style={{ background: '#fafafa', border: '1px solid #e4e4e7', borderRadius: 12, padding: 20, marginBottom: 24 }}>
         <h2 style={{ fontSize: 13, fontWeight: 600, margin: '0 0 12px', color: '#3f3f46', textTransform: 'uppercase', letterSpacing: 0.5 }}>
-          Subscription
+          {translate('portal.subscriptionHeader')}
         </h2>
         <dl style={{ display: 'grid', gridTemplateColumns: '140px 1fr', gap: '8px 16px', fontSize: 14, margin: 0 }}>
-          <dt style={{ color: '#71717a' }}>Amount</dt>
+          <dt style={{ color: '#71717a' }}>{translate('portal.amount')}</dt>
           <dd style={{ margin: 0, fontWeight: 500 }}>
             {result.subscription.amount
               ? `${result.subscription.amount.value} ${result.subscription.amount.currency}${result.subscription.interval ? ' / ' + result.subscription.interval : ''}`
               : '—'}
           </dd>
-          <dt style={{ color: '#71717a' }}>Next charge</dt>
+          <dt style={{ color: '#71717a' }}>{translate('portal.nextCharge')}</dt>
           <dd style={{ margin: 0, fontWeight: 500 }}>
             {result.subscription.nextPaymentDate
               ? new Date(result.subscription.nextPaymentDate).toLocaleDateString(locale === 'en' ? 'en-GB' : locale, { day: '2-digit', month: 'short', year: 'numeric' })
               : '—'}
           </dd>
-          <dt style={{ color: '#71717a' }}>Started</dt>
+          <dt style={{ color: '#71717a' }}>{translate('portal.started')}</dt>
           <dd style={{ margin: 0, fontWeight: 500 }}>
             {result.subscription.createdAt
               ? new Date(result.subscription.createdAt).toLocaleDateString(locale === 'en' ? 'en-GB' : locale, { day: '2-digit', month: 'short', year: 'numeric' })
@@ -184,7 +226,7 @@ export default async function MyAdoptionPage({
           </dd>
           {result.subscription.canceledAt && (
             <>
-              <dt style={{ color: '#71717a' }}>Canceled</dt>
+              <dt style={{ color: '#71717a' }}>{translate('portal.canceled')}</dt>
               <dd style={{ margin: 0, fontWeight: 500 }}>
                 {new Date(result.subscription.canceledAt).toLocaleDateString(locale === 'en' ? 'en-GB' : locale, { day: '2-digit', month: 'short', year: 'numeric' })}
               </dd>
@@ -193,6 +235,88 @@ export default async function MyAdoptionPage({
         </dl>
       </section>
 
+      {/* Payment mandate — surfaces SEPA / card authorisation state so donors
+          learn about a revoked mandate BEFORE their next charge fails
+          (parity with N26 / Klarna / Revolut subscription tabs). Sits between
+          the subscription summary and the action buttons so the
+          "Update payment method" CTA below is the natural next action when
+          mandate state is bad. */}
+      {(() => {
+        const m = result.mandate
+        // Status → badge colour mapping. Unknown / null → gray.
+        const mStatus = m?.status ?? null
+        const badgeColor =
+          mStatus === 'valid' ? '#15803d'
+          : mStatus === 'pending' ? '#a16207'
+          : mStatus === 'invalid' || mStatus === 'revoked' ? '#b91c1c'
+          : '#52525b'
+        const badgeBg =
+          mStatus === 'valid' ? '#dcfce7'
+          : mStatus === 'pending' ? '#fef3c7'
+          : mStatus === 'invalid' || mStatus === 'revoked' ? '#fee2e2'
+          : '#f4f4f5'
+        // Method → human label. Mollie returns 'directdebit' | 'creditcard' |
+        // 'paypal'; we surface the EU-payment-app convention donors recognise.
+        const methodLabel =
+          m?.method === 'directdebit' ? 'SEPA'
+          : m?.method === 'creditcard' ? 'Card'
+          : m?.method === 'ideal' ? 'iDEAL'
+          : m?.method === 'paypal' ? 'PayPal'
+          : m?.method ?? null
+        // SEPA accounts get the masked-IBAN dot prefix; card numbers come
+        // pre-masked from Mollie (already start with •••• so no double prefix).
+        const accountDisplay =
+          m?.bankAccount
+            ? m.method === 'directdebit' || (m.bankAccount.length === 4 && /^\w{4}$/.test(m.bankAccount))
+              ? `•••• ${m.bankAccount}`
+              : m.bankAccount
+            : null
+        return (
+          <section style={{ background: '#fafafa', border: '1px solid #e4e4e7', borderRadius: 12, padding: 20, marginBottom: 24 }}>
+            <h2 style={{ fontSize: 13, fontWeight: 600, margin: '0 0 12px', color: '#3f3f46', textTransform: 'uppercase', letterSpacing: 0.5 }}>
+              Payment mandate
+            </h2>
+            {m === null ? (
+              <p style={{ margin: 0, fontSize: 14, color: '#52525b' }}>
+                <span style={{ background: badgeBg, color: badgeColor, padding: '2px 10px', borderRadius: 99, fontSize: 12, fontWeight: 600, textTransform: 'uppercase', marginRight: 10 }}>
+                  No mandate
+                </span>
+                No mandate on file. Use the &ldquo;Update payment method&rdquo; button below to authorise one.
+              </p>
+            ) : (
+              <>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap', marginBottom: 12 }}>
+                  <span style={{ background: badgeBg, color: badgeColor, padding: '2px 10px', borderRadius: 99, fontSize: 12, fontWeight: 600, textTransform: 'uppercase' }}>
+                    {mStatus ?? 'unknown'}
+                  </span>
+                  {methodLabel && (
+                    <span style={{ fontSize: 14, color: '#3f3f46', fontWeight: 500 }}>{methodLabel}</span>
+                  )}
+                  {accountDisplay && (
+                    <span style={{ fontSize: 14, color: '#52525b', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}>
+                      {accountDisplay}
+                    </span>
+                  )}
+                </div>
+                <dl style={{ display: 'grid', gridTemplateColumns: '140px 1fr', gap: '8px 16px', fontSize: 14, margin: 0 }}>
+                  <dt style={{ color: '#71717a' }}>Signed</dt>
+                  <dd style={{ margin: 0, fontWeight: 500 }}>
+                    {m.signatureDate
+                      ? new Date(m.signatureDate).toLocaleDateString(locale === 'en' ? 'en-GB' : locale, { day: '2-digit', month: 'short', year: 'numeric' })
+                      : '—'}
+                  </dd>
+                </dl>
+                {(mStatus === 'invalid' || mStatus === 'revoked') && (
+                  <div style={{ marginTop: 12, background: '#fee2e2', borderLeft: '4px solid #b91c1c', padding: '10px 14px', borderRadius: 6, fontSize: 14, color: '#7f1d1d' }}>
+                    <strong>Mandate revoked</strong> — your next charge will fail. Tap &ldquo;Update payment method&rdquo; below.
+                  </div>
+                )}
+              </>
+            )}
+          </section>
+        )
+      })()}
+
       {/* Action buttons */}
       <section style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 32 }}>
         {isLive && result.updateToken && (
@@ -200,7 +324,7 @@ export default async function MyAdoptionPage({
             href={`${SITE_BASE_URL}/api/mollie-manage/update-payment?token=${result.updateToken}`}
             style={{ background: '#556B2F', color: '#fff', padding: '12px 24px', borderRadius: 8, textDecoration: 'none', fontWeight: 600, fontSize: 14 }}
           >
-            Update payment method
+            {translate('portal.updatePayment')}
           </a>
         )}
         {isLive && result.cancelToken && (
@@ -208,7 +332,7 @@ export default async function MyAdoptionPage({
             href={`${SITE_BASE_URL}/api/mollie-manage/cancel?token=${result.cancelToken}`}
             style={{ background: '#fff', color: '#b91c1c', border: '1px solid #b91c1c', padding: '12px 24px', borderRadius: 8, textDecoration: 'none', fontWeight: 600, fontSize: 14 }}
           >
-            Cancel adoption
+            {translate('portal.cancel')}
           </a>
         )}
         {!isLive && (
@@ -216,26 +340,49 @@ export default async function MyAdoptionPage({
             href={`${SITE_BASE_URL}/${locale}/adopt`}
             style={{ background: '#556B2F', color: '#fff', padding: '12px 24px', borderRadius: 8, textDecoration: 'none', fontWeight: 600, fontSize: 14 }}
           >
-            Adopt again
+            {translate('portal.adoptAgain')}
           </a>
         )}
       </section>
+
+      {/* Share-adoption CTA + referral-code badge.
+          Sits between the action buttons (update/cancel) and the photo
+          gallery so the share affordance is visible without scrolling past
+          the emotional content (alpaca card + gallery). The badge shows the
+          donor's stable referral code and renders the share URL with `?ref=`
+          appended non-destructively — the ShareCTA component itself stays
+          unchanged this round (forbidden file constraint) so the
+          ShareCTA-built clipboard link does NOT yet include `?ref=`; the
+          referral URL displayed here is what donors can copy manually.
+          Follow-up round will thread the code into ShareCTA's clipboard
+          payload once that component opens up for edits. */}
+      {isLive && <ShareCTA alpacaSlug={result.subscription.alpacaSlug} locale={locale} />}
+      {isLive && referralCode && (
+        <ReferralCodeBadge code={referralCode} shareUrl={referralShareUrl} />
+      )}
 
       {/* Photo gallery — always-rendered surface so donors see what's coming
           even before the owner uploads shots. Empty array → soft empty state.
           NEVER invent photo paths (Failsafe Rule 5). */}
       <PhotoGallery photos={galleryPhotos} alpacaName={galleryAlpacaName} />
 
-      {/* Latest quarterly farm news — sneak preview from the admin compose page */}
+      {/* Payment history — always rendered. Empty array → "first payment in
+          progress" hint, which is the right message for a fresh donor. */}
+      <PaymentHistoryTable payments={result.paymentHistory} locale={locale} />
+
+      {/* Latest quarterly farm news — sneak preview from the admin compose
+          page. Sits last (just above the footer) so the practical info
+          (mandate / actions / payment history) is what donors see first
+          when they land on the page. */}
       {result.latestQuarter && (
         <section style={{ background: '#fff', border: '1px solid #e4e4e7', borderRadius: 12, padding: 24, marginBottom: 24 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 12 }}>
             <h2 style={{ fontSize: 18, fontWeight: 600, margin: 0, color: '#556B2F' }}>
-              {result.latestQuarter.label} from the farm
+              {translate('portal.farmNewsHeader').replace('{label}', result.latestQuarter.label)}
             </h2>
             {!result.latestQuarter.sentAt && (
               <span style={{ background: '#dbeafe', color: '#1e40af', padding: '2px 10px', borderRadius: 99, fontSize: 11, fontWeight: 600, textTransform: 'uppercase' }}>
-                Sneak peek
+                {translate('portal.sneakPeek')}
               </span>
             )}
           </div>
@@ -246,12 +393,8 @@ export default async function MyAdoptionPage({
         </section>
       )}
 
-      {/* Payment history — always rendered. Empty array → "first payment in
-          progress" hint, which is the right message for a fresh donor. */}
-      <PaymentHistoryTable payments={result.paymentHistory} locale={locale} />
-
       <footer style={{ marginTop: 32, padding: 16, borderTop: '1px solid #e4e4e7', fontSize: 12, color: '#a1a1aa' }}>
-        Need help? Reply to your welcome email or write to{' '}
+        {translate('portal.footerHelpPrefix')}{' '}
         <a href="mailto:info@alpacasibiza.com" style={{ color: '#556B2F' }}>info@alpacasibiza.com</a>.
       </footer>
     </main>

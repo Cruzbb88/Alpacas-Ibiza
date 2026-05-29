@@ -77,13 +77,36 @@ export interface EventParamsMap {
   adopt_payment_field_focused: Record<string, never>
   adopt_payment_confirmed: {
     tier: 'monthly' | 'yearly'
-    processor: 'stripe'
+    processor: 'stripe' | 'mollie'
   }
   newsletter_signup_attempted: {
     source: string
   }
   newsletter_signup_succeeded: {
     source: string
+  }
+  // Donor-portal share-card flow. Fires when the donor clicks "Share my
+  // adoption" on /my-adoption and the share link lands in their clipboard
+  // (or the mailto fallback opens). `alpaca_slug` is null when the donor
+  // let us pick — the share-link still works (generic OG card).
+  adopt_referral_link_copied: {
+    alpaca_slug: string | null
+  }
+  // ── Referral attribution (Patreon/Substack/Memberful-style sharing) ──────
+  // Fired when the donor's referral code is rendered on /my-adoption (gives
+  // us a denominator for share-link impressions). Distinct from the existing
+  // `adopt_referral_link_copied` (which fires only on copy/share action);
+  // this fires on every portal view so the conversion ratio is visible.
+  referral_link_displayed: {
+    code: string
+  }
+  // Fired in the checkout adapter when the donor lands on /adopt with a
+  // valid `?ref=XXXXXX` and proceeds to checkout. Pairs with
+  // adopt_checkout_started so the funnel report can split referred vs cold
+  // checkout-starts without us touching the existing event.
+  adopt_checkout_started_via_referral: {
+    tier: 'monthly' | 'yearly'
+    ref_code: string
   }
 }
 
@@ -106,6 +129,9 @@ export const EVENT_CATEGORY: Record<EventName, EventCategory> = {
   adopt_payment_confirmed: 'checkout',
   newsletter_signup_attempted: 'engagement',
   newsletter_signup_succeeded: 'engagement',
+  adopt_referral_link_copied: 'engagement',
+  referral_link_displayed: 'engagement',
+  adopt_checkout_started_via_referral: 'checkout',
 }
 
 // ── gtag / dataLayer minimal types ──────────────────────────────────────────

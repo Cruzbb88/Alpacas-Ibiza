@@ -151,15 +151,103 @@ export interface WelcomeAdoptionInput {
     }
 }
 
-export function welcomeAdoptionSubject(tier: AdoptTier, isGift?: boolean): string {
+export function welcomeAdoptionSubject(tier: AdoptTier, isGift?: boolean, locale?: string): string {
     if (isGift) {
-        return tier === 'yearly'
-            ? "You've been gifted a yearly alpaca adoption"
-            : "You've been gifted a monthly alpaca adoption"
+        switch (locale) {
+            case 'de': return tier === 'yearly'
+                ? 'Du hast eine Jahres-Alpaka-Patenschaft geschenkt bekommen'
+                : 'Du hast eine Monats-Alpaka-Patenschaft geschenkt bekommen'
+            case 'it': return tier === 'yearly'
+                ? 'Hai ricevuto in regalo un\'adozione annuale di un alpaca'
+                : 'Hai ricevuto in regalo un\'adozione mensile di un alpaca'
+            case 'es': return tier === 'yearly'
+                ? 'Te han regalado una adopción anual de un alpaca'
+                : 'Te han regalado una adopción mensual de un alpaca'
+            case 'nl': return tier === 'yearly'
+                ? 'Je hebt een jaarlijkse alpaca-adoptie cadeau gekregen'
+                : 'Je hebt een maandelijkse alpaca-adoptie cadeau gekregen'
+            case 'fr': return tier === 'yearly'
+                ? 'On vous a offert une adoption annuelle d\'alpaga'
+                : 'On vous a offert une adoption mensuelle d\'alpaga'
+            default: return tier === 'yearly'
+                ? "You've been gifted a yearly alpaca adoption"
+                : "You've been gifted a monthly alpaca adoption"
+        }
     }
-    return tier === 'yearly'
-        ? 'Welcome to the herd — your yearly adoption is active'
-        : 'Welcome to the herd — your monthly adoption is active'
+    switch (locale) {
+        case 'de': return tier === 'yearly'
+            ? 'Willkommen in der Herde — deine Jahres-Patenschaft ist aktiv'
+            : 'Willkommen in der Herde — deine Monats-Patenschaft ist aktiv'
+        case 'it': return tier === 'yearly'
+            ? 'Benvenuto nel branco — la tua adozione annuale è attiva'
+            : 'Benvenuto nel branco — la tua adozione mensile è attiva'
+        case 'es': return tier === 'yearly'
+            ? 'Bienvenido a la manada — tu adopción anual está activa'
+            : 'Bienvenido a la manada — tu adopción mensual está activa'
+        case 'nl': return tier === 'yearly'
+            ? 'Welkom bij de kudde — je jaarlijkse adoptie is actief'
+            : 'Welkom bij de kudde — je maandelijkse adoptie is actief'
+        case 'fr': return tier === 'yearly'
+            ? 'Bienvenue dans le troupeau — votre adoption annuelle est active'
+            : 'Bienvenue dans le troupeau — votre adoption mensuelle est active'
+        default: return tier === 'yearly'
+            ? 'Welcome to the herd — your yearly adoption is active'
+            : 'Welcome to the herd — your monthly adoption is active'
+    }
+}
+
+/**
+ * Donor-facing payment-failure email subject. Drives escalation tone (first /
+ * at-risk / action-required) by failureCount across 6 locales with English
+ * fallback. Same locale fall-through pattern as `reminderSubject` — keep all
+ * strings inline so `node:test` runs without the @/ alias machinery.
+ *
+ * Severity buckets:
+ *   - failureCount >= 3  → "Final reminder" / action-required tone
+ *   - failureCount === 2 → "Reminder ... failed again" / at-risk tone
+ *   - default            → "Action needed" / first-fail tone
+ */
+export function donorPaymentFailedSubject(failureCount: number, locale?: string): string {
+    const bucket: 'final' | 'reminder' | 'first' =
+        failureCount >= 3 ? 'final' : failureCount === 2 ? 'reminder' : 'first'
+    switch (locale) {
+        case 'de':
+            return bucket === 'final'
+                ? 'Letzte Erinnerung: Bitte aktualisiere deine Adopt-a-Paca-Zahlung'
+                : bucket === 'reminder'
+                    ? 'Erinnerung: Deine Adopt-a-Paca-Zahlung ist erneut fehlgeschlagen'
+                    : 'Aktion erforderlich: Deine Adopt-a-Paca-Zahlung ist nicht durchgegangen'
+        case 'it':
+            return bucket === 'final'
+                ? 'Ultimo promemoria: aggiorna il tuo pagamento Adopt-a-Paca'
+                : bucket === 'reminder'
+                    ? 'Promemoria: il tuo pagamento Adopt-a-Paca è di nuovo fallito'
+                    : 'Azione necessaria: il tuo pagamento Adopt-a-Paca non è andato a buon fine'
+        case 'es':
+            return bucket === 'final'
+                ? 'Último aviso: por favor actualiza tu pago de Adopt-a-Paca'
+                : bucket === 'reminder'
+                    ? 'Recordatorio: tu pago de Adopt-a-Paca ha fallado de nuevo'
+                    : 'Acción necesaria: tu pago de Adopt-a-Paca no se ha procesado'
+        case 'nl':
+            return bucket === 'final'
+                ? 'Laatste herinnering: werk je Adopt-a-Paca-betaling bij'
+                : bucket === 'reminder'
+                    ? 'Herinnering: je Adopt-a-Paca-betaling is opnieuw mislukt'
+                    : 'Actie nodig: je Adopt-a-Paca-betaling is niet gelukt'
+        case 'fr':
+            return bucket === 'final'
+                ? 'Dernier rappel : merci de mettre à jour votre paiement Adopt-a-Paca'
+                : bucket === 'reminder'
+                    ? 'Rappel : votre paiement Adopt-a-Paca a de nouveau échoué'
+                    : 'Action requise : votre paiement Adopt-a-Paca n\'est pas passé'
+        default:
+            return bucket === 'final'
+                ? 'Final reminder: please update your Adopt-a-Paca payment'
+                : bucket === 'reminder'
+                    ? 'Reminder: your Adopt-a-Paca payment failed again'
+                    : "Action needed: your Adopt-a-Paca payment didn't go through"
+    }
 }
 
 export function welcomeAdoptionEmailHtml(opts: WelcomeAdoptionInput): string {
@@ -583,3 +671,119 @@ export function buildBillingPortalEmail(portalUrl: string): { subject: string; h
     return { subject, html }
 }
 
+// ── Adopter milestone email (anniversary touchpoints: 30d / 6mo / 1yr / 2yr) ─
+
+export interface AdopterMilestoneInput {
+    /**
+     * Pre-escaped donor display name for direct interpolation. Caller is
+     * expected to pass the escaped form (route does this) so this module
+     * does not double-escape. Empty/undefined → "Hi there" fallback.
+     */
+    escapedName?: string | null
+    /** Display name of the adopted alpaca — RAW (will be HTML-escaped here). null/empty → generic copy. */
+    alpacaName?: string | null
+    /** Milestone day-count: 30 | 180 | 365 | 730. Subject + body branch on this. */
+    milestoneDays: 30 | 180 | 365 | 730
+    /** Two-letter locale slug for the /${locale}/gifts share CTA. Defaults to 'en'. */
+    locale?: string | null
+}
+
+/**
+ * Builds the per-donor anniversary milestone email — fired from the daily
+ * `/api/adopt-milestone-emails` cron when a Mollie subscription's
+ * `createdAt` lands today at one of the milestone day-counts.
+ *
+ * Subject mirrors the Patreon / Substack / Memberful pattern: warm,
+ * concrete, names the alpaca, names the milestone. Body is intentionally
+ * short — milestone emails outperform long-form quarterly updates because
+ * they're a "we remembered" signal, not a content drop.
+ *
+ * Body structure:
+ *   1. Greeting (escapedName when present, "Hi there" otherwise)
+ *   2. Milestone phrase + warm thank-you
+ *   3. Photo placeholder (TODO marker for CMS / per-quarter env — same
+ *      pattern as buildAdoptQuarterlyUpdateEmail; mail clients don't blow
+ *      up on a missing <img>)
+ *   4. Share-a-friend CTA → /${locale}/gifts
+ *
+ * Caller MUST also pass replyTo to sendEmail(). List-Unsubscribe omitted —
+ * these are transactional adoption-update emails exempt under CAN-SPAM
+ * § 5(a). Adopters manage their subscription via the billing portal link
+ * in their welcome email footer.
+ */
+export function buildAdopterMilestoneEmail(
+    input: AdopterMilestoneInput,
+): { subject: string; html: string } {
+    const { milestoneDays } = input
+    const locale = (input.locale && input.locale.length > 0) ? input.locale : 'en'
+    const safeLocale = escapeHtml(locale)
+    const safeAlpacaName = input.alpacaName ? escapeHtml(input.alpacaName) : null
+    const safeName = input.escapedName ?? ''
+    const greeting = safeName ? `Hi ${safeName},` : 'Hi there,'
+
+    // Milestone-specific copy. Keep subject + heading + intro phrase mapped
+    // in one place so the catalogue is easy to scan when copy reviewers
+    // come looking.
+    const milestoneCopy: Record<typeof milestoneDays, { subjectPhrase: string; headingPhrase: string; introPhrase: string }> = {
+        30: {
+            subjectPhrase: 'First month milestone',
+            headingPhrase: 'One month in 🎉',
+            introPhrase: 'It\'s been a full month since you joined the Adopt-a-Paca herd. The first month is when the alpacas figure out your name in our records — they don\'t quite know it yet, but the paperwork is settled.',
+        },
+        180: {
+            subjectPhrase: 'Six months with',
+            headingPhrase: 'Six months together 🦙',
+            introPhrase: 'Half a year. You\'ve been part of the herd through one full shearing cycle, and the paddocks have changed colour twice. Thank you for sticking with us.',
+        },
+        365: {
+            subjectPhrase: 'One year with',
+            headingPhrase: 'One full year on the farm 🎉',
+            introPhrase: 'A whole year. You\'ve seen the herd through every season — the spring greenness, the dry summer paddocks, the autumn shed-out, and the windy Ibicenco winter. That kind of steady support is what keeps a small farm small.',
+        },
+        730: {
+            subjectPhrase: 'Two years with',
+            headingPhrase: 'Two years together 🦙🦙',
+            introPhrase: 'Two years. By any honest measure, you\'re part of the farm now. The alpacas don\'t track time, but we do, and this one matters.',
+        },
+    }
+    const copy = milestoneCopy[milestoneDays]
+
+    // Subject: when alpacaName is unknown, fall back to a warm generic phrase.
+    const alpacaForSubject = safeAlpacaName ?? 'your alpaca'
+    const subject = milestoneDays === 30
+        ? `🦙 ${copy.subjectPhrase} — thank you`
+        : `🦙 ${copy.subjectPhrase} ${alpacaForSubject} — thank you`
+
+    // Alpaca-specific paragraph — falls back to generic if name is null.
+    const alpacaBlock = safeAlpacaName
+        ? `<p><strong>${safeAlpacaName}</strong> has been quietly tucking into hay this whole time. The adoption keeps ${safeAlpacaName} fed, brushed, and roaming the paddocks of Es Currals.</p>`
+        : `<p>Your matched alpaca has been quietly tucking into hay this whole time. The adoption keeps them fed, brushed, and roaming the paddocks of Es Currals.</p>`
+
+    // Photo placeholder — same pattern as the quarterly update so support
+    // recognises the OWNER_INPUT marker.
+    const photoBlock = `
+<div style="margin:24px 0;text-align:center;padding:24px;background:${BRAND.secondary};border-radius:8px;color:#666;font-style:italic">
+  <!-- OWNER_INPUT: paste hosted milestone photo URL here -->
+  📷 A fresh photo of the herd will appear in this space.
+</div>`
+
+    const giftsUrl = `${SITE_BASE_URL_INLINE}/${safeLocale}/gifts`
+    const shareBlock = `
+<h3 style="margin-top:28px;color:${BRAND.primary}">Pass it on</h3>
+<p>If someone in your life would love their own alpaca to follow, a gift adoption is a small thing that lands big. We'll handle the welcome email, photo, and certificate.</p>
+<div style="text-align:center;margin:20px 0">
+  <a href="${giftsUrl}" style="display:inline-block;padding:12px 24px;background:${BRAND.primary};color:#fff;text-decoration:none;border-radius:8px;font-weight:600;font-size:15px">Send an alpaca gift</a>
+</div>`
+
+    const html = emailLayout(`
+<h2 style="color:${BRAND.primary}">${greeting}</h2>
+<h3 style="color:${BRAND.primary};margin-top:8px">${copy.headingPhrase}</h3>
+<p>${copy.introPhrase}</p>
+${alpacaBlock}
+${photoBlock}
+${shareBlock}
+<p style="color:#888;font-size:12px;margin-top:24px">You're receiving this milestone note because you're an active Adopt-a-Paca supporter. Reply any time — we read every message. To pause or cancel your adoption, use the billing portal link in your welcome email.</p>
+`)
+
+    return { subject, html }
+}

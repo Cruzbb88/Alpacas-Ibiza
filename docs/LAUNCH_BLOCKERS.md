@@ -72,7 +72,9 @@ Owner action required:
 5. Add ping URL: `HEARTBEAT_OWNER_DIGEST_URL=https://hc-ping.com/<uuid>`
 6. Create check "adopt-quarterly-update" with cron pattern `0 9 1 1,4,7,10 *` + 24h grace (quarterly schedule needs a wider window than weekly)
 7. Add ping URL: `HEARTBEAT_ADOPT_QUARTERLY_UPDATE_URL=https://hc-ping.com/<uuid>`
-8. Trigger each cron manually via the Vercel cron tab + confirm Healthchecks turns green.
+8. Create check "adopt-milestone-emails" with cron pattern `0 10 * * *` + 2h grace (daily schedule — most days the route sends zero emails but the heartbeat still pings, so the watchdog detects a stalled cron not a quiet day)
+9. Add ping URL: `HEARTBEAT_ADOPT_MILESTONE_EMAILS_URL=https://hc-ping.com/<uuid>`
+10. Trigger each cron manually via the Vercel cron tab + confirm Healthchecks turns green.
 
 When env vars are unset (preview/dev), `pingHeartbeat()` is a no-op so
 nothing leaks to the wrong check. The quarterly route deliberately does

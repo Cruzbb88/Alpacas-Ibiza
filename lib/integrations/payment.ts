@@ -80,6 +80,21 @@ export interface CreateCheckoutOpts {
     /** ISO yyyy-mm-dd or undefined (= send today). */
     sendDate?: string
   }
+  /**
+   * Two-letter locale slug (en/de/it/es/nl/fr) captured at checkout. Threaded
+   * into provider metadata so webhook handlers can replay the buyer's language
+   * in the welcome and payment-failure emails. Caller pre-validates via
+   * `extractLocaleFromReferer()` — providers do not re-validate.
+   */
+  locale?: string
+  /**
+   * Optional referrer attribution code (6-char A-Z0-9). When present, the
+   * provider writes it into payment/subscription metadata under `referredBy`
+   * so the admin /admin/analytics/referrals page can group subscriptions by
+   * referrer. Caller MUST pre-validate via lib/referral-codes.verifyReferralCode;
+   * providers do not re-validate.
+   */
+  referredBy?: string
 }
 
 // ── Result types ───────────────────────────────────────────────────────────────

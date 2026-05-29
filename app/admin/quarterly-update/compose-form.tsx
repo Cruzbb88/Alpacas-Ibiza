@@ -13,6 +13,44 @@ export function QuarterlyComposeForm({ quarter, initialHtml, lastUpdated, sentAt
   const [html, setHtml] = useState(initialHtml)
   const [status, setStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
+  const [suggesting, setSuggesting] = useState(false)
+
+  async function handleSuggest() {
+    // Confirm before overwriting non-empty textarea content. The suggested
+    // draft is a starter — the owner's existing edits would be lost.
+    if (html.trim().length > 0) {
+      const ok = window.confirm(
+        'Replace the current draft with an auto-generated starter? Your existing edits will be lost.',
+      )
+      if (!ok) return
+    }
+    setSuggesting(true)
+    setErrorMsg(null)
+    try {
+      const res = await fetch(
+        `/api/admin/quarterly-update/suggest?quarter=${encodeURIComponent(quarter)}`,
+      )
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        setErrorMsg(typeof body?.error === 'string' ? body.error : `HTTP ${res.status}`)
+        setStatus('error')
+        return
+      }
+      const body = (await res.json()) as { ok?: boolean; draftHtml?: string }
+      if (typeof body.draftHtml !== 'string') {
+        setErrorMsg('Suggestion API returned no draftHtml')
+        setStatus('error')
+        return
+      }
+      setHtml(body.draftHtml)
+      setStatus('idle')
+    } catch (err) {
+      setErrorMsg(err instanceof Error ? err.message : String(err))
+      setStatus('error')
+    } finally {
+      setSuggesting(false)
+    }
+  }
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -112,6 +150,24 @@ export function QuarterlyComposeForm({ quarter, initialHtml, lastUpdated, sentAt
           }}
         >
           {status === 'saving' ? 'Saving…' : 'Save draft'}
+        </button>
+        <button
+          type="button"
+          onClick={handleSuggest}
+          disabled={suggesting}
+          style={{
+            background: '#fff',
+            color: '#556B2F',
+            border: '1px solid #556B2F',
+            padding: '10px 20px',
+            borderRadius: 8,
+            fontSize: 14,
+            fontWeight: 600,
+            cursor: suggesting ? 'not-allowed' : 'pointer',
+            opacity: suggesting ? 0.6 : 1,
+          }}
+        >
+          {suggesting ? 'Suggesting…' : 'Auto-suggest starter draft'}
         </button>
         <a
           href={previewUrl}

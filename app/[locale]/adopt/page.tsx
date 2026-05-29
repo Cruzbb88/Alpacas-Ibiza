@@ -248,7 +248,7 @@ export default async function AdoptPage({
                 Renders null when referral param is absent or malformed. */}
             <PageSection bg="default" width="narrow" className="pt-8 pb-0">
                 <Suspense fallback={null}>
-                    <ReferralAppliedBanner />
+                    <ReferralAppliedBanner locale={locale} />
                 </Suspense>
             </PageSection>
 
@@ -303,6 +303,7 @@ export default async function AdoptPage({
                     yearlyBadge={translate('adopt.yearlyTierBadge') || undefined}
                     monthlyCtaLabel={translate('adopt.monthlyCtaLabel') || 'Adopt monthly'}
                     yearlyCtaLabel={translate('adopt.yearlyCtaLabel') || 'Adopt yearly'}
+                    whatYouGetLabel={translate('adopt.comparison.whatYouGet') || 'What you get'}
                     monthlyHref={monthlyUrl}
                     yearlyHref={yearlyUrl}
                     features={[

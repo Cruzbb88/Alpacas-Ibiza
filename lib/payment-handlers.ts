@@ -15,7 +15,7 @@
  * duplicate-send disasters if a transient email failure bubbled up as a 500.
  */
 
-import { welcomeAdoptionEmailHtml, welcomeAdoptionSubject, buildAdoptDiscountCodesEmail } from './email-templates.ts'
+import { welcomeAdoptionEmailHtml, welcomeAdoptionSubject, buildAdoptDiscountCodesEmail, donorPaymentFailedSubject } from './email-templates.ts'
 import { escapeHtml } from './html.ts'
 import { findAlpacaName } from './data/alpacas.ts'
 import { SITE_BASE_URL } from './config.ts'
@@ -61,6 +61,8 @@ export interface StripeCheckoutSessionLike {
   metadata?: {
     tier?: 'monthly' | 'yearly' | string
     alpaca?: string
+    /** Two-letter locale slug recorded at checkout (en/de/it/es/nl/fr). */
+    locale?: string
     /** Gift recipient fields — set when buyer purchased via the gift wizard. */
     gift_recipient_email?: string
     gift_recipient_name?: string
@@ -151,6 +153,10 @@ export async function handleStripeCheckoutCompleted(
     tierRaw === 'monthly' || tierRaw === 'yearly' ? tierRaw : null
   const email = session.customer_details?.email ?? undefined
   const name = session.customer_details?.name ?? undefined
+  // Locale captured at checkout (via extractLocaleFromReferer) — replayed in the
+  // welcome subject so a German donor's welcome email is German, etc. Unknown
+  // values fall through to English in welcomeAdoptionSubject's switch.
+  const locale = session.metadata?.locale ?? undefined
   // metadata.alpaca is the slug recorded at checkout. Resolve to display name
   // via the canonical roster — findAlpacaName returns null for unknown slugs,
   // which collapses to the generic "we'll match you" email copy.
@@ -273,7 +279,7 @@ export async function handleStripeCheckoutCompleted(
     (async () =>
       deps.sendEmail({
         to: isGiftWelcome ? giftRecipientEmail! : email,
-        subject: welcomeAdoptionSubject(tier, isGiftWelcome),
+        subject: welcomeAdoptionSubject(tier, isGiftWelcome, locale),
         html: welcomeAdoptionEmailHtml({
           escapedName: isGiftWelcome
             ? (giftRecipientName ? escapeHtml(giftRecipientName) : undefined)
@@ -437,6 +443,14 @@ export interface StripeInvoiceLike {
   attempt_count?: number | null
   next_payment_attempt?: number | null
   hosted_invoice_url?: string | null
+  /**
+   * Subscription metadata copied onto the Invoice by Stripe. Used to replay
+   * the buyer's checkout locale in the donor-facing failure email subject.
+   * Optional — Stripe only populates this for invoices tied to a Subscription
+   * with metadata set at checkout. Other fields (alpaca, tier) intentionally
+   * omitted from this minimal shape until a handler needs them.
+   */
+  metadata?: { locale?: string } | null
 }
 
 export interface InvoicePaymentFailedDeps {
@@ -517,12 +531,9 @@ export async function handleStripeInvoicePaymentFailed(
       : severity === 'at-risk'
         ? `[Adopt-a-Paca] AT-RISK donor — 2nd Stripe fail — invoice ${invoice.id}`
         : `[Adopt-a-Paca] Payment failed — invoice ${invoice.id}`
-  const donorSubject =
-    severity === 'action-required'
-      ? `Final reminder: please update your Adopt-a-Paca payment`
-      : severity === 'at-risk'
-        ? `Reminder: your Adopt-a-Paca payment failed again`
-        : `Action needed: your Adopt-a-Paca payment didn't go through`
+  // Donor-facing subject mirrors checkout locale when Stripe surfaced it on
+  // the invoice (copied from subscription metadata). Falls back to English.
+  const donorSubject = donorPaymentFailedSubject(failureCount, invoice.metadata?.locale ?? undefined)
 
   const [donorResult, ownerResult] = await Promise.allSettled([
     deps.sendEmail({
@@ -681,6 +692,8 @@ export interface MolliePaymentLike {
     tier?: 'monthly' | 'yearly' | string
     tenantId?: string
     alpaca?: string
+    /** Two-letter locale slug recorded at checkout (en/de/it/es/nl/fr). */
+    locale?: string
     /**
      * Set by the update-payment route to signal a re-mandate flow. Webhook
      * patches the existing subscription instead of treating this as a new
@@ -930,6 +943,9 @@ async function sendMollieWelcomeQuiet(
   try {
     const alpacaName = findAlpacaName(payment.metadata?.alpaca ?? null)
     const meta = payment.metadata
+    // Locale captured at checkout (Mollie metadata) — replayed in the welcome
+    // subject so the donor receives the email in their checkout language.
+    const locale = meta?.locale ?? undefined
 
     // Gift fields — route welcome to recipient when present.
     const giftRecipientEmail = typeof meta?.gift_recipient_email === 'string' && meta.gift_recipient_email.length > 0
@@ -955,7 +971,7 @@ async function sendMollieWelcomeQuiet(
 
     await sendEmail({
       to: isGiftWelcome ? giftRecipientEmail! : email,
-      subject: welcomeAdoptionSubject(tier, isGiftWelcome),
+      subject: welcomeAdoptionSubject(tier, isGiftWelcome, locale),
       html: welcomeAdoptionEmailHtml({
         escapedName: isGiftWelcome
           ? (giftRecipientName ? escapeHtml(giftRecipientName) : undefined)
@@ -1168,12 +1184,7 @@ export async function handleMolliePaymentFailed(
   const [donorResult, ownerResult] = await Promise.allSettled([
     deps.sendEmail({
       to: donorEmail,
-      subject:
-        severity === 'action-required'
-          ? `Final reminder: please update your Adopt-a-Paca payment`
-          : severity === 'at-risk'
-            ? `Reminder: your Adopt-a-Paca payment failed again`
-            : `Action needed: your Adopt-a-Paca payment didn't go through`,
+      subject: donorPaymentFailedSubject(failureCount, payment.metadata?.locale ?? undefined),
       html: donorHtml,
     }),
     deps.ownerEmail

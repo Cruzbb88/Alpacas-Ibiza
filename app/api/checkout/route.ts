@@ -7,6 +7,7 @@ import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-
 import { findAlpacaName } from '@/lib/data/alpacas'
 import { parseGiftFields, type ParsedGiftFields } from '@/lib/gift-fields'
 import { rateLimit, getClientIp } from '@/lib/rate-limit'
+import { verifyReferralCode } from '@/lib/referral-codes'
 
 /** Stripe metadata shape — snake_case keys, expected by lib/payment-handlers Stripe path. */
 interface StripeGiftMetadata {
@@ -79,26 +80,51 @@ async function handleCheckout(request: Request, method: 'GET' | 'POST') {
   if (secretGate) return attachRequestId(secretGate, reqId)
   const secretKey = process.env.STRIPE_SECRET_KEY!
 
+  // Referral code format guard — must match ALPACA-[A-Z0-9]{6}
+  const REFERRAL_CODE_RE = /^ALPACA-[A-Z0-9]{6}$/
+
   let tier: AdoptTier | null = null
   let alpacaSlugRaw: string | null = null
   let giftFields: ParsedGiftFields | null = null
+  let referralCode: string | null = null
+  // Referrer-tracking code (?ref=XXXXXX, format /^[A-Z0-9]{6}$/) — distinct
+  // from the existing ?referral=ALPACA-XXXXXX coupon flow. This one only
+  // tags the *referred* subscription's metadata.referredBy for admin
+  // attribution; no discount, no Stripe coupon lookup. Credit logic is a
+  // follow-up round per the task scope.
+  let referredBy: string | null = null
   if (method === 'GET') {
     const url = new URL(request.url)
     const raw = url.searchParams.get('tier')
     if (isAdoptTier(raw)) tier = raw
     alpacaSlugRaw = url.searchParams.get('alpaca')
+    const rawReferral = url.searchParams.get('referral')
+    if (rawReferral && REFERRAL_CODE_RE.test(rawReferral)) referralCode = rawReferral
+    referredBy = verifyReferralCode(url.searchParams.get('ref'))
+    // Accept both the richer multi-field form (gift_recipient_email etc.) and the
+    // simplified AdoptGiftAdoption form (gift_name / gift_email / gift_deliver).
+    // Richer fields take precedence when both are present.
     giftFields = parseGiftFields({
-      gift_recipient_email: url.searchParams.get('gift_recipient_email'),
-      gift_recipient_name: url.searchParams.get('gift_recipient_name'),
+      gift_recipient_email:
+        url.searchParams.get('gift_recipient_email') ??
+        url.searchParams.get('gift_email'),
+      gift_recipient_name:
+        url.searchParams.get('gift_recipient_name') ??
+        url.searchParams.get('gift_name'),
       gift_sender_name: url.searchParams.get('gift_sender_name'),
       gift_message: url.searchParams.get('gift_message'),
-      gift_send_date: url.searchParams.get('gift_send_date'),
+      gift_send_date:
+        url.searchParams.get('gift_send_date') ??
+        url.searchParams.get('gift_deliver'),
     })
   } else {
     try {
       const body = await request.json()
       if (isAdoptTier(body?.tier)) tier = body.tier
       if (typeof body?.alpaca === 'string') alpacaSlugRaw = body.alpaca
+      const bodyReferral = typeof body?.referral_code === 'string' ? body.referral_code : null
+      if (bodyReferral && REFERRAL_CODE_RE.test(bodyReferral)) referralCode = bodyReferral
+      if (typeof body?.ref === 'string') referredBy = verifyReferralCode(body.ref)
       giftFields = parseGiftFields({
         gift_recipient_email: typeof body?.gift_recipient_email === 'string' ? body.gift_recipient_email : undefined,
         gift_recipient_name: typeof body?.gift_recipient_name === 'string' ? body.gift_recipient_name : undefined,
@@ -112,6 +138,15 @@ async function handleCheckout(request: Request, method: 'GET' | 'POST') {
   }
   if (!tier) {
     return attachRequestId(NextResponse.json({ error: 'tier must be "monthly" or "yearly"' }, { status: 400 }), reqId)
+  }
+
+  // Server-side log when a ref code is in play — surfaces referral attempts
+  // in Vercel Function Logs BEFORE the donor finishes payment. Admin already
+  // gets the post-payment view via the /admin/analytics/referrals page; this
+  // line gives a live counter of in-flight checkouts so spikes after a
+  // referrer's social post are visible immediately.
+  if (referredBy) {
+    log.info('referral attribution attached', { vendor: 'stripe', tier, ref: referredBy })
   }
 
   // Validate alpaca slug against the canonical roster — unknown slugs (forged
@@ -147,6 +182,29 @@ async function handleCheckout(request: Request, method: 'GET' | 'POST') {
   }
   const stripe = stripeFactory(secretKey, { apiVersion: '2024-06-20' })
 
+  // ── Referral coupon validation ─────────────────────────────────────────────
+  // If a referral code was supplied, validate it exists in Stripe and isn't
+  // expired before applying. Silently ignored if invalid — never breaks checkout.
+  let validatedCouponId: string | null = null
+  if (referralCode) {
+    try {
+      const coupon = await stripe.coupons.retrieve(referralCode) as {
+        id: string
+        valid: boolean
+        redeem_by: number | null
+      }
+      if (coupon.valid) {
+        validatedCouponId = coupon.id
+        log.info('referral coupon validated', { couponId: coupon.id })
+      } else {
+        log.info('referral coupon invalid or expired — ignoring', { code: referralCode })
+      }
+    } catch {
+      // Not found or Stripe error — fail-quiet, don't break checkout.
+      log.info('referral coupon not found — ignoring', { code: referralCode })
+    }
+  }
+
   try {
     const session = await stripe.checkout.sessions.create({
       mode: tier === 'monthly' ? 'subscription' : 'payment',
@@ -155,11 +213,21 @@ async function handleCheckout(request: Request, method: 'GET' | 'POST') {
       cancel_url: cancelUrl,
       billing_address_collection: 'auto',
       automatic_tax: { enabled: false }, // OWNER_INPUT_NEEDED: set true once Stripe Tax activated
+      // Apply referral discount — only when a valid coupon was verified above.
+      // Stripe only allows `discounts` on checkout sessions when
+      // `allow_promotion_codes` is NOT set. Both are mutually exclusive.
+      ...(validatedCouponId ? { discounts: [{ coupon: validatedCouponId }] } : {}),
       metadata: {
         product: 'adopt-a-paca',
         tier,
+        locale,
         ...(alpacaSlug ? { alpaca: alpacaSlug } : {}),
         ...(giftFields ? toStripeGiftMetadata(giftFields) : {}),
+        ...(validatedCouponId ? { referral_code_used: validatedCouponId } : {}),
+        // Referrer attribution — distinct from referral_code_used (coupon).
+        // referredBy is the referrer's stable HMAC-derived code; the admin
+        // referrals page groups subscriptions by this field.
+        ...(referredBy ? { referredBy } : {}),
       },
     })
     if (!session.url) {

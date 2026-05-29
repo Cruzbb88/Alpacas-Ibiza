@@ -20,6 +20,7 @@ import {
   welcomeAdoptionEmailHtml,
   welcomeAdoptionSubject,
   buildAdoptDiscountCodesEmail,
+  donorPaymentFailedSubject,
 } from './email-templates.ts'
 
 describe('welcomeAdoptionSubject', () => {
@@ -310,5 +311,77 @@ describe('buildAdoptDiscountCodesEmail — partial-set is treated as unset', () 
       /arrive shortly|coming|finalising|48 hours/i,
       'should fall to placeholder copy',
     )
+  })
+})
+
+// ── Locale-switched subject lines ────────────────────────────────────────────
+
+describe('welcomeAdoptionSubject — locale switching', () => {
+  it('German welcome subject differs from English', () => {
+    const en = welcomeAdoptionSubject('monthly', false, 'en')
+    const de = welcomeAdoptionSubject('monthly', false, 'de')
+    assert.notEqual(de, en, 'German subject must differ from English')
+    assert.match(de, /Willkommen|Herde|Patenschaft/, 'German subject should contain a German keyword')
+  })
+
+  it('Spanish welcome subject differs from English', () => {
+    const en = welcomeAdoptionSubject('yearly', false, 'en')
+    const es = welcomeAdoptionSubject('yearly', false, 'es')
+    assert.notEqual(es, en, 'Spanish subject must differ from English')
+    assert.match(es, /Bienvenido|adopción|manada/, 'Spanish subject should contain a Spanish keyword')
+  })
+
+  it('unknown locale falls back to English', () => {
+    const en = welcomeAdoptionSubject('monthly')
+    const fallback = welcomeAdoptionSubject('monthly', false, 'jp')
+    assert.equal(fallback, en, 'unknown locale should fall through to English default')
+  })
+
+  it('locale also applies to gift subjects (German + Spanish)', () => {
+    const enGift = welcomeAdoptionSubject('yearly', true)
+    const deGift = welcomeAdoptionSubject('yearly', true, 'de')
+    const esGift = welcomeAdoptionSubject('yearly', true, 'es')
+    assert.notEqual(deGift, enGift, 'German gift subject must differ from English')
+    assert.notEqual(esGift, enGift, 'Spanish gift subject must differ from English')
+    assert.match(deGift, /geschenkt/i, 'German gift subject should contain "geschenkt"')
+    assert.match(esGift, /regalado/i, 'Spanish gift subject should contain "regalado"')
+  })
+})
+
+describe('donorPaymentFailedSubject — locale switching', () => {
+  it('German failure subject differs from English at each escalation bucket', () => {
+    for (const count of [1, 2, 3]) {
+      const en = donorPaymentFailedSubject(count, 'en')
+      const de = donorPaymentFailedSubject(count, 'de')
+      assert.notEqual(de, en, `German subject must differ from English at count=${count}`)
+    }
+  })
+
+  it('Spanish failure subject differs from English at each escalation bucket', () => {
+    for (const count of [1, 2, 3]) {
+      const en = donorPaymentFailedSubject(count, 'en')
+      const es = donorPaymentFailedSubject(count, 'es')
+      assert.notEqual(es, en, `Spanish subject must differ from English at count=${count}`)
+    }
+  })
+
+  it('first-fail / at-risk / action-required tones differ within a locale', () => {
+    const first = donorPaymentFailedSubject(1, 'de')
+    const atRisk = donorPaymentFailedSubject(2, 'de')
+    const final = donorPaymentFailedSubject(3, 'de')
+    assert.notEqual(first, atRisk, 'first-fail and at-risk must differ')
+    assert.notEqual(atRisk, final, 'at-risk and action-required must differ')
+    assert.notEqual(first, final, 'first-fail and action-required must differ')
+  })
+
+  it('unknown locale falls back to English', () => {
+    const en = donorPaymentFailedSubject(1)
+    const fallback = donorPaymentFailedSubject(1, 'jp')
+    assert.equal(fallback, en, 'unknown locale should fall through to English default')
+  })
+
+  it('preserves the existing English "Action needed" copy (payment-handlers.test contract)', () => {
+    const en = donorPaymentFailedSubject(1, 'en')
+    assert.match(en, /Action needed/, 'English first-fail subject must still match payment-handlers test regex')
   })
 })

@@ -879,6 +879,32 @@
       "expandHint": "Click to personalise as a gift",
       "confirmation": "Your tier buttons above will checkout as a gift.",
       "reset": "Remove gift details"
+    },
+    "referral": {
+      "welcomeFromFriend": "🎁 Welcome from a friend — your first month is €5 off.",
+      "codeApplied": "Discount applied automatically at checkout with code"
+    },
+    "campaign": {
+      "finalHours": "Final hours",
+      "oneDayLeft": "1 day left",
+      "daysLeft": "{count} days left",
+      "daysRemainingAria": "{count} days remaining"
+    },
+    "thankYou": {
+      "welcome": "Welcome to the herd",
+      "welcomeNamed": "Welcome to the herd, {name}!",
+      "tierMonthly": "Your €75/month adoption is now active.",
+      "tierYearly": "Your €900 yearly adoption (12 months coverage) is now active.",
+      "whatsNext": "What happens next",
+      "stepNow": "Now: a welcome email landed in your inbox with your adoption details (check spam if you don't see it within 2 minutes).",
+      "step24h": "Within 24 hours: a follow-up email with your supporter discount codes (10% Wishfulfilling Weaving, 15% Farm Shop).",
+      "stepThisWeek": "This week: we'll personally assign you a herd member and send their name + photo.",
+      "stepEachMonth": "Each month: photo + update of your sponsored alpaca, plus an open invitation to visit Es Currals.",
+      "downloadCert": "Download your certificate (PDF)",
+      "backToFarm": "Back to the farm →"
+    },
+    "comparison": {
+      "whatYouGet": "What you get"
     }
   },
   "journal": {
@@ -1233,5 +1259,34 @@
     "marketingConsentRequired": "Please tick this box to subscribe.",
     "adoptAction": "adopting",
     "giftAction": "completing your gift"
+  },
+  "portal": {
+    "title": "Your adoption",
+    "matchedAlpacaFallback": "Your matched alpaca",
+    "subscriptionHeader": "Subscription",
+    "amount": "Amount",
+    "nextCharge": "Next charge",
+    "started": "Started",
+    "canceled": "Canceled",
+    "updatePayment": "Update payment method",
+    "cancel": "Cancel adoption",
+    "adoptAgain": "Adopt again",
+    "failureWarningPrefix": "Heads up — {count} recent payment failures.",
+    "failureWarningSuffix": "Your adoption will pause if we can't collect soon. Use the “Update payment” button below to fix it.",
+    "photoComingSoon": "Photo coming soon. The owner is gathering portraits — your welcome packet has one too.",
+    "farmNewsHeader": "{label} from the farm",
+    "sneakPeek": "Sneak peek",
+    "weWillPick": "You let us pick — we'll match you to one of the herd within a few days and update this page.",
+    "bioComingSoon": "Bio coming soon — the owner is collecting personality notes from the herd.",
+    "personalityLabel": "Personality:",
+    "footerHelpPrefix": "Need help? Reply to your welcome email or write to",
+    "requestFreshLink": "Request a fresh portal email",
+    "emailUs": "Email us",
+    "errorTitle": {
+      "noToken": "Portal link missing",
+      "expired": "Portal link expired",
+      "sdkMissing": "Service starting up",
+      "fetchFailed": "Couldn't load your adoption"
+    }
   }
 }

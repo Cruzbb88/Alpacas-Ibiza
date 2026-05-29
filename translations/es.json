@@ -899,6 +899,32 @@
       "expandHint": "__UNTRANSLATED__: Click to personalise as a gift",
       "confirmation": "__UNTRANSLATED__: Your tier buttons above will checkout as a gift.",
       "reset": "__UNTRANSLATED__: Remove gift details"
+    },
+    "referral": {
+      "welcomeFromFriend": "__UNTRANSLATED__: 🎁 Welcome from a friend — your first month is €5 off.",
+      "codeApplied": "__UNTRANSLATED__: Discount applied automatically at checkout with code"
+    },
+    "campaign": {
+      "finalHours": "__UNTRANSLATED__: Final hours",
+      "oneDayLeft": "__UNTRANSLATED__: 1 day left",
+      "daysLeft": "__UNTRANSLATED__: {count} days left",
+      "daysRemainingAria": "__UNTRANSLATED__: {count} days remaining"
+    },
+    "thankYou": {
+      "welcome": "__UNTRANSLATED__: Welcome to the herd",
+      "welcomeNamed": "__UNTRANSLATED__: Welcome to the herd, {name}!",
+      "tierMonthly": "__UNTRANSLATED__: Your €75/month adoption is now active.",
+      "tierYearly": "__UNTRANSLATED__: Your €900 yearly adoption (12 months coverage) is now active.",
+      "whatsNext": "__UNTRANSLATED__: What happens next",
+      "stepNow": "__UNTRANSLATED__: Now: a welcome email landed in your inbox with your adoption details (check spam if you don't see it within 2 minutes).",
+      "step24h": "__UNTRANSLATED__: Within 24 hours: a follow-up email with your supporter discount codes (10% Wishfulfilling Weaving, 15% Farm Shop).",
+      "stepThisWeek": "__UNTRANSLATED__: This week: we'll personally assign you a herd member and send their name + photo.",
+      "stepEachMonth": "__UNTRANSLATED__: Each month: photo + update of your sponsored alpaca, plus an open invitation to visit Es Currals.",
+      "downloadCert": "__UNTRANSLATED__: Download your certificate (PDF)",
+      "backToFarm": "__UNTRANSLATED__: Back to the farm →"
+    },
+    "comparison": {
+      "whatYouGet": "__UNTRANSLATED__: What you get"
     }
   },
   "sitemap": {
@@ -1233,5 +1259,34 @@
     "marketingConsentRequired": "__UNTRANSLATED__: Please tick this box to subscribe.",
     "adoptAction": "__UNTRANSLATED__: adopting",
     "giftAction": "__UNTRANSLATED__: completing your gift"
+  },
+  "portal": {
+    "title": "__UNTRANSLATED__: Your adoption",
+    "matchedAlpacaFallback": "__UNTRANSLATED__: Your matched alpaca",
+    "subscriptionHeader": "__UNTRANSLATED__: Subscription",
+    "amount": "__UNTRANSLATED__: Amount",
+    "nextCharge": "__UNTRANSLATED__: Next charge",
+    "started": "__UNTRANSLATED__: Started",
+    "canceled": "__UNTRANSLATED__: Canceled",
+    "updatePayment": "__UNTRANSLATED__: Update payment method",
+    "cancel": "__UNTRANSLATED__: Cancel adoption",
+    "adoptAgain": "__UNTRANSLATED__: Adopt again",
+    "failureWarningPrefix": "__UNTRANSLATED__: Heads up — {count} recent payment failures.",
+    "failureWarningSuffix": "__UNTRANSLATED__: Your adoption will pause if we can't collect soon. Use the “Update payment” button below to fix it.",
+    "photoComingSoon": "__UNTRANSLATED__: Photo coming soon. The owner is gathering portraits — your welcome packet has one too.",
+    "farmNewsHeader": "__UNTRANSLATED__: {label} from the farm",
+    "sneakPeek": "__UNTRANSLATED__: Sneak peek",
+    "weWillPick": "__UNTRANSLATED__: You let us pick — we'll match you to one of the herd within a few days and update this page.",
+    "bioComingSoon": "__UNTRANSLATED__: Bio coming soon — the owner is collecting personality notes from the herd.",
+    "personalityLabel": "__UNTRANSLATED__: Personality:",
+    "footerHelpPrefix": "__UNTRANSLATED__: Need help? Reply to your welcome email or write to",
+    "requestFreshLink": "__UNTRANSLATED__: Request a fresh portal email",
+    "emailUs": "__UNTRANSLATED__: Email us",
+    "errorTitle": {
+      "noToken": "__UNTRANSLATED__: Portal link missing",
+      "expired": "__UNTRANSLATED__: Portal link expired",
+      "sdkMissing": "__UNTRANSLATED__: Service starting up",
+      "fetchFailed": "__UNTRANSLATED__: Couldn't load your adoption"
+    }
   }
 }

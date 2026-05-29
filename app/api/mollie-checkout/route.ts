@@ -8,6 +8,7 @@ import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-
 import { findAlpacaName } from '@/lib/data/alpacas'
 import { parseGiftFields, type ParsedGiftFields } from '@/lib/gift-fields'
 import { rateLimit, getClientIp } from '@/lib/rate-limit'
+import { verifyReferralCode } from '@/lib/referral-codes'
 
 /**
  * GET  /api/mollie-checkout?tier=monthly|yearly
@@ -64,18 +65,33 @@ async function handleCheckout(request: Request, method: 'GET' | 'POST') {
   let customerEmail: string | undefined
   let alpacaSlugRaw: string | null = null
   let giftFields: ParsedGiftFields | null = null
+  // Referrer-tracking code (?ref=XXXXXX) — distinct from any discount/coupon
+  // flow. Validated for format only (no signature check); written into
+  // payment metadata.referredBy so admin attribution survives the
+  // mandate→subscription handoff in the Mollie webhook.
+  let referredBy: string | null = null
   if (method === 'GET') {
     const url = new URL(request.url)
     const raw = url.searchParams.get('tier')
     if (isAdoptTier(raw)) tier = raw
     alpacaSlugRaw = url.searchParams.get('alpaca')
+    // Accept both the richer multi-field form (gift_recipient_email etc.) and the
+    // simplified AdoptGiftAdoption form (gift_name / gift_email / gift_deliver).
+    // Richer fields take precedence when both are present.
     giftFields = parseGiftFields({
-      gift_recipient_email: url.searchParams.get('gift_recipient_email'),
-      gift_recipient_name: url.searchParams.get('gift_recipient_name'),
+      gift_recipient_email:
+        url.searchParams.get('gift_recipient_email') ??
+        url.searchParams.get('gift_email'),
+      gift_recipient_name:
+        url.searchParams.get('gift_recipient_name') ??
+        url.searchParams.get('gift_name'),
       gift_sender_name: url.searchParams.get('gift_sender_name'),
       gift_message: url.searchParams.get('gift_message'),
-      gift_send_date: url.searchParams.get('gift_send_date'),
+      gift_send_date:
+        url.searchParams.get('gift_send_date') ??
+        url.searchParams.get('gift_deliver'),
     })
+    referredBy = verifyReferralCode(url.searchParams.get('ref'))
   } else {
     try {
       const body = (await request.json()) as Record<string, unknown>
@@ -84,6 +100,7 @@ async function handleCheckout(request: Request, method: 'GET' | 'POST') {
         customerEmail = body.email
       }
       if (typeof body?.alpaca === 'string') alpacaSlugRaw = body.alpaca
+      if (typeof body?.ref === 'string') referredBy = verifyReferralCode(body.ref)
       giftFields = parseGiftFields({
         gift_recipient_email: typeof body?.gift_recipient_email === 'string' ? body.gift_recipient_email : undefined,
         gift_recipient_name: typeof body?.gift_recipient_name === 'string' ? body.gift_recipient_name : undefined,
@@ -100,6 +117,13 @@ async function handleCheckout(request: Request, method: 'GET' | 'POST') {
   }
   const alpacaSlug = findAlpacaName(alpacaSlugRaw) ? alpacaSlugRaw! : undefined
 
+  // Server-side log when a ref code is in play — same rationale as the Stripe
+  // route: surfaces referral activity in Vercel Function Logs before payment
+  // completes, so spikes after a referrer's social post are visible live.
+  if (referredBy) {
+    log.info('referral attribution attached', { vendor: 'mollie', tier, ref: referredBy })
+  }
+
   // SECURITY: SITE_BASE_URL only — never request.headers.get('origin'). See
   // CLAUDE.md failsafe map "Mollie checkout returnUrl uses SITE_BASE_URL".
   const locale = extractLocaleFromReferer(request.headers.get('referer'))
@@ -112,6 +136,8 @@ async function handleCheckout(request: Request, method: 'GET' | 'POST') {
     returnUrl,
     customerEmail,
     alpacaSlug,
+    locale,
+    ...(referredBy ? { referredBy } : {}),
     ...(giftFields
       ? {
           gift: {

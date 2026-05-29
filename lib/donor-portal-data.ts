@@ -53,6 +53,20 @@ export type DonorPortalResult =
       updateToken: string | null
       /** True when the subscription is in a state the donor can still act on. */
       isLive: boolean
+      /**
+       * Current Mollie mandate for the donor — surfaces SEPA / card authorisation
+       * state so donors learn about a revoked mandate BEFORE a charge fails
+       * (parity with N26 / Klarna / Revolut). null when no mandate exists OR the
+       * Mollie list call failed (fail-quiet — UI renders a "couldn't load" hint).
+       * `bankAccount` masked to last 4 chars (PII).
+       */
+      mandate: {
+        id: string
+        status: string
+        method: string | null
+        signatureDate: string | null
+        bankAccount: string | null
+      } | null
       /** Latest quarterly farm-news HTML the owner has composed, or null. */
       latestQuarter: { label: string; newsHtml: string; sentAt: string | null } | null
       /**
@@ -168,6 +182,93 @@ async function fetchPaymentHistory(
   }
 }
 
+/** Narrow shape of the Mollie Mandate resource we read. Matches SDK types
+ *  but reduced to the fields we surface in the portal. `details` is a union
+ *  of direct-debit / credit-card / paypal shapes — we read all three keys
+ *  conditionally and let the absent ones fall through to null. */
+type MollieMandateRow = {
+  id: string
+  status?: string
+  method?: string | null
+  signatureDate?: string | null
+  details?: {
+    consumerAccount?: string
+    consumerName?: string
+    cardLabel?: string | null
+    cardNumber?: string
+  } | null
+}
+
+/**
+ * Fetch the donor's current Mollie mandate, fail-quiet.
+ *
+ * Returns the most-recent VALID mandate when one exists, otherwise the
+ * most-recent mandate of any status (so revoked / pending state still
+ * surfaces in the UI — that's the whole point: tell donors BEFORE the
+ * next charge fails). Returns null when:
+ *   - The customer has zero mandates on file
+ *   - The Mollie API call throws (network, auth, SDK shape drift)
+ *
+ * NEVER throws. The donor portal must still render subscription + alpaca
+ * even if mandate state is unavailable; the page renders a "couldn't load
+ * mandate" hint when this returns null.
+ *
+ * Account masking: SEPA `consumerAccount` is a full IBAN — we expose ONLY
+ * the last 4 characters (e.g. "1234"). Card numbers are already masked by
+ * Mollie (e.g. "•••• 1234") and pass through as-is.
+ */
+async function fetchCurrentMandate(
+  mollie: MollieClient,
+  customerId: string,
+): Promise<{ id: string; status: string; method: string | null; signatureDate: string | null; bankAccount: string | null } | null> {
+  try {
+    // SDK exposes `customerMandates.page({ customerId })` — newest-first,
+    // paginated. We only need the first page (any donor with >250 mandates
+    // is an edge case we don't need to optimise for; their newest is on
+    // page 1 regardless). Cast through unknown so the dynamic-import +
+    // missing-package fallback still compiles when @mollie/api-client is
+    // absent (mirrors fetchPaymentHistory's pattern).
+    const binder = (mollie as unknown as {
+      customerMandates: {
+        page: (opts: { customerId: string }) => Promise<MollieMandateRow[]>
+      }
+    }).customerMandates
+
+    const page = await binder.page({ customerId })
+    if (!Array.isArray(page) || page.length === 0) return null
+
+    // Prefer the most-recent VALID mandate — that's the one Mollie will
+    // actually charge against. Fall back to the most-recent overall (which
+    // may be `pending` or `invalid`/`revoked`) so revoked state still
+    // shows up in the UI rather than being silently hidden.
+    const chosen = page.find((m) => m.status === 'valid') ?? page[0]
+    if (!chosen) return null
+
+    // Mask the bank account: IBAN → last 4 chars only. Mollie already
+    // masks card numbers server-side (e.g. "•••• 1234"); we let those pass.
+    let bankAccount: string | null = null
+    const iban = chosen.details?.consumerAccount
+    const cardMasked = chosen.details?.cardNumber
+    if (typeof iban === 'string' && iban.length >= 4) {
+      bankAccount = iban.slice(-4)
+    } else if (typeof cardMasked === 'string' && cardMasked.length > 0) {
+      bankAccount = cardMasked
+    }
+
+    return {
+      id: chosen.id,
+      status: chosen.status ?? 'unknown',
+      method: chosen.method ?? null,
+      signatureDate: chosen.signatureDate ?? null,
+      bankAccount,
+    }
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    console.warn('[donor-portal] customerMandates fetch failed for customer', customerId, message)
+    return null
+  }
+}
+
 /**
  * Verify a status-scoped token, fetch the subscription, and assemble the
  * portal view-model. Never throws — every failure mode returns a structured
@@ -234,6 +335,14 @@ export async function fetchDonorPortalData(
     ? await fetchPaymentHistory(mollie, payload.customerId)
     : []
 
+  // Mandate state — fail-quiet, null on no-mandate OR fetch error.
+  // Surfaces SEPA / card authorisation state ahead of the next charge so
+  // donors can re-mandate BEFORE a failure (parity with N26 / Klarna /
+  // Revolut subscription tab).
+  const mandate = payload.customerId
+    ? await fetchCurrentMandate(mollie, payload.customerId)
+    : null
+
   return {
     ok: true,
     customerId: payload.customerId,
@@ -259,6 +368,7 @@ export async function fetchDonorPortalData(
       ? encodeURIComponent(signMollieUpdatePaymentToken(payload.customerId, payload.subscriptionId, oneHourMs))
       : null,
     isLive,
+    mandate,
     latestQuarter,
     paymentHistory,
   }
