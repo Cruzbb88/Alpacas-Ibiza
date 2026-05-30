@@ -49,6 +49,8 @@ import { loadStripe } from '@stripe/stripe-js'
 import { Elements, PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import { trackEvent } from '@/lib/client-track'
 import type { ParsedGiftFields } from '@/lib/gift-fields'
+import { ADOPT_PRICE_MONTHLY_EUR, ADOPT_PRICE_YEARLY_EUR } from '@/lib/config'
+import { formatPriceForLocale } from '@/lib/format-price'
 
 export interface EmbeddedCheckoutProps {
   tier: 'monthly' | 'yearly'
@@ -260,7 +262,7 @@ function PaymentForm({ tier, locale, paymentIntentId }: PaymentFormProps) {
             Processing…
           </>
         ) : (
-          `Confirm payment — ${tier === 'monthly' ? '€75 / month' : '€900 / year'}`
+          `Confirm payment — ${formatPriceForLocale(tier === 'monthly' ? ADOPT_PRICE_MONTHLY_EUR : ADOPT_PRICE_YEARLY_EUR, locale)}${tier === 'monthly' ? ' / month' : ' / year'}`
         )}
       </button>
       <p className="text-xs text-foreground/60">

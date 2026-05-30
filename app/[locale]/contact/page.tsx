@@ -1,9 +1,37 @@
+import type { Metadata } from 'next'
 import { t } from '@/lib/translations'
 import type { Locale } from '@/i18n.config'
 import { ContactForm } from '@/components/contact-form'
 import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
 import { TenantMap } from '@/components/tenant-map'
 import { getDefaultTenant } from '@/lib/tenants/server'
+import { buildLocaleAlternates } from '@/lib/i18n-metadata'
+import { getOgImage } from '@/lib/og-images'
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  const tr = t(locale)
+  const ogImage = getOgImage('about', 'Contact Alpacas Ibiza – Get in touch')
+  return {
+    title: tr('contact.metaTitle', 'Contact Alpacas Ibiza | San Carlos Farm – Get in Touch'),
+    description:
+      'Get in touch with Alpacas Ibiza. Visit our farm in San Carlos, Ibiza — contact us by phone, email, or through the form.',
+    alternates: buildLocaleAlternates(locale, 'contact'),
+    openGraph: {
+      title: tr('contact.metaTitle', 'Contact Alpacas Ibiza | San Carlos Farm – Get in Touch'),
+      description: 'Contact Alpacas Ibiza – farm location, opening hours, and enquiry form.',
+      images: [ogImage],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      images: [ogImage.url],
+    },
+  }
+}
 
 export default async function ContactPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params

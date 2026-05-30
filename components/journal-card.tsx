@@ -19,7 +19,8 @@ interface JournalCardProps {
 
 export function JournalCard({ post, locale }: JournalCardProps) {
   const categoryLabel = post.category.replace(/-/g, ' ')
-  const dateLabel = new Date(post.date).toLocaleDateString('en-GB', {
+  const bcp47Locale = locale === 'en' ? 'en-GB' : locale
+  const dateLabel = new Date(post.date).toLocaleDateString(bcp47Locale, {
     day: 'numeric',
     month: 'short',
     year: 'numeric',

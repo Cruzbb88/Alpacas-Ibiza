@@ -50,7 +50,8 @@ export function LatestStories({ locale, max = 3 }: Props) {
         {/* Card grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
           {posts.map((post) => {
-            const dateLabel = new Date(post.publishedAt).toLocaleDateString('en-GB', {
+            const bcp47Locale = locale === 'en' ? 'en-GB' : locale
+            const dateLabel = new Date(post.publishedAt).toLocaleDateString(bcp47Locale, {
               day: 'numeric',
               month: 'short',
               year: 'numeric',

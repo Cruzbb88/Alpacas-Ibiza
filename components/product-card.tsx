@@ -25,6 +25,7 @@ import { Heart, ShoppingCart } from 'lucide-react'
 import type { Locale } from '@/i18n.config'
 import { t } from '@/lib/translations'
 import { getFareHarborCategoryUrl } from '@/lib/config'
+import { formatPriceForLocale } from '@/lib/format-price'
 
 export type ProductStatus = 'in-stock' | 'low-stock' | 'sold-out' | 'made-to-order'
 
@@ -80,12 +81,9 @@ function slugify(s: string): string {
     .replace(/(^-|-$)/g, '')
 }
 
+/** @deprecated Replaced by formatPriceForLocale from @/lib/format-price */
 function formatEUR(locale: Locale, amount: number): string {
-  try {
-    return new Intl.NumberFormat(locale, { style: 'currency', currency: 'EUR' }).format(amount)
-  } catch {
-    return new Intl.NumberFormat('en', { style: 'currency', currency: 'EUR' }).format(amount)
-  }
+  return formatPriceForLocale(amount, locale)
 }
 
 function Star({ filled, half }: { filled: boolean; half?: boolean }) {

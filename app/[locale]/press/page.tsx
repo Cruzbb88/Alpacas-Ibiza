@@ -43,7 +43,7 @@ export async function generateMetadata({
         descriptionOverride:
             'Alpacas Ibiza as seen in Belgian and Spanish press. Coverage from Gazet van Antwerpen, Het Laatste Nieuws, Diario de Ibiza, Tribes & Nomads and more.',
     })
-    const ogImage = getOgImage('about', 'Press & Media – Alpacas Ibiza')
+    const ogImage = getOgImage('press', 'Press & Media – Alpacas Ibiza')
     return {
         ...base,
         robots: { index: false, follow: true },

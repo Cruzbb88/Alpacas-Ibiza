@@ -21,6 +21,7 @@ import { ShareButtons } from '@/components/share-buttons'
 import { trackEvent } from '@/lib/client-track'
 import { getTranslation } from '@/lib/translations'
 import type { Locale } from '@/i18n.config'
+import { MOLLIE_PENDING_STATES } from '@/lib/checkout-states'
 
 export interface AdoptThankYouProps {
   readonly locale: Locale
@@ -51,8 +52,7 @@ export function AdoptThankYou({
   // to confirm — but the marketing page must NOT re-render under them or the
   // donor will think payment failed and pay again. Treat as a success surface
   // with a pending-state banner.
-  const PENDING_STATES = ['mollie-return', 'mollie-embedded-return'] as const
-  const isPending = PENDING_STATES.includes(checkoutState as never)
+  const isPending = (MOLLIE_PENDING_STATES as ReadonlyArray<string>).includes(checkoutState ?? '')
   const isSuccessLike = checkoutState === 'success' || isPending
 
   // ── Funnel analytics ────────────────────────────────────────────────────

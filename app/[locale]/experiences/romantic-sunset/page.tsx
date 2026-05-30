@@ -16,12 +16,12 @@ export async function generateMetadata({
     const tr = t(locale as any)
     const ogImage = getOgImage('alpacas', 'Romantic Sunset Walks – Alpacas Ibiza')
     return {
-        title: tr('romantic.title'),
+        title: tr('romantic.metaTitle', 'Romantic Sunset Walk with Alpacas | Couples – Alpacas Ibiza'),
         description:
             'A private sunset walk with alpacas at Es Currals, Ibiza. Perfect for couples — cava, tapas, and a professional photographer included.',
         alternates: buildLocaleAlternates(locale, 'experiences/romantic-sunset'),
         openGraph: {
-            title: tr('romantic.title'),
+            title: tr('romantic.metaTitle', 'Romantic Sunset Walk with Alpacas | Couples – Alpacas Ibiza'),
             description:
                 'Private golden-hour walk through the alpaca paddocks with cava, tapas, and photography.',
             images: [ogImage],

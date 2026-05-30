@@ -5,6 +5,7 @@ import { escapeHtml } from '@/lib/html'
 import { reminderEmailHtml, reminderSubject } from '@/lib/email-templates'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
 import { buildIcs, googleCalendarUrl } from '@/lib/ics'
+import { rateLimit, getClientIp } from '@/lib/rate-limit'
 
 /**
  * POST /api/reminder
@@ -19,6 +20,21 @@ import { buildIcs, googleCalendarUrl } from '@/lib/ics'
 export async function POST(request: Request) {
     const reqId = getRequestId(request)
     const log = makeRequestLogger('reminder', reqId)
+
+    // IP rate-limit — 5 req / 5 min. Prevents flooding recipient inboxes via
+    // unauthenticated callers when FAREHARBOR_WEBHOOK_SECRET is unset.
+    const ip = getClientIp(request)
+    const rl = rateLimit({ key: `reminder:${ip}`, limit: 5, windowMs: 5 * 60 * 1000 })
+    if (!rl.allowed) {
+        log.warn('IP rate limit hit', { ip, retryAfterSec: Math.ceil(rl.resetMs / 1000) })
+        return attachRequestId(
+            NextResponse.json({ error: 'Too many requests' }, {
+                status: 429,
+                headers: { 'Retry-After': String(Math.ceil(rl.resetMs / 1000)) },
+            }),
+            reqId,
+        )
+    }
 
     const expected = process.env.FAREHARBOR_WEBHOOK_SECRET
     if (expected) {
@@ -35,13 +51,16 @@ export async function POST(request: Request) {
         return attachRequestId(NextResponse.json({ error: 'Invalid JSON' }, { status: 400 }), reqId)
     }
 
-    const rawName = (body.customer_name as string) || (body.name as string) || 'there'
-    const email = (body.customer_email as string) || (body.email as string)
-    const rawTourName = (body.tour_name as string) || (body.item_name as string) || 'your visit'
+    // Length caps — prevents oversized strings from reaching escapeHtml / email send.
+    const MAX_NAME = 200, MAX_EMAIL = 320, MAX_TOUR = 200, MAX_PK = 64, MAX_LOCALE = 10
+
+    const rawName = String((body.customer_name as string) || (body.name as string) || 'there').slice(0, MAX_NAME)
+    const email = String((body.customer_email as string) || (body.email as string) || '').slice(0, MAX_EMAIL)
+    const rawTourName = String((body.tour_name as string) || (body.item_name as string) || 'your visit').slice(0, MAX_TOUR)
     const startAt = body.start_at ? new Date(body.start_at as string) : null
     const endAt = body.end_at ? new Date(body.end_at as string) : null
-    const bookingPk = body.pk ? String(body.pk) : null
-    const locale = ((body.locale as string) || 'en')
+    const bookingPk = body.pk ? String(body.pk).slice(0, MAX_PK) : null
+    const locale = String((body.locale as string) || 'en').slice(0, MAX_LOCALE)
 
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
         return attachRequestId(NextResponse.json({ error: 'Invalid email' }, { status: 400 }), reqId)

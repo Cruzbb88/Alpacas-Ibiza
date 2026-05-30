@@ -303,6 +303,8 @@
   "backHome": "Back to Home",
   "shop": {
     "title": "Wishfulfilling Weaving Collection",
+    "metaTitle": "Shop | Wishfulfilling Weaving & Alcaca – Alpacas Ibiza",
+    "metaDescription": "Hand-woven scarves on traditional wooden looms, custom commissions, and Alcaca organic fertilizer — all from Es Currals, Ibiza's first alpaca farm.",
     "subtitle": "Made in Ibiza, embracing the world",
     "description": "Hand-woven exclusive scarves on a traditional wooden loom using high-quality alpaca wool, linen, mohair and silk wool.",
     "categories": {
@@ -336,6 +338,8 @@
   },
   "wovenPage": {
     "title": "Woven Collection",
+    "metaTitle": "Woven Collection | Wishfulfilling Weaving – Alpacas Ibiza",
+    "metaDescription": "Handwoven alpaca-wool scarves, blankets, and textiles made on a traditional wooden loom at Es Currals, Ibiza. Each piece is unique — enquire for availability.",
     "subtitle": "Handcrafted with love using traditional weaving techniques and natural alpaca wool",
     "addToCart": "Add to Cart",
     "scarf": "Alpaca Wool Scarf",
@@ -347,6 +351,8 @@
   },
   "commissionPage": {
     "title": "Custom Commission",
+    "metaTitle": "Custom Commission | Wishfulfilling Weaving – Alpacas Ibiza",
+    "metaDescription": "Commission a bespoke hand-woven piece from San at Es Currals, Ibiza. Choose your colours, pattern, and dimensions — made to order on a traditional wooden loom.",
     "subtitle": "Create your dream piece with custom colors, patterns, and dimensions",
     "formTitle": "Tell Us About Your Vision",
     "name": "Your Name",
@@ -359,6 +365,8 @@
   },
   "alcacaPage": {
     "title": "Premium Alpaca Manure",
+    "metaTitle": "Alcaca Organic Fertilizer | Alpaca Manure – Alpacas Ibiza",
+    "metaDescription": "Alcaca is premium organic alpaca-manure fertilizer from Es Currals, Ibiza. Nutrient-rich, chemical-free, and sustainably produced — available in sample, bulk, and wholesale packs.",
     "subtitle": "Rich in nutrients. Certified organic. Sustainably sourced from our farm.",
     "orderNow": "Order Now",
     "sample": "Sample Pack (5L)",
@@ -443,6 +451,7 @@
   },
   "romantic": {
     "title": "Romantic Sunset Walks",
+    "metaTitle": "Romantic Sunset Walk with Alpacas | Couples – Alpacas Ibiza",
     "subtitle": "Golden hour with the alpacas. A private, intimate experience for couples in the heart of Ibiza.",
     "cta": "Book Sunset Tour",
     "quote": "\"The most magical date we've ever had.\"",
@@ -510,6 +519,7 @@
   },
   "about": {
     "title": "About Alpacas Ibiza",
+    "metaTitle": "About Alpacas Ibiza | Es Currals Farm – Bart & San",
     "storyTitle": "Our Story",
     "storyText": "Alpacas Ibiza was founded on the belief that tourism can be meaningful, artisanal, and deeply connected to animal welfare. We created the first alpaca farm on the island to share our passion for these gentle creatures and their incredible fiber.",
     "valuesTitle": "Our Values",
@@ -536,6 +546,7 @@
   },
   "contact": {
     "title": "Get in Touch",
+    "metaTitle": "Contact Alpacas Ibiza | San Carlos Farm – Get in Touch",
     "subtitle": "Have questions? We'd love to hear from you!",
     "formTitle": "Send us a Message",
     "name": "Name",
@@ -903,7 +914,13 @@
       "stepThisWeek": "This week: we'll personally assign you a herd member and send their name + photo.",
       "stepEachMonth": "Each month: photo + update of your sponsored alpaca, plus an open invitation to visit Es Currals.",
       "downloadCert": "Download your certificate (PDF)",
-      "backToFarm": "Back to the farm →"
+      "backToFarm": "Back to the farm →",
+      "pendingCopy": "Your payment is being processed. SEPA bank transfers take 1-5 business days to clear — your welcome email will arrive once the funds settle.",
+      "pendingBadge": "Payment processing",
+      "pendingDetail": "Your bank is confirming the transfer. We'll email you the moment it clears (usually 1-2 business days for SEPA).",
+      "alpacaLine": "You've adopted {name}",
+      "needHelpPrefix": "Need help? Reach the team at",
+      "orWhatsApp": "or"
     },
     "comparison": {
       "whatYouGet": "What you get"
@@ -1228,7 +1245,7 @@
   },
   "gifts": {
     "meta": {
-      "title": "Gift a Visit — Alpacas Ibiza",
+      "title": "Gift Voucher – Alpacas Ibiza | Give an Alpaca Experience",
       "description": "Give someone a memorable day with our alpaca herd. Gift vouchers valid for any of our tours."
     },
     "hero": {

@@ -7,6 +7,7 @@ import { InlineSpinner } from '@/components/inline-spinner'
 import { useFormDraft } from '@/lib/hooks/use-form-draft'
 import { t } from '@/lib/translations'
 import type { Locale } from '@/i18n.config'
+import { formatPriceForLocale } from '@/lib/format-price'
 
 /* ----------------------------------------------------------------------------
  * Types & constants
@@ -121,13 +122,19 @@ interface CommissionFormProps {
      * Defaults to 'en' so existing call sites that omit it keep working.
      */
     locale?: Locale
+    /**
+     * When a visitor arrives from a product page (?product=<slug>), the page
+     * passes the slug here so the message textarea is pre-filled with a
+     * "[Product: <slug>]" prefix, saving the customer a step.
+     */
+    defaultProductInterest?: string
 }
 
 /* ----------------------------------------------------------------------------
  * Component
  * ------------------------------------------------------------------------- */
 
-export function CommissionForm({ labels, locale = 'en' }: CommissionFormProps) {
+export function CommissionForm({ labels, locale = 'en', defaultProductInterest }: CommissionFormProps) {
     const tr = t(locale)
     const text = (key: string, fallback: string) => {
         const value = tr(key, '')
@@ -138,7 +145,10 @@ export function CommissionForm({ labels, locale = 'en' }: CommissionFormProps) {
     const successHeadingRef = useRef<HTMLHeadingElement | null>(null)
 
     const [status, setStatus] = useState<Status>('idle')
-    const { draft, patch, clear } = useFormDraft<FormDraft>('commission', INITIAL_DRAFT)
+    const initialDraft: FormDraft = defaultProductInterest
+        ? { ...INITIAL_DRAFT, message: `[Product: ${defaultProductInterest}] ` }
+        : INITIAL_DRAFT
+    const { draft, patch, clear } = useFormDraft<FormDraft>('commission', initialDraft)
     const [captchaToken, setCaptchaToken] = useState('')
     const [honeypot, setHoneypot] = useState('')
     const [errors, setErrors] = useState<Partial<Record<keyof FormDraft | 'references', string>>>({})
@@ -550,7 +560,7 @@ export function CommissionForm({ labels, locale = 'en' }: CommissionFormProps) {
                     )}
                 </p>
                 <div className="mt-3 flex items-baseline gap-3" aria-live="polite">
-                    <strong className="text-2xl text-accent">€{draft.budget}</strong>
+                    <strong className="text-2xl text-accent">{formatPriceForLocale(draft.budget, locale)}</strong>
                     <span className="text-sm text-foreground/70">
                         {text(bucket.labelKey, bucket.fallback)}
                     </span>
@@ -567,14 +577,14 @@ export function CommissionForm({ labels, locale = 'en' }: CommissionFormProps) {
                     aria-valuemin={100}
                     aria-valuemax={5000}
                     aria-valuenow={draft.budget}
-                    aria-valuetext={`€${draft.budget}, ${text(bucket.labelKey, bucket.fallback)}`}
+                    aria-valuetext={`${formatPriceForLocale(draft.budget, locale)}, ${text(bucket.labelKey, bucket.fallback)}`}
                     className="mt-3 w-full accent-accent cursor-pointer"
                 />
                 <div className="mt-1 flex justify-between text-[11px] text-foreground/50">
-                    <span>€100</span>
-                    <span>€1500</span>
-                    <span>€3000</span>
-                    <span>€5000</span>
+                    <span>{formatPriceForLocale(100, locale)}</span>
+                    <span>{formatPriceForLocale(1500, locale)}</span>
+                    <span>{formatPriceForLocale(3000, locale)}</span>
+                    <span>{formatPriceForLocale(5000, locale)}</span>
                 </div>
             </div>
 

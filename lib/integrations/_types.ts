@@ -90,6 +90,12 @@ export interface EmailProvider {
     replyTo?: string
     /** ISO 8601 or natural-language "in 48 hours" — falls back to immediate if unsupported. */
     scheduledAt?: string
+    /**
+     * When provided, the adapter SHOULD attach RFC 8058 List-Unsubscribe
+     * and List-Unsubscribe-Post headers. Required by Gmail/Yahoo 2026 bulk-
+     * sender rules for commercial transactional email.
+     */
+    listUnsubscribeUrl?: string
   }): Promise<{ id: string | null }>
 
   cancelScheduled(id: string): Promise<boolean>

@@ -1,5 +1,5 @@
 'use client'
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 
 /**
  * global-error.tsx — catches uncaught server errors that escape the root layout.
@@ -29,8 +29,26 @@ export default function GlobalError({
     }).catch(() => { /* silent */ })
   }, [error])
 
+  // Attempt to detect locale from the URL so home/tours links stay consistent.
+  // Falls back to 'en' when this boundary fires before any navigation has occurred.
+  const locales = ['en', 'de', 'it', 'es', 'nl', 'fr']
+  const seg = typeof window !== 'undefined' ? window.location.pathname.split('/')[1] : 'en'
+  const locale = locales.includes(seg) ? seg : 'en'
+
+  const btnBase: React.CSSProperties = {
+    padding: '0.625rem 1.25rem',
+    backgroundColor: 'transparent',
+    color: '#556B2F',
+    border: '2px solid #556B2F',
+    borderRadius: '0.5rem',
+    fontWeight: 600,
+    textDecoration: 'none',
+    fontSize: '0.9375rem',
+    display: 'inline-block',
+  }
+
   return (
-    <html lang="en">
+    <html lang={locale}>
       <body
         style={{
           margin: 0,
@@ -45,7 +63,7 @@ export default function GlobalError({
       >
         <div
           style={{
-            maxWidth: '480px',
+            maxWidth: '520px',
             width: '100%',
             textAlign: 'center',
           }}
@@ -89,22 +107,27 @@ export default function GlobalError({
             >
               Try again
             </button>
-            <a
-              href="/en"
-              style={{
-                padding: '0.625rem 1.25rem',
-                backgroundColor: 'transparent',
-                color: '#556B2F',
-                border: '2px solid #556B2F',
-                borderRadius: '0.5rem',
-                fontWeight: 600,
-                textDecoration: 'none',
-                fontSize: '0.9375rem',
-              }}
-            >
+            <a href={`/${locale}`} style={btnBase}>
               Back to home
             </a>
+            <a href={`/${locale}/tours`} style={btnBase}>
+              Browse tours
+            </a>
+            <a href={`/${locale}/adopt`} style={btnBase}>
+              Adopt an alpaca
+            </a>
           </div>
+          {error.digest && (
+            <p
+              style={{
+                marginTop: '2rem',
+                fontSize: '0.75rem',
+                color: '#708090',
+              }}
+            >
+              Error ref: {error.digest}
+            </p>
+          )}
         </div>
       </body>
     </html>

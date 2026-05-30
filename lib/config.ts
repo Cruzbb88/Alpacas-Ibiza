@@ -6,6 +6,15 @@ const log = makeRequestLogger('config', '')
 // central config helpers for environment-driven constants
 
 /**
+ * Adopt-a-Paca campaign banner — env-gated. All three must be set for the banner
+ * to render; unset = `null` and `<CampaignBanner>` returns null (fail-open).
+ * End date is parsed as ISO; past dates auto-hide the banner.
+ */
+export const CAMPAIGN_HEADLINE: string | null = process.env.ADOPT_CAMPAIGN_HEADLINE ?? null
+export const CAMPAIGN_SUBLINE: string | null = process.env.ADOPT_CAMPAIGN_SUBLINE ?? null
+export const CAMPAIGN_END_DATE: string | null = process.env.ADOPT_CAMPAIGN_END_DATE ?? null
+
+/**
  * Canonical site origin — used in metadata, sitemap, hreflang, structured data, OG URLs.
  * `NEXT_PUBLIC_SITE_URL` allows preview/staging override without code change. Never has trailing slash.
  */

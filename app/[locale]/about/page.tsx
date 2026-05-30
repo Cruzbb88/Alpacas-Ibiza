@@ -4,6 +4,7 @@ import type { Locale } from '@/i18n.config'
 import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
 import { buildLocaleAlternates } from '@/lib/i18n-metadata'
 import { AwardsBadges } from '@/components/awards-badges'
+import { getOgImage } from '@/lib/og-images'
 
 export async function generateMetadata({
   params,
@@ -12,9 +13,22 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params
   const tr = t(locale)
+  const ogImage = getOgImage('about', 'About Alpacas Ibiza – Es Currals Farm')
   return {
-    title: tr('about.title'),
+    title: tr('about.metaTitle', 'About Alpacas Ibiza | Es Currals Farm – Bart & San'),
+    description:
+      "Meet the team and story behind Es Currals, Ibiza's first alpaca farm. Belgian founders Bart & San, the Wishfulfilling Weaving studio, and 14 alpacas.",
     alternates: buildLocaleAlternates(locale, 'about'),
+    openGraph: {
+      title: tr('about.metaTitle', 'About Alpacas Ibiza | Es Currals Farm – Bart & San'),
+      description:
+        "Meet the team and story behind Es Currals, Ibiza's first alpaca farm.",
+      images: [ogImage],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      images: [ogImage.url],
+    },
   }
 }
 

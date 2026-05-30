@@ -20,13 +20,13 @@ export async function generateMetadata({
     const tr = t(locale)
     const ogImage = getOgImage('alpacas', 'Gift a Visit to Alpacas Ibiza')
     return {
-        title: tr('gifts.meta.title') || 'Gift a Visit — Alpacas Ibiza',
+        title: tr('gifts.meta.title') || 'Gift Voucher – Alpacas Ibiza | Give an Alpaca Experience',
         description:
             tr('gifts.meta.description') ||
             'Give someone a memorable day with our alpaca herd. Gift vouchers valid for any of our tours.',
         alternates: buildLocaleAlternates(locale, 'gifts'),
         openGraph: {
-            title: tr('gifts.meta.title') || 'Gift a Visit — Alpacas Ibiza',
+            title: tr('gifts.meta.title') || 'Gift Voucher – Alpacas Ibiza | Give an Alpaca Experience',
             description:
                 tr('gifts.meta.description') ||
                 'Give someone a memorable day with our alpaca herd. Gift vouchers valid for any of our tours.',

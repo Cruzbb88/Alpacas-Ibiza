@@ -15,10 +15,18 @@ export async function generateMetadata({
   const tr = t(locale)
   const ogImage = getOgImage('alpacas', 'Woven Alpaca Textiles – Wishfulfilling Weaving')
   return {
-    title: tr('wovenPage.title'),
+    title: tr('wovenPage.metaTitle', 'Woven Collection | Wishfulfilling Weaving – Alpacas Ibiza'),
+    description: tr(
+      'wovenPage.metaDescription',
+      'Handwoven alpaca-wool scarves, blankets, and textiles made on a traditional wooden loom at Es Currals, Ibiza. Each piece is unique — enquire for availability.',
+    ),
     alternates: buildLocaleAlternates(locale, 'shop/woven'),
     openGraph: {
-      title: tr('wovenPage.title'),
+      title: tr('wovenPage.metaTitle', 'Woven Collection | Wishfulfilling Weaving – Alpacas Ibiza'),
+      description: tr(
+        'wovenPage.metaDescription',
+        'Handwoven alpaca-wool scarves, blankets, and textiles made on a traditional wooden loom at Es Currals, Ibiza. Each piece is unique — enquire for availability.',
+      ),
       images: [ogImage],
     },
     twitter: {

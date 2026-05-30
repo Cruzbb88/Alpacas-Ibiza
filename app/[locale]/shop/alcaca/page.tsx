@@ -15,10 +15,18 @@ export async function generateMetadata({
   const tr = t(locale)
   const ogImage = getOgImage('alpacas', 'Alcaca Alpaca Fertilizer – Alpacas Ibiza')
   return {
-    title: tr('alcacaPage.title'),
+    title: tr('alcacaPage.metaTitle', 'Alcaca Organic Fertilizer | Alpaca Manure – Alpacas Ibiza'),
+    description: tr(
+      'alcacaPage.metaDescription',
+      'Alcaca is premium organic alpaca-manure fertilizer from Es Currals, Ibiza. Nutrient-rich, chemical-free, and sustainably produced — available in sample, bulk, and wholesale packs.',
+    ),
     alternates: buildLocaleAlternates(locale, 'shop/alcaca'),
     openGraph: {
-      title: tr('alcacaPage.title'),
+      title: tr('alcacaPage.metaTitle', 'Alcaca Organic Fertilizer | Alpaca Manure – Alpacas Ibiza'),
+      description: tr(
+        'alcacaPage.metaDescription',
+        'Alcaca is premium organic alpaca-manure fertilizer from Es Currals, Ibiza. Nutrient-rich, chemical-free, and sustainably produced — available in sample, bulk, and wholesale packs.',
+      ),
       images: [ogImage],
     },
     twitter: {

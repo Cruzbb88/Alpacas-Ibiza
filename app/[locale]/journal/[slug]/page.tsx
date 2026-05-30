@@ -149,7 +149,8 @@ export default async function JournalPostPage({
   }
 
   const categoryLabel = post.category.replace(/-/g, ' ')
-  const dateLabel = new Date(post.date).toLocaleDateString('en-GB', {
+  const bcp47Locale = locale === 'en' ? 'en-GB' : locale
+  const dateLabel = new Date(post.date).toLocaleDateString(bcp47Locale, {
     day: 'numeric',
     month: 'long',
     year: 'numeric',

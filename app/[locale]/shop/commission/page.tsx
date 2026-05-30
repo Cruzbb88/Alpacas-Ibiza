@@ -5,6 +5,7 @@ import { t } from '@/lib/translations'
 import { CommissionForm } from '@/components/commission-form'
 import { buildLocaleAlternates } from '@/lib/i18n-metadata'
 import { shopCategoryItemListSchema, toJsonLd } from '@/lib/structured-data'
+import { getOgImage } from '@/lib/og-images'
 
 export async function generateMetadata({
   params,
@@ -13,14 +14,38 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params
   const tr = t(locale)
+  const ogImage = getOgImage('alpacas', 'Commission a Custom Woven Piece – Alpacas Ibiza')
   return {
-    title: tr('commissionPage.title'),
+    title: tr('commissionPage.metaTitle', 'Custom Commission | Wishfulfilling Weaving – Alpacas Ibiza'),
+    description: tr(
+      'commissionPage.metaDescription',
+      'Commission a bespoke hand-woven piece from San at Es Currals, Ibiza. Choose your colours, pattern, and dimensions — made to order on a traditional wooden loom.',
+    ),
     alternates: buildLocaleAlternates(locale, 'shop/commission'),
+    openGraph: {
+      title: tr('commissionPage.metaTitle', 'Custom Commission | Wishfulfilling Weaving – Alpacas Ibiza'),
+      description: tr(
+        'commissionPage.metaDescription',
+        'Commission a bespoke hand-woven piece from San at Es Currals, Ibiza. Choose your colours, pattern, and dimensions — made to order on a traditional wooden loom.',
+      ),
+      images: [ogImage],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      images: [ogImage.url],
+    },
   }
 }
 
-export default async function CommissionPage({ params }: { params: Promise<{ locale: Locale }> }) {
+export default async function CommissionPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: Locale }>
+  searchParams: Promise<{ product?: string }>
+}) {
   const { locale } = await params
+  const { product } = await searchParams
   const translate = t(locale)
 
   const formLabels = {
@@ -63,7 +88,7 @@ export default async function CommissionPage({ params }: { params: Promise<{ loc
             <h2 className="text-2xl font-bold text-foreground mb-6">
               {translate('commissionPage.formTitle')}
             </h2>
-            <CommissionForm labels={formLabels} />
+            <CommissionForm labels={formLabels} locale={locale} defaultProductInterest={product} />
           </div>
         </div>
       </section>

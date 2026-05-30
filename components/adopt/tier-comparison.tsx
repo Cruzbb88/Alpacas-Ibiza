@@ -29,6 +29,8 @@ interface TierComparisonProps {
   yearlyCtaLabel: string
   monthlyHref: string
   yearlyHref: string
+  /** Localised label for the "what you get" / features column header. */
+  whatYouGetLabel?: string
 }
 
 /**

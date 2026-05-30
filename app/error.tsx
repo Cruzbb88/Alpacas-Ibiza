@@ -5,10 +5,16 @@
  * Catches errors thrown inside any route that doesn't have its own error.tsx.
  * Does NOT replace the root layout (that's global-error.tsx).
  * Does NOT leak error.message — only logs digest for server-side correlation.
+ *
+ * This boundary sits outside [locale] so we always fall back to English.
+ * If the error originates from a locale route, [locale]/error.tsx fires first.
  */
 import { useEffect } from 'react'
+import { t } from '@/lib/translations'
 
-export default function GlobalError({
+const tr = t('en')
+
+export default function RootError({
   error,
   reset,
 }: {
@@ -34,25 +40,36 @@ export default function GlobalError({
     <div className="flex flex-col items-center justify-center min-h-[60vh] px-4 py-16 text-center">
       <span className="text-6xl mb-6 block" aria-hidden="true">🦙</span>
       <h1 className="text-3xl font-bold text-foreground mb-3 font-display">
-        Something went wrong
+        {tr('error.title')}
       </h1>
-      <p className="text-foreground/70 max-w-md mb-8">
-        One of our alpacas wandered off with this page. Please try again or head back home.
+      <p className="text-foreground/70 max-w-md mb-8 leading-relaxed">
+        {tr('error.subtitle')}
       </p>
       <div className="flex gap-3 flex-wrap justify-center">
         <button
           onClick={reset}
           className="px-5 py-2.5 bg-primary text-primary-foreground rounded-xl font-semibold hover:bg-primary/90 transition-colors"
         >
-          Try again
+          {tr('error.tryAgain')}
         </button>
         <a
           href="/en"
           className="px-5 py-2.5 border-2 border-primary text-primary rounded-xl font-semibold hover:bg-primary/5 transition-colors"
         >
-          Back to home
+          {tr('error.goHome')}
+        </a>
+        <a
+          href="/en/tours"
+          className="px-5 py-2.5 border-2 border-primary text-primary rounded-xl font-semibold hover:bg-primary/5 transition-colors"
+        >
+          {tr('error.goTours')}
         </a>
       </div>
+      {error.digest && (
+        <p className="text-xs text-muted-foreground mt-8">
+          {tr('error.errorRef')}: {error.digest}
+        </p>
+      )}
     </div>
   )
 }

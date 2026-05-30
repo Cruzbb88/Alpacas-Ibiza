@@ -12,6 +12,7 @@ import { localBusinessSchema, faqPageSchema, toJsonLd } from '@/lib/structured-d
 import type { Locale } from '@/i18n.config'
 
 import { SITE_BASE_URL as BASE_URL, FAREHARBOR_ITEM_BUSINESS_INCENTIVES } from '@/lib/config'
+import { getOgImage } from '@/lib/og-images'
 
 export async function generateMetadata({
     params,
@@ -19,24 +20,22 @@ export async function generateMetadata({
     params: Promise<{ locale: string }>
 }): Promise<Metadata> {
     const { locale } = await params
+    const ogImage = getOgImage('alpacas', 'Corporate Team Building with Alpacas – Alpacas Ibiza')
     return {
-        title: 'Corporate Team Building with Alpacas | Ibiza Retreats - Alpacas Ibiza',
+        title: 'Corporate Alpaca Retreats | Team Building – Alpacas Ibiza',
         description:
             'Unique corporate retreats and team building experiences with alpacas in Ibiza. Stress reduction, communication workshops, and nature connection. Book your corporate event!',
         alternates: buildLocaleAlternates(locale, 'experiences/corporate-team-building'),
         openGraph: {
-            title: 'Corporate Team Building | Alpacas Ibiza',
+            title: 'Corporate Alpaca Retreats | Team Building – Alpacas Ibiza',
             description:
                 'Disconnect to reconnect. Bring your team to Ibiza for a unique bonding experience with alpacas on an authentic finca.',
             url: `${BASE_URL}/${locale}/experiences/corporate-team-building`,
-            images: [
-                {
-                    url: '/images/corporate-team-alpacas.webp',
-                    width: 1200,
-                    height: 630,
-                    alt: 'Corporate team building with alpacas at Ibiza eco-tourism farm',
-                },
-            ],
+            images: [ogImage],
+        },
+        twitter: {
+            card: 'summary_large_image',
+            images: [ogImage.url],
         },
     }
 }

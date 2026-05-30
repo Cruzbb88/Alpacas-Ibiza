@@ -53,6 +53,8 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import Script from 'next/script'
 import { trackEvent } from '@/lib/client-track'
 import type { ParsedGiftFields } from '@/lib/gift-fields'
+import { ADOPT_PRICE_MONTHLY_EUR, ADOPT_PRICE_YEARLY_EUR } from '@/lib/config'
+import { formatPriceForLocale } from '@/lib/format-price'
 
 export interface EmbeddedMollieCheckoutProps {
   tier: 'monthly' | 'yearly'
@@ -402,7 +404,7 @@ export function EmbeddedMollieCheckout(props: EmbeddedMollieCheckoutProps) {
               Processing…
             </>
           ) : (
-            `Confirm payment — ${props.tier === 'monthly' ? '€75 / month' : '€900 / year'}`
+            `Confirm payment — ${formatPriceForLocale(props.tier === 'monthly' ? ADOPT_PRICE_MONTHLY_EUR : ADOPT_PRICE_YEARLY_EUR, props.locale)}${props.tier === 'monthly' ? ' / month' : ' / year'}`
           )}
         </button>
         <p className="text-xs text-foreground/60">

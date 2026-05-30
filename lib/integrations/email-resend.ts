@@ -24,6 +24,7 @@ export function resendEmailProvider(tenant: Tenant): EmailProvider {
         html: opts.html,
         replyTo: opts.replyTo,
         scheduledAt: opts.scheduledAt,
+        listUnsubscribeUrl: opts.listUnsubscribeUrl,
       })
     },
     async cancelScheduled(id) {

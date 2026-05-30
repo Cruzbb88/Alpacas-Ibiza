@@ -96,7 +96,7 @@ export function reviewRequestEmailHtml({
   <a href="${googleReviewUrl}" style="display:inline-block;margin:4px;padding:12px 24px;background:${BRAND.primary};color:#fff;text-decoration:none;border-radius:8px;font-weight:600">Review on Google</a>
   <a href="${tripadvisorUrl}" style="display:inline-block;margin:4px;padding:12px 24px;background:#00AA6C;color:#fff;text-decoration:none;border-radius:8px;font-weight:600">Review on TripAdvisor</a>
 </div>
-<p>Want to come back? Save 10% with code <strong>${returnCode}</strong> on your next visit.</p>
+<p>Want to come back? Save 10% with code <strong>${escapeHtml(returnCode)}</strong> on your next visit.</p>
 <p style="margin-top:24px">With gratitude,<br/>The ${BRAND.name} team 🦙</p>
 `)
 }
@@ -380,10 +380,14 @@ export function buildNewsletterConfirmEmail(
     unsubscribeUrl?: string,
 ): { subject: string; html: string } {
     const siteUrl = SITE_BASE_URL_INLINE
+    // confirmUrl and unsubscribeUrl are server-constructed but may contain
+    // base64url / query-string characters that need HTML-entity escaping in
+    // href attributes and text nodes.
+    const escapedConfirmUrl = escapeHtml(confirmUrl)
     const unsubscribeFooter = unsubscribeUrl
         ? `<p style="color:#aaa;font-size:11px;margin-top:24px;border-top:1px solid #eee;padding-top:16px">
 You're receiving this because you subscribed at <a href="${siteUrl}" style="color:#aaa">${siteUrl}</a>.
-<br><a href="${unsubscribeUrl}" style="color:#aaa">Unsubscribe</a>
+<br><a href="${escapeHtml(unsubscribeUrl)}" style="color:#aaa">Unsubscribe</a>
 </p>`
         : ''
     const subject = 'Confirm your Alpacas Ibiza newsletter subscription 🦙'
@@ -392,12 +396,12 @@ You're receiving this because you subscribed at <a href="${siteUrl}" style="colo
 <p>You signed up for farm news from <strong>${BRAND.name}</strong> — seasonal herd updates, weaving stories, and island life.</p>
 <p>Click the button below to confirm your subscription. This link is valid for 7 days.</p>
 <div style="text-align:center;margin:32px 0">
-  <a href="${confirmUrl}" style="display:inline-block;padding:14px 28px;background:${BRAND.primary};color:#fff;text-decoration:none;border-radius:8px;font-weight:600;font-size:16px">
+  <a href="${escapedConfirmUrl}" style="display:inline-block;padding:14px 28px;background:${BRAND.primary};color:#fff;text-decoration:none;border-radius:8px;font-weight:600;font-size:16px">
     Confirm subscription
   </a>
 </div>
 <p style="color:#888;font-size:13px">If you didn't sign up for this newsletter, you can ignore this email — no action needed.</p>
-<p style="color:#888;font-size:12px;margin-top:8px">Or copy this link into your browser:<br/>${confirmUrl}</p>
+<p style="color:#888;font-size:12px;margin-top:8px">Or copy this link into your browser:<br/>${escapedConfirmUrl}</p>
 ${unsubscribeFooter}
 `)
     return { subject, html }
@@ -491,14 +495,16 @@ export interface OwnerMrrDigestInput {
  *   1. KPI grid: MRR, ARR, active, new7d, canceled7d, churn%
  *   2. Dunning attention block: at-risk + action-required counts with link
  *
- * All values are numbers/strings computed server-side — no user-controlled
- * strings pass through here, so no escapeHtml needed.
+ * weekStart/weekEnd are server-computed date strings — escapeHtml applied
+ * defensively since they appear in HTML text nodes and the email subject.
  */
 export function buildOwnerMrrDigestEmail(
     input: OwnerMrrDigestInput,
 ): { subject: string; html: string } {
     const { mrr, arr, activeCount, newCount7d, canceledCount7d, churnPct, atRiskCount, actionRequiredCount, weekStart, weekEnd, dunningColdStartCaveat } = input
-    const subject = `[Alpacas Ibiza] Weekly herd revenue digest — ${weekStart} to ${weekEnd}`
+    const safeWeekStart = escapeHtml(weekStart)
+    const safeWeekEnd   = escapeHtml(weekEnd)
+    const subject = `[Alpacas Ibiza] Weekly herd revenue digest — ${safeWeekStart} to ${safeWeekEnd}`
 
     const kpiCell = (label: string, value: string, highlight = false) =>
         `<td style="padding:16px;text-align:center;background:${highlight ? '#fff3cd' : BRAND.secondary};border-radius:8px;min-width:100px">
@@ -519,7 +525,7 @@ export function buildOwnerMrrDigestEmail(
 
     const html = emailLayout(`
 <h2 style="color:${BRAND.primary}">Weekly herd revenue digest</h2>
-<p style="color:#888;font-size:13px;margin-top:-8px">${weekStart} — ${weekEnd}</p>
+<p style="color:#888;font-size:13px;margin-top:-8px">${safeWeekStart} — ${safeWeekEnd}</p>
 
 <h3 style="margin-top:24px;margin-bottom:12px">This week</h3>
 <table style="width:100%;border-collapse:separate;border-spacing:8px 0">
@@ -655,18 +661,21 @@ ${shareBlock}
 }
 
 export function buildBillingPortalEmail(portalUrl: string): { subject: string; html: string } {
+    // portalUrl is server-constructed (Stripe session URL) but may contain
+    // query-string characters that need HTML-entity escaping in href + text nodes.
+    const escapedPortalUrl = escapeHtml(portalUrl)
     const subject = 'Manage your Alpacas Ibiza adoption'
     const html = emailLayout(`
 <h2 style="color:${BRAND.primary}">Manage your adoption</h2>
 <p>You asked for a link to manage your Alpacas Ibiza adoption — here it is.</p>
 <p>This link opens the secure Stripe portal where you can update your payment method, view invoices, or cancel your adoption.</p>
 <div style="text-align:center;margin:32px 0">
-  <a href="${portalUrl}" style="display:inline-block;padding:14px 28px;background:${BRAND.primary};color:#fff;text-decoration:none;border-radius:8px;font-weight:600;font-size:16px">
+  <a href="${escapedPortalUrl}" style="display:inline-block;padding:14px 28px;background:${BRAND.primary};color:#fff;text-decoration:none;border-radius:8px;font-weight:600;font-size:16px">
     Open subscription portal
   </a>
 </div>
 <p style="color:#888;font-size:13px">If you didn't request this, you can ignore this email — the link does nothing without your Stripe account.</p>
-<p style="color:#888;font-size:12px;margin-top:8px">Or copy this link into your browser:<br/>${portalUrl}</p>
+<p style="color:#888;font-size:12px;margin-top:8px">Or copy this link into your browser:<br/>${escapedPortalUrl}</p>
 `)
     return { subject, html }
 }

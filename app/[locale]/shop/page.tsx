@@ -3,6 +3,7 @@ import Link from 'next/link'
 import type { Locale } from '@/i18n.config'
 import { t } from '@/lib/translations'
 import { buildLocaleAlternates } from '@/lib/i18n-metadata'
+import { getOgImage } from '@/lib/og-images'
 
 export async function generateMetadata({
   params,
@@ -11,9 +12,26 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params
   const tr = t(locale)
+  const ogImage = getOgImage('alpacas', 'Alpacas Ibiza Farm Shop – Woven Textiles & Alcaca')
   return {
-    title: tr('shop.title'),
+    title: tr('shop.metaTitle', 'Shop | Wishfulfilling Weaving & Alcaca – Alpacas Ibiza'),
+    description: tr(
+      'shop.metaDescription',
+      "Hand-woven scarves on traditional wooden looms, custom commissions, and Alcaca organic fertilizer — all from Es Currals, Ibiza's first alpaca farm.",
+    ),
     alternates: buildLocaleAlternates(locale, 'shop'),
+    openGraph: {
+      title: tr('shop.metaTitle', 'Shop | Wishfulfilling Weaving & Alcaca – Alpacas Ibiza'),
+      description: tr(
+        'shop.metaDescription',
+        "Hand-woven scarves on traditional wooden looms, custom commissions, and Alcaca organic fertilizer — all from Es Currals, Ibiza's first alpaca farm.",
+      ),
+      images: [ogImage],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      images: [ogImage.url],
+    },
   }
 }
 

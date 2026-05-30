@@ -28,6 +28,7 @@ import { AdoptThankYou } from '@/components/adopt-thank-you'
 import { AdoptPageTracker } from '@/components/adopt/adopt-page-tracker'
 import { AdoptCheckoutLink } from '@/components/adopt/adopt-checkout-link'
 import { EmbeddedCheckout } from '@/components/adopt/embedded-checkout'
+import { SUCCESS_LIKE_CHECKOUT_STATES } from '@/lib/checkout-states'
 import { getCheckoutMode } from '@/lib/checkout-mode'
 import { FAQ } from '@/components/faq'
 import { TestimonialsWall } from '@/components/testimonials-wall'
@@ -203,8 +204,7 @@ export default async function AdoptPage({
     // content so they see the thank-you (or SEPA-pending) screen, not the pitch
     // that suggests their payment failed. Mollie returns to `mollie-return` /
     // `mollie-embedded-return` while SEPA settles (1-5 business days).
-    const SUCCESS_LIKE_STATES = ['success', 'mollie-return', 'mollie-embedded-return']
-    const isSuccess = checkout != null && SUCCESS_LIKE_STATES.includes(checkout)
+    const isSuccess = checkout != null && (SUCCESS_LIKE_CHECKOUT_STATES as ReadonlyArray<string>).includes(checkout)
 
     return (
         <>

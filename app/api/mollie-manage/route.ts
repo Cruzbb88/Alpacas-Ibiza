@@ -68,6 +68,12 @@ export async function POST(request: Request) {
     return attachRequestId(GENERIC_OK(), reqId)
   }
 
+  // Email length cap — RFC 5321 max 320 chars. Silent GENERIC_OK (oracle-
+  // closure: same shape as all other invalid-email paths in this route).
+  if (email && String(email).length > 320) {
+    return attachRequestId(GENERIC_OK(), reqId)
+  }
+
   const ip = getClientIp(request)
   const ipResult = rateLimit({ key: `mollie-manage:${ip}`, limit: 3, windowMs: 5 * 60 * 1000 })
   if (!ipResult.allowed) {

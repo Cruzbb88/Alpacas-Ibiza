@@ -16,14 +16,63 @@ const nextConfig = {
     // (ADR-006/014), so a strict CSP would break analytics. Report-Only mode
     // collects violations without blocking. Move to enforcing once nonce-based
     // CSP can replace 'unsafe-inline'.
+    //
+    // ── Origin inventory (keep in sync with every external resource) ──────────
+    //
+    // SCRIPTS (script-src)
+    //   www.googletagmanager.com  — GA4 gtag.js + FareHarbor GTM container (app/layout.tsx)
+    //   www.google-analytics.com  — legacy GA4 tag helper
+    //   fareharbor.com            — FareHarbor booking embed API (app/layout.tsx Script lazyOnload)
+    //   *.fareharbor.com          — FareHarbor subdomains (integration kit, CDN)
+    //   challenges.cloudflare.com — Cloudflare Turnstile CAPTCHA widget JS
+    //   js.stripe.com             — Stripe.js (loaded by @stripe/stripe-js in embedded-checkout.tsx)
+    //   js.mollie.com             — Mollie Components JS (loaded via next/script in embedded-mollie-checkout.tsx)
+    //   va.vercel-scripts.com     — Vercel Analytics + SpeedInsights script (vercel-instrumentation.tsx)
+    //
+    // STYLES (style-src)
+    //   fonts.googleapis.com      — Google Fonts CSS (next/font/google Geist + Playfair Display)
+    //
+    // IMAGES (img-src)
+    //   https:                    — broad allowance covers: og-images, fareharbor item photos,
+    //                               tile.openstreetmap.org (OSM map tiles inside OSM iframe),
+    //                               dipr2nuwo661l.cloudfront.net (FareHarbor CloudFront CDN)
+    //
+    // FONTS (font-src)
+    //   fonts.gstatic.com         — Google Fonts binary files
+    //
+    // CONNECT (connect-src / XHR / fetch / beacon)
+    //   www.googletagmanager.com      — GTM config fetch
+    //   www.google-analytics.com      — GA4 hit endpoint (older)
+    //   region1.google-analytics.com  — GA4 regional measurement protocol endpoint (confirmed via Lighthouse audit)
+    //   *.fareharbor.com              — FareHarbor availability API + webhook callbacks
+    //   api.resend.com                — Resend email API (server-side only, belt-and-suspenders)
+    //   places.googleapis.com         — Google Places API (google-reviews-badge.tsx)
+    //   challenges.cloudflare.com     — Turnstile token verification
+    //   api.stripe.com                — Stripe REST API (payment-stripe-direct.ts)
+    //   api.mollie.com                — Mollie REST API (payment-mollie.ts)
+    //   va.vercel-scripts.com         — Vercel Analytics + SpeedInsights beacon endpoint
+    //
+    // FRAMES (frame-src)
+    //   www.googletagmanager.com  — GTM noscript iframe fallback (app/layout.tsx)
+    //   fareharbor.com            — FareHarbor booking lightframe
+    //   *.fareharbor.com          — FareHarbor subdomains
+    //   challenges.cloudflare.com — Turnstile widget iframe
+    //   www.openstreetmap.org     — OSM embed iframe (lib/integrations/map.ts osm-iframe)
+    //   www.google.com            — Google Maps embed iframe (lib/integrations/map.ts google-embed,
+    //                               active only when GOOGLE_MAPS_EMBED_API_KEY is set; fail-open to OSM)
+    //   js.stripe.com             — Stripe Elements iframe (embedded-checkout.tsx PaymentElement)
+    //
+    // FORM-ACTION
+    //   checkout.stripe.com       — Stripe Hosted Checkout redirect target
+    // ──────────────────────────────────────────────────────────────────────────
     const csp = [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://fareharbor.com https://*.fareharbor.com https://challenges.cloudflare.com https://js.stripe.com",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://fareharbor.com https://*.fareharbor.com https://challenges.cloudflare.com https://js.stripe.com https://js.mollie.com https://va.vercel-scripts.com",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "img-src 'self' data: https:",
       "font-src 'self' data: https://fonts.gstatic.com",
-      "connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://*.fareharbor.com https://api.resend.com https://places.googleapis.com https://challenges.cloudflare.com https://api.stripe.com https://api.mollie.com",
-      "frame-src 'self' https://www.googletagmanager.com https://fareharbor.com https://*.fareharbor.com https://challenges.cloudflare.com https://www.openstreetmap.org https://js.stripe.com",
+      "connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://region1.google-analytics.com https://*.fareharbor.com https://api.resend.com https://places.googleapis.com https://challenges.cloudflare.com https://api.stripe.com https://api.mollie.com https://va.vercel-scripts.com",
+      "frame-src 'self' https://www.googletagmanager.com https://fareharbor.com https://*.fareharbor.com https://challenges.cloudflare.com https://www.openstreetmap.org https://www.google.com https://js.stripe.com",
       "frame-ancestors 'self'",
       "base-uri 'self'",
       "form-action 'self' https://checkout.stripe.com",

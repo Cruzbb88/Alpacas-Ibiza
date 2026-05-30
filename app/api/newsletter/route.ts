@@ -41,6 +41,12 @@ export async function POST(request: Request) {
       return attachRequestId(NextResponse.json({ error: 'Email address is required' }, { status: 400 }), reqId)
     }
 
+    // Length cap — RFC 5321 email max 320 chars. A longer value is never valid;
+    // reject before any regex or hashing work.
+    if (String(email).length > 320) {
+      return attachRequestId(NextResponse.json({ error: 'Input too long' }, { status: 400 }), reqId)
+    }
+
     // IP rate-limit — 5 req / 5 min (blocks burst from a single IP)
     const ip = getClientIp(request)
     const ipResult = rateLimit({ key: ip, limit: 5, windowMs: 5 * 60 * 1000 })
