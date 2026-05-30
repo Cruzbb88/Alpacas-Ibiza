@@ -21,7 +21,7 @@ import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import type { Locale } from '@/i18n.config'
-import { t } from '@/lib/translations'
+import { useLocaleT } from '@/lib/locale-context'
 
 // ─── Editorial (new) types ──────────────────────────────────────
 
@@ -89,7 +89,7 @@ function WeavingShowcaseEditorial({
   subtitle,
   layout = 'mosaic',
 }: WeavingShowcaseEditorialProps) {
-  const translate = t(locale)
+  const translate = useLocaleT()
 
   if (!pieces || pieces.length === 0) return null
 

@@ -18,11 +18,17 @@
  *
  * `source` distinguishes "cta" (the in-page gradient CTA block) from "repeat"
  * (the closing CTA after the FAQ) so we can see which one converts better.
+ *
+ * EU Art 16(m): consumes WaiverContext from CheckoutGate. When the donor has
+ * not yet accepted the waiver, navigation is blocked and the error is shown.
+ * When accepted, ?waiver_accepted=1&waiver_ts=<epoch> is appended to the URL
+ * so the server route can record the acceptance in Stripe/Mollie metadata.
  */
 
 import Link from 'next/link'
 import type { ReactNode } from 'react'
 import { trackEvent } from '@/lib/client-track'
+import { useWaiverGate } from '@/components/adopt/checkout-gate'
 
 interface AdoptCheckoutLinkProps {
   href: string
@@ -47,7 +53,25 @@ export function AdoptCheckoutLink({
   ariaLabel,
   children,
 }: AdoptCheckoutLinkProps) {
-  function fire() {
+  const { accepted, showError } = useWaiverGate()
+
+  function appendWaiver(url: string): string {
+    const sep = url.includes('?') ? '&' : '?'
+    return `${url}${sep}waiver_accepted=1&waiver_ts=${Date.now()}`
+  }
+
+  function handleClick(e: React.MouseEvent<HTMLAnchorElement>) {
+    if (!accepted) {
+      e.preventDefault()
+      showError()
+      return
+    }
+
+    // Append waiver audit params to the checkout URL, then fire analytics.
+    // Use window.location so the full rewritten URL is sent rather than the
+    // stale href captured at render time.
+    const withWaiver = appendWaiver(href)
+    e.preventDefault()
     try {
       trackEvent('adopt_tier_selected', { tier, source })
       trackEvent('adopt_checkout_started', {
@@ -59,10 +83,11 @@ export function AdoptCheckoutLink({
     } catch {
       // Never block navigation on analytics failure.
     }
+    window.location.href = withWaiver
   }
 
   return (
-    <Link href={href} onClick={fire} className={className} aria-label={ariaLabel}>
+    <Link href={href} onClick={handleClick} className={className} aria-label={ariaLabel}>
       {children}
     </Link>
   )

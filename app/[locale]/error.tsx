@@ -11,8 +11,7 @@ import { useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { t } from '@/lib/translations'
-import type { Locale } from '@/i18n.config'
+import { useLocaleT, useLocale } from '@/lib/locale-context'
 
 export default function Error({
   error,
@@ -24,10 +23,9 @@ export default function Error({
   const pathname = usePathname()
   // Extract locale from the URL segment so links stay in the same locale.
   // Falls back to 'en' if the path is somehow missing a locale prefix.
-  const locales = ['en', 'de', 'it', 'es', 'nl', 'fr'] as const
   const seg = pathname?.split('/')[1] ?? 'en'
-  const locale: Locale = (locales as readonly string[]).includes(seg) ? (seg as Locale) : 'en'
-  const tr = t(locale)
+  const locale = useLocale() || seg
+  const tr = useLocaleT()
 
   useEffect(() => {
     fetch('/api/log-error', {

@@ -19,7 +19,7 @@ import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { ShareButtons } from '@/components/share-buttons'
 import { trackEvent } from '@/lib/client-track'
-import { getTranslation } from '@/lib/translations'
+import { useLocaleT } from '@/lib/locale-context'
 import type { Locale } from '@/i18n.config'
 import { MOLLIE_PENDING_STATES } from '@/lib/checkout-states'
 
@@ -76,7 +76,7 @@ export function AdoptThankYou({
     }
   }, [checkoutState, params, isSuccessLike, isPending])
 
-  const tr = (key: string, fallback: string) => getTranslation(locale, key, fallback)
+  const tr = useLocaleT()
 
   // ── Cancelled banner ────────────────────────────────────────────────────────
   if (checkoutState === 'cancelled') {

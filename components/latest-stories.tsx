@@ -10,7 +10,7 @@
 
 import Link from 'next/link'
 import { listJournalPostsNewest } from '@/lib/data/journal-posts'
-import { t } from '@/lib/translations'
+import { useLocaleT } from '@/lib/locale-context'
 import type { Locale } from '@/i18n.config'
 
 interface Props {
@@ -24,7 +24,7 @@ export function LatestStories({ locale, max = 3 }: Props) {
   // Fail-quiet — section disappears when no posts; no empty space rendered
   if (posts.length === 0) return null
 
-  const translate = t(locale)
+  const translate = useLocaleT()
 
   const sectionTitle =
     translate('journal.latestTitle') || 'Latest from the journal'

@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { usePathname } from 'next/navigation'
 import { trackConversion } from '@/lib/analytics'
-import { t as makeT } from '@/lib/translations'
+import { useLocaleT } from '@/lib/locale-context'
 import type { Locale } from '@/i18n.config'
 
 /**
@@ -194,7 +194,7 @@ export function FloatingWhatsApp({
   const panelRef = useRef<HTMLDivElement | null>(null)
   const fabRef = useRef<HTMLButtonElement | null>(null)
 
-  const t = makeT(locale)
+  const t = useLocaleT()
 
   // Mount delay so we don't impact LCP.
   useEffect(() => {

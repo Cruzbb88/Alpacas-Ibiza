@@ -743,5 +743,11 @@
     "goTours": "Voir les visites",
     "goAdopt": "Adopter un alpaga",
     "errorRef": "Référence d'erreur"
+  },
+  "adopt": {
+    "legal": {
+      "withdrawalWaiver": "__UNTRANSLATED__",
+      "waiverRequired": "__UNTRANSLATED__"
+    }
   }
 }

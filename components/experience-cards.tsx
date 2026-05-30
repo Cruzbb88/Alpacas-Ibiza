@@ -27,7 +27,7 @@ import Link from 'next/link'
 import { BookingButton } from '@/components/booking/button'
 import type { Locale } from '@/i18n.config'
 import type { FareHarborProduct } from '@/lib/fareharbor-products'
-import { t } from '@/lib/translations'
+import { useLocaleT } from '@/lib/locale-context'
 
 export type ProductSlug = FareHarborProduct
 
@@ -328,7 +328,7 @@ export function ExperienceCards({
   // Edge case: nothing to render.
   if (resolved.length === 0) return null
 
-  const translate = t(locale)
+  const translate = useLocaleT()
   const bookCtaLabel = translate('experiences.bookCta', 'Book this experience')
   const learnMoreLabel = translate('experiences.learnMore', 'Learn more')
 

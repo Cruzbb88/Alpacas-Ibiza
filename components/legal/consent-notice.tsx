@@ -23,7 +23,7 @@
  */
 
 import type { Locale } from '@/i18n.config'
-import { t } from '@/lib/translations'
+import { useLocaleT } from '@/lib/locale-context'
 
 interface ConsentNoticeProps {
   locale: Locale
@@ -36,7 +36,7 @@ interface ConsentNoticeProps {
 }
 
 export function ConsentNotice({ locale, actionLabel }: ConsentNoticeProps) {
-  const translate = t(locale)
+  const translate = useLocaleT()
   // Translation files contain a placeholder `{action}` so localised copy can
   // reorder around the verb (e.g. German verb-final). For unknown locales we
   // fall back to English. The translation helper already falls back to en,

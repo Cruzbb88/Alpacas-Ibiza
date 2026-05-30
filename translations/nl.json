@@ -735,5 +735,11 @@
     "goTours": "Tours bekijken",
     "goAdopt": "Adopteer een alpaca",
     "errorRef": "Foutreferentie"
+  },
+  "adopt": {
+    "legal": {
+      "withdrawalWaiver": "Ik ga er uitdrukkelijk mee akkoord dat mijn adoptie onmiddellijk begint en erken dat ik mijn 14-daagse herroepingsrecht verlies zodra de prestatie begint. (Vereist door EU-richtlijn 2011/83 art. 16(m).)",
+      "waiverRequired": "Accepteer de bovenstaande herroepingsverklaring om door te gaan naar betaling."
+    }
   }
 }

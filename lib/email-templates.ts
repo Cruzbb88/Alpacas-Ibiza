@@ -4,7 +4,7 @@
  * its inputs are either trusted or pre-escaped.
  */
 
-import { escapeHtml } from './html.ts'
+import { escapeHtml, sanitiseDisplayName } from './html.ts'
 
 // Canonical site origin for absolute links inside email HTML. Mirrors
 // SITE_BASE_URL in lib/config.ts (kept inline because email-templates.ts is
@@ -607,9 +607,9 @@ export function buildAdoptQuarterlyUpdateEmail(
         ? input.escapedAlpacaName
         : (input.alpacaName ? escapeHtml(input.alpacaName) : null)
 
-    // Subject: when alpacaName is unknown, fall back to a generic but warm phrase.
-    // Subject is plain text — use raw values (the HTML body uses the escaped ones).
-    const alpacaForSubject = input.alpacaName ?? 'your alpaca'
+    // Subject: plain-text email header — strip HTML tags to prevent XSS/injection.
+    // Fall back to a generic warm phrase when alpacaName is unknown.
+    const alpacaForSubject = sanitiseDisplayName(input.alpacaName) ?? 'your alpaca'
     const subject = `🦙 ${quarterLabel} update from ${alpacaForSubject} and the Alpacas Ibiza herd`
 
     const safeName = input.name ? escapeHtml(input.name) : ''

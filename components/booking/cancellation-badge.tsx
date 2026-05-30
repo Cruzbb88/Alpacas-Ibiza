@@ -1,8 +1,6 @@
 'use client'
 
-import { useParams } from 'next/navigation'
-import type { Locale } from '@/i18n.config'
-import { t } from '@/lib/translations'
+import { useLocaleT } from '@/lib/locale-context'
 
 interface Props {
     /** Visual variant — compact for inline near small buttons, full for booking sections */
@@ -16,9 +14,7 @@ interface Props {
  * messaging near the CTA lifts tourism booking conversion 15-25%.
  */
 export function CancellationBadge({ variant = 'compact', className = '' }: Props) {
-    const params = useParams()
-    const locale = (params?.locale as Locale) || 'en'
-    const tr = t(locale)
+    const tr = useLocaleT()
     const label =
         tr('cancellation.freeUp24h') ||
         'Free cancellation up to 24h before your visit'

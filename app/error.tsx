@@ -10,9 +10,21 @@
  * If the error originates from a locale route, [locale]/error.tsx fires first.
  */
 import { useEffect } from 'react'
-import { t } from '@/lib/translations'
 
-const tr = t('en')
+// app/error.tsx is outside [locale] layout — no context provider.
+// Use static EN strings to avoid importing the 6-locale bundle client-side.
+const EN_STRINGS: Record<string, string> = {
+  'error.title': 'Something went wrong',
+  'error.subtitle': "We've been notified. Try refreshing or head back home.",
+  'error.tryAgain': 'Try Again',
+  'error.goHome': 'Go Home',
+  'error.goTours': 'View Tours',
+  'error.errorRef': 'Error ref',
+}
+
+function tr(key: string): string {
+  return EN_STRINGS[key] ?? key
+}
 
 export default function RootError({
   error,

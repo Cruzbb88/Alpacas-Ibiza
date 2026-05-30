@@ -19,7 +19,7 @@
 
 import { useEffect, useState } from 'react'
 import type { Locale } from '@/i18n.config'
-import { t } from '@/lib/translations'
+import { useLocaleT } from '@/lib/locale-context'
 
 interface AdoptShareCardProps {
   locale: Locale
@@ -42,7 +42,7 @@ export function AdoptShareCard({
   shareText,
   hashtags = DEFAULT_HASHTAGS,
 }: AdoptShareCardProps) {
-  const translate = t(locale)
+  const translate = useLocaleT()
   const heading = translate('adopt.share.heading', 'Tell the world')
   const sub = translate(
     'adopt.share.sub',

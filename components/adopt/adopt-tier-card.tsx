@@ -21,10 +21,9 @@
  * Tracking calls are wrapped — they never block the navigation or throw.
  */
 
-import Link from 'next/link'
 import type { Locale } from '@/i18n.config'
-import { t } from '@/lib/translations'
-import { trackEvent } from '@/lib/client-track'
+import { useLocaleT } from '@/lib/locale-context'
+import { AdoptCheckoutLink } from '@/components/adopt/adopt-checkout-link'
 import { ConsentNotice } from '@/components/legal/consent-notice'
 
 export type AdoptTier = 'monthly' | 'yearly'
@@ -62,7 +61,7 @@ export function AdoptTierCard({
   processor = 'unknown',
   isGift = false,
 }: AdoptTierCardProps) {
-  const translate = t(locale)
+  const translate = useLocaleT()
   const isYearly = tier === 'yearly'
   const tierName =
     tier === 'monthly'
@@ -112,35 +111,23 @@ export function AdoptTierCard({
 
       <p className="text-sm text-foreground/60 mb-6">{sub}</p>
 
-      <Link
+      <AdoptCheckoutLink
         href={checkoutUrl}
-        onClick={() => {
-          // Fire both tier-selected and checkout-started — donor has committed
-          // to this tier and is about to leave the page for the processor.
-          // Wrapped: trackEvent itself try/catches, but belt-and-braces against
-          // an upstream throw still keeps the nav working.
-          try {
-            trackEvent('adopt_tier_selected', { tier, source: 'card' })
-            trackEvent('adopt_checkout_started', {
-              tier,
-              alpaca_slug: alpacaSlug,
-              processor,
-              is_gift: isGift,
-            })
-          } catch {
-            // Never block navigation on analytics failure.
-          }
-        }}
+        tier={tier}
+        source="cta"
+        alpacaSlug={alpacaSlug}
+        processor={processor}
+        isGift={isGift}
         className={
           'mt-auto inline-flex w-full justify-center rounded-lg px-6 py-3 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 ' +
           (isYearly
             ? 'bg-primary text-primary-foreground hover:bg-primary/90'
             : 'border border-primary text-primary hover:bg-primary/5')
         }
-        aria-label={`${cta} — ${priceLabel}`}
+        ariaLabel={`${cta} — ${priceLabel}`}
       >
         {cta}
-      </Link>
+      </AdoptCheckoutLink>
 
       {/*
        * GDPR Art. 13 + CAN-SPAM § 5(a): adopt checkout is a transactional

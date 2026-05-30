@@ -1,10 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useParams } from 'next/navigation'
 import { ArrowRight, Calendar } from 'lucide-react'
-import type { Locale } from '@/i18n.config'
-import { t } from '@/lib/translations'
+import { useLocaleT, useLocale } from '@/lib/locale-context'
 import { FAREHARBOR_BOOKING_URL } from '@/lib/config'
 import { CancellationBadge } from '@/components/booking/cancellation-badge'
 
@@ -18,9 +16,8 @@ export function BookingSection() {
     const [availableDates, setAvailableDates] = useState<AvailableDate[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
-    const params = useParams()
-    const locale = (params.locale as Locale) || 'en'
-    const tr = t(locale)
+    const tr = useLocaleT()
+    const locale = useLocale()
 
     useEffect(() => {
         fetch('/api/availability')

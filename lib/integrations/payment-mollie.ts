@@ -227,6 +227,11 @@ export function molliePaymentProvider(opts?: {
                     : {}),
                 }
               : {}),
+            // EU Directive 2011/83 Art 16(m) audit trail.
+            waiver_accepted: checkoutOpts.waiverAccepted ? '1' : '0',
+            ...(checkoutOpts.waiverAcceptedAt
+              ? { waiver_accepted_at: checkoutOpts.waiverAcceptedAt }
+              : {}),
           },
         }
 

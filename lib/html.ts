@@ -29,3 +29,28 @@ export function sanitizeHeader(value: unknown): string {
         .trim()
         .slice(0, 200)
 }
+
+/**
+ * Sanitise a name or other free-form user string for display.
+ * - Strips HTML tags
+ * - Strips control characters (incl. CR/LF, tab)
+ * - Trims whitespace
+ * - Caps at maxLen (default 80)
+ *
+ * Returns `null` when input is null/undefined OR collapses to empty after sanitisation.
+ *
+ * Used at every boundary where untrusted user-supplied names reach a rendered
+ * surface (PDF certificate, Open Graph image, post-payment confirmation page).
+ */
+export function sanitiseDisplayName(
+    raw: string | null | undefined,
+    maxLen: number = 80,
+): string | null {
+    if (raw == null) return null
+    const stripped = raw
+        .replace(/<[^>]*>/g, '')
+        .replace(/[\r\n\t\x00-\x1F]+/g, ' ')
+        .trim()
+    if (!stripped) return null
+    return stripped.slice(0, maxLen)
+}

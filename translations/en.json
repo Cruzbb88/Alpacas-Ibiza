@@ -924,6 +924,10 @@
     },
     "comparison": {
       "whatYouGet": "What you get"
+    },
+    "legal": {
+      "withdrawalWaiver": "I expressly consent to my adoption beginning immediately and acknowledge I lose my 14-day right of withdrawal once performance starts. (Required by EU Directive 2011/83 Art 16(m).)",
+      "waiverRequired": "Please accept the withdrawal-rights notice above to proceed to payment."
     }
   },
   "journal": {

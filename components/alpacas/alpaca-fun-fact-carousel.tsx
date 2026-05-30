@@ -20,7 +20,7 @@ import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import type { Locale } from '@/i18n.config'
 import type { AnimalEntity } from '@/lib/integrations/content-types'
-import { t } from '@/lib/translations'
+import { useLocaleT } from '@/lib/locale-context'
 
 interface AlpacaFunFactCarouselProps {
   locale: Locale
@@ -37,7 +37,7 @@ export function AlpacaFunFactCarousel({
   intervalMs = 6000,
   heading,
 }: AlpacaFunFactCarouselProps) {
-  const translate = t(locale)
+  const translate = useLocaleT()
   const facts = useMemo(
     () => animals.filter((a): a is AnimalEntity & { fun_fact: string } => Boolean(a.fun_fact)),
     [animals],

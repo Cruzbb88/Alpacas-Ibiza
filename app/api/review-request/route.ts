@@ -16,9 +16,10 @@ export async function POST(request: Request) {
     const reqId = getRequestId(request)
     const log = makeRequestLogger('review-request', reqId)
 
-    // IP rate-limit — 5 req / 5 min. Mirrors /api/reminder.
+    // IP rate-limit — 2 req / 5 min. Manual fallback — not a public form;
+    // 5-in-5-min would send 5 review requests to one tour-attendee.
     const ip = getClientIp(request)
-    const rl = rateLimit({ key: `review-request:${ip}`, limit: 5, windowMs: 5 * 60 * 1000 })
+    const rl = rateLimit({ key: `review-request:${ip}`, limit: 2, windowMs: 5 * 60 * 1000 })
     if (!rl.allowed) {
         log.warn('IP rate limit hit', { ip, retryAfterSec: Math.ceil(rl.resetMs / 1000) })
         return attachRequestId(

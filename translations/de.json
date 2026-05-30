@@ -743,5 +743,11 @@
     "goTours": "Touren durchsuchen",
     "goAdopt": "Alpaka adoptieren",
     "errorRef": "Fehlerreferenz"
+  },
+  "adopt": {
+    "legal": {
+      "withdrawalWaiver": "__UNTRANSLATED__",
+      "waiverRequired": "__UNTRANSLATED__"
+    }
   }
 }

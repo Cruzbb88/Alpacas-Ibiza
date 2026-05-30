@@ -1,15 +1,12 @@
 'use client'
 
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
-import type { Locale } from '@/i18n.config'
-import { t } from '@/lib/translations'
+import { useLocaleT, useLocale } from '@/lib/locale-context'
 import { MapPin, Calendar, ShoppingBag, HelpCircle, Home, ArrowRight } from 'lucide-react'
 
 export function DidYouMean() {
-  const params = useParams()
-  const locale = (params.locale as Locale) || 'en'
-  const tr = t(locale)
+  const tr = useLocaleT()
+  const locale = useLocale()
 
   const suggestedPages = [
     {

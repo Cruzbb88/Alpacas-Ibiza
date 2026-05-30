@@ -142,6 +142,9 @@ This file holds two catalogs that PRACTICES doesn't: the in-code failsafe map (w
 | `logNotFound` 404 referrer logger — never throws; malformed referer → null (no crash) | [lib/notfound-log.ts](lib/notfound-log.ts) `safeReferrerHost()` try/catch | `console.warn` only; in-process dedupe Map (TTL 60 s) prevents log flood from crawlers; logs host only (no full URL, no IP — privacy-safe) |
 | `robots.ts` disallows all on non-production environments | [app/robots.ts](app/robots.ts) → [lib/robots-env.ts](lib/robots-env.ts) `isProductionEnv()` | `VERCEL_ENV !== 'production'` AND `SITE_BASE_URL !== 'https://alpacasibiza.com'` → `disallow: '/'`; prevents preview deploys from being indexed |
 | `NavProgressBar` wraps `useSearchParams` in Suspense | [components/nav-progress-bar.tsx](components/nav-progress-bar.tsx) mounted in [app/[locale]/layout.tsx](app/%5Blocale%5D/layout.tsx) | `useSearchParams()` requires Suspense boundary; bar renders null when progress is complete; `z-[60]` stays above sticky-booking-bar (z-50) |
+| IP rate-limit on `/api/contact` + `/api/commission` (2 req / 5 min per IP) | [app/api/contact/route.ts](app/api/contact/route.ts), [app/api/commission/route.ts](app/api/commission/route.ts) via [lib/rate-limit.ts](lib/rate-limit.ts) | per-IP in-memory sliding window; 429 + Retry-After; supplements Turnstile + honeypot on those routes |
+| `lib/checkout-states.ts` canonical checkout-state constants | [lib/checkout-states.ts](lib/checkout-states.ts) | `MOLLIE_PENDING_STATES` + `SUCCESS_LIKE_CHECKOUT_STATES` — single source of truth for checkout-state branching used by adopt page + thank-you component; prevents drift between callers |
+| `app/manifest.ts` `short_name` word-boundary truncation | [app/manifest.ts](app/manifest.ts) `toShortName()` | W3C App Manifest ≤ 12-char limit; `toShortName()` clips at last space (never mid-word); fallback to hard slice only if first word itself exceeds 12 chars |
 
 **Adding a new failsafe?** PRACTICES.md "Append protocol" applies. After landing the code, add the row above with file:line.
 
@@ -198,7 +201,7 @@ mishandling) that 603 tests + `next build` + `tsc --noEmit` all missed because
 - Specs open: 3 (specs/todo/)
 - 239 unit tests passing (pnpm test — last verified 2026-05-27 overnight)
 - E2E tests: deferred — requires deployed URL + headless browser (see CANT_BE_DONE.md)
-- Failsafes documented: 94 rows (In-code failsafe map above)
+- Failsafes documented: 97 rows (In-code failsafe map above)
 - Production-blocking gaps: legal text, owner content, FareHarbor IDs, Stripe keys — see DROP_IN_GUIDE.md
 
 ---

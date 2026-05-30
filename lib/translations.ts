@@ -49,3 +49,23 @@ export function t(locale: Locale) {
 export function ta(locale: Locale) {
   return (key: string) => getTranslationArray(locale, key)
 }
+
+/** Shape of the pre-resolved locale data injected into LocaleTranslationsProvider. */
+export interface LocaleTranslationData {
+  locale: string
+  strings: Record<string, unknown>
+  en: Record<string, unknown>
+}
+
+/**
+ * Returns the locale-specific translation slice + EN fallback tree for
+ * injection into LocaleTranslationsProvider (server-side only).
+ * Client components use useLocaleT() from lib/locale-context instead.
+ */
+export function getLocaleTranslations(locale: Locale): LocaleTranslationData {
+  return {
+    locale,
+    strings: (translations[locale] ?? translations.en) as Record<string, unknown>,
+    en: translations.en as Record<string, unknown>,
+  }
+}

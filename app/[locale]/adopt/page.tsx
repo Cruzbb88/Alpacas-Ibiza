@@ -27,6 +27,7 @@ import { ReferralAppliedBanner } from '@/components/adopt/referral-applied-banne
 import { AdoptThankYou } from '@/components/adopt-thank-you'
 import { AdoptPageTracker } from '@/components/adopt/adopt-page-tracker'
 import { AdoptCheckoutLink } from '@/components/adopt/adopt-checkout-link'
+import { CheckoutGate } from '@/components/adopt/checkout-gate'
 import { EmbeddedCheckout } from '@/components/adopt/embedded-checkout'
 import { SUCCESS_LIKE_CHECKOUT_STATES } from '@/lib/checkout-states'
 import { getCheckoutMode } from '@/lib/checkout-mode'
@@ -217,7 +218,7 @@ export default async function AdoptPage({
 
             {/* Marketing content — hidden when checkout=success (donor already converted) */}
             {!isSuccess && (
-            <>
+            <CheckoutGate locale={locale}>
             {/* GA4 page-view fire — invisible client component; only renders in the
                 marketing path so the success/cancelled events stay isolated. */}
             <AdoptPageTracker locale={locale} />
@@ -532,7 +533,7 @@ export default async function AdoptPage({
                     '[UNMAPPED] Add to main nav? Under "Experiences" or standalone?',
                 ]}
             />
-            </>
+            </CheckoutGate>
             )}
 
             {/* Mobile-only sticky bottom CTA — hidden on success, hidden above fold,

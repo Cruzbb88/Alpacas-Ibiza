@@ -10,7 +10,7 @@ import { BookingButton } from '@/components/booking/button'
 import { HeaderSearch } from '@/components/header-search'
 import { useParams, usePathname } from 'next/navigation'
 import type { Locale } from '@/i18n.config'
-import { t } from '@/lib/translations'
+import { useLocaleT } from '@/lib/locale-context'
 
 interface NavItem {
   /** Translation key. */
@@ -44,7 +44,7 @@ export function Header({ logoUrl = null, brandName = 'Alpacas Ibiza' }: HeaderPr
   const params = useParams()
   const pathname = usePathname() || '/'
   const locale = (params.locale as Locale) || 'en'
-  const tr = t(locale)
+  const tr = useLocaleT()
 
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)

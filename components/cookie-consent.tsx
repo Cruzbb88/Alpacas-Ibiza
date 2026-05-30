@@ -2,9 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
-import type { Locale } from '@/i18n.config'
-import { t } from '@/lib/translations'
+import { useLocaleT, useLocale } from '@/lib/locale-context'
 
 const STORAGE_KEY = 'ai_cookie_consent_v1'
 
@@ -49,9 +47,8 @@ function writeConsent(value: 'accepted' | 'rejected') {
 }
 
 export function CookieConsent() {
-    const params = useParams()
-    const locale = (params?.locale as Locale) || 'en'
-    const tr = t(locale)
+    const tr = useLocaleT()
+    const locale = useLocale()
     const [visible, setVisible] = useState(false)
     const rejectRef = useRef<HTMLButtonElement>(null)
     const acceptRef = useRef<HTMLButtonElement>(null)

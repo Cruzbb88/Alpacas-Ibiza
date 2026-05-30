@@ -1,16 +1,12 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useParams } from 'next/navigation'
-import type { Locale } from '@/i18n.config'
-import { t } from '@/lib/translations'
+import { useLocaleT } from '@/lib/locale-context'
 import { FAREHARBOR_BOOKING_URL } from '@/lib/config'
 
 export function StickyBookingBar() {
     const [isVisible, setIsVisible] = useState(false)
-    const params = useParams()
-    const locale = (params.locale as Locale) || 'en'
-    const tr = t(locale)
+    const tr = useLocaleT()
 
     useEffect(() => {
         let ticking = false

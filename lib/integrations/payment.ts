@@ -95,6 +95,17 @@ export interface CreateCheckoutOpts {
    * providers do not re-validate.
    */
   referredBy?: string
+  /**
+   * EU Directive 2011/83 Art 16(m) audit trail.
+   * True when the donor explicitly accepted the withdrawal-rights waiver on the
+   * /adopt page (via CheckoutGate). The value is written into provider metadata
+   * as waiver_accepted='1' so the payment record is self-auditing.
+   * Caller (checkout route) has already returned 400 if this is false, so
+   * providers can assume true when the field is present and truthy.
+   */
+  waiverAccepted?: boolean
+  /** Epoch-ms timestamp string captured client-side when the box was ticked. */
+  waiverAcceptedAt?: string
 }
 
 // ── Result types ───────────────────────────────────────────────────────────────

@@ -93,6 +93,11 @@ async function handleCheckout(request: Request, method: 'GET' | 'POST') {
   // attribution; no discount, no Stripe coupon lookup. Credit logic is a
   // follow-up round per the task scope.
   let referredBy: string | null = null
+  // EU Directive 2011/83 Art 16(m) waiver — must be '1' (set by CheckoutGate
+  // client component). Server-side gate is belt-and-suspenders: the client
+  // already blocks the CTA before this route is even called.
+  let waiverAccepted = false
+  let waiverAcceptedAt = ''
   if (method === 'GET') {
     const url = new URL(request.url)
     const raw = url.searchParams.get('tier')
@@ -117,6 +122,10 @@ async function handleCheckout(request: Request, method: 'GET' | 'POST') {
         url.searchParams.get('gift_send_date') ??
         url.searchParams.get('gift_deliver'),
     })
+    waiverAccepted = url.searchParams.get('waiver_accepted') === '1'
+    const rawTs = url.searchParams.get('waiver_ts') ?? ''
+    // Accept only numeric timestamps (epoch ms, up to 16 digits)
+    waiverAcceptedAt = /^\d{1,16}$/.test(rawTs) ? rawTs : ''
   } else {
     try {
       const body = await request.json()
@@ -132,12 +141,33 @@ async function handleCheckout(request: Request, method: 'GET' | 'POST') {
         gift_message: typeof body?.gift_message === 'string' ? body.gift_message : undefined,
         gift_send_date: typeof body?.gift_send_date === 'string' ? body.gift_send_date : undefined,
       })
+      waiverAccepted = body?.waiver_accepted === true || body?.waiver_accepted === '1'
+      const bodyTs = typeof body?.waiver_ts === 'string'
+        ? body.waiver_ts
+        : typeof body?.waiver_ts === 'number'
+          ? String(body.waiver_ts as number)
+          : ''
+      waiverAcceptedAt = /^\d{1,16}$/.test(bodyTs) ? bodyTs : ''
     } catch {
       return attachRequestId(NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 }), reqId)
     }
   }
   if (!tier) {
     return attachRequestId(NextResponse.json({ error: 'tier must be "monthly" or "yearly"' }, { status: 400 }), reqId)
+  }
+
+  // EU Directive 2011/83 Art 16(m) server-side gate — belt-and-suspenders.
+  // The client CheckoutGate already blocks the CTA; this ensures no session
+  // is created for a donor who bypassed the client-side check.
+  if (!waiverAccepted) {
+    log.warn('Checkout blocked: EU Art 16(m) withdrawal waiver not accepted')
+    return attachRequestId(
+      NextResponse.json(
+        { error: 'Withdrawal waiver must be accepted before checkout (EU Directive 2011/83 Art 16(m))' },
+        { status: 400 }
+      ),
+      reqId
+    )
   }
 
   // Server-side log when a ref code is in play — surfaces referral attempts
@@ -228,6 +258,10 @@ async function handleCheckout(request: Request, method: 'GET' | 'POST') {
         // referredBy is the referrer's stable HMAC-derived code; the admin
         // referrals page groups subscriptions by this field.
         ...(referredBy ? { referredBy } : {}),
+        // EU Directive 2011/83 Art 16(m) audit trail.
+        // waiver_accepted is always '1' here (the gate above returns 400 if not).
+        waiver_accepted: waiverAccepted ? '1' : '0',
+        waiver_accepted_at: waiverAcceptedAt,
       },
     })
     if (!session.url) {

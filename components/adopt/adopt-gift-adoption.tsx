@@ -30,7 +30,7 @@
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useRef, useTransition } from 'react'
 import type { Locale } from '@/i18n.config'
-import { t } from '@/lib/translations'
+import { useLocaleT } from '@/lib/locale-context'
 import { trackEvent } from '@/lib/client-track'
 
 interface AdoptGiftAdoptionProps {
@@ -40,7 +40,7 @@ interface AdoptGiftAdoptionProps {
 }
 
 export function AdoptGiftAdoption({ locale, heading }: AdoptGiftAdoptionProps) {
-  const translate = t(locale)
+  const translate = useLocaleT()
   const router = useRouter()
   const searchParams = useSearchParams()
   const [isPending, startTransition] = useTransition()

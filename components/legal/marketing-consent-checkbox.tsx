@@ -16,7 +16,7 @@
  */
 
 import type { Locale } from '@/i18n.config'
-import { t } from '@/lib/translations'
+import { useLocaleT } from '@/lib/locale-context'
 
 interface MarketingConsentCheckboxProps {
   locale: Locale
@@ -47,7 +47,7 @@ export function MarketingConsentCheckbox({
   id = 'marketing-consent',
   disabled = false,
 }: MarketingConsentCheckboxProps) {
-  const translate = t(locale)
+  const translate = useLocaleT()
   // The translation file holds a single string that includes the
   // [Privacy Policy] anchor placeholder so localised copy can move the link
   // mid-sentence. We split on the placeholder and render the link as a real

@@ -10,6 +10,20 @@
 
 ## ⚠️ Must confirm BEFORE launch
 
+### EU Art 16(m) withdrawal waiver copy — legal review required (ADR-022)
+The adopt checkout page now shows a required checkbox before donors are sent to the payment processor (EU Directive 2011/83 Art 16(m) compliance). The current text is a placeholder derived from the directive minimums:
+
+> "I expressly consent to my adoption beginning immediately and acknowledge I lose my 14-day right of withdrawal once performance starts. (Required by EU Directive 2011/83 Art 16(m).)"
+
+**Action required:**
+- Have a EU consumer-law qualified lawyer review and approve the final copy.
+- The text is in `translations/en.json` under `adopt.legal.withdrawalWaiver` and `adopt.legal.waiverRequired`.
+- Dutch translation (`translations/nl.json`) also needs legal review.
+- German, Spanish, French, Italian are marked `__UNTRANSLATED__` and fall back to English until translated.
+- The component with the `OWNER_INPUT_NEEDED` comment is `components/adopt/checkout-gate.tsx` (look for the `OWNER_INPUT_NEEDED:` block).
+
+**Why this is a launch blocker:** pre-ticked boxes or bundled T&C acceptance INVALIDATE the waiver under the directive. Non-compliant wording exposes the business to consumer claims that the 14-day withdrawal right was never lawfully excluded.
+
 ### Cancellation policy
 - Is free cancellation actually **24 hours** before the visit? (Currently showing "Free cancellation up to 24h before your visit" on every Book button.)
 - Other possibilities: 48h, 7 days, non-refundable, partial refund with N% fee

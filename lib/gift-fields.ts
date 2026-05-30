@@ -66,7 +66,7 @@ export function parseGiftFields(
 
   if (!isValidEmail(recipientEmail)) return null
   if (recipientName.length === 0) return null
-  if (message.length < 2) return null
+  if (message.length > 0 && message.length < 2) return null
 
   let validSendDate: string | undefined
   if (sendDate && ISO_DATE_RE.test(sendDate)) {

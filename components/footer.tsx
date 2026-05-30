@@ -1,9 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
-import type { Locale } from '@/i18n.config'
-import { t } from '@/lib/translations'
+import { useLocaleT, useLocale } from '@/lib/locale-context'
 
 export interface FooterProps {
   legalName: string
@@ -61,9 +59,8 @@ export function Footer({
   social,
   brandName,
 }: FooterProps) {
-  const params = useParams()
-  const locale = (params?.locale as Locale) || 'en'
-  const tr = t(locale)
+  const tr = useLocaleT()
+  const locale = useLocale()
 
   const phoneDisplay = formatPhoneE164(phoneE164)
   const phoneHref = `tel:${phoneE164}`

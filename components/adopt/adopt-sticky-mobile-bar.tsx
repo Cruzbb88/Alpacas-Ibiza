@@ -24,7 +24,7 @@
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import type { Locale } from '@/i18n.config'
-import { t } from '@/lib/translations'
+import { useLocaleT } from '@/lib/locale-context'
 import { trackEvent } from '@/lib/client-track'
 
 interface AdoptStickyMobileBarProps {
@@ -71,7 +71,7 @@ export function AdoptStickyMobileBar({
       // Never block navigation on analytics failure.
     }
   }
-  const translate = t(locale)
+  const translate = useLocaleT()
   const monthlyLabel = monthlyPriceShort ?? translate('adopt.sticky.monthlyShort', '€75/mo')
   const yearlyLabel = yearlyPriceShort ?? translate('adopt.sticky.yearlyShort', '€900/yr')
   const adoptVerb = translate('adopt.sticky.cta', 'Adopt')

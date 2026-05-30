@@ -24,7 +24,7 @@
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useTransition } from 'react'
 import type { Locale } from '@/i18n.config'
-import { t } from '@/lib/translations'
+import { useLocaleT } from '@/lib/locale-context'
 import {
   FILTER_PERSONALITIES,
   FILTER_COLORS,
@@ -41,7 +41,7 @@ interface AlpacaSearchFilterProps {
 }
 
 export function AlpacaSearchFilter({ locale, matchCount, totalCount }: AlpacaSearchFilterProps) {
-  const translate = t(locale)
+  const translate = useLocaleT()
   const router = useRouter()
   const searchParams = useSearchParams()
   const [isPending, startTransition] = useTransition()

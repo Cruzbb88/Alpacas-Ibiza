@@ -27,7 +27,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import type { Locale } from '@/i18n.config'
 import type { AnimalEntity } from '@/lib/integrations/content-types'
-import { t } from '@/lib/translations'
+import { useLocaleT } from '@/lib/locale-context'
 
 type Trait = 'calm' | 'playful' | 'shy' | 'bold' | 'sociable' | 'independent'
 
@@ -91,7 +91,7 @@ interface MatchProps {
 }
 
 export function AlpacaPersonalityMatch({ locale, animals, heading, intro }: MatchProps) {
-  const translate = t(locale)
+  const translate = useLocaleT()
   const [step, setStep] = useState(0) // 0..QUESTIONS.length — last is the result
   const [weights, setWeights] = useState<Record<Trait, number>>({
     calm: 0, playful: 0, shy: 0, bold: 0, sociable: 0, independent: 0,

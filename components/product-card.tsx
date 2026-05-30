@@ -23,7 +23,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Heart, ShoppingCart } from 'lucide-react'
 import type { Locale } from '@/i18n.config'
-import { t } from '@/lib/translations'
+import { useLocaleT } from '@/lib/locale-context'
 import { getFareHarborCategoryUrl } from '@/lib/config'
 import { formatPriceForLocale } from '@/lib/format-price'
 
@@ -173,7 +173,7 @@ export function ProductCard({
   onAddToCart,
   onWishlist,
 }: ProductCardProps) {
-  const translate = t(locale)
+  const translate = useLocaleT()
   const [hovered, setHovered] = useState(false)
 
   const isCompact = variant === 'compact'

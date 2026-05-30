@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { t } from '@/lib/translations'
+import { useLocaleT } from '@/lib/locale-context'
 import type { Locale } from '@/i18n.config'
 import { TurnstileWidget } from '@/components/turnstile-widget'
 import { HoneypotField } from '@/components/honeypot-field'
@@ -24,7 +24,7 @@ export function NewsletterForm({ locale, source = 'footer' }: NewsletterFormProp
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
   const [error, setError] = useState<string | null>(null)
 
-  const translate = t(locale)
+  const translate = useLocaleT()
 
   const canSubmit = email.length > 0 && consent && status !== 'sending'
 

@@ -21,10 +21,10 @@ export async function POST(request: Request) {
     const reqId = getRequestId(request)
     const log = makeRequestLogger('reminder', reqId)
 
-    // IP rate-limit — 5 req / 5 min. Prevents flooding recipient inboxes via
-    // unauthenticated callers when FAREHARBOR_WEBHOOK_SECRET is unset.
+    // IP rate-limit — 2 req / 5 min. Manual fallback — not a public form;
+    // 5-in-5-min would send 5 emails to one tour-attendee.
     const ip = getClientIp(request)
-    const rl = rateLimit({ key: `reminder:${ip}`, limit: 5, windowMs: 5 * 60 * 1000 })
+    const rl = rateLimit({ key: `reminder:${ip}`, limit: 2, windowMs: 5 * 60 * 1000 })
     if (!rl.allowed) {
         log.warn('IP rate limit hit', { ip, retryAfterSec: Math.ceil(rl.resetMs / 1000) })
         return attachRequestId(

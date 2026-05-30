@@ -743,5 +743,11 @@
     "goTours": "Ver tours",
     "goAdopt": "Adoptar una alpaca",
     "errorRef": "Referencia de error"
+  },
+  "adopt": {
+    "legal": {
+      "withdrawalWaiver": "__UNTRANSLATED__",
+      "waiverRequired": "__UNTRANSLATED__"
+    }
   }
 }
