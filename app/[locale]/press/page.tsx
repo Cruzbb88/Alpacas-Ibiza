@@ -25,6 +25,7 @@ import { getTenant } from '@/lib/tenants/server'
 import { tenantMetadata } from '@/lib/tenants/metadata'
 import { localBusinessSchema, toJsonLd } from '@/lib/structured-data'
 import { press } from '@/lib/data/press'
+import { getOgImage } from '@/lib/og-images'
 
 // ── Metadata ──────────────────────────────────────────────────────────────────
 
@@ -35,13 +36,20 @@ export async function generateMetadata({
 }): Promise<Metadata> {
     const { locale } = await params
     const tenant = await getTenant()
-    return tenantMetadata(tenant, {
+    const base = tenantMetadata(tenant, {
         locale,
         route: '/press',
         titleOverride: 'Press & Media | Alpacas Ibiza',
         descriptionOverride:
             'Alpacas Ibiza as seen in Belgian and Spanish press. Coverage from Gazet van Antwerpen, Het Laatste Nieuws, Diario de Ibiza, Tribes & Nomads and more.',
     })
+    const ogImage = getOgImage('about', 'Press & Media – Alpacas Ibiza')
+    return {
+        ...base,
+        robots: { index: false, follow: true },
+        openGraph: { ...base.openGraph, images: [ogImage] },
+        twitter: { ...base.twitter, images: [ogImage.url] },
+    }
 }
 
 // ── Page ─────────────────────────────────────────────────────────────────────

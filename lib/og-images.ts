@@ -15,22 +15,41 @@ import { SITE_BASE_URL } from './config'
  * but inert until the file drops.
  */
 
-export const DEFAULT_OG_IMAGE = `${SITE_BASE_URL}/images/og/default.webp`
+/**
+ * Generic OG image generator — branded gradient, no owner asset needed.
+ * Accepts optional ?title= and ?subtitle= query params.
+ */
+export const DEFAULT_OG_IMAGE = `${SITE_BASE_URL}/og`
 
-/** Slug → absolute OG image URL. Empty until owner provides images. */
+/**
+ * Build a dynamic OG URL for a named page.
+ * Falls back to the bare generator when title/subtitle are omitted.
+ */
+function ogUrl(title: string, subtitle?: string): string {
+  const u = new URL(`${SITE_BASE_URL}/og`)
+  u.searchParams.set('title', title)
+  if (subtitle) u.searchParams.set('subtitle', subtitle)
+  return u.toString()
+}
+
+/** Slug → absolute OG image URL. Dynamic generator used until owner provides images. */
 const OG_IMAGES: Record<string, string> = {
-  // home:           `${SITE_BASE_URL}/images/og/home.webp`,
-  // tours:          `${SITE_BASE_URL}/images/og/tours.webp`,
-  // alpacas:        `${SITE_BASE_URL}/images/og/alpacas.webp`,
-  // adopt:          `${SITE_BASE_URL}/images/og/adopt.webp`,
-  // sustainability: `${SITE_BASE_URL}/images/og/sustainability.webp`,
-  // weddings:       `${SITE_BASE_URL}/images/og/weddings.webp`,
-  // yoga:           `${SITE_BASE_URL}/images/og/yoga.webp`,
-  // workshops:      `${SITE_BASE_URL}/images/og/workshops.webp`,
-  // gifts:          `${SITE_BASE_URL}/images/og/gifts.webp`,
-  // journal:        `${SITE_BASE_URL}/images/og/journal.webp`,
-  // media:          `${SITE_BASE_URL}/images/og/media.webp`,
-  // 'press-kit':    `${SITE_BASE_URL}/images/og/press-kit.webp`,
+  home:           ogUrl('Alpacas Ibiza', "Ibiza's first alpaca farm · Es Currals"),
+  tours:          ogUrl('Book a Tour', 'Walk with alpacas on Ibiza · Es Currals'),
+  alpacas:        ogUrl('Meet the Herd', 'Every alpaca has a name and a story'),
+  adopt:          ogUrl('Adopt an Alpaca', 'Support the herd · Alpacas Ibiza'),
+  about:          ogUrl('Our Story', 'Alpacas Ibiza · Es Currals'),
+  sustainability: ogUrl('Sustainability', 'Eco-conscious alpaca farming on Ibiza'),
+  weddings:       ogUrl('Weddings & Events', 'Celebrate with alpacas · Alpacas Ibiza'),
+  yoga:           ogUrl('Alpaca Yoga', 'Sunrise yoga with alpacas · Ibiza'),
+  workshops:      ogUrl('Workshops', 'Hands-on farm experiences · Alpacas Ibiza'),
+  gifts:          ogUrl('Gift Experiences', 'Give the gift of alpacas · Ibiza'),
+  journal:        ogUrl('Journal', 'Stories from the farm · Alpacas Ibiza'),
+  media:          ogUrl('Media', 'Press & photos · Alpacas Ibiza'),
+  press:          ogUrl('Press', 'In the news · Alpacas Ibiza'),
+  'press-kit':    ogUrl('Press Kit', 'Media resources · Alpacas Ibiza'),
+  weaving:        ogUrl('Wishfulfilling Weaving', "Handwoven scarves from our herd's fleece · Es Currals"),
+  'weaving/collection': ogUrl('Weaving Collection', 'Handcrafted textiles from Alpacas Ibiza'),
 }
 
 export interface OgImageMeta {

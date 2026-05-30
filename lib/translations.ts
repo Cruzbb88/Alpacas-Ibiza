@@ -18,12 +18,18 @@ function resolve(obj: unknown, keys: string[]): unknown {
   return cur
 }
 
+// A sentinel-prefixed value is treated as missing: getTranslation('de', 'adopt.cta', 'Adopt') → EN value or fallback.
+function isSentinel(val: string): boolean {
+  return val === '__UNTRANSLATED__' || val.startsWith('__UNTRANSLATED__:')
+}
+
 export function getTranslation(locale: Locale, key: string, defaultValue = ''): string {
-  const val = resolve(translations[locale], key.split('.'))
-  if (typeof val === 'string') return val
-  // Fallback to English
-  const fallback = resolve(translations.en, key.split('.'))
-  if (typeof fallback === 'string') return fallback
+  const keys = key.split('.')
+  const val = resolve(translations[locale], keys)
+  if (typeof val === 'string' && !isSentinel(val)) return val
+  // Fallback to English (skip if also sentinel)
+  const enVal = resolve(translations.en, keys)
+  if (typeof enVal === 'string' && !isSentinel(enVal)) return enVal
   return defaultValue
 }
 

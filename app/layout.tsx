@@ -58,7 +58,7 @@ export default async function RootLayout({
       : i18nConfig.defaultLocale
   return (
     <html lang={lang}>
-      <body className="font-sans antialiased">
+      <body className={`font-sans antialiased ${_playfairDisplay.variable}`}>
         {/* GDPR Consent Mode v2 default — must load BEFORE any GA/GTM script */}
         <Script id="consent-default" strategy="beforeInteractive">
           {`window.dataLayer = window.dataLayer || [];

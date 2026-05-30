@@ -269,7 +269,7 @@ STRIPE_SECRET_KEY=sk_test_...
 
 # Email Service
 SENDGRID_API_KEY=SG.xxx...
-SENDGRID_FROM_EMAIL=hello@alpacasibiza.com
+SENDGRID_FROM_EMAIL=info@alpacasibiza.com
 
 # Database (if using)
 DATABASE_URL=postgresql://user:pass@host/db

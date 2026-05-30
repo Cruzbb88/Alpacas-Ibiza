@@ -24,8 +24,8 @@ interface OrganizationSchemaTenant {
 
 export function organizationSchema(tenant?: OrganizationSchemaTenant) {
     const sameAs: string[] = [
-        'https://www.facebook.com/alpacasibiza',
-        'https://www.instagram.com/alpacasibiza',
+        'https://www.facebook.com/people/Es-Currals-Alpacas-Ibiza/100066379310193/',
+        'https://www.instagram.com/wishfulfillingweaving/',
     ]
     const rawHandle = tenant?.social?.twitterHandle
     if (rawHandle) {

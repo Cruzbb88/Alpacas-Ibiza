@@ -18,6 +18,7 @@ import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
 import { GradientPageHero, PageSection, OwnerConfirmBanner } from '@/components/layout'
 import { PhotoGallery } from '@/components/photo-gallery'
 import { hasLiveMedia } from '@/lib/data/media'
+import { getOgImage } from '@/lib/og-images'
 
 // ── Metadata ──────────────────────────────────────────────────────────────────
 
@@ -28,13 +29,20 @@ export async function generateMetadata({
 }): Promise<Metadata> {
     const { locale } = await params
     const tenant = await getTenant()
-    return tenantMetadata(tenant, {
+    const base = tenantMetadata(tenant, {
         locale,
         route: '/media',
         titleOverride: 'Media & Gallery | Alpacas Ibiza — Es Currals Farm',
         descriptionOverride:
             'Photos from the farm, the alpaca herd, Wishfulfilling Weaving, and events at Es Currals Alpacas Ibiza.',
     })
+    const ogImage = getOgImage('media', 'Media & Gallery – Alpacas Ibiza')
+    return {
+        ...base,
+        robots: { index: false, follow: true },
+        openGraph: { ...base.openGraph, images: [ogImage] },
+        twitter: { ...base.twitter, images: [ogImage.url] },
+    }
 }
 
 // ── Page ─────────────────────────────────────────────────────────────────────
@@ -114,16 +122,29 @@ export default async function MediaPage({ params }: { params: Promise<{ locale: 
                     </PageSection>
                 </>
             ) : (
-                /* ── Empty state — shown publicly until owner supplies photos ── */
+                /* ── Empty state — redirects visitors to real content instead of a dead grid ── */
                 <PageSection>
-                    <div className="py-16 text-center">
-                        <h2 className="text-2xl font-bold text-foreground mb-4">
-                            {translate('media.emptyTitle') || 'Photos coming soon'}
-                        </h2>
-                        <p className="text-foreground/70 max-w-md mx-auto">
+                    <div className="py-16 text-center max-w-lg mx-auto">
+                        <p className="text-foreground/70 mb-8">
                             {translate('media.emptyBody') ||
-                                "We're building the gallery. Follow us on Instagram for updates."}
+                                'See the alpacas, the farm, and Wishfulfilling Weaving in our photo gallery.'}
                         </p>
+                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                            <a
+                                href={`/${locale}#gallery`}
+                                className="inline-block bg-primary text-primary-foreground font-semibold px-8 py-3 rounded-[16px] hover:bg-primary/90 transition-colors"
+                            >
+                                {translate('media.emptyCta') || 'View gallery'}
+                            </a>
+                            <a
+                                href="https://www.instagram.com/wishfulfillingweaving/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-block border border-primary text-primary font-semibold px-8 py-3 rounded-[16px] hover:bg-primary/5 transition-colors"
+                            >
+                                Instagram
+                            </a>
+                        </div>
                     </div>
                 </PageSection>
             )}

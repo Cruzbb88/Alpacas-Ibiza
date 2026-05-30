@@ -168,6 +168,8 @@ export default async function Home({ params }: { params: Promise<{ locale: Local
       <Hero
         title={translate('hero.title')}
         subtitle={translate('hero.subtitle')}
+        eyebrow={translate('hero.eyebrow', 'San Carlos, Ibiza')}
+        trustSignals={["Ibiza's first alpaca farm", "By appointment in San Carlos"]}
         cta={{
           label: translate('hero.ctaPrimary'),
           href: FAREHARBOR_BOOKING_URL,
@@ -246,7 +248,7 @@ export default async function Home({ params }: { params: Promise<{ locale: Local
           </div>
           <div className="text-center">
             <a
-              href="https://www.facebook.com/alpacasibiza/reviews"
+              href="https://www.facebook.com/people/Es-Currals-Alpacas-Ibiza/100066379310193/"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center text-primary hover:text-primary/80 font-medium transition-colors"

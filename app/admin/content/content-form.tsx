@@ -431,7 +431,7 @@ export default function ContentStagingForm() {
       {/* ── 2. Tenant config ── */}
       <Section title="2. Tenant config (lib/tenants/alpacasibiza.ts)">
         <Field label="CIF (Spanish tax ID — required on all commercial websites)" value={patch.tenant.cif} onChange={(v) => setTenant('cif', v)} placeholder="B12345678" hint="Format: B followed by 8 digits. Footer auto-shows when set." />
-        <Field label="No-reply / transactional sender email" value={patch.tenant.noreplyEmail} onChange={(v) => setTenant('noreplyEmail', v)} placeholder="hello@alpacasibiza.com" type="url" />
+        <Field label="No-reply / transactional sender email" value={patch.tenant.noreplyEmail} onChange={(v) => setTenant('noreplyEmail', v)} placeholder="info@alpacasibiza.com" type="url" />
         <Field label="Logo URL (drop file at public/images/logo.webp first)" value={patch.tenant.logoUrl} onChange={(v) => setTenant('logoUrl', v)} placeholder="/images/logo.webp" />
         <Field label="OG default image URL (drop file at public/images/og-default.webp first)" value={patch.tenant.ogImageUrl} onChange={(v) => setTenant('ogImageUrl', v)} placeholder="/images/og-default.webp" />
         <Field label="Google review shortlink" value={patch.tenant.googleReviewUrl} onChange={(v) => setTenant('googleReviewUrl', v)} placeholder="https://g.page/r/..." type="url" />

@@ -8,7 +8,8 @@
     "language": "Taal",
     "home": "__UNTRANSLATED__: Home",
     "alpacas": "__UNTRANSLATED__: Our Alpacas",
-    "gifts": "__UNTRANSLATED__: Gift Vouchers"
+    "gifts": "__UNTRANSLATED__: Gift Vouchers",
+    "weaving": "Weven"
   },
   "hero": {
     "title": "Es Currals Alpacas Ibiza",
@@ -186,14 +187,14 @@
       "viewAndBook": "Bekijk beschikbare data & boek nu",
       "poweredBy": "Veilig boeken via FareHarbor",
       "questions": "Vragen?",
-      "questionsText": "Neem contact op via hello@alpacasibiza.com of WhatsApp voor persoonlijke begeleiding.",
+      "questionsText": "Neem contact op via info@alpacasibiza.com of WhatsApp voor persoonlijke begeleiding.",
       "nextDates": "Eerstvolgende beschikbare data",
       "spotsLeft": "plekken vrij",
       "updatedNote": "Elke 2 uur bijgewerkt · Klik op \"Nu boeken\" om alle tijden te zien",
       "loading": "Beschikbaarheid laden...",
       "apiNote": "Real-time beschikbaarheid vereist API-configuratie"
     },
-    "questionsText": "Neem contact op via hello@alpacasibiza.com of WhatsApp voor persoonlijke begeleiding.",
+    "questionsText": "Neem contact op via info@alpacasibiza.com of WhatsApp voor persoonlijke begeleiding.",
     "compare": {
       "title": "Tourtypen vergelijken",
       "subtitle": "Vind de ervaring die het beste bij u past",
@@ -626,7 +627,7 @@
       "Verwijdering aan te vragen (recht op vergetelheid)",
       "Af te melden voor marketingcommunicatie"
     ],
-    "lastUpdated": "Laatst bijgewerkt: Februari 2024. Neem contact op via hello@alpacasibiza.com voor privacyvragen."
+    "lastUpdated": "Laatst bijgewerkt: Februari 2024. Neem contact op via info@alpacasibiza.com voor privacyvragen."
   },
   "terms": {
     "title": "Servicevoorwaarden",
@@ -672,7 +673,7 @@
       "Probeer de website niet te hacken of te verstoren",
       "Respecteer intellectuele eigendomsrechten"
     ],
-    "lastUpdated": "Laatst bijgewerkt: Februari 2024. Neem contact op via hello@alpacasibiza.com bij vragen."
+    "lastUpdated": "Laatst bijgewerkt: Februari 2024. Neem contact op via info@alpacasibiza.com bij vragen."
   },
   "cookies": {
     "title": "Cookiebeleid",
@@ -728,7 +729,7 @@
       "Staan eenvoudige afmelding toe",
       "Respecteren je privacykeuzes"
     ],
-    "lastUpdated": "Laatst bijgewerkt: Februari 2024. Neem contact op via hello@alpacasibiza.com voor cookievragen."
+    "lastUpdated": "Laatst bijgewerkt: Februari 2024. Neem contact op via info@alpacasibiza.com voor cookievragen."
   },
   "impressum": {
     "title": "__UNTRANSLATED__: Legal notice — Alpacas Ibiza",
@@ -744,7 +745,7 @@
     "hostingProviderValue": "__UNTRANSLATED__: Vercel Inc., USA",
     "disputeResolutionHeading": "__UNTRANSLATED__: Dispute resolution",
     "disputeResolutionBody": "__UNTRANSLATED__: Under Regulation (EU) 524/2013, the European Commission provides a platform for online dispute resolution (ODR) where consumers resident in the EU may submit complaints arising from online purchases. The platform is available at the link below. We are willing but not obliged to participate in dispute-resolution proceedings before a consumer arbitration board.",
-    "lastUpdated": "__UNTRANSLATED__: Last updated: February 2024. Contact hello@alpacasibiza.com for legal notice enquiries."
+    "lastUpdated": "__UNTRANSLATED__: Last updated: February 2024. Contact info@alpacasibiza.com for legal notice enquiries."
   },
   "notFound": {
     "title": "Pagina niet gevonden",
@@ -1309,5 +1310,35 @@
     "trustContact": "__UNTRANSLATED__: Get in Touch",
     "ownerConfirmHeader": "__UNTRANSLATED__: Owner action required before launch",
     "ownerConfirmBody": "__UNTRANSLATED__: Please review the items flagged below and provide the confirmed details before this page goes live."
+  },
+  "weaving": {
+    "title": "Wishfulfilling Weaving — Atelier op Es Currals",
+    "subhead": "Handgeweven sjaals van de wol van onze kudde. Traditioneel houten weefgetouw. Langzaam ambacht, voornamelijk alpaca, gemaakt op de boerderij.",
+    "collectionCta": "Onze collectie",
+    "commissionCta": "Commissie aanvragen",
+    "processTitle": "__UNTRANSLATED__: From fleece to finished cloth",
+    "processStep1Title": "__UNTRANSLATED__: Shearing",
+    "processStep1Body": "__UNTRANSLATED__: [UNMAPPED — owner to confirm shearing season and method]",
+    "processStep2Title": "__UNTRANSLATED__: Washing",
+    "processStep2Body": "__UNTRANSLATED__: [UNMAPPED — owner to confirm washing process]",
+    "processStep3Title": "__UNTRANSLATED__: Spinning",
+    "processStep3Body": "__UNTRANSLATED__: [UNMAPPED — owner to confirm spinning method]",
+    "processStep4Title": "__UNTRANSLATED__: Weaving",
+    "processStep4Body": "__UNTRANSLATED__: [UNMAPPED — owner to confirm loom and weaving details]",
+    "studioHistoryTitle": "__UNTRANSLATED__: The studio",
+    "studioHistoryBody": "__UNTRANSLATED__: [UNMAPPED — owner to provide studio history and background]",
+    "photoStudio": "__UNTRANSLATED__: [UNMAPPED — studio interior photo]",
+    "photoLoom": "__UNTRANSLATED__: [UNMAPPED — loom in action photo]",
+    "photoScarves": "__UNTRANSLATED__: [UNMAPPED — finished scarves photo]",
+    "ownerConfirmHeader": "__UNTRANSLATED__: Owner action required before launch",
+    "ownerConfirmBody": "__UNTRANSLATED__: All [UNMAPPED] items below need owner-provided content before this page goes live.",
+    "collectionTitle": "__UNTRANSLATED__: Weaving Collection",
+    "collectionSubhead": "__UNTRANSLATED__: Handcrafted textiles from our studio at Es Currals. Each piece is unique — enquire for availability and pricing.",
+    "enquireCta": "__UNTRANSLATED__: Enquire",
+    "priceOnRequest": "__UNTRANSLATED__: Price on request",
+    "crossSellYogaTitle": "__UNTRANSLATED__: Alpaca Yoga",
+    "crossSellYogaBody": "__UNTRANSLATED__: Hatha yoga in the alpaca paddock — Wednesdays and Saturdays.",
+    "crossSellWorkshopsTitle": "__UNTRANSLATED__: Weaving Workshops",
+    "crossSellWorkshopsBody": "__UNTRANSLATED__: A 2-day deep-dive from raw fleece to finished scarf, taught by San."
   }
 }

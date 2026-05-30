@@ -21,8 +21,6 @@ const routes = [
     '/experiences/romantic-sunset',
     '/experiences/family-farm-days',
     '/gifts',
-    '/media',
-    '/press',
     '/sustainability',
     '/weddings',
     '/workshops',
@@ -31,7 +29,9 @@ const routes = [
     '/terms',
     '/cookies',
     '/impressum', // LSSI-CE Art. 10 legal notice — required for EU-targeted commercial site (indexable)
-    '/press-kit',
+    // '/media'     — excluded: no live photos yet; page is noindex, direct URL still works
+    // '/press'     — excluded: no live press logos/articles yet; page is noindex, direct URL still works
+    // '/press-kit' — excluded: no assets uploaded yet; page is noindex, direct URL still works
     '/sitemap',   // human-readable site map
     '/journal',   // journal index
 ]

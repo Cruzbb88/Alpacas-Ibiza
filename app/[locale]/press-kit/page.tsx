@@ -22,6 +22,7 @@ import { OwnerConfirmBanner } from '@/components/layout/owner-confirm-banner'
 import { GradientPageHero } from '@/components/layout/gradient-page-hero'
 import { PageSection } from '@/components/layout/page-section'
 import { buildLocaleAlternates } from '@/lib/i18n-metadata'
+import { getOgImage } from '@/lib/og-images'
 
 // ── Asset registry ────────────────────────────────────────────────────────────
 // Set `enabled: true` AND provide `url` once the owner uploads the file to
@@ -56,12 +57,25 @@ export async function generateMetadata({
   const { locale } = await params
   const tr = t(locale as Locale)
   const alts = buildLocaleAlternates(locale, 'press-kit')
+  const ogImage = getOgImage('press-kit', 'Press Kit – Alpacas Ibiza')
   return {
     title: tr('pressKit.meta.title') || 'Press Kit | Alpacas Ibiza',
     description:
       tr('pressKit.meta.description') ||
       'Download the official Alpacas Ibiza press kit — logo pack, hi-res photos, fact sheet, and founder bio for journalists and media partners.',
+    robots: { index: false, follow: true },
     alternates: alts,
+    openGraph: {
+      title: tr('pressKit.meta.title') || 'Press Kit | Alpacas Ibiza',
+      description:
+        tr('pressKit.meta.description') ||
+        'Download the official Alpacas Ibiza press kit — logo pack, hi-res photos, fact sheet, and founder bio.',
+      images: [ogImage],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      images: [ogImage.url],
+    },
   }
 }
 

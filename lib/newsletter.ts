@@ -1,8 +1,8 @@
-import fetch from 'node-fetch'
+import { fetchWithTimeout } from '@/lib/fetch'
 
 const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY
 const SENDGRID_LIST_ID = process.env.SENDGRID_LIST_ID // optional
-const FROM_EMAIL = process.env.SENDGRID_FROM_EMAIL || 'hello@alpacasibiza.com'
+const FROM_EMAIL = process.env.SENDGRID_FROM_EMAIL || 'info@alpacasibiza.com'
 
 if (!SENDGRID_API_KEY) {
   console.warn('[newsletter] SENDGRID_API_KEY not defined; newsletter functionality will be disabled.')
@@ -27,14 +27,14 @@ export async function subscribe(email: string): Promise<NewsletterResponse> {
     body.list_ids = [SENDGRID_LIST_ID]
   }
 
-  const res = await fetch(url, {
+  const res = await fetchWithTimeout(url, {
     method: 'PUT', // PUT to upsert
     headers: {
       Authorization: `Bearer ${SENDGRID_API_KEY}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(body),
-  })
+  }, 5000)
 
   if (!res.ok) {
     const text = await res.text()
@@ -65,14 +65,14 @@ export async function unsubscribe(email: string): Promise<NewsletterResponse> {
   // Step 1: add to global unsubscribes (suppression list — SendGrid honours on all sends)
   const suppressUrl = 'https://api.sendgrid.com/v3/asm/suppressions/global'
   try {
-    const res = await fetch(suppressUrl, {
+    const res = await fetchWithTimeout(suppressUrl, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${SENDGRID_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ recipient_emails: [email] }),
-    })
+    }, 5000)
     if (!res.ok) {
       const text = await res.text()
       console.warn('[newsletter] unsubscribe: sendgrid suppression error', res.status, text)
@@ -88,24 +88,24 @@ export async function unsubscribe(email: string): Promise<NewsletterResponse> {
     // Look up the contact ID first (required by the contacts DELETE endpoint)
     try {
       const searchUrl = 'https://api.sendgrid.com/v3/marketing/contacts/search/emails'
-      const searchRes = await fetch(searchUrl, {
+      const searchRes = await fetchWithTimeout(searchUrl, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${SENDGRID_API_KEY}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ emails: [email] }),
-      })
+      }, 5000)
       if (searchRes.ok) {
         // SendGrid v3 contact-search response: { result: { [email]: { contact: { id } } } }
         const data = (await searchRes.json()) as { result?: Record<string, { contact?: { id?: string } }> }
         const contactId: string | undefined = data?.result?.[email.toLowerCase()]?.contact?.id
         if (contactId) {
           const deleteUrl = `https://api.sendgrid.com/v3/marketing/contacts?ids=${encodeURIComponent(contactId)}`
-          const delRes = await fetch(deleteUrl, {
+          const delRes = await fetchWithTimeout(deleteUrl, {
             method: 'DELETE',
             headers: { Authorization: `Bearer ${SENDGRID_API_KEY}` },
-          })
+          }, 5000)
           if (!delRes.ok) {
             const text = await delRes.text()
             console.warn('[newsletter] unsubscribe: contact delete error', delRes.status, text)

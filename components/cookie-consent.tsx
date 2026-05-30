@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import type { Locale } from '@/i18n.config'
@@ -53,20 +53,47 @@ export function CookieConsent() {
     const locale = (params?.locale as Locale) || 'en'
     const tr = t(locale)
     const [visible, setVisible] = useState(false)
+    const rejectRef = useRef<HTMLButtonElement>(null)
+    const acceptRef = useRef<HTMLButtonElement>(null)
 
     useEffect(() => {
         if (readConsent() === null) setVisible(true)
     }, [])
+
+    // Focus the Reject button on mount so it is reachable first (safety-first).
+    useEffect(() => {
+        if (visible) rejectRef.current?.focus()
+    }, [visible])
+
+    // Tab focus-trap: cycle between Reject and Accept buttons only.
+    function handleKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
+        if (e.key !== 'Tab') return
+        const buttons = [rejectRef.current, acceptRef.current].filter(Boolean) as HTMLButtonElement[]
+        if (buttons.length < 2) return
+        const first = buttons[0]
+        const last = buttons[buttons.length - 1]
+        if (e.shiftKey) {
+            if (document.activeElement === first) {
+                e.preventDefault()
+                last.focus()
+            }
+        } else {
+            if (document.activeElement === last) {
+                e.preventDefault()
+                first.focus()
+            }
+        }
+    }
 
     if (!visible) return null
 
     return (
         <div
             role="dialog"
-            aria-live="polite"
             aria-label={tr('cookieConsent.ariaLabel') || 'Cookie consent'}
             aria-describedby="cookie-consent-message"
             className="fixed bottom-0 inset-x-0 z-[1000] p-4 md:p-5 bg-background border-t border-border shadow-2xl"
+            onKeyDown={handleKeyDown}
         >
             <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-start md:items-center gap-4">
                 <p id="cookie-consent-message" className="flex-1 text-sm text-foreground/80">
@@ -80,18 +107,26 @@ export function CookieConsent() {
                     </Link>
                     .
                 </p>
+                {/* AEPD 2024 equal-prominence requirement: both buttons must be
+                    the same size, position, and visual weight. Reject uses
+                    bg-secondary (filled, neutral) — same padding/font/rounded as
+                    Accept so neither is visually subordinated. A plain border-only
+                    Reject button would fail equal-prominence under AEPD 2024
+                    guidance in force 2026. */}
                 <div className="flex gap-2 shrink-0">
                     <button
+                        ref={rejectRef}
                         type="button"
                         onClick={() => {
                             writeConsent('rejected')
                             setVisible(false)
                         }}
-                        className="px-4 py-2 text-sm font-medium rounded-md border border-border hover:bg-secondary"
+                        className="px-4 py-2 text-sm font-medium rounded-md bg-secondary text-secondary-foreground hover:bg-secondary/80"
                     >
                         {tr('cookieConsent.reject') || 'Reject non-essential'}
                     </button>
                     <button
+                        ref={acceptRef}
                         type="button"
                         onClick={() => {
                             writeConsent('accepted')

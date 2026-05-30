@@ -4,6 +4,7 @@ import type { Locale } from '@/i18n.config'
 import { t } from '@/lib/translations'
 import { buildLocaleAlternates } from '@/lib/i18n-metadata'
 import { shopCategoryItemListSchema, toJsonLd } from '@/lib/structured-data'
+import { getOgImage } from '@/lib/og-images'
 
 export async function generateMetadata({
   params,
@@ -12,9 +13,18 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params
   const tr = t(locale)
+  const ogImage = getOgImage('alpacas', 'Woven Alpaca Textiles – Wishfulfilling Weaving')
   return {
     title: tr('wovenPage.title'),
     alternates: buildLocaleAlternates(locale, 'shop/woven'),
+    openGraph: {
+      title: tr('wovenPage.title'),
+      images: [ogImage],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      images: [ogImage.url],
+    },
   }
 }
 
@@ -22,36 +32,44 @@ export default async function WovenPage({ params }: { params: Promise<{ locale: 
   const { locale } = await params
   const translate = t(locale)
 
+  const priceOnRequest = translate('shop.priceOnRequest', 'Contact for pricing')
+  // No ecommerce is wired — each product links to the commission enquiry form.
   const products = [
     {
       title: translate('wovenPage.scarf'),
-      price: '€45',
+      price: priceOnRequest,
       icon: '🧣',
+      slug: 'woven-scarf',
     },
     {
       title: translate('wovenPage.blanket'),
-      price: '€180',
+      price: priceOnRequest,
       icon: '🛏️',
+      slug: 'woven-blanket',
     },
     {
       title: translate('wovenPage.throw'),
-      price: '€95',
+      price: priceOnRequest,
       icon: '🎨',
+      slug: 'woven-throw',
     },
     {
       title: translate('wovenPage.cushion'),
-      price: '€65',
+      price: priceOnRequest,
       icon: '🏠',
+      slug: 'woven-cushion',
     },
     {
       title: translate('wovenPage.wallHanging'),
-      price: '€150',
+      price: priceOnRequest,
       icon: '🎭',
+      slug: 'woven-wall-hanging',
     },
     {
       title: translate('wovenPage.poncho'),
-      price: '€120',
+      price: priceOnRequest,
       icon: '👚',
+      slug: 'woven-poncho',
     },
   ]
 
@@ -90,9 +108,13 @@ export default async function WovenPage({ params }: { params: Promise<{ locale: 
                 <div className="p-6">
                   <h3 className="text-lg font-semibold text-foreground mb-2">{product.title}</h3>
                   <p className="text-accent font-bold text-xl mb-4">{product.price}</p>
-                  <button className="w-full px-4 py-2 bg-accent hover:bg-accent/90 text-accent-foreground rounded-lg font-medium transition-colors">
-                    {translate('wovenPage.addToCart')}
-                  </button>
+                  {/* No ecommerce wired — routes to commission enquiry form */}
+                  <Link
+                    href={`/${locale}/shop/commission?product=${product.slug}`}
+                    className="block w-full px-4 py-2 bg-accent hover:bg-accent/90 text-accent-foreground rounded-lg font-medium transition-colors text-center"
+                  >
+                    {translate('wovenPage.enquire', 'Enquire')}
+                  </Link>
                 </div>
               </div>
             ))}

@@ -14,7 +14,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
     const { locale } = await params
     const tr = t(locale as any)
-    const ogImage = getOgImage('alpacas', 'Romantic Sunset Experience – Alpacas Ibiza')
+    const ogImage = getOgImage('alpacas', 'Romantic Sunset Walks – Alpacas Ibiza')
     return {
         title: tr('romantic.title'),
         description:
