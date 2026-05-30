@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
-import { Button } from '@/components/ui/button'
 import type { Locale } from '@/i18n.config'
 import { t } from '@/lib/translations'
+import { FAREHARBOR_BOOKING_URL } from '@/lib/config'
 
 export function StickyBookingBar() {
     const [isVisible, setIsVisible] = useState(false)
@@ -13,15 +13,22 @@ export function StickyBookingBar() {
     const tr = t(locale)
 
     useEffect(() => {
+        let ticking = false
         const handleScroll = () => {
-            if (window.scrollY > 100) {
-                setIsVisible(true)
-            } else {
-                setIsVisible(false)
+            if (!ticking) {
+                ticking = true
+                requestAnimationFrame(() => {
+                    if (window.scrollY > 100) {
+                        setIsVisible(true)
+                    } else {
+                        setIsVisible(false)
+                    }
+                    ticking = false
+                })
             }
         }
 
-        window.addEventListener('scroll', handleScroll)
+        window.addEventListener('scroll', handleScroll, { passive: true })
         return () => window.removeEventListener('scroll', handleScroll)
     }, [])
 
@@ -31,14 +38,12 @@ export function StickyBookingBar() {
                 }`}
         >
             <a
-                href="https://fareharbor.com/embeds/book/alpacasibiza/?full-items=yes"
+                href={FAREHARBOR_BOOKING_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full block"
+                className="w-full inline-flex items-center justify-center bg-background text-primary hover:bg-background/90 font-bold text-lg h-12 rounded-full shadow-lg"
             >
-                <Button className="w-full bg-background text-primary hover:bg-background/90 font-bold text-lg h-12 rounded-full shadow-lg">
-                    {tr('nav.bookTour')}
-                </Button>
+                {tr('nav.bookTour')}
             </a>
         </div>
     )

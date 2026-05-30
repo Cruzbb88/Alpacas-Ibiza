@@ -199,7 +199,12 @@ export default async function AdoptPage({
         ],
     }
 
-    const isSuccess = checkout === 'success'
+    // Donor has finished a Mollie/Stripe round-trip — suppress the marketing
+    // content so they see the thank-you (or SEPA-pending) screen, not the pitch
+    // that suggests their payment failed. Mollie returns to `mollie-return` /
+    // `mollie-embedded-return` while SEPA settles (1-5 business days).
+    const SUCCESS_LIKE_STATES = ['success', 'mollie-return', 'mollie-embedded-return']
+    const isSuccess = checkout != null && SUCCESS_LIKE_STATES.includes(checkout)
 
     return (
         <>

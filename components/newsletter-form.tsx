@@ -92,13 +92,18 @@ export function NewsletterForm({ locale, source = 'footer' }: NewsletterFormProp
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-3">
       <HoneypotField name="business_name" value={honeypot} onChange={setHoneypot} />
+      <label htmlFor="newsletter-email-input" className="sr-only">
+        {translate('newsletter.emailLabel', 'Email address')}
+      </label>
       <div className="flex gap-2">
         <input
+          id="newsletter-email-input"
           type="email"
           placeholder={translate('newsletter.placeholder')}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
+          autoComplete="email"
           className="flex-1 px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary"
         />
         <button
@@ -130,12 +135,12 @@ export function NewsletterForm({ locale, source = 'footer' }: NewsletterFormProp
       )}
       <TurnstileWidget onToken={setCaptchaToken} />
       {status === 'success' && (
-        <p className="text-sm text-green-600">
+        <p role="status" aria-live="polite" className="text-sm text-green-600">
           {translate('newsletter.success')}
         </p>
       )}
       {status === 'error' && (
-        <p className="text-sm text-red-600">{error}</p>
+        <p role="alert" aria-live="assertive" className="text-sm text-red-600">{error}</p>
       )}
     </form>
   )

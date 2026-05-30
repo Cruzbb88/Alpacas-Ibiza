@@ -19,9 +19,11 @@ import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { ShareButtons } from '@/components/share-buttons'
 import { trackEvent } from '@/lib/client-track'
+import { getTranslation } from '@/lib/translations'
+import type { Locale } from '@/i18n.config'
 
 export interface AdoptThankYouProps {
-  readonly locale: string
+  readonly locale: Locale
   readonly contactEmail: string
   readonly whatsappE164: string | null
   readonly siteUrl: string
@@ -44,6 +46,15 @@ export function AdoptThankYou({
     return () => clearTimeout(id)
   }, [checkoutState])
 
+  // A donor returning from Mollie hosted/embedded lands with one of these
+  // states. They are NOT 'success' yet — for SEPA the bank can take 1-5 days
+  // to confirm — but the marketing page must NOT re-render under them or the
+  // donor will think payment failed and pay again. Treat as a success surface
+  // with a pending-state banner.
+  const PENDING_STATES = ['mollie-return', 'mollie-embedded-return'] as const
+  const isPending = PENDING_STATES.includes(checkoutState as never)
+  const isSuccessLike = checkoutState === 'success' || isPending
+
   // ── Funnel analytics ────────────────────────────────────────────────────
   // Fire adopt_checkout_succeeded / adopt_checkout_cancelled exactly once per
   // mount. The ref guards against StrictMode double-effect in dev. Tier is
@@ -51,19 +62,21 @@ export function AdoptThankYou({
   const trackedRef = useRef(false)
   useEffect(() => {
     if (trackedRef.current) return
-    if (checkoutState !== 'success' && checkoutState !== 'cancelled') return
+    if (!isSuccessLike && checkoutState !== 'cancelled') return
     const rawTier = params.get('tier')
     const tier: 'monthly' | 'yearly' = rawTier === 'yearly' ? 'yearly' : 'monthly'
     trackedRef.current = true
     try {
       trackEvent(
-        checkoutState === 'success' ? 'adopt_checkout_succeeded' : 'adopt_checkout_cancelled',
+        isSuccessLike ? 'adopt_checkout_succeeded' : 'adopt_checkout_cancelled',
         { tier },
       )
     } catch {
       // Never let analytics break the thank-you render.
     }
-  }, [checkoutState, params])
+  }, [checkoutState, params, isSuccessLike, isPending])
+
+  const tr = (key: string, fallback: string) => getTranslation(locale, key, fallback)
 
   // ── Cancelled banner ────────────────────────────────────────────────────────
   if (checkoutState === 'cancelled') {
@@ -75,7 +88,7 @@ export function AdoptThankYou({
         className="animate-fade-out-slow bg-muted border-l-4 border-border px-4 py-4 my-4 max-w-3xl mx-auto rounded flex items-center justify-between gap-4"
       >
         <p className="text-foreground text-sm">
-          No charge — you can adopt anytime.
+          {tr('adopt.canceledBody', 'No worries — your adoption was not processed. You can try again any time.')}
         </p>
         <button
           type="button"
@@ -90,15 +103,19 @@ export function AdoptThankYou({
   }
 
   // ── Not a success redirect — render nothing ─────────────────────────────────
-  if (checkoutState !== 'success') return null
+  if (!isSuccessLike) return null
 
   // ── Success screen ──────────────────────────────────────────────────────────
   const tierRaw = params.get('tier')
   const tier: 'monthly' | 'yearly' = tierRaw === 'yearly' ? 'yearly' : 'monthly'
-  const tierCopy =
-    tier === 'yearly'
-      ? 'Your €900 yearly adoption (12 months coverage) is now active.'
-      : 'Your €75/month adoption is now active.'
+  const tierCopy = isPending
+    ? tr(
+        'adopt.thankYou.pendingCopy',
+        'Your payment is being processed. SEPA bank transfers take 1-5 business days to clear — your welcome email will arrive once the funds settle.',
+      )
+    : tier === 'yearly'
+      ? tr('adopt.thankYou.tierYearly', 'Your €900 yearly adoption (12 months coverage) is now active.')
+      : tr('adopt.thankYou.tierMonthly', 'Your €75/month adoption is now active.')
 
   /**
    * Personalised welcome params.
@@ -119,10 +136,10 @@ export function AdoptThankYou({
   const alpacaName = sanitiseParam(params.get('alpaca_name'))
 
   const headingText = donorName
-    ? `Welcome to the herd, ${donorName}!`
-    : 'Welcome to the herd'
+    ? tr('adopt.thankYou.welcomeNamed', 'Welcome to the herd, {name}!').replace('{name}', donorName)
+    : tr('adopt.thankYou.welcome', 'Welcome to the herd')
   const alpacaLine = alpacaName
-    ? `You've adopted ${alpacaName}`
+    ? tr('adopt.thankYou.alpacaLine', "You've adopted {name}").replace('{name}', alpacaName)
     : null
 
   const waNumber = whatsappE164 ? whatsappE164.replace(/[^\d]/g, '') : null
@@ -134,6 +151,20 @@ export function AdoptThankYou({
         <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
           {headingText}
         </h1>
+        {isPending && (
+          <div
+            role="status"
+            aria-live="polite"
+            className="mb-6 rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900"
+          >
+            <strong>{tr('adopt.thankYou.pendingBadge', 'Payment processing')}</strong>
+            {' — '}
+            {tr(
+              'adopt.thankYou.pendingDetail',
+              "Your bank is confirming the transfer. We'll email you the moment it clears (usually 1-2 business days for SEPA).",
+            )}
+          </div>
+        )}
         {alpacaLine && (
           <p className="text-xl font-semibold text-primary mb-2">{alpacaLine}</p>
         )}
@@ -142,31 +173,27 @@ export function AdoptThankYou({
         {/* Receipt / next-steps timeline */}
         <div className="bg-background rounded-2xl p-8 text-left shadow-sm border border-border mb-8">
           <h2 className="text-xl font-bold text-foreground mb-4">
-            What happens next
+            {tr('adopt.thankYou.whatsNext', 'What happens next')}
           </h2>
           <ol className="space-y-3 text-foreground/80 list-none">
             <li>
-              <strong>Now:</strong> a welcome email landed in your inbox with your
-              adoption details (check spam if you don&apos;t see it within 2 minutes).
+              {tr('adopt.thankYou.stepNow', "Now: a welcome email landed in your inbox with your adoption details (check spam if you don't see it within 2 minutes).")}
             </li>
             <li>
-              <strong>Within 24 hours:</strong> a follow-up email with your supporter
-              discount codes (10% Wishfulfilling Weaving, 15% Farm Shop).
+              {tr('adopt.thankYou.step24h', 'Within 24 hours: a follow-up email with your supporter discount codes (10% Wishfulfilling Weaving, 15% Farm Shop).')}
             </li>
             <li>
-              <strong>This week:</strong> we&apos;ll personally assign you a herd member
-              and send their name + photo.
+              {tr('adopt.thankYou.stepThisWeek', "This week: we'll personally assign you a herd member and send their name + photo.")}
             </li>
             <li>
-              <strong>Each month:</strong> photo + update of your sponsored alpaca,
-              plus an open invitation to visit Es Currals.
+              {tr('adopt.thankYou.stepEachMonth', 'Each month: photo + update of your sponsored alpaca, plus an open invitation to visit Es Currals.')}
             </li>
           </ol>
         </div>
 
         {/* Support contacts */}
         <p className="text-sm text-foreground/60 mb-6">
-          Need help? Reach the team at{' '}
+          {tr('adopt.thankYou.needHelpPrefix', 'Need help? Reach the team at')}{' '}
           <a
             href={`mailto:${contactEmail}`}
             className="text-primary underline"
@@ -175,7 +202,7 @@ export function AdoptThankYou({
           </a>
           {waNumber && (
             <>
-              {' '}or{' '}
+              {' '}{tr('adopt.thankYou.orWhatsApp', 'or')}{' '}
               <a
                 href={`https://wa.me/${waNumber}`}
                 target="_blank"
@@ -210,7 +237,7 @@ export function AdoptThankYou({
               rel="noopener noreferrer"
               className="inline-block rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90 mb-4"
             >
-              Download your certificate (PDF)
+              {tr('adopt.thankYou.downloadCert', 'Download your certificate (PDF)')}
             </a>
           )
         })()}
@@ -220,7 +247,7 @@ export function AdoptThankYou({
           href={`/${locale}`}
           className="inline-flex items-center px-6 py-3 bg-primary text-primary-foreground rounded-xl font-medium hover:bg-primary/90 transition-colors"
         >
-          Back to the farm →
+          {tr('adopt.thankYou.backToFarm', 'Back to the farm →')}
         </Link>
       </div>
     </section>

@@ -11,7 +11,7 @@ import { t } from '@/lib/translations'
 import { localBusinessSchema, faqPageSchema, toJsonLd } from '@/lib/structured-data'
 import type { Locale } from '@/i18n.config'
 
-import { SITE_BASE_URL as BASE_URL } from '@/lib/config'
+import { SITE_BASE_URL as BASE_URL, FAREHARBOR_ITEM_BUSINESS_INCENTIVES } from '@/lib/config'
 
 export async function generateMetadata({
     params,
@@ -105,7 +105,7 @@ export default async function CorporatePage({ params }: { params: Promise<{ loca
                         {translate('tours.bookingSection.subtitle', 'Select your preferred date and time to reserve your alpaca experience.')}
                     </p>
                     <div className="bg-white rounded-[16px] p-6 md:p-8 shadow-sm border border-[#F5F5DC]">
-                        <FareHarborCalendar />
+                        <FareHarborCalendar itemId={FAREHARBOR_ITEM_BUSINESS_INCENTIVES} />
                     </div>
                 </div>
             </section>
