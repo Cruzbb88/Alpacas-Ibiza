@@ -160,11 +160,9 @@ export async function GET(request: Request) {
                 continue
             }
             let email: string | null = null
-            let donorName: string | null = null
             try {
                 const customer = await mollie.customers.get(raw.customerId)
                 email = typeof customer?.email === 'string' ? customer.email : null
-                donorName = typeof customer?.name === 'string' ? customer.name : null
             } catch (custErr) {
                 log.warn('mollie.customers.get failed — skipping recipient', {
                     subId: raw.id,

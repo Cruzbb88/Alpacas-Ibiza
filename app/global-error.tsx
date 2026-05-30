@@ -29,11 +29,10 @@ export default function GlobalError({
     }).catch(() => { /* silent */ })
   }, [error])
 
-  // Attempt to detect locale from the URL so home/tours links stay consistent.
-  // Falls back to 'en' when this boundary fires before any navigation has occurred.
-  const locales = ['en', 'de', 'it', 'es', 'nl', 'fr']
-  const seg = typeof window !== 'undefined' ? window.location.pathname.split('/')[1] : 'en'
-  const locale = locales.includes(seg) ? seg : 'en'
+  // global-error replaces the root layout entirely, meaning i18n context may not
+  // be available and window.location is not safe during SSR. Use 'en' so links
+  // are always valid regardless of when this boundary fires.
+  const locale = 'en'
 
   const btnBase: React.CSSProperties = {
     padding: '0.625rem 1.25rem',

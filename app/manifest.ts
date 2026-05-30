@@ -2,6 +2,14 @@ import type { MetadataRoute } from 'next'
 import { getDefaultTenant } from '@/lib/tenants/server'
 import { BRAND_THEME_COLOR_HEX, BRAND_BACKGROUND_HEX } from '@/lib/brand'
 
+/**
+ * W3C App Manifest spec requires short_name ≤ 12 characters for home-screen
+ * labels on Android. Truncate the brand name to stay within that limit.
+ */
+function toShortName(brandName: string): string {
+  return brandName.length <= 12 ? brandName : brandName.slice(0, 12)
+}
+
 export default function manifest(): MetadataRoute.Manifest {
   let tenant
   try {
@@ -14,11 +22,14 @@ export default function manifest(): MetadataRoute.Manifest {
 
   return {
     name: tenant.brandName,
-    short_name: tenant.brandName,
+    // W3C: short_name must be ≤ 12 chars — Android launcher label.
+    // 'Alpacas Ibiza' is 13 chars; slice to 'Alpacas Ibiz'.
+    short_name: toShortName(tenant.brandName),
     description: tenant.tagline,
     start_url: '/',
     display: 'standalone',
     background_color: BRAND_BACKGROUND_HEX,
+    // theme_color must match app/layout.tsx viewport.themeColor (#6da855).
     theme_color: BRAND_THEME_COLOR_HEX,
     orientation: 'portrait-primary',
     lang: tenant.defaultLocale,
@@ -32,6 +43,14 @@ export default function manifest(): MetadataRoute.Manifest {
       {
         src: '/apple-icon',
         sizes: '180x180',
+        type: 'image/png',
+        purpose: 'any',
+      },
+      // 192×192 is the minimum size required by Chrome's PWA installability
+      // checker. Served by app/icon-192.tsx (ImageResponse, edge runtime).
+      {
+        src: '/icon-192',
+        sizes: '192x192',
         type: 'image/png',
         purpose: 'any',
       },

@@ -13,11 +13,15 @@
  * so the activate event purges old caches.
  */
 
-const CACHE_VERSION = 'alpacas-v1'
+const CACHE_VERSION = 'alpacas-v2'
 const STATIC_CACHE = `${CACHE_VERSION}-static`
 const HTML_CACHE = `${CACHE_VERSION}-html`
 
-const OFFLINE_FALLBACK_URL = '/offline'
+// The offline page lives under the [locale] segment: /en/offline, /de/offline, etc.
+// Use the default locale (/en/offline) as the pre-cached fallback. The middleware
+// would redirect /offline → /en/offline (302) making cache.add() store under the
+// wrong key; pointing directly at /en/offline avoids that mismatch.
+const OFFLINE_FALLBACK_URL = '/en/offline'
 
 self.addEventListener('install', (event) => {
   event.waitUntil(

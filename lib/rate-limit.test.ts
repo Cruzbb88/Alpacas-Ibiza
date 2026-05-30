@@ -3,16 +3,6 @@ import assert from 'node:assert/strict'
 import { createHash } from 'crypto'
 import { rateLimit, rateLimitByEmail, __resetEmailRateLimit } from './rate-limit.ts'
 
-// Reset the in-memory store between tests by exploiting the globalThis singleton.
-// Cast to any to access the private store key.
-function resetStore() {
-  const g = globalThis as Record<string, unknown>
-  delete g['__rateLimitStore']
-  // Re-require is not available with strip-types; instead clear via the exported internals.
-  // The store is module-level, so we can't clear it without re-import.
-  // Workaround: use distinct keys per test to avoid cross-test interference.
-}
-
 describe('rateLimit', () => {
   it('allows requests up to the limit', () => {
     const key = `test-allow-${Date.now()}`

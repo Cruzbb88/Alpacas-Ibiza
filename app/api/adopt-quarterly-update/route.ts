@@ -8,6 +8,7 @@ import { pingHeartbeat } from '@/lib/heartbeat'
 import { getQuarterLabel } from '@/lib/quarterly-update'
 import { isValidEmail } from '@/lib/validate-email'
 import { getQuarterlyContent, markQuarterlySent } from '@/lib/quarterly-content-store'
+import { isAlreadyProcessed, markProcessed } from '@/lib/webhook-idempotency'
 
 /**
  * GET /api/adopt-quarterly-update  (Authorization: Bearer <CRON_SECRET>)
@@ -190,6 +191,21 @@ export async function GET(request: Request) {
     type SendResult = { ok: true; subId: string } | { ok: false; subId: string; reason: string }
 
     const tasks = recipients.map(async (r): Promise<SendResult> => {
+        // Per-recipient idempotency: if Vercel double-fires the cron, the second
+        // run finds every already-sent (quarterLabel, subId) pair in the store
+        // and skips them. Key is stable across retries — same quarter + same subId.
+        // The webhook-idempotency store's 4-day TTL comfortably covers any
+        // same-day double-fire. markProcessed is called ONLY after a successful
+        // send so a transient send failure allows a retry on the next cron run.
+        const idemKey = `quarterly:${quarterLabel}:${r.subId}`
+        if (isAlreadyProcessed(idemKey)) {
+            log.info('Skipping quarterly send — already sent for this sub+quarter', {
+                subId: r.subId,
+                quarter: quarterLabel,
+            })
+            return { ok: false, subId: r.subId, reason: 'already-sent' }
+        }
+
         // Defence-in-depth: skip recipients whose email metadata is malformed.
         if (!isValidEmail(r.email)) {
             log.warn('Skipping recipient with invalid email in metadata', { subId: r.subId })
@@ -215,6 +231,10 @@ export async function GET(request: Request) {
                 html,
                 replyTo: contactEmail,
             })
+            // Mark AFTER successful send — a failed send must not be marked so
+            // the next cron fire can retry the recipient. Mirrors milestone-emails
+            // post-success-mark contract.
+            markProcessed(idemKey)
             return { ok: true, subId: r.subId }
         } catch (err) {
             const reason = err instanceof Error ? err.message : String(err)

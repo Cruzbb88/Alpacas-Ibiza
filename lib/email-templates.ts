@@ -401,7 +401,7 @@ You're receiving this because you subscribed at <a href="${siteUrl}" style="colo
   </a>
 </div>
 <p style="color:#888;font-size:13px">If you didn't sign up for this newsletter, you can ignore this email — no action needed.</p>
-<p style="color:#888;font-size:12px;margin-top:8px">Or copy this link into your browser:<br/>${escapedConfirmUrl}</p>
+<p style="color:#888;font-size:12px;margin-top:8px">Or copy this link into your browser:<br/>${confirmUrl}</p>
 ${unsubscribeFooter}
 `)
     return { subject, html }
@@ -675,7 +675,7 @@ export function buildBillingPortalEmail(portalUrl: string): { subject: string; h
   </a>
 </div>
 <p style="color:#888;font-size:13px">If you didn't request this, you can ignore this email — the link does nothing without your Stripe account.</p>
-<p style="color:#888;font-size:12px;margin-top:8px">Or copy this link into your browser:<br/>${escapedPortalUrl}</p>
+<p style="color:#888;font-size:12px;margin-top:8px">Or copy this link into your browser:<br/>${portalUrl}</p>
 `)
     return { subject, html }
 }

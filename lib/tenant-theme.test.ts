@@ -1,7 +1,7 @@
 /**
  * Tests for lib/tenants/theme.ts — buildCssVars + helpers.
  */
-import { describe, it, mock } from 'node:test'
+import { describe, it } from 'node:test'
 import assert from 'node:assert/strict'
 import { buildCssVars, hexToHslTriple, isValidHex } from './tenants/theme.ts'
 

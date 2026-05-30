@@ -28,7 +28,6 @@ import { localBusinessSchema, yogaWeeklyEventSchema, toJsonLd } from '@/lib/stru
 import {
     SITE_BASE_URL as BASE_URL,
     YOGA_PRICE_EUR,
-    FAREHARBOR_BOOKING_URL,
     FAREHARBOR_ITEM_YOGA,
     getFareHarborItemUrl,
 } from '@/lib/config'

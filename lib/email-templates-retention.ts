@@ -101,9 +101,10 @@ ${alpacaLine}
 
     // --- Block (c): Manage adoption ---
     const billingPortalUrl = `${SITE_BASE_URL_INLINE}/${safeLocale}/adopt#manage`
+    const safePortalUrl = escapeHtml(billingPortalUrl)
     const manageBlock = `
 <h3 style="margin-top:24px;color:${BRAND.primary}">Manage your adoption</h3>
-<p>Need to update payment details, pause, or cancel? <a href="${billingPortalUrl}" style="color:${BRAND.primary}">Manage your adoption here</a>.</p>
+<p>Need to update payment details, pause, or cancel? <a href="${safePortalUrl}" style="color:${BRAND.primary}">Manage your adoption here</a>.</p>
 `
 
     const html = retentionEmailLayout(`
@@ -219,8 +220,8 @@ export function buildRenewalReminderEmail(
   <p style="margin:0 0 12px;font-size:14px">Know someone who'd love to adopt an alpaca? Give them <strong>€5 off their first month</strong> with your personal code:</p>
   <p style="font-size:24px;font-weight:700;letter-spacing:2px;color:${BRAND.primary};margin:0 0 12px">${safeReferralCode}</p>
   <p style="font-size:12px;color:#777;margin:0">They can use this code at checkout — just share this link:<br>
-    <a href="${SITE_BASE_URL_INLINE}/en/adopt?referral=${safeReferralCode}" style="color:${BRAND.primary};word-break:break-all">
-      ${SITE_BASE_URL_INLINE}/en/adopt?referral=${safeReferralCode}
+    <a href="${SITE_BASE_URL_INLINE}/${escapeHtml(locale || 'en')}/adopt?referral=${safeReferralCode}" style="color:${BRAND.primary};word-break:break-all">
+      ${SITE_BASE_URL_INLINE}/${escapeHtml(locale || 'en')}/adopt?referral=${safeReferralCode}
     </a>
   </p>
 </div>

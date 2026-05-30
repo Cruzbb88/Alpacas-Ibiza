@@ -15,7 +15,6 @@ import type { Locale } from '@/i18n.config'
 import { getTenant } from '@/lib/tenants/server'
 import { tenantMetadata } from '@/lib/tenants/metadata'
 import { GradientPageHero, PageSection } from '@/components/layout'
-import { SITE_BASE_URL } from '@/lib/config'
 
 export async function generateMetadata({
   params,

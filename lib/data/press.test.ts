@@ -12,10 +12,9 @@
  * the source for discoverability; run it directly or extend the glob in package.json.
  */
 
-import { describe, it, after } from 'node:test'
+import { describe, it } from 'node:test'
 import assert from 'node:assert/strict'
 import { press, hasLivePress } from './press.ts'
-import type { PressMention } from './press.ts'
 
 describe('hasLivePress', () => {
   // The test environment never sets logoUrl on any entry — they all start as null.

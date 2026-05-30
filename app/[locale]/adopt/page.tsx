@@ -77,21 +77,6 @@ function normalizeProcessor(
   return 'unknown'
 }
 
-// TODO: OWNER_CONFIRMED — prices (€75/mo, €900/yr) and all 9 benefits sourced from live site
-// VERIFICATION_RESULTS.md #10. Owner must confirm before launch: (a) prices unchanged,
-// (b) benefits bundle migrates 1:1, (c) existing subscriber grandfathering policy.
-
-// 7 confirmed benefits per spec 003 + VERIFICATION_RESULTS.md #10.
-// Owner-blocked items (alpaca selector, per-alpaca cap) handled via OwnerConfirmBanner below.
-const BENEFITS = [
-    'benefit1',
-    'benefit2',
-    'benefit3',
-    'benefit4',
-    'benefit5',
-    'benefit6',
-    'benefit7',
-] as const
 
 export default async function AdoptPage({
     params,

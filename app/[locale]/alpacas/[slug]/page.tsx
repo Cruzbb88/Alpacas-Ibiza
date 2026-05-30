@@ -1,8 +1,5 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import Image from 'next/image'
-import Link from 'next/link'
-import { AlpacaCard } from '@/components/alpaca-card'
 import { AlpacaDetailHero } from '@/components/alpaca-detail-hero'
 import { AlpacaPeerGrid } from '@/components/alpacas/alpaca-peer-grid'
 import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
@@ -16,11 +13,6 @@ import { getOgImage } from '@/lib/og-images'
 import { SITE_BASE_URL } from '@/lib/config'
 import type { Locale } from '@/i18n.config'
 import { i18nConfig } from '@/i18n.config'
-import { resolveAnimalBio } from '@/lib/alpacas/resolve-bio'
-
-// Cap on "Meet the rest of the herd" thumbnails. 6 keeps the grid scannable
-// at 3 cols × 2 rows on tablet without an awkward final row.
-const REST_OF_HERD_LIMIT = 6
 
 /**
  * /[locale]/alpacas/[slug] — individual alpaca detail page.
@@ -103,19 +95,7 @@ export default async function AlpacaDetailPage({ params }: PageProps) {
   const animal = animals.find((a) => a.id === slug)
   if (!animal) notFound()
 
-  // Other alpacas for the "meet the rest of the herd" strip — exclude this one.
-  const otherAnimals = animals.filter((a) => a.id !== animal.id).slice(0, REST_OF_HERD_LIMIT)
-
-  // Bio resolution lives in lib/alpacas/resolve-bio.ts — shared with AlpacaCard
-  // so the cascade can't drift between detail page and listing card.
-  const bioText = resolveAnimalBio(animal, locale, translate)
-
   const hasImage = animal.image != null
-  // Compose descriptive alt text from available structured fields rather than
-  // just the name — gives screen-reader users colour/breed context.
-  const altText = [animal.name, animal.color, animal.breed].filter(Boolean).join(', ')
-  const adoptHref = `/${locale}/adopt?alpaca=${encodeURIComponent(animal.id)}`
-  const listHref = `/${locale}/alpacas`
 
   // Schema.org — AboutPage with a Thing main entity (Animal is non-standard;
   // Thing is the safest concrete type Google's Rich Results validator accepts).

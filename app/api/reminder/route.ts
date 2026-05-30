@@ -66,15 +66,22 @@ export async function POST(request: Request) {
         return attachRequestId(NextResponse.json({ error: 'Invalid email' }, { status: 400 }), reqId)
     }
 
+    const dateStrOptions: Intl.DateTimeFormatOptions = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+    }
     const dateStr = startAt
-        ? startAt.toLocaleString(locale, {
-              weekday: 'long',
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit',
-          })
+        ? (() => {
+              try {
+                  return startAt.toLocaleString(locale, dateStrOptions)
+              } catch {
+                  return startAt.toLocaleString('en-GB', dateStrOptions)
+              }
+          })()
         : 'your scheduled time'
 
     // Build ICS attachment + Google Calendar link when start time is available.

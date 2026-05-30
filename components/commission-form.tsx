@@ -154,6 +154,18 @@ export function CommissionForm({ labels, locale = 'en', defaultProductInterest }
     const [errors, setErrors] = useState<Partial<Record<keyof FormDraft | 'references', string>>>({})
     const [errorMessage, setErrorMessage] = useState('')
 
+    // When a product context is passed via ?product=, enforce the "[Product: ...]"
+    // prefix after useFormDraft hydrates from localStorage on mount. Without this,
+    // a stale draft message from a previous session overwrites the server-set prefix.
+    useEffect(() => {
+        if (defaultProductInterest && initialDraft.message) {
+            patch({ message: initialDraft.message } as Partial<FormDraft>)
+        }
+        // Only run once on mount — initialDraft.message is stable for the lifetime
+        // of this render (derived from defaultProductInterest which is a prop).
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
     // Move focus to success heading once we transition to success.
     useEffect(() => {
         if (status === 'success') {

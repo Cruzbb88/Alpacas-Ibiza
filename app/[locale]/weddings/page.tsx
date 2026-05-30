@@ -5,7 +5,6 @@
 import type { Metadata } from 'next'
 import { t } from '@/lib/translations'
 import type { Locale } from '@/i18n.config'
-import { SITE_BASE_URL as BASE_URL } from '@/lib/config'
 import { BookingButton } from '@/components/booking/button'
 import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
 import { localBusinessSchema, faqPageSchema, weddingsServiceSchema, toJsonLd } from '@/lib/structured-data'

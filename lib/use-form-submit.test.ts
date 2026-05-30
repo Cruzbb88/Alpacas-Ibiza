@@ -38,13 +38,6 @@ function buildHookRunner<TBody>(opts: {
     const statusCell = makeUseState<string>('idle')
     const errorCell = makeUseState<string | null>(null)
 
-    let callCount = 0
-    const fakeUseState = (initial: unknown) => {
-        if (callCount === 0) { callCount++; return [statusCell[0](), statusCell[1]] as [unknown, (v: unknown) => void] }
-        callCount++
-        return [errorCell[0](), errorCell[1]] as [unknown, (v: unknown) => void]
-    }
-
     // We bypass the hook's React import by testing the logic directly.
     // Instead of importing the hook (which needs React), we inline the logic here
     // mirroring the implementation so we test the contract.
@@ -221,7 +214,7 @@ describe('useFormSubmit logic', () => {
         t.mock.method(globalThis, 'fetch', mockFetchOk())
 
         let capturedBody: unknown = undefined
-        t.mock.method(globalThis, 'fetch', async (url: string, init: RequestInit) => {
+        t.mock.method(globalThis, 'fetch', async (_url: string, init: RequestInit) => {
             capturedBody = JSON.parse(init.body as string)
             return { ok: true, json: async () => ({}) } as unknown as Response
         })

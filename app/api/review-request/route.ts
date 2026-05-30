@@ -3,8 +3,6 @@ import { sendEmail } from '@/lib/mailer'
 import { escapeHtml } from '@/lib/html'
 import { safeEqual } from '@/lib/secrets'
 import { reviewRequestEmailHtml, reviewRequestSubject } from '@/lib/email-templates'
-import { isValidEmail } from '@/lib/validate-email'
-import { requireOptionalWebhookSecret } from '@/lib/route-helpers'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
 import { rateLimit, getClientIp } from '@/lib/rate-limit'
 

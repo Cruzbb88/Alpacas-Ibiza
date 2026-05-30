@@ -6,6 +6,7 @@ import { getMollieClient } from '@/lib/integrations/payment-mollie'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
 import { verifyCronSecret } from '@/lib/cron-auth'
 import { pingHeartbeat } from '@/lib/heartbeat'
+import { isAlreadyProcessed, markProcessed } from '@/lib/webhook-idempotency'
 
 /**
  * GET /api/owner-mrr-digest   (Authorization: Bearer <CRON_SECRET>)
@@ -68,6 +69,22 @@ export async function GET(request: Request) {
         now.getUTCMonth(),
         now.getUTCDate() - dayOfWeekMonZero,
     )
+
+    // Run-level idempotency: key on this Monday's UTC date (YYYY-MM-DD). If
+    // Vercel fires the cron twice on the same Monday, the second run is a
+    // no-op. markProcessed is called ONLY after a successful send so a
+    // transient Resend failure allows a retry the same day.
+    const thisMonday = new Date(thisWeekMondayMs).toISOString().slice(0, 10)
+    const runKey = `owner-mrr-digest:${thisMonday}`
+    if (isAlreadyProcessed(runKey)) {
+        log.info('MRR digest already sent this week — skipping duplicate run', { thisMonday })
+        pingHeartbeat('owner-mrr-digest')
+        return attachRequestId(
+            NextResponse.json({ ok: true, sent: false, idempotent: true, thisMonday }),
+            reqId,
+        )
+    }
+
     const weekStartMs = thisWeekMondayMs - 7 * 24 * 60 * 60 * 1000
     const weekEndMs = thisWeekMondayMs
     const fmtDate = (d: Date) =>
@@ -265,6 +282,9 @@ export async function GET(request: Request) {
             reqId,
         )
     }
+
+    // Mark this week's digest as sent so a same-Monday double-fire is a no-op.
+    markProcessed(runKey)
 
     // Heartbeat: ping the external watchdog AFTER successful send so
     // Healthchecks.io marks this run green. No-op when env var unset.

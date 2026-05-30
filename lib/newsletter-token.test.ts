@@ -47,7 +47,7 @@ describe('verifyNewsletterToken — tamper resistance', () => {
   it('returns null when the email in the payload is tampered', () => {
     const token = signNewsletterToken('legit@example.com')
     // Replace the payload portion with one that has a different email
-    const [payloadB64, sigB64] = token.split('.')
+    const [, sigB64] = token.split('.')
     const tamperedPayload = Buffer.from(
       JSON.stringify({ email: 'attacker@evil.com', expiresAt: new Date(Date.now() + 86400000).toISOString(), nonce: 'aaa' })
     ).toString('base64url')

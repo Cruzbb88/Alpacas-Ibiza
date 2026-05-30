@@ -1337,5 +1337,14 @@
     "crossSellYogaBody": "Hatha yoga in the alpaca paddock — Wednesdays and Saturdays.",
     "crossSellWorkshopsTitle": "Weaving Workshops",
     "crossSellWorkshopsBody": "A 2-day deep-dive from raw fleece to finished scarf, taught by San."
+  },
+  "error": {
+    "title": "Something went wrong",
+    "subtitle": "One of our alpacas seems to have wandered off with the page. Our team has been notified — please try again or head back home.",
+    "tryAgain": "Try again",
+    "goHome": "Back to home",
+    "goTours": "Browse tours",
+    "goAdopt": "Adopt an alpaca",
+    "errorRef": "Error ref"
   }
 }

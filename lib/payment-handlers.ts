@@ -38,13 +38,6 @@ function stripeAmountToEurMajor(
   return amountMinor / 100
 }
 
-/** Parse Mollie's "75.00" decimal string into a number for event payloads. */
-function mollieAmountToNumber(amountValue: string | null | undefined): number | null {
-  if (!amountValue) return null
-  const n = Number.parseFloat(amountValue)
-  return Number.isFinite(n) ? n : null
-}
-
 // ── Stripe checkout.session.completed handler ────────────────────────────────
 
 /**
@@ -1237,7 +1230,7 @@ export async function handleMolliePaymentFailed(
 }
 
 function buildMollieDonorPaymentFailedHtml(
-  payment: MolliePaymentLike,
+  _payment: MolliePaymentLike,
   donorName: string | null,
   failureCount: number,
 ): string {

@@ -2,8 +2,6 @@ import { fetchWithTimeout } from '@/lib/fetch'
 
 const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY
 const SENDGRID_LIST_ID = process.env.SENDGRID_LIST_ID // optional
-const FROM_EMAIL = process.env.SENDGRID_FROM_EMAIL || 'info@alpacasibiza.com'
-
 if (!SENDGRID_API_KEY) {
   console.warn('[newsletter] SENDGRID_API_KEY not defined; newsletter functionality will be disabled.')
 }

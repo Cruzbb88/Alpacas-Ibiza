@@ -5,6 +5,7 @@ import { safeEqual } from '@/lib/secrets'
 import { escapeHtml } from '@/lib/html'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
 import { pingHeartbeat } from '@/lib/heartbeat'
+import { isAlreadyProcessed, markProcessed } from '@/lib/webhook-idempotency'
 
 /**
  * GET /api/owner-digest?secret=<CRON_SECRET>
@@ -31,6 +32,28 @@ export async function GET(request: Request) {
         return attachRequestId(NextResponse.json({ error: 'Unauthorized' }, { status: 401 }), reqId)
     }
 
+    // Run-level idempotency: key on the ISO calendar week (YYYY-Www) so a
+    // Vercel double-fire within the same Monday window is a no-op. Uses the
+    // same in-memory store as webhook-idempotency (4-day TTL easily covers a
+    // same-minute double-fire and any same-day retry). markProcessed is called
+    // AFTER a successful send so a transient Resend failure allows a retry.
+    const now = new Date()
+    const isoWeek = (() => {
+        // ISO week: Jan 4 is always in week 1 (ISO 8601).
+        const tmp = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()))
+        // Thursday in current week determines the year (ISO rule).
+        tmp.setUTCDate(tmp.getUTCDate() + 4 - (tmp.getUTCDay() || 7))
+        const yearStart = new Date(Date.UTC(tmp.getUTCFullYear(), 0, 1))
+        const weekNo = Math.ceil((((tmp.getTime() - yearStart.getTime()) / 86400000) + 1) / 7)
+        return `${tmp.getUTCFullYear()}-W${weekNo.toString().padStart(2, '0')}`
+    })()
+    const runKey = `owner-digest:${isoWeek}`
+    if (isAlreadyProcessed(runKey)) {
+        log.info('Digest already sent this week — skipping duplicate run', { isoWeek })
+        pingHeartbeat('owner-digest')
+        return attachRequestId(NextResponse.json({ sent: false, idempotent: true, isoWeek }), reqId)
+    }
+
     const ownerEmail = process.env.CONTACT_EMAIL || 'info@alpacasibiza.com'
     const appKey = process.env.FAREHARBOR_APP_KEY
     const userKey = process.env.FAREHARBOR_USER_KEY
@@ -41,7 +64,7 @@ export async function GET(request: Request) {
         try {
             await sendEmail({
                 to: ownerEmail,
-                subject: `[Alpacas Ibiza] Weekly digest — ${new Date().toLocaleDateString()}`,
+                subject: `[Alpacas Ibiza] Weekly digest — ${now.toLocaleDateString()}`,
                 html: `
                     <div style="font-family:sans-serif;max-width:600px;margin:0 auto">
                       <h2 style="color:#556B2F">🦙 Weekly summary</h2>
@@ -52,6 +75,7 @@ export async function GET(request: Request) {
                 `,
                 listUnsubscribeUrl: `mailto:${process.env.CONTACT_EMAIL ?? 'info@alpacasibiza.com'}?subject=unsubscribe`,
             })
+            markProcessed(runKey)
             pingHeartbeat('owner-digest')
             return attachRequestId(NextResponse.json({ sent: true, mode: 'fallback' }), reqId)
         } catch (err) {
@@ -61,7 +85,7 @@ export async function GET(request: Request) {
     }
 
     // Fetch upcoming bookings from FareHarbor
-    const now = new Date()
+    // (now already declared above for the idempotency key computation)
     const weekFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000)
     const fmt = (d: Date) => d.toISOString().split('T')[0]
 
@@ -153,6 +177,7 @@ export async function GET(request: Request) {
             listUnsubscribeUrl: `mailto:${process.env.CONTACT_EMAIL ?? 'info@alpacasibiza.com'}?subject=unsubscribe`,
         })
 
+        markProcessed(runKey)
         pingHeartbeat('owner-digest')
         return attachRequestId(
             NextResponse.json({

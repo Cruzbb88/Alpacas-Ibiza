@@ -5,11 +5,7 @@
     "about": "Nosotros",
     "contact": "Contacto",
     "bookTour": "Reservar Tour",
-    "language": "Idioma",
-    "home": "__UNTRANSLATED__: Home",
-    "alpacas": "__UNTRANSLATED__: Our Alpacas",
-    "gifts": "__UNTRANSLATED__: Gift Vouchers",
-    "weaving": "__UNTRANSLATED__: Weaving"
+    "language": "Idioma"
   },
   "hero": {
     "title": "Es Currals Alpacas Ibiza",
@@ -411,29 +407,7 @@
     "phone": "Teléfono",
     "emailLabel": "Correo",
     "hours": "Horario",
-    "byAppointment": "Solo con cita previa",
-    "mapHeading": "__UNTRANSLATED__: How to find us",
-    "mapIframeTitle": "__UNTRANSLATED__: Map showing Alpacas Ibiza location",
-    "mapLargerLabel": "__UNTRANSLATED__: View larger map →",
-    "gettingHere": {
-      "heading": "__UNTRANSLATED__: Getting here",
-      "byCar": {
-        "title": "__UNTRANSLATED__: By car",
-        "body": "__UNTRANSLATED__: Located in San Carlos, a short drive from Ibiza Town and Santa Eulàlia. Free parking on-site. Contact us for current journey-time estimates."
-      },
-      "fromAirport": {
-        "title": "__UNTRANSLATED__: From the airport",
-        "body": "__UNTRANSLATED__: Ibiza Airport (IBZ) is a short drive away. Taxis are available at the airport rank; no pre-booking required. Contact us for current journey-time estimates."
-      },
-      "transit": {
-        "title": "__UNTRANSLATED__: Public transit",
-        "body": "__UNTRANSLATED__: Check ibizabus.com for current routes and timetables. A rental car or taxi is recommended for the final stretch to the farm."
-      },
-      "coordinates": {
-        "title": "__UNTRANSLATED__: Coordinates & backup nav",
-        "body": "__UNTRANSLATED__: GPS: 38.9861° N, 1.5228° E. Search «Alpacas Ibiza, San Carlos» in Google Maps or Apple Maps."
-      }
-    }
+    "byAppointment": "Solo con cita previa"
   },
   "footer": {
     "tagline": "La primera granja de alpacas y estudio de tejido artesanal de Ibiza",
@@ -447,7 +421,6 @@
     "privacy": "Política de Privacidad",
     "terms": "Términos de Servicio",
     "cookies": "Política de Cookies",
-    "impressum": "__UNTRANSLATED__: Legal notice",
     "copyright": "Todos los derechos reservados."
   },
   "homepage": {
@@ -594,39 +567,39 @@
     "subtitle": "Cómo recogemos, usamos y protegemos tu información",
     "section1Title": "1. Información que Recogemos",
     "section1Intro": "Recogemos la información que proporcionas directamente:",
-    "section1Items": [
-      "Datos de reserva de tours (nombre, email, teléfono)",
-      "Información de pedidos (dirección de envío, datos de pago)",
-      "Consultas de encargos (detalles del proyecto, preferencias)",
-      "Suscripción al newsletter (dirección de email)",
-      "Envíos del formulario de contacto"
-    ],
+    "section1Items": {
+      "0": "Datos de reserva de tours (nombre, email, teléfono)",
+      "1": "Información de pedidos (dirección de envío, datos de pago)",
+      "2": "Consultas de encargos (detalles del proyecto, preferencias)",
+      "3": "Suscripción al newsletter (dirección de email)",
+      "4": "Envíos del formulario de contacto"
+    },
     "section2Title": "2. Cómo Usamos Tu Información",
-    "section2Items": [
-      "Gestionar reservas de tours y pedidos",
-      "Enviar emails de confirmación y actualizaciones",
-      "Responder a consultas",
-      "Mejorar nuestro sitio web y servicios",
-      "Enviar newsletters (puedes darte de baja en cualquier momento)",
-      "Cumplir con obligaciones legales"
-    ],
+    "section2Items": {
+      "0": "Gestionar reservas de tours y pedidos",
+      "1": "Enviar emails de confirmación y actualizaciones",
+      "2": "Responder a consultas",
+      "3": "Mejorar nuestro sitio web y servicios",
+      "4": "Enviar newsletters (puedes darte de baja en cualquier momento)",
+      "5": "Cumplir con obligaciones legales"
+    },
     "section3Title": "3. Protección de Datos",
     "section3Intro": "Nos tomamos tu privacidad en serio. Tus datos están encriptados y almacenados de forma segura. No compartimos tu información con terceros excepto:",
-    "section3Items": [
-      "Procesadores de pago (para transacciones seguras)",
-      "Sistemas de reserva (FareHarbor, según sea necesario)",
-      "Requisitos legales (cuando lo exija la ley)"
-    ],
+    "section3Items": {
+      "0": "Procesadores de pago (para transacciones seguras)",
+      "1": "Sistemas de reserva (FareHarbor, según sea necesario)",
+      "2": "Requisitos legales (cuando lo exija la ley)"
+    },
     "section4Title": "4. Cookies y Seguimiento",
     "section4Text": "Usamos cookies para mejorar tu experiencia. Las cookies esenciales son necesarias para la funcionalidad. Puedes controlar las preferencias de cookies en tu navegador o en nuestro banner de cookies.",
     "section5Title": "5. Tus Derechos",
     "section5Intro": "Tienes derecho a:",
-    "section5Items": [
-      "Acceder a tus datos",
-      "Corregir información inexacta",
-      "Solicitar la eliminación (derecho al olvido)",
-      "Optar por no recibir comunicaciones de marketing"
-    ],
+    "section5Items": {
+      "0": "Acceder a tus datos",
+      "1": "Corregir información inexacta",
+      "2": "Solicitar la eliminación (derecho al olvido)",
+      "3": "Optar por no recibir comunicaciones de marketing"
+    },
     "lastUpdated": "Última actualización: Febrero 2024. Contáctanos en info@alpacasibiza.com para consultas de privacidad."
   },
   "terms": {
@@ -634,45 +607,45 @@
     "subtitle": "Por favor lee estos términos antes de usar nuestro sitio web y servicios de reserva",
     "section1Title": "1. Reservas y Tours",
     "section1Intro": "Al reservar un tour, aceptas:",
-    "section1Items": [
-      "Seguir todas las normas de seguridad de la granja y los animales",
-      "Llegar 15 minutos antes de la hora programada",
-      "Respetar las alpacas y la propiedad de la granja",
-      "Traer identificación válida si es necesario",
-      "Seguir los protocolos de salud/seguridad vigentes"
-    ],
+    "section1Items": {
+      "0": "Seguir todas las normas de seguridad de la granja y los animales",
+      "1": "Llegar 15 minutos antes de la hora programada",
+      "2": "Respetar las alpacas y la propiedad de la granja",
+      "3": "Traer identificación válida si es necesario",
+      "4": "Seguir los protocolos de salud/seguridad vigentes"
+    },
     "section2Title": "2. Cancelaciones y Reembolsos",
-    "section2Items": [
-      "Cancelación hasta 48 horas antes: Reembolso completo o reprogramación",
-      "Cancelación con menos de 48 horas: Se aplica cargo del 50%",
-      "No presentarse: Pago completo perdido",
-      "Cierre por condiciones climáticas: Reembolso completo o reprogramación"
-    ],
+    "section2Items": {
+      "0": "Cancelación hasta 48 horas antes: Reembolso completo o reprogramación",
+      "1": "Cancelación con menos de 48 horas: Se aplica cargo del 50%",
+      "2": "No presentarse: Pago completo perdido",
+      "3": "Cierre por condiciones climáticas: Reembolso completo o reprogramación"
+    },
     "section3Title": "3. Pedidos de la Tienda",
     "section3Intro": "Todos los productos son hechos a mano. Las pequeñas variaciones e imperfecciones son normales y parte del proceso artesanal.",
-    "section3Items": [
-      "Envío en 5-7 días laborales",
-      "Los pedidos internacionales pueden tardar más",
-      "Devoluciones: 30 días para artículos sin usar y sin daños",
-      "Los artículos personalizados/encargados no son retornables"
-    ],
+    "section3Items": {
+      "0": "Envío en 5-7 días laborales",
+      "1": "Los pedidos internacionales pueden tardar más",
+      "2": "Devoluciones: 30 días para artículos sin usar y sin daños",
+      "3": "Los artículos personalizados/encargados no son retornables"
+    },
     "section4Title": "4. Acuerdos de Encargo",
-    "section4Items": [
-      "Se requiere un depósito del 50% para asegurar tu proyecto",
-      "Saldo pendiente antes del envío final",
-      "Las estimaciones de tiempo son aproximadas",
-      "Cancelación después del inicio de producción: solo 50% de reembolso"
-    ],
+    "section4Items": {
+      "0": "Se requiere un depósito del 50% para asegurar tu proyecto",
+      "1": "Saldo pendiente antes del envío final",
+      "2": "Las estimaciones de tiempo son aproximadas",
+      "3": "Cancelación después del inicio de producción: solo 50% de reembolso"
+    },
     "section5Title": "5. Fotografía y Consentimiento",
     "section5Text": "Al visitar nuestra granja o comprar nuestros productos, consientes ser fotografiado. Estas imágenes pueden usarse en nuestro sitio web y redes sociales. Si prefieres no ser fotografiado, informa a tu guía.",
     "section6Title": "6. Exención de Responsabilidad",
     "section6Text": "Las visitas a la granja implican interacción con animales. Los visitantes asumen todos los riesgos. No somos responsables de lesiones a menos que sean causadas por negligencia grave. Los niños deben estar supervisados en todo momento.",
     "section7Title": "7. Uso del Sitio Web",
-    "section7Items": [
-      "No reproduzcas ni redistribuyas nuestro contenido sin permiso",
-      "No intentes hackear o interferir con el sitio web",
-      "Respeta los derechos de propiedad intelectual"
-    ],
+    "section7Items": {
+      "0": "No reproduzcas ni redistribuyas nuestro contenido sin permiso",
+      "1": "No intentes hackear o interferir con el sitio web",
+      "2": "Respeta los derechos de propiedad intelectual"
+    },
     "lastUpdated": "Última actualización: Febrero 2024. Contacta info@alpacasibiza.com con preguntas."
   },
   "cookies": {
@@ -683,69 +656,53 @@
     "typesTitle": "Tipos de Cookies que Usamos",
     "essentialTitle": "Cookies Esenciales",
     "essentialText": "Necesarias para el funcionamiento del sitio. Incluyen:",
-    "essentialItems": [
-      "Cookies de sesión (para tu reserva)",
-      "Cookies de seguridad (para proteger tus datos)",
-      "Cookies de funcionalidad del sitio"
-    ],
+    "essentialItems": {
+      "0": "Cookies de sesión (para tu reserva)",
+      "1": "Cookies de seguridad (para proteger tus datos)",
+      "2": "Cookies de funcionalidad del sitio"
+    },
     "preferenceTitle": "Cookies de Preferencia",
     "preferenceText": "Recuerdan tus opciones (idioma, tema, etc.) para una mejor experiencia.",
     "analyticsTitle": "Cookies de Analítica",
     "analyticsText": "Nos ayudan a entender cómo usas nuestro sitio para poder mejorarlo. Usamos:",
-    "analyticsItems": [
-      "Google Analytics (páginas vistas, fuentes de tráfico)",
-      "Seguimiento de conversiones (reservas, seguimiento de compras)"
-    ],
+    "analyticsItems": {
+      "0": "Google Analytics (páginas vistas, fuentes de tráfico)",
+      "1": "Seguimiento de conversiones (reservas, seguimiento de compras)"
+    },
     "marketingTitle": "Cookies de Marketing",
     "marketingText": "Se usan para anuncios de retargeting y campañas de remarketing. Puedes optar por no recibirlas en cualquier momento.",
     "choicesTitle": "Tus Opciones de Cookies",
-    "choicesItems": [
-      "Cookies esenciales: No se pueden desactivar (necesarias para el sitio)",
-      "Analítica y Marketing: Desactivar a través de nuestro banner de cookies",
-      "Configuración del navegador: La mayoría de navegadores permiten controlar cookies",
-      "Optar por no: Usa la configuración \"No Rastrear\" de tu navegador"
-    ],
+    "choicesItems": {
+      "0": "Cookies esenciales: No se pueden desactivar (necesarias para el sitio)",
+      "1": "Analítica y Marketing: Desactivar a través de nuestro banner de cookies",
+      "2": "Configuración del navegador: La mayoría de navegadores permiten controlar cookies",
+      "3": "Optar por no: Usa la configuración \"No Rastrear\" de tu navegador"
+    },
     "thirdPartyTitle": "Servicios de Terceros",
     "thirdPartyText": "Usamos servicios de terceros que pueden establecer sus propias cookies:",
-    "thirdPartyItems": [
-      "Procesadores de pago (para transacciones seguras)",
-      "Sistemas de reservas (FareHarbor)",
-      "Proveedores de analítica"
-    ],
+    "thirdPartyItems": {
+      "0": "Procesadores de pago (para transacciones seguras)",
+      "1": "Sistemas de reservas (FareHarbor)",
+      "2": "Proveedores de analítica"
+    },
     "manageTitle": "Gestionar Cookies",
     "manageText": "La mayoría de navegadores te permiten:",
-    "manageItems": [
-      "Ver cookies almacenadas",
-      "Eliminar cookies específicas",
-      "Bloquear nuevas cookies",
-      "Establecer niveles de privacidad"
-    ],
+    "manageItems": {
+      "0": "Ver cookies almacenadas",
+      "1": "Eliminar cookies específicas",
+      "2": "Bloquear nuevas cookies",
+      "3": "Establecer niveles de privacidad"
+    },
     "manageNote": "Consulta la documentación de tu navegador para instrucciones específicas.",
     "gdprTitle": "Conformidad RGPD",
     "gdprText": "Cumplimos con el RGPD y las regulaciones ePrivacy. Nosotros:",
-    "gdprItems": [
-      "Solo establecemos cookies no esenciales con tu consentimiento",
-      "Proporcionamos información clara sobre cookies",
-      "Permitimos la opción de no participar fácilmente",
-      "Respetamos tus opciones de privacidad"
-    ],
+    "gdprItems": {
+      "0": "Solo establecemos cookies no esenciales con tu consentimiento",
+      "1": "Proporcionamos información clara sobre cookies",
+      "2": "Permitimos la opción de no participar fácilmente",
+      "3": "Respetamos tus opciones de privacidad"
+    },
     "lastUpdated": "Última actualización: Febrero 2024. Contacta info@alpacasibiza.com para preguntas sobre cookies."
-  },
-  "impressum": {
-    "title": "__UNTRANSLATED__: Legal notice — Alpacas Ibiza",
-    "intro": "__UNTRANSLATED__: In compliance with Spanish Law 34/2002 on Information Society Services and Electronic Commerce (LSSI-CE) Article 10 and equivalent European disclosure obligations, the following identification information is provided about the operator of this website.",
-    "companyName": "__UNTRANSLATED__: Company name",
-    "companyNameValue": "__UNTRANSLATED__: Registered legal name of the operating company (e.g. \"Alpacas Ibiza S.L.\"). Must match what is registered with the Registro Mercantil.",
-    "registeredAddress": "__UNTRANSLATED__: Registered address",
-    "registeredAddressValue": "__UNTRANSLATED__: Full registered office address (street, postal code, city, province, country) as recorded with the Registro Mercantil.",
-    "taxId": "__UNTRANSLATED__: Tax ID (CIF)",
-    "taxIdValue": "__UNTRANSLATED__: Spanish CIF / NIF / VAT number assigned by the Agencia Tributaria (e.g. \"B12345678\").",
-    "contactEmail": "__UNTRANSLATED__: Contact",
-    "hostingProvider": "__UNTRANSLATED__: Hosting provider",
-    "hostingProviderValue": "__UNTRANSLATED__: Vercel Inc., USA",
-    "disputeResolutionHeading": "__UNTRANSLATED__: Dispute resolution",
-    "disputeResolutionBody": "__UNTRANSLATED__: Under Regulation (EU) 524/2013, the European Commission provides a platform for online dispute resolution (ODR) where consumers resident in the EU may submit complaints arising from online purchases. The platform is available at the link below. We are willing but not obliged to participate in dispute-resolution proceedings before a consumer arbitration board.",
-    "lastUpdated": "__UNTRANSLATED__: Last updated: February 2024. Contact info@alpacasibiza.com for legal notice enquiries."
   },
   "notFound": {
     "title": "Página no encontrada",
@@ -768,14 +725,7 @@
   "journal": {
     "title": "Diario",
     "backToJournal": "Volver al diario",
-    "relatedTitle": "Más de",
-    "subtitle": "__UNTRANSLATED__: Stories from the farm — life with the herd, weaving rhythms, seasonal notes.",
-    "emptyTitle": "__UNTRANSLATED__: Stories coming soon",
-    "emptyBody": "__UNTRANSLATED__: Follow us on Instagram for updates while we get the journal ready.",
-    "emptyCtaHref": "__UNTRANSLATED__: /contact",
-    "emptyCtaLabel": "__UNTRANSLATED__: Get in touch →",
-    "ownerConfirmHeader": "__UNTRANSLATED__: Owner: add posts to activate",
-    "ownerConfirmBody": "__UNTRANSLATED__: Add entries to lib/data/journal.ts with status: 'live'. Drop hero images at public/images/journal/<slug>.webp. Empty state shows publicly until then."
+    "relatedTitle": "Más de"
   },
   "share": {
     "label": "Compartir",
@@ -785,539 +735,13 @@
     "twitter": "Compartir en X",
     "facebook": "Compartir en Facebook"
   },
-  "search": {
-    "placeholder": "__UNTRANSLATED__: Search...",
-    "noResults": "__UNTRANSLATED__: No matches",
-    "openShortcut": "__UNTRANSLATED__: Press / to search",
-    "browseJournal": "__UNTRANSLATED__: Browse all journal posts"
-  },
-  "pressKit": {
-    "meta.title": "__UNTRANSLATED__: Press Kit | Alpacas Ibiza",
-    "meta.description": "__UNTRANSLATED__: Download the official Alpacas Ibiza press kit — logo pack, hi-res photos, fact sheet, and founder bio for journalists and media partners.",
-    "title": "__UNTRANSLATED__: Press Kit",
-    "subtitle": "__UNTRANSLATED__: For journalists, photographers, and partners — assets, fact sheet, and founder bio.",
-    "assetsHeading": "__UNTRANSLATED__: Downloadable assets",
-    "assetsSubheading": "__UNTRANSLATED__: Files will be available for download once uploaded by the farm team.",
-    "logoPackTitle": "__UNTRANSLATED__: Logo Pack",
-    "logoPackBody": "__UNTRANSLATED__: SVG and PNG versions of the Alpacas Ibiza wordmark, icon, and combination mark. Colour and monochrome variants included.",
-    "logoPackCta": "__UNTRANSLATED__: Download logo pack",
-    "photosTitle": "__UNTRANSLATED__: Hi-res Photos",
-    "photosBody": "__UNTRANSLATED__: High-resolution farm and alpaca photography. Cleared for editorial and commercial use with attribution.",
-    "photosCta": "__UNTRANSLATED__: Download photo archive",
-    "factSheetTitle": "__UNTRANSLATED__: Fact Sheet",
-    "factSheetBody": "__UNTRANSLATED__: One-page PDF with key facts: founding date, herd size, farm location, activity categories, and contact details.",
-    "factSheetCta": "__UNTRANSLATED__: Download fact sheet",
-    "founderBioTitle": "__UNTRANSLATED__: Founder Bio",
-    "founderBioBody": "__UNTRANSLATED__: Short and long-form biography of the farm founders, suitable for article introductions and speaker profiles.",
-    "founderBioCta": "__UNTRANSLATED__: Download founder bio",
-    "inquiriesTitle": "__UNTRANSLATED__: Press Inquiries",
-    "inquiriesBody": "__UNTRANSLATED__: Journalists and media professionals are welcome to reach out for interviews, photography access, or editorial information.",
-    "inquiriesCta": "__UNTRANSLATED__: Email the press team",
-    "inquiriesContactLink": "__UNTRANSLATED__: Use the contact form",
-    "featuredTitle": "__UNTRANSLATED__: As featured in",
-    "ownerConfirmHeader": "__UNTRANSLATED__: Owner action required before launch",
-    "ownerConfirmBody": "__UNTRANSLATED__: Upload the following files to public/press/, then flip enabled: true in app/[locale]/press-kit/page.tsx PRESS_ASSETS.",
-    "comingSoonBadge": "__UNTRANSLATED__: Coming soon"
-  },
-  "adopt": {
-    "title": "__UNTRANSLATED__: Adopt an Alpaca",
-    "subtitle": "__UNTRANSLATED__: ",
-    "tierLabel": "__UNTRANSLATED__: Choose your adoption plan",
-    "monthlyPrice": "__UNTRANSLATED__: €75 / month",
-    "yearlyPrice": "__UNTRANSLATED__: €900 / year",
-    "benefitsTitle": "__UNTRANSLATED__: What's included",
-    "benefitsIntro": "__UNTRANSLATED__: ",
-    "benefit1": "__UNTRANSLATED__: ",
-    "benefit2": "__UNTRANSLATED__: ",
-    "benefit3": "__UNTRANSLATED__: ",
-    "benefit4": "__UNTRANSLATED__: ",
-    "benefit5": "__UNTRANSLATED__: ",
-    "benefit6": "__UNTRANSLATED__: ",
-    "benefit7": "__UNTRANSLATED__: ",
-    "alpacaGridTitle": "__UNTRANSLATED__: Choose your alpaca",
-    "alpacaGridSubtitle": "__UNTRANSLATED__: ",
-    "alpacaUnmappedBio": "__UNTRANSLATED__: ",
-    "ctaLabel": "__UNTRANSLATED__: Adopt now",
-    "ctaSubtext": "__UNTRANSLATED__: Secure checkout via Mollie. You'll receive a welcome email and adoption certificate within a few days.",
-    "successHeading": "__UNTRANSLATED__: Welcome to the herd!",
-    "successBody": "__UNTRANSLATED__: Your {tier} adoption is confirmed. You'll receive a welcome email shortly.",
-    "successTierMonthly": "__UNTRANSLATED__: monthly",
-    "successTierYearly": "__UNTRANSLATED__: yearly",
-    "canceledBody": "__UNTRANSLATED__: No worries — your adoption was not processed. You can try again any time.",
-    "ownerConfirmHeader": "__UNTRANSLATED__: Owner action required before launch",
-    "ownerConfirmBody": "__UNTRANSLATED__: The items below are owner-blocked. Replace the empty-string placeholders with confirmed content.",
-    "pickerHeading": "__UNTRANSLATED__: Pick your alpaca",
-    "pickerSubheading": "__UNTRANSLATED__: Choose a specific alpaca to support, or let us match you with one of the herd.",
-    "pickerRandomLabel": "__UNTRANSLATED__: Pick for me",
-    "monthlyTierTagline": "__UNTRANSLATED__: Cancel any time",
-    "yearlyTierTagline": "__UNTRANSLATED__: Same total as monthly, paid upfront — no recurring charges",
-    "yearlyTierBadge": "__UNTRANSLATED__: Most committed",
-    "faqTitle": "__UNTRANSLATED__: Adoption questions",
-    "faqSubtitle": "__UNTRANSLATED__: Quick answers to the questions adopters ask most.",
-    "faqQ1": "__UNTRANSLATED__: How long does the adoption last?",
-    "faqA1": "__UNTRANSLATED__: One full year from the day of payment. Your perks (free tours, photoshoot, fertilizer shipments) are valid across that whole year.",
-    "faqQ2": "__UNTRANSLATED__: Can I cancel a monthly adoption?",
-    "faqA2": "__UNTRANSLATED__: Yes, any time. Use the subscription portal at the bottom of this page to cancel — you keep access to the year's perks already used. Yearly adoptions are paid upfront and non-refundable, but you keep all the benefits.",
-    "faqQ3": "__UNTRANSLATED__: Can I visit my adopted alpaca?",
-    "faqA3": "__UNTRANSLATED__: Absolutely — that's the point. Your adoption includes 6 free farm tours per year (up to 4 guests each visit). You'll meet your alpaca and the rest of the herd.",
-    "faqQ4": "__UNTRANSLATED__: What if I pick a specific alpaca?",
-    "faqA4": "__UNTRANSLATED__: Your certificate names that alpaca and your welcome email mentions them. If you pick \"Pick for me\", we'll match you with one of the herd and let you know within a few days.",
-    "faqQ5": "__UNTRANSLATED__: Do you ship the fertilizer internationally?",
-    "faqA5": "__UNTRANSLATED__: Inside Spain, yes — included in the price. For other EU countries, we cover shipping up to a reasonable cost; outside the EU we ask for help with postage. Get in touch before adopting if shipping is a concern.",
-    "faqQ6": "__UNTRANSLATED__: Is this a gift?",
-    "faqA6": "__UNTRANSLATED__: You can adopt on behalf of someone else — at checkout, enter their name and email. They'll get the welcome email and certificate. Contact us first if you'd like to time the welcome around a birthday or holiday.",
-    "faqQ7": "__UNTRANSLATED__: What payment methods do you accept?",
-    "faqA7": "__UNTRANSLATED__: Major cards (Visa, Mastercard, Amex), Apple Pay, Google Pay, iDEAL, Bancontact, and SEPA Direct Debit. All processed via Mollie — we never see your card or account details.",
-    "certPreviewTitle": "__UNTRANSLATED__: Your adoption certificate",
-    "certPreviewSubtitle": "__UNTRANSLATED__: A personalised certificate ships within 7–10 days of adoption. Here's what it looks like.",
-    "certPreviewLabel": "__UNTRANSLATED__: Adoption certificate",
-    "certPreviewPresentedTo": "__UNTRANSLATED__: Presented to",
-    "certPreviewSponsorOf": "__UNTRANSLATED__: is the proud sponsor of",
-    "certPreviewFooter": "__UNTRANSLATED__: Es Currals · Alpacas Ibiza · Santa Eulària",
-    "certPreviewAlpacaPlaceholder": "__UNTRANSLATED__: Your alpaca",
-    "certPreviewDonorPlaceholder": "__UNTRANSLATED__: Your name",
-    "trustHeading": "__UNTRANSLATED__: A safe, simple adoption",
-    "trustSecurePayments": "__UNTRANSLATED__: Secure payments processed by Mollie — we never see your card or account details.",
-    "trustCancelAnyTime": "__UNTRANSLATED__: Cancel monthly adoptions any time, no questions asked.",
-    "trustResponsiveSupport": "__UNTRANSLATED__: Email support within 24 hours at info@alpacasibiza.com.",
-    "trustReceiptIncluded": "__UNTRANSLATED__: VAT-compliant receipt emailed immediately after payment.",
-    "trustAcceptedLabel": "__UNTRANSLATED__: We accept",
-    "repeatHeading": "__UNTRANSLATED__: Ready to join the herd?",
-    "repeatBody": "__UNTRANSLATED__: Adopt today and you'll get the welcome email within minutes. Your certificate and gift bundle ship next week.",
-    "repeatAlpacaNote": "__UNTRANSLATED__: You picked {name} — they'll appear on your certificate.",
-    "repeatMonthlyCta": "__UNTRANSLATED__: Adopt monthly — €75",
-    "repeatYearlyCta": "__UNTRANSLATED__: Adopt yearly — €900",
-    "gift": {
-      "heading": "__UNTRANSLATED__: Adopting for someone else?",
-      "sub": "__UNTRANSLATED__: Make this a gift — we'll personalise the certificate and time the welcome to arrive on the date you choose.",
-      "nameLabel": "__UNTRANSLATED__: Recipient name",
-      "emailLabel": "__UNTRANSLATED__: Recipient email (optional)",
-      "deliverLabel": "__UNTRANSLATED__: Deliver the welcome on",
-      "namePlaceholder": "__UNTRANSLATED__: e.g. Marta",
-      "emailPlaceholder": "__UNTRANSLATED__: marta@example.com",
-      "deliverHint": "__UNTRANSLATED__: Leave blank to send the welcome immediately after checkout.",
-      "activeBadge": "__UNTRANSLATED__: Gift mode active — for {name}",
-      "expandHint": "__UNTRANSLATED__: Click to personalise as a gift",
-      "confirmation": "__UNTRANSLATED__: Your tier buttons above will checkout as a gift.",
-      "reset": "__UNTRANSLATED__: Remove gift details"
-    },
-    "referral": {
-      "welcomeFromFriend": "__UNTRANSLATED__: 🎁 Welcome from a friend — your first month is €5 off.",
-      "codeApplied": "__UNTRANSLATED__: Discount applied automatically at checkout with code"
-    },
-    "campaign": {
-      "finalHours": "__UNTRANSLATED__: Final hours",
-      "oneDayLeft": "__UNTRANSLATED__: 1 day left",
-      "daysLeft": "__UNTRANSLATED__: {count} days left",
-      "daysRemainingAria": "__UNTRANSLATED__: {count} days remaining"
-    },
-    "thankYou": {
-      "welcome": "__UNTRANSLATED__: Welcome to the herd",
-      "welcomeNamed": "__UNTRANSLATED__: Welcome to the herd, {name}!",
-      "tierMonthly": "__UNTRANSLATED__: Your €75/month adoption is now active.",
-      "tierYearly": "__UNTRANSLATED__: Your €900 yearly adoption (12 months coverage) is now active.",
-      "whatsNext": "__UNTRANSLATED__: What happens next",
-      "stepNow": "__UNTRANSLATED__: Now: a welcome email landed in your inbox with your adoption details (check spam if you don't see it within 2 minutes).",
-      "step24h": "__UNTRANSLATED__: Within 24 hours: a follow-up email with your supporter discount codes (10% Wishfulfilling Weaving, 15% Farm Shop).",
-      "stepThisWeek": "__UNTRANSLATED__: This week: we'll personally assign you a herd member and send their name + photo.",
-      "stepEachMonth": "__UNTRANSLATED__: Each month: photo + update of your sponsored alpaca, plus an open invitation to visit Es Currals.",
-      "downloadCert": "__UNTRANSLATED__: Download your certificate (PDF)",
-      "backToFarm": "__UNTRANSLATED__: Back to the farm →"
-    },
-    "comparison": {
-      "whatYouGet": "__UNTRANSLATED__: What you get"
-    }
-  },
-  "sitemap": {
-    "metaTitle": "__UNTRANSLATED__: Site Map | Alpacas Ibiza",
-    "metaDescription": "__UNTRANSLATED__: Every page on alpacasibiza.com — tours, shop, experiences, and more.",
-    "title": "__UNTRANSLATED__: Site Map",
-    "subtitle": "__UNTRANSLATED__: Every page on alpacasibiza.com",
-    "breadcrumb": "__UNTRANSLATED__: Site Map",
-    "navAriaLabel": "__UNTRANSLATED__: Site map navigation",
-    "categoryVisit": "__UNTRANSLATED__: Visit & Experiences",
-    "categoryShop": "__UNTRANSLATED__: Shop",
-    "categoryAdopt": "__UNTRANSLATED__: Adopt",
-    "categoryAbout": "__UNTRANSLATED__: About",
-    "categoryMedia": "__UNTRANSLATED__: Media & Stories",
-    "categoryContact": "__UNTRANSLATED__: Contact",
-    "categoryLegal": "__UNTRANSLATED__: Legal",
-    "linkTours": "__UNTRANSLATED__: Tours & Farm Visits",
-    "linkYoga": "__UNTRANSLATED__: Alpaca Yoga",
-    "linkFamily": "__UNTRANSLATED__: Family Farm Days",
-    "linkRomantic": "__UNTRANSLATED__: Romantic Sunset Walks",
-    "linkCorporate": "__UNTRANSLATED__: Corporate & Team Building",
-    "linkWeddings": "__UNTRANSLATED__: Weddings",
-    "linkWorkshops": "__UNTRANSLATED__: Workshops",
-    "linkShop": "__UNTRANSLATED__: Shop Overview",
-    "linkWoven": "__UNTRANSLATED__: Woven Collection",
-    "linkCommission": "__UNTRANSLATED__: Custom Commission",
-    "linkAlcaca": "__UNTRANSLATED__: Alcaca – Alpaca Manure",
-    "linkGifts": "__UNTRANSLATED__: Gift Cards",
-    "linkAdopt": "__UNTRANSLATED__: Adopt an Alpaca",
-    "linkAbout": "__UNTRANSLATED__: About Us",
-    "linkAlpacas": "__UNTRANSLATED__: Our Alpacas",
-    "linkSustainability": "__UNTRANSLATED__: Sustainability",
-    "linkJournal": "__UNTRANSLATED__: Journal",
-    "linkMedia": "__UNTRANSLATED__: Media",
-    "linkPress": "__UNTRANSLATED__: Press",
-    "linkContact": "__UNTRANSLATED__: Contact Us",
-    "linkPrivacy": "__UNTRANSLATED__: Privacy Policy",
-    "linkTerms": "__UNTRANSLATED__: Terms of Service",
-    "linkCookies": "__UNTRANSLATED__: Cookie Policy",
-    "linkSitemap": "__UNTRANSLATED__: Site Map"
-  },
-  "awards": {
-    "recognizedBy": "__UNTRANSLATED__: Recognized by",
-    "certified": "__UNTRANSLATED__: Certified",
-    "awardsAndRecognition": "__UNTRANSLATED__: Awards & Recognition"
-  },
-  "alpacas": {
-    "title": "__UNTRANSLATED__: Meet Our Alpacas",
-    "subtitle": "__UNTRANSLATED__: Get to know the herd at Es Currals — 14 individuals, each with their own personality.",
-    "adoptCta": "__UNTRANSLATED__: Adopt me",
-    "funFacts": {
-      "heading": "__UNTRANSLATED__: Did you know?",
-      "prev": "__UNTRANSLATED__: Previous fun fact",
-      "next": "__UNTRANSLATED__: Next fun fact"
-    },
-    "filter": {
-      "personality": "__UNTRANSLATED__: Personality",
-      "color": "__UNTRANSLATED__: Colour",
-      "breed": "__UNTRANSLATED__: Breed",
-      "showing": "__UNTRANSLATED__: Showing {match} of {total}",
-      "clearAll": "__UNTRANSLATED__: Clear all filters",
-      "noMatches": "__UNTRANSLATED__: No alpacas match those filters. Try clearing one.",
-      "personalityOption": {
-        "calm": "__UNTRANSLATED__: Calm",
-        "playful": "__UNTRANSLATED__: Playful",
-        "bold": "__UNTRANSLATED__: Bold",
-        "shy": "__UNTRANSLATED__: Shy",
-        "sociable": "__UNTRANSLATED__: Sociable",
-        "independent": "__UNTRANSLATED__: Independent"
-      },
-      "colorOption": {
-        "white": "__UNTRANSLATED__: White",
-        "grey": "__UNTRANSLATED__: Grey",
-        "brown": "__UNTRANSLATED__: Brown",
-        "mixed": "__UNTRANSLATED__: Mixed"
-      },
-      "breedOption": {
-        "huacaya": "__UNTRANSLATED__: Huacaya",
-        "suri": "__UNTRANSLATED__: Suri"
-      }
-    }
-  },
-  "yoga": {
-    "title": "__UNTRANSLATED__: Alpaca Yoga",
-    "subtitle": "__UNTRANSLATED__: Hatha yoga among the alpacas — 1 hour 15 minutes, max 6 guests. Every Wednesday and Saturday.",
-    "cta": "__UNTRANSLATED__: Book Your Yoga Session",
-    "ctaSecondary": "__UNTRANSLATED__: Enquire about private groups",
-    "whatTitle": "__UNTRANSLATED__: What is Alpaca Yoga?",
-    "whatBody": "__UNTRANSLATED__: A 75-minute outdoor Hatha yoga session held in the alpaca paddock at Es Currals finca in the rural north of Ibiza. Practise surrounded by the gentle presence of our herd — they graze freely around you while your guide leads the session.",
-    "whyTitle": "__UNTRANSLATED__: Why Yoga with Alpacas?",
-    "whyBody": "__UNTRANSLATED__: Alpacas are naturally calming animals. Their unhurried pace, soft sounds, and curious nature create an environment that deepens relaxation and focus. Guests consistently report that the presence of the herd makes it easier to stay present on the mat.",
-    "whenTitle": "__UNTRANSLATED__: When & Where",
-    "whenBody": "__UNTRANSLATED__: Sessions run every Wednesday and Saturday. The yoga area is on the finca in San Carlos, rural north Ibiza. Contact us to confirm the start time for your preferred date, and for off-season availability.",
-    "priceTitle": "__UNTRANSLATED__: Price & Capacity",
-    "priceBody": "__UNTRANSLATED__: €30 per person. Maximum 6 participants per session to keep the experience intimate and to respect the alpacas' space.",
-    "scheduleNote": "__UNTRANSLATED__: Wednesday & Saturday sessions. Contact us for the current start time and seasonal availability.",
-    "details": {
-      "price": {
-        "title": "__UNTRANSLATED__: €30 per person",
-        "desc": "__UNTRANSLATED__: Verified from live site"
-      },
-      "duration": {
-        "title": "__UNTRANSLATED__: 1 hour 15 minutes",
-        "desc": "__UNTRANSLATED__: Hatha session"
-      },
-      "groupSize": {
-        "title": "__UNTRANSLATED__: Max 6 guests",
-        "desc": "__UNTRANSLATED__: Intimate by design"
-      }
-    },
-    "faq": {
-      "audience": {
-        "q": "__UNTRANSLATED__: Do I need yoga experience?",
-        "a": "__UNTRANSLATED__: No experience is necessary. The session is suitable for all levels, including complete beginners. The instructor adapts to the group."
-      },
-      "bring": {
-        "q": "__UNTRANSLATED__: What should I bring?",
-        "a": "__UNTRANSLATED__: Comfortable clothing you can move in, and sunscreen for outdoor sessions. Contact us to confirm whether mats are provided or if you should bring your own."
-      },
-      "weather": {
-        "q": "__UNTRANSLATED__: What happens if it rains?",
-        "a": "__UNTRANSLATED__: Sessions may be rescheduled or moved to a sheltered area in poor weather. We will contact you in advance if conditions require a change."
-      },
-      "refund": {
-        "q": "__UNTRANSLATED__: What is the cancellation policy?",
-        "a": "__UNTRANSLATED__: Cancellations made at least 48 hours in advance receive a full refund or rebooking. Later cancellations may incur a 50% fee."
-      }
-    },
-    "ownerConfirmHeader": "__UNTRANSLATED__: Owner action required before launch",
-    "ownerConfirmBody": "__UNTRANSLATED__: The items below need owner confirmation before the yoga page goes live."
-  },
-  "weddings": {
-    "eyebrow": "__UNTRANSLATED__: Weddings & Photoshoots",
-    "title": "__UNTRANSLATED__: Alpacas at Your Wedding",
-    "subtitle": "__UNTRANSLATED__: Make your wedding, engagement, or photoshoot unforgettable with our gentle herd. On-site at the finca or at your venue — contact us for a bespoke quote.",
-    "includedTitle": "__UNTRANSLATED__: What's Included",
-    "includedSubtitle": "__UNTRANSLATED__: Package details are tailored to your event. Contact us for a full quote.",
-    "contactForDetails": "__UNTRANSLATED__: Contact us for details",
-    "useCasesTitle": "__UNTRANSLATED__: Perfect for Every Occasion",
-    "useCases": {
-      "bridal": "__UNTRANSLATED__: Bridal photoshoot",
-      "ringBearer": "__UNTRANSLATED__: Ring-bearer ceremony",
-      "engagement": "__UNTRANSLATED__: Engagement portraits",
-      "family": "__UNTRANSLATED__: Family photo sessions",
-      "socialMedia": "__UNTRANSLATED__: Social media & content shoots"
-    },
-    "details": {
-      "alpacaCount": "__UNTRANSLATED__: Alpacas included",
-      "duration": "__UNTRANSLATED__: Duration",
-      "radius": "__UNTRANSLATED__: Off-site travel radius",
-      "handler": "__UNTRANSLATED__: Handler"
-    },
-    "welfareTitle": "__UNTRANSLATED__: Welfare Comes First",
-    "welfareText": "__UNTRANSLATED__: Our alpacas are socialized, calm, and accustomed to guests. All appearances are supervised by an experienced handler. We only accept bookings we are confident are safe and comfortable for the herd.",
-    "welfare": {
-      "gentle": "__UNTRANSLATED__: Gentle & socialized",
-      "gentleDesc": "__UNTRANSLATED__: Our herd is used to people and calm in new settings.",
-      "supervised": "__UNTRANSLATED__: Always supervised",
-      "supervisedDesc": "__UNTRANSLATED__: An experienced handler accompanies every appearance.",
-      "allergy": "__UNTRANSLATED__: Hypoallergenic fleece",
-      "allergyDesc": "__UNTRANSLATED__: Alpaca fibre is low-allergen — kind to sensitive guests."
-    },
-    "bookingTitle": "__UNTRANSLATED__: Plan Your Wedding with Alpacas",
-    "bookingText": "__UNTRANSLATED__: Whether you are hosting at our finca or need us to bring the alpacas to your venue, we will work with you to create the right experience. Get in touch to start planning.",
-    "bookAtFarm": "__UNTRANSLATED__: Book at the Farm",
-    "bookOffSite": "__UNTRANSLATED__: Enquire about off-site",
-    "faq": {
-      "notice": {
-        "q": "__UNTRANSLATED__: How far in advance should I book?",
-        "a": "__UNTRANSLATED__: We recommend booking as early as possible — at least 4–6 weeks ahead for standard shoots and as far in advance as possible for weddings. Popular dates fill quickly in peak season (May–October)."
-      },
-      "location": {
-        "q": "__UNTRANSLATED__: Can you bring alpacas to our venue?",
-        "a": "__UNTRANSLATED__: Yes, off-site appearances are available. Contact us with your venue location and we will confirm whether it is within our travel area and provide a quote."
-      },
-      "kids": {
-        "q": "__UNTRANSLATED__: Are alpacas safe around children?",
-        "a": "__UNTRANSLATED__: Yes. Our alpacas are socialized and gentle. All interactions are supervised by a handler. We advise children to approach calmly and follow the handler's guidance."
-      },
-      "cancellation": {
-        "q": "__UNTRANSLATED__: What is your cancellation policy for weddings?",
-        "a": "__UNTRANSLATED__: Cancellation terms depend on the package. Please contact us for the specific policy for your booking. We aim to be as flexible as possible given the nature of special events."
-      }
-    }
-  },
-  "workshops": {
-    "breadcrumb": "__UNTRANSLATED__: Workshops",
-    "title": "__UNTRANSLATED__: Weaving + Spinning Workshops with San",
-    "subtitle": "__UNTRANSLATED__: A 2-day deep-dive into the full journey from alpaca fleece to finished scarf. Taught by San of Wishfulfilling Weaving, off-season and on request.",
-    "cta": "__UNTRANSLATED__: Request a Workshop Date",
-    "curriculum": {
-      "title": "__UNTRANSLATED__: What You'll Learn",
-      "subtitle": "__UNTRANSLATED__: Every step of the craft, from raw fleece to finished cloth",
-      "wash": "__UNTRANSLATED__: Wash and card alpaca fleece from our own herd",
-      "spin": "__UNTRANSLATED__: Spin yarn on a spinning wheel",
-      "weave": "__UNTRANSLATED__: Weave on a traditional wooden loom",
-      "scarf": "__UNTRANSLATED__: Take home the scarf you wove yourself"
-    },
-    "facts": {
-      "title": "__UNTRANSLATED__: Workshop at a Glance",
-      "subtitle": "__UNTRANSLATED__: Everything you need to know before you request a date",
-      "duration": {
-        "title": "__UNTRANSLATED__: Duration",
-        "desc": "__UNTRANSLATED__: 2 days"
-      },
-      "instructor": {
-        "title": "__UNTRANSLATED__: Instructor",
-        "desc": "__UNTRANSLATED__: San"
-      },
-      "groupSize": {
-        "title": "__UNTRANSLATED__: Group Size",
-        "desc": "__UNTRANSLATED__: Small group — contact for details"
-      },
-      "schedule": {
-        "title": "__UNTRANSLATED__: Schedule",
-        "desc": "__UNTRANSLATED__: Off-season only — on request"
-      },
-      "price": {
-        "title": "__UNTRANSLATED__: Price",
-        "desc": "__UNTRANSLATED__: Contact us for pricing"
-      },
-      "takeaway": {
-        "title": "__UNTRANSLATED__: Takeaway",
-        "desc": "__UNTRANSLATED__: Your own handwoven scarf"
-      }
-    },
-    "san": {
-      "title": "__UNTRANSLATED__: About San",
-      "body": "__UNTRANSLATED__: San is the weaver behind Wishfulfilling Weaving — the artisan studio at the heart of Es Currals alpaca farm. She works on a traditional wooden loom, turning fleece from our own herd into exclusive handcrafted textiles. The workshop is her invitation to share that craft with guests who want to go beyond watching and actually make something."
-    },
-    "booking": {
-      "title": "__UNTRANSLATED__: How to Book",
-      "body": "__UNTRANSLATED__: The workshop runs off-season, when the farm is quieter and San has time to give you her full attention. There is no fixed calendar — send us a message with your preferred dates and we will confirm availability.",
-      "cta": "__UNTRANSLATED__: Request a Workshop Date"
-    },
-    "faq": {
-      "experience": {
-        "q": "__UNTRANSLATED__: Do I need weaving experience?",
-        "a": "__UNTRANSLATED__: None at all. The workshop is designed for complete beginners. San takes you through every step, from washing the raw fleece to finishing your scarf."
-      },
-      "bring": {
-        "q": "__UNTRANSLATED__: What should I bring?",
-        "a": "__UNTRANSLATED__: Just yourself and comfortable clothes you do not mind getting a little dusty. All materials, tools, and equipment are provided. Lunch arrangements will be confirmed when you book."
-      },
-      "cancellation": {
-        "q": "__UNTRANSLATED__: What is the cancellation policy?",
-        "a": "__UNTRANSLATED__: If you need to cancel or reschedule, please contact us as early as possible. Because workshops are scheduled on request and San sets aside two full days, we ask for reasonable notice."
-      },
-      "wool": {
-        "q": "__UNTRANSLATED__: Is the wool from your own alpacas?",
-        "a": "__UNTRANSLATED__: Yes. You will work with fleece from our own herd at Es Currals — the same animals you can meet on a farm visit. The connection between the animal and the finished cloth is real."
-      }
-    }
-  },
-  "sustainability": {
-    "title": "__UNTRANSLATED__: Sustainability",
-    "subtitle": "__UNTRANSLATED__: How we live and work on the land at Es Currals — animal welfare, traditional craft, and low-impact farming.",
-    "welfareTitle": "__UNTRANSLATED__: Animal Welfare",
-    "welfareBody": "__UNTRANSLATED__: Our alpacas come first in every decision we make. The herd at Es Currals lives on open pasture, is sheared once a year in spring, and is never subjected to anything that causes stress or harm. Each of our 14 alpacas has a name and is treated as an individual.",
-    "craftTitle": "__UNTRANSLATED__: Traditional Weaving",
-    "craftBody": "__UNTRANSLATED__: San weaves on a traditional wooden loom using fleece from our own herd. The Wishfulfilling Weaving studio produces scarves and textiles by hand — slow, intentional work that uses the full value of what the alpacas give us each year.",
-    "dyesTitle": "__UNTRANSLATED__: Natural Dyes",
-    "dyesBody": "__UNTRANSLATED__: We use natural dyes wherever possible. The colour palette comes from plants, minerals, and other natural sources rather than synthetic chemicals — keeping the process honest from fleece to finished cloth.",
-    "wasteTitle": "__UNTRANSLATED__: Zero-Waste Approach",
-    "wasteBody": "__UNTRANSLATED__: Fleece that does not go into weaving is composted or used in our Alcaca organic fertilizer programme. Nothing from the alpacas is wasted. Alcaca — our branded alpaca manure — closes the loop between animal care and land care.",
-    "landTitle": "__UNTRANSLATED__: The Land",
-    "landBody": "__UNTRANSLATED__: Es Currals is an authentic Ibiza finca in the rural north of the island. We manage the land using organic practices, with no artificial fertilizers or pesticides. The alpacas graze naturally and their manure replenishes the soil.",
-    "sourcingTitle": "__UNTRANSLATED__: Responsible Sourcing",
-    "sourcingBody": "__UNTRANSLATED__: When we need materials beyond our own fleece — linen, mohair, silk — we source from suppliers who share our values. We do not cut corners on quality or ethics at any point in the supply chain.",
-    "trustSectionTitle": "__UNTRANSLATED__: Learn more about Es Currals",
-    "trustAbout": "__UNTRANSLATED__: Our Story",
-    "trustPress": "__UNTRANSLATED__: Press Coverage",
-    "trustContact": "__UNTRANSLATED__: Get in Touch",
-    "ownerConfirmHeader": "__UNTRANSLATED__: Owner action required before launch",
-    "ownerConfirmBody": "__UNTRANSLATED__: Please review the items flagged below and provide the confirmed details before this page goes live."
-  },
-  "media": {
-    "title": "__UNTRANSLATED__: Media & Gallery",
-    "subtitle": "__UNTRANSLATED__: A glimpse of life on the farm — by us, by guests, by the press.",
-    "categoryFarm": "__UNTRANSLATED__: Farm life",
-    "categoryAlpacas": "__UNTRANSLATED__: The herd",
-    "categoryWeaving": "__UNTRANSLATED__: Wishfulfilling Weaving",
-    "categoryEvents": "__UNTRANSLATED__: Events & weddings",
-    "categoryPress": "__UNTRANSLATED__: Press coverage",
-    "emptyTitle": "__UNTRANSLATED__: Photos coming soon",
-    "emptyBody": "__UNTRANSLATED__: We're building the gallery. Follow us on Instagram for updates.",
-    "ownerConfirmHeader": "__UNTRANSLATED__: Owner: drop photos to activate",
-    "ownerConfirmBody": "__UNTRANSLATED__: Add files to public/images/gallery/ and entries to lib/data/media.ts with status: 'live'. Empty state shows publicly until then."
-  },
-  "press": {
-    "title": "__UNTRANSLATED__: Press & Media",
-    "subtitle": "__UNTRANSLATED__: Alpacas Ibiza has been featured in Belgian national press, regional Flemish media, Spanish local newspapers, and international travel outlets.",
-    "featuredIn": "__UNTRANSLATED__: As Seen In",
-    "readArticle": "__UNTRANSLATED__: Read article",
-    "logosComingSoon": "__UNTRANSLATED__: Press logos and article links coming soon — check back shortly.",
-    "inquiriesTitle": "__UNTRANSLATED__: Press Inquiries",
-    "inquiriesBody": "__UNTRANSLATED__: Journalists and media professionals are welcome to reach out for interviews, photography access, or editorial information.",
-    "inquiriesCta": "__UNTRANSLATED__: Contact for Press"
-  },
-  "gifts": {
-    "meta": {
-      "title": "__UNTRANSLATED__: Gift a Visit — Alpacas Ibiza",
-      "description": "__UNTRANSLATED__: Give someone a memorable day with our alpaca herd. Gift vouchers valid for any of our tours."
-    },
-    "hero": {
-      "title": "__UNTRANSLATED__: Give the gift of alpacas",
-      "subtitle": "__UNTRANSLATED__: A unique Ibiza experience — valid for any tour, any date",
-      "cta": "__UNTRANSLATED__: Buy a gift voucher"
-    },
-    "why": {
-      "title": "__UNTRANSLATED__: Why gift an Alpacas Ibiza visit?",
-      "reason1": "__UNTRANSLATED__: An experience, not another thing they will store away",
-      "reason2": "__UNTRANSLATED__: Redeemable on any date — flexible for their schedule",
-      "reason3": "__UNTRANSLATED__: Works for any age — families, couples, groups",
-      "reason4": "__UNTRANSLATED__: Digital voucher delivered by email — no shipping wait"
-    },
-    "booking": {
-      "title": "__UNTRANSLATED__: Buy a gift voucher",
-      "subtitle": "__UNTRANSLATED__: Select a tour and purchase a voucher. We will email it directly to the recipient on your chosen date.",
-      "poweredBy": "__UNTRANSLATED__: Secure gift voucher checkout powered by FareHarbor"
-    },
-    "faq": {
-      "howItWorksTitle": "__UNTRANSLATED__: How it works",
-      "howItWorksText": "__UNTRANSLATED__: Choose a tour, pay securely, and we send a branded voucher by email to the recipient. They pick a date that works for them and book through the same system."
-    }
-  },
-  "legal": {
-    "consentBy": "__UNTRANSLATED__: By {action} you agree to our",
-    "consentTerms": "__UNTRANSLATED__: Terms",
-    "consentPrivacy": "__UNTRANSLATED__: Privacy Policy",
-    "marketingConsent": "__UNTRANSLATED__: I agree to receive Alpacas Ibiza updates and accept the [Privacy Policy].",
-    "marketingConsentRequired": "__UNTRANSLATED__: Please tick this box to subscribe.",
-    "adoptAction": "__UNTRANSLATED__: adopting",
-    "giftAction": "__UNTRANSLATED__: completing your gift"
-  },
-  "portal": {
-    "title": "__UNTRANSLATED__: Your adoption",
-    "matchedAlpacaFallback": "__UNTRANSLATED__: Your matched alpaca",
-    "subscriptionHeader": "__UNTRANSLATED__: Subscription",
-    "amount": "__UNTRANSLATED__: Amount",
-    "nextCharge": "__UNTRANSLATED__: Next charge",
-    "started": "__UNTRANSLATED__: Started",
-    "canceled": "__UNTRANSLATED__: Canceled",
-    "updatePayment": "__UNTRANSLATED__: Update payment method",
-    "cancel": "__UNTRANSLATED__: Cancel adoption",
-    "adoptAgain": "__UNTRANSLATED__: Adopt again",
-    "failureWarningPrefix": "__UNTRANSLATED__: Heads up — {count} recent payment failures.",
-    "failureWarningSuffix": "__UNTRANSLATED__: Your adoption will pause if we can't collect soon. Use the “Update payment” button below to fix it.",
-    "photoComingSoon": "__UNTRANSLATED__: Photo coming soon. The owner is gathering portraits — your welcome packet has one too.",
-    "farmNewsHeader": "__UNTRANSLATED__: {label} from the farm",
-    "sneakPeek": "__UNTRANSLATED__: Sneak peek",
-    "weWillPick": "__UNTRANSLATED__: You let us pick — we'll match you to one of the herd within a few days and update this page.",
-    "bioComingSoon": "__UNTRANSLATED__: Bio coming soon — the owner is collecting personality notes from the herd.",
-    "personalityLabel": "__UNTRANSLATED__: Personality:",
-    "footerHelpPrefix": "__UNTRANSLATED__: Need help? Reply to your welcome email or write to",
-    "requestFreshLink": "__UNTRANSLATED__: Request a fresh portal email",
-    "emailUs": "__UNTRANSLATED__: Email us",
-    "errorTitle": {
-      "noToken": "__UNTRANSLATED__: Portal link missing",
-      "expired": "__UNTRANSLATED__: Portal link expired",
-      "sdkMissing": "__UNTRANSLATED__: Service starting up",
-      "fetchFailed": "__UNTRANSLATED__: Couldn't load your adoption"
-    }
-  },
-  "weaving": {
-    "title": "__UNTRANSLATED__: Wishfulfilling Weaving — Studio at Es Currals",
-    "subhead": "__UNTRANSLATED__: Handwoven scarves from our herd's fleece. Traditional wooden loom. Slow craft, mostly alpaca, made on the farm.",
-    "collectionCta": "__UNTRANSLATED__: See the collection",
-    "commissionCta": "__UNTRANSLATED__: Commission a custom piece",
-    "processTitle": "__UNTRANSLATED__: From fleece to finished cloth",
-    "processStep1Title": "__UNTRANSLATED__: Shearing",
-    "processStep1Body": "__UNTRANSLATED__: [UNMAPPED — owner to confirm shearing season and method]",
-    "processStep2Title": "__UNTRANSLATED__: Washing",
-    "processStep2Body": "__UNTRANSLATED__: [UNMAPPED — owner to confirm washing process]",
-    "processStep3Title": "__UNTRANSLATED__: Spinning",
-    "processStep3Body": "__UNTRANSLATED__: [UNMAPPED — owner to confirm spinning method]",
-    "processStep4Title": "__UNTRANSLATED__: Weaving",
-    "processStep4Body": "__UNTRANSLATED__: [UNMAPPED — owner to confirm loom and weaving details]",
-    "studioHistoryTitle": "__UNTRANSLATED__: The studio",
-    "studioHistoryBody": "__UNTRANSLATED__: [UNMAPPED — owner to provide studio history and background]",
-    "photoStudio": "__UNTRANSLATED__: [UNMAPPED — studio interior photo]",
-    "photoLoom": "__UNTRANSLATED__: [UNMAPPED — loom in action photo]",
-    "photoScarves": "__UNTRANSLATED__: [UNMAPPED — finished scarves photo]",
-    "ownerConfirmHeader": "__UNTRANSLATED__: Owner action required before launch",
-    "ownerConfirmBody": "__UNTRANSLATED__: All [UNMAPPED] items below need owner-provided content before this page goes live.",
-    "collectionTitle": "__UNTRANSLATED__: Weaving Collection",
-    "collectionSubhead": "__UNTRANSLATED__: Handcrafted textiles from our studio at Es Currals. Each piece is unique — enquire for availability and pricing.",
-    "enquireCta": "__UNTRANSLATED__: Enquire",
-    "priceOnRequest": "__UNTRANSLATED__: Price on request",
-    "crossSellYogaTitle": "__UNTRANSLATED__: Alpaca Yoga",
-    "crossSellYogaBody": "__UNTRANSLATED__: Hatha yoga in the alpaca paddock — Wednesdays and Saturdays.",
-    "crossSellWorkshopsTitle": "__UNTRANSLATED__: Weaving Workshops",
-    "crossSellWorkshopsBody": "__UNTRANSLATED__: A 2-day deep-dive from raw fleece to finished scarf, taught by San."
+  "error": {
+    "title": "Algo salió mal",
+    "subtitle": "Parece que una de nuestras alpacas se escapó con la página. Nuestro equipo ha sido notificado — inténtalo de nuevo o vuelve a la página de inicio.",
+    "tryAgain": "Intentar de nuevo",
+    "goHome": "Volver al inicio",
+    "goTours": "Ver tours",
+    "goAdopt": "Adoptar una alpaca",
+    "errorRef": "Referencia de error"
   }
 }

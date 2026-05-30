@@ -7,46 +7,14 @@
  * The route imports from 'next/server' (NextResponse). Node's test runner won't
  * have Next loaded, so we mock NextResponse minimally.
  */
-import { describe, it, before, after, beforeEach, afterEach } from 'node:test'
+import { describe, it, beforeEach, afterEach } from 'node:test'
 import assert from 'node:assert/strict'
 
-// ── Minimal NextResponse stub ────────────────────────────────────────────────
-// Must be in place before the route module is imported.
-
-class FakeResponse {
-  body: unknown
-  status: number
-  headers: Map<string, string>
-
-  constructor(body: unknown, init: { status?: number; headers?: Record<string, string> } = {}) {
-    this.body = body
-    this.status = init.status ?? 200
-    this.headers = new Map(Object.entries(init.headers ?? {}))
-  }
-
-  async json() { return this.body }
-}
-
-const NextResponse = {
-  json(body: unknown, init: { status?: number; headers?: Record<string, string> } = {}) {
-    return new FakeResponse(body, init)
-  },
-}
-
-// Inject into module cache via a loader-friendly approach: patch globalThis so the
-// dynamic import below can reference it. We use module-level mock via the module
-// registry trick available in Node — simplest approach that avoids a separate
-// loader file is to re-export with path aliasing. Since we can't intercept ESM
-// specifiers without a loader, we instead test the logic directly by importing
-// validate-env and duplicating the route's minimal logic under test.
-//
-// This is the pragmatic tradeoff: the route is 30 lines; testing it end-to-end
-// requires a Next.js server. Instead we test the two meaningful behaviors:
+// Tests drive the route's logic directly by importing the helpers.
+// End-to-end testing requires a Next.js server (deferred — see CANT_BE_DONE.md).
+// The two meaningful behaviors tested:
 // (a) healthy shape when Tier 1 vars are all set
 // (b) 503 + missing list when any Tier 1 var is absent
-// Both are driven by TIER1_KEYS + isSet, which are already independently tested.
-// The route wires them together — we test the wiring here by importing the helpers
-// directly and exercising the same logic path.
 
 import { isSet, TIER1_KEYS, __reset } from './validate-env.ts'
 

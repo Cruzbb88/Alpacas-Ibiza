@@ -1,4 +1,4 @@
-import { describe, it, before, afterEach } from 'node:test'
+import { describe, it, afterEach } from 'node:test'
 import assert from 'node:assert/strict'
 import {
   safeReferrerHost,
@@ -44,15 +44,8 @@ describe('isBotUA', () => {
 })
 
 describe('logNotFound', () => {
-  let warned: string[] = []
-
-  before(() => {
-    // nothing — afterEach cleans up
-  })
-
   afterEach(() => {
     _resetDedupeMapForTesting()
-    warned = []
   })
 
   it('strips query strings from path before logging', () => {
