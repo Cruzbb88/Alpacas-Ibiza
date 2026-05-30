@@ -567,39 +567,39 @@
     "subtitle": "Come raccogliamo, utilizziamo e proteggiamo le tue informazioni",
     "section1Title": "1. Informazioni che Raccogliamo",
     "section1Intro": "Raccogliamo le informazioni che fornisci direttamente:",
-    "section1Items": {
-      "0": "Dettagli di prenotazione tour (nome, email, telefono)",
-      "1": "Informazioni sugli ordini (indirizzo di spedizione, dati di pagamento)",
-      "2": "Richieste di commissione (dettagli del progetto, preferenze)",
-      "3": "Iscrizione alla newsletter (indirizzo email)",
-      "4": "Invii dal modulo di contatto"
-    },
+    "section1Items": [
+      "Dettagli di prenotazione tour (nome, email, telefono)",
+      "Informazioni sugli ordini (indirizzo di spedizione, dati di pagamento)",
+      "Richieste di commissione (dettagli del progetto, preferenze)",
+      "Iscrizione alla newsletter (indirizzo email)",
+      "Invii dal modulo di contatto"
+    ],
     "section2Title": "2. Come Utilizziamo le Tue Informazioni",
-    "section2Items": {
-      "0": "Gestire prenotazioni tour e ordini",
-      "1": "Inviare email di conferma e aggiornamenti",
-      "2": "Rispondere alle richieste",
-      "3": "Migliorare il nostro sito web e servizi",
-      "4": "Inviare newsletter (puoi cancellarti in qualsiasi momento)",
-      "5": "Adempiere agli obblighi legali"
-    },
+    "section2Items": [
+      "Gestire prenotazioni tour e ordini",
+      "Inviare email di conferma e aggiornamenti",
+      "Rispondere alle richieste",
+      "Migliorare il nostro sito web e servizi",
+      "Inviare newsletter (puoi cancellarti in qualsiasi momento)",
+      "Adempiere agli obblighi legali"
+    ],
     "section3Title": "3. Protezione dei Dati",
     "section3Intro": "Prendiamo seriamente la tua privacy. I tuoi dati sono crittografati e conservati in modo sicuro. Non condividiamo le tue informazioni tranne:",
-    "section3Items": {
-      "0": "Processori di pagamento (per transazioni sicure)",
-      "1": "Sistemi di prenotazione (FareHarbor, se necessario)",
-      "2": "Requisiti legali (quando richiesto dalla legge)"
-    },
+    "section3Items": [
+      "Processori di pagamento (per transazioni sicure)",
+      "Sistemi di prenotazione (FareHarbor, se necessario)",
+      "Requisiti legali (quando richiesto dalla legge)"
+    ],
     "section4Title": "4. Cookie e Tracciamento",
     "section4Text": "Utilizziamo i cookie per migliorare la tua esperienza. I cookie essenziali sono necessari per la funzionalità. Puoi controllare le preferenze dei cookie nel tuo browser o nel nostro banner dei cookie.",
     "section5Title": "5. I Tuoi Diritti",
     "section5Intro": "Hai il diritto di:",
-    "section5Items": {
-      "0": "Accedere ai tuoi dati",
-      "1": "Correggere informazioni inesatte",
-      "2": "Richiedere la cancellazione (diritto all'oblio)",
-      "3": "Rinunciare alle comunicazioni di marketing"
-    },
+    "section5Items": [
+      "Accedere ai tuoi dati",
+      "Correggere informazioni inesatte",
+      "Richiedere la cancellazione (diritto all'oblio)",
+      "Rinunciare alle comunicazioni di marketing"
+    ],
     "lastUpdated": "Ultimo aggiornamento: Febbraio 2024. Contattaci a info@alpacasibiza.com per domande sulla privacy."
   },
   "terms": {
@@ -607,45 +607,45 @@
     "subtitle": "Ti preghiamo di leggere questi termini prima di utilizzare il nostro sito web e i servizi di prenotazione",
     "section1Title": "1. Prenotazioni e Tour",
     "section1Intro": "Prenotando un tour, accetti di:",
-    "section1Items": {
-      "0": "Seguire tutte le linee guida di sicurezza della fattoria e degli animali",
-      "1": "Arrivare 15 minuti prima dell'orario previsto",
-      "2": "Rispettare gli alpaca e la proprietà della fattoria",
-      "3": "Portare un documento d'identità valido se richiesto",
-      "4": "Seguire tutti i protocolli di salute/sicurezza in vigore"
-    },
+    "section1Items": [
+      "Seguire tutte le linee guida di sicurezza della fattoria e degli animali",
+      "Arrivare 15 minuti prima dell'orario previsto",
+      "Rispettare gli alpaca e la proprietà della fattoria",
+      "Portare un documento d'identità valido se richiesto",
+      "Seguire tutti i protocolli di salute/sicurezza in vigore"
+    ],
     "section2Title": "2. Cancellazioni e Rimborsi",
-    "section2Items": {
-      "0": "Cancellazione fino a 48 ore prima: Rimborso completo o riprogrammazione",
-      "1": "Cancellazione con meno di 48 ore: Penale del 50%",
-      "2": "Mancata presentazione: Pagamento completo perso",
-      "3": "Chiusura per maltempo: Rimborso completo o riprogrammazione"
-    },
+    "section2Items": [
+      "Cancellazione fino a 48 ore prima: Rimborso completo o riprogrammazione",
+      "Cancellazione con meno di 48 ore: Penale del 50%",
+      "Mancata presentazione: Pagamento completo perso",
+      "Chiusura per maltempo: Rimborso completo o riprogrammazione"
+    ],
     "section3Title": "3. Ordini del Negozio",
     "section3Intro": "Tutti i prodotti sono fatti a mano. Piccole variazioni e imperfezioni sono normali e fanno parte del processo artigianale.",
-    "section3Items": {
-      "0": "Spedizione entro 5-7 giorni lavorativi",
-      "1": "Gli ordini internazionali possono richiedere più tempo",
-      "2": "Resi: 30 giorni per articoli non usati e non danneggiati",
-      "3": "Gli articoli personalizzati/su commissione non sono restituibili"
-    },
+    "section3Items": [
+      "Spedizione entro 5-7 giorni lavorativi",
+      "Gli ordini internazionali possono richiedere più tempo",
+      "Resi: 30 giorni per articoli non usati e non danneggiati",
+      "Gli articoli personalizzati/su commissione non sono restituibili"
+    ],
     "section4Title": "4. Accordi di Commissione",
-    "section4Items": {
-      "0": "Acconto del 50% richiesto per confermare il progetto",
-      "1": "Saldo dovuto prima della spedizione finale",
-      "2": "Le stime dei tempi sono approssimative",
-      "3": "Cancellazione dopo l'inizio della produzione: rimborso solo del 50%"
-    },
+    "section4Items": [
+      "Acconto del 50% richiesto per confermare il progetto",
+      "Saldo dovuto prima della spedizione finale",
+      "Le stime dei tempi sono approssimative",
+      "Cancellazione dopo l'inizio della produzione: rimborso solo del 50%"
+    ],
     "section5Title": "5. Fotografia e Consenso",
     "section5Text": "Visitando la nostra fattoria o acquistando i nostri prodotti, acconsenti ad essere fotografato. Queste immagini possono essere utilizzate sul nostro sito web e sui social media. Se preferisci non essere fotografato, informa la tua guida.",
     "section6Title": "6. Limitazione di Responsabilità",
     "section6Text": "Le visite in fattoria comportano interazione con gli animali. I visitatori assumono tutti i rischi. Non siamo responsabili per infortuni a meno che non siano causati da negligenza grave. I bambini devono essere sorvegliati in ogni momento.",
     "section7Title": "7. Utilizzo del Sito Web",
-    "section7Items": {
-      "0": "Non riprodurre o redistribuire i nostri contenuti senza permesso",
-      "1": "Non tentare di hackerare o interferire con il sito web",
-      "2": "Rispettare i diritti di proprietà intellettuale"
-    },
+    "section7Items": [
+      "Non riprodurre o redistribuire i nostri contenuti senza permesso",
+      "Non tentare di hackerare o interferire con il sito web",
+      "Rispettare i diritti di proprietà intellettuale"
+    ],
     "lastUpdated": "Ultimo aggiornamento: Febbraio 2024. Contatta info@alpacasibiza.com per domande."
   },
   "cookies": {
@@ -656,52 +656,52 @@
     "typesTitle": "Tipi di Cookie che Utilizziamo",
     "essentialTitle": "Cookie Essenziali",
     "essentialText": "Necessari per il funzionamento del sito. Includono:",
-    "essentialItems": {
-      "0": "Cookie di sessione (per la tua prenotazione)",
-      "1": "Cookie di sicurezza (per proteggere i tuoi dati)",
-      "2": "Cookie di funzionalità del sito"
-    },
+    "essentialItems": [
+      "Cookie di sessione (per la tua prenotazione)",
+      "Cookie di sicurezza (per proteggere i tuoi dati)",
+      "Cookie di funzionalità del sito"
+    ],
     "preferenceTitle": "Cookie di Preferenza",
     "preferenceText": "Ricordano le tue scelte (lingua, tema, ecc.) per un'esperienza migliore.",
     "analyticsTitle": "Cookie di Analisi",
     "analyticsText": "Ci aiutano a capire come usi il nostro sito per poterlo migliorare. Utilizziamo:",
-    "analyticsItems": {
-      "0": "Google Analytics (visualizzazioni pagina, fonti di traffico)",
-      "1": "Tracciamento conversioni (prenotazioni, monitoraggio acquisti)"
-    },
+    "analyticsItems": [
+      "Google Analytics (visualizzazioni pagina, fonti di traffico)",
+      "Tracciamento conversioni (prenotazioni, monitoraggio acquisti)"
+    ],
     "marketingTitle": "Cookie di Marketing",
     "marketingText": "Utilizzati per annunci di retargeting e campagne di remarketing. Puoi disattivarli in qualsiasi momento.",
     "choicesTitle": "Le Tue Scelte sui Cookie",
-    "choicesItems": {
-      "0": "Cookie essenziali: Non possono essere disattivati (necessari per il sito)",
-      "1": "Analisi e Marketing: Disattivabili tramite il nostro banner dei cookie",
-      "2": "Impostazioni del browser: La maggior parte dei browser consente il controllo dei cookie",
-      "3": "Rinuncia: Usa l'impostazione \"Non tracciare\" del tuo browser"
-    },
+    "choicesItems": [
+      "Cookie essenziali: Non possono essere disattivati (necessari per il sito)",
+      "Analisi e Marketing: Disattivabili tramite il nostro banner dei cookie",
+      "Impostazioni del browser: La maggior parte dei browser consente il controllo dei cookie",
+      "Rinuncia: Usa l'impostazione \"Non tracciare\" del tuo browser"
+    ],
     "thirdPartyTitle": "Servizi di Terze Parti",
     "thirdPartyText": "Utilizziamo servizi di terze parti che possono impostare i propri cookie:",
-    "thirdPartyItems": {
-      "0": "Processori di pagamento (per transazioni sicure)",
-      "1": "Sistemi di prenotazione (FareHarbor)",
-      "2": "Fornitori di analisi"
-    },
+    "thirdPartyItems": [
+      "Processori di pagamento (per transazioni sicure)",
+      "Sistemi di prenotazione (FareHarbor)",
+      "Fornitori di analisi"
+    ],
     "manageTitle": "Gestire i Cookie",
     "manageText": "La maggior parte dei browser ti consente di:",
-    "manageItems": {
-      "0": "Visualizzare i cookie memorizzati",
-      "1": "Eliminare cookie specifici",
-      "2": "Bloccare nuovi cookie",
-      "3": "Impostare livelli di privacy"
-    },
+    "manageItems": [
+      "Visualizzare i cookie memorizzati",
+      "Eliminare cookie specifici",
+      "Bloccare nuovi cookie",
+      "Impostare livelli di privacy"
+    ],
     "manageNote": "Consulta la documentazione del tuo browser per istruzioni specifiche.",
     "gdprTitle": "Conformità GDPR",
     "gdprText": "Rispettiamo il GDPR e le normative ePrivacy. Noi:",
-    "gdprItems": {
-      "0": "Impostiamo cookie non essenziali solo con il tuo consenso",
-      "1": "Forniamo informazioni chiare sui cookie",
-      "2": "Consentiamo una facile rinuncia",
-      "3": "Rispettiamo le tue scelte sulla privacy"
-    },
+    "gdprItems": [
+      "Impostiamo cookie non essenziali solo con il tuo consenso",
+      "Forniamo informazioni chiare sui cookie",
+      "Consentiamo una facile rinuncia",
+      "Rispettiamo le tue scelte sulla privacy"
+    ],
     "lastUpdated": "Ultimo aggiornamento: Febbraio 2024. Contatta info@alpacasibiza.com per domande sui cookie."
   },
   "notFound": {

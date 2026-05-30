@@ -64,7 +64,8 @@ export function buildQuarterlyUpdateEmail(
     const safeDonorName = donorName ? escapeHtml(donorName) : null
     const safeAlpacaName = alpacaName ? escapeHtml(alpacaName) : null
 
-    const subject = `A note from the herd — ${safeQuarterLabel}`
+    // Subject is plain text — use raw quarterLabel; HTML body uses safeQuarterLabel.
+    const subject = `A note from the herd — ${quarterLabel}`
 
     // --- Greeting ---
     const greeting = safeDonorName

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { sendEmail } from '@/lib/mailer'
 import { verifyTurnstile } from '@/lib/turnstile'
 import { detectHoneypot } from '@/lib/honeypot'
+import { rateLimit, getClientIp } from '@/lib/rate-limit'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
 import { escapeHtml, sanitizeHeader } from '@/lib/html'
 import { isValidEmail } from '@/lib/validate-email'
@@ -37,7 +38,19 @@ export async function POST(request: Request) {
             return attachRequestId(NextResponse.json({ error: 'Missing required fields' }, { status: 400 }), reqId)
         }
 
-        const ip = request.headers.get('cf-connecting-ip') || request.headers.get('x-forwarded-for')
+        // IP rate-limit — 5 req / 5 min (blocks burst from a single IP)
+        const ip = getClientIp(request)
+        const ipResult = rateLimit({ key: `contact:${ip}`, limit: 5, windowMs: 5 * 60 * 1000 })
+        if (!ipResult.allowed) {
+            return attachRequestId(
+                NextResponse.json({ error: 'Too many requests' }, {
+                    status: 429,
+                    headers: { 'Retry-After': String(Math.ceil(ipResult.resetMs / 1000)) },
+                }),
+                reqId
+            )
+        }
+
         const captcha = await verifyTurnstile(captchaToken, ip)
         if (!captcha.ok) {
             return attachRequestId(

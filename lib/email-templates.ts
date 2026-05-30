@@ -504,7 +504,8 @@ export function buildOwnerMrrDigestEmail(
     const { mrr, arr, activeCount, newCount7d, canceledCount7d, churnPct, atRiskCount, actionRequiredCount, weekStart, weekEnd, dunningColdStartCaveat } = input
     const safeWeekStart = escapeHtml(weekStart)
     const safeWeekEnd   = escapeHtml(weekEnd)
-    const subject = `[Alpacas Ibiza] Weekly herd revenue digest — ${safeWeekStart} to ${safeWeekEnd}`
+    // Subject is plain text — use raw values; HTML body below uses the escaped ones.
+    const subject = `[Alpacas Ibiza] Weekly herd revenue digest — ${weekStart} to ${weekEnd}`
 
     const kpiCell = (label: string, value: string, highlight = false) =>
         `<td style="padding:16px;text-align:center;background:${highlight ? '#fff3cd' : BRAND.secondary};border-radius:8px;min-width:100px">
@@ -607,8 +608,9 @@ export function buildAdoptQuarterlyUpdateEmail(
         : (input.alpacaName ? escapeHtml(input.alpacaName) : null)
 
     // Subject: when alpacaName is unknown, fall back to a generic but warm phrase.
-    const alpacaForSubject = safeAlpacaName ?? 'your alpaca'
-    const subject = `🦙 ${safeQuarterLabel} update from ${alpacaForSubject} and the Alpacas Ibiza herd`
+    // Subject is plain text — use raw values (the HTML body uses the escaped ones).
+    const alpacaForSubject = input.alpacaName ?? 'your alpaca'
+    const subject = `🦙 ${quarterLabel} update from ${alpacaForSubject} and the Alpacas Ibiza herd`
 
     const safeName = input.name ? escapeHtml(input.name) : ''
     const greeting = safeName ? `Hi ${safeName},` : 'Hi there,'

@@ -4,10 +4,15 @@ import { BRAND_THEME_COLOR_HEX, BRAND_BACKGROUND_HEX } from '@/lib/brand'
 
 /**
  * W3C App Manifest spec requires short_name ≤ 12 characters for home-screen
- * labels on Android. Truncate the brand name to stay within that limit.
+ * labels on Android. Truncate at a word boundary so the label never cuts a
+ * word mid-stream (e.g. "Alpacas Ibiza" → "Alpacas", never "Alpacas Ibiz").
  */
 function toShortName(brandName: string): string {
-  return brandName.length <= 12 ? brandName : brandName.slice(0, 12)
+  if (brandName.length <= 12) return brandName
+  const clipped = brandName.slice(0, 12)
+  const lastSpace = clipped.lastIndexOf(' ')
+  // Only fall back to a hard slice if the first word itself exceeds 12 chars.
+  return lastSpace > 0 ? clipped.slice(0, lastSpace) : clipped
 }
 
 export default function manifest(): MetadataRoute.Manifest {

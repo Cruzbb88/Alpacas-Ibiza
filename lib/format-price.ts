@@ -26,6 +26,10 @@ export function formatPriceForLocale(eurAmount: number, locale: string): string 
     return new Intl.NumberFormat(bcp47(locale), {
       style: 'currency',
       currency: 'EUR',
+      // Whole euros render as "€75" not "€75.00"; fractional amounts keep
+      // their cents. Matches the prior formatPrice() default behaviour.
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
     }).format(eurAmount)
   } catch {
     return `€${eurAmount}`

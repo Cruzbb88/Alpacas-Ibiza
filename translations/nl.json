@@ -547,39 +547,39 @@
     "subtitle": "Hoe we je informatie verzamelen, gebruiken en beschermen",
     "section1Title": "1. Informatie die We Verzamelen",
     "section1Intro": "We verzamelen informatie die je direct verstrekt:",
-    "section1Items": {
-      "0": "Tourboekingsgegevens (naam, email, telefoon)",
-      "1": "Bestelinformatie (verzendadres, betalingsgegevens)",
-      "2": "Commissieverzoeken (projectdetails, voorkeuren)",
-      "3": "Nieuwsbriefaanmelding (e-mailadres)",
-      "4": "Contactformulierinzendingen"
-    },
+    "section1Items": [
+      "Tourboekingsgegevens (naam, email, telefoon)",
+      "Bestelinformatie (verzendadres, betalingsgegevens)",
+      "Commissieverzoeken (projectdetails, voorkeuren)",
+      "Nieuwsbriefaanmelding (e-mailadres)",
+      "Contactformulierinzendingen"
+    ],
     "section2Title": "2. Hoe We Je Informatie Gebruiken",
-    "section2Items": {
-      "0": "Tourboekingen en bestellingen verwerken",
-      "1": "Bevestigingsmails en updates verzenden",
-      "2": "Reageren op vragen",
-      "3": "Onze website en diensten verbeteren",
-      "4": "Nieuwsbrieven verzenden (je kunt je op elk moment uitschrijven)",
-      "5": "Aan wettelijke verplichtingen voldoen"
-    },
+    "section2Items": [
+      "Tourboekingen en bestellingen verwerken",
+      "Bevestigingsmails en updates verzenden",
+      "Reageren op vragen",
+      "Onze website en diensten verbeteren",
+      "Nieuwsbrieven verzenden (je kunt je op elk moment uitschrijven)",
+      "Aan wettelijke verplichtingen voldoen"
+    ],
     "section3Title": "3. Gegevensbescherming",
     "section3Intro": "We nemen je privacy serieus. Je gegevens worden versleuteld en veilig opgeslagen. We delen je informatie niet met derden, behalve:",
-    "section3Items": {
-      "0": "Betalingsverwerkers (voor veilige transacties)",
-      "1": "Boekingssystemen (FareHarbor, indien nodig)",
-      "2": "Wettelijke vereisten (wanneer wettelijk verplicht)"
-    },
+    "section3Items": [
+      "Betalingsverwerkers (voor veilige transacties)",
+      "Boekingssystemen (FareHarbor, indien nodig)",
+      "Wettelijke vereisten (wanneer wettelijk verplicht)"
+    ],
     "section4Title": "4. Cookies & Tracking",
     "section4Text": "We gebruiken cookies om je ervaring te verbeteren. Essentiële cookies zijn noodzakelijk voor de functionaliteit. Je kunt cookievoorkeuren beheren in je browser of ons cookiebanner.",
     "section5Title": "5. Je Rechten",
     "section5Intro": "Je hebt het recht om:",
-    "section5Items": {
-      "0": "Toegang tot je gegevens te krijgen",
-      "1": "Onjuiste informatie te corrigeren",
-      "2": "Verwijdering aan te vragen (recht op vergetelheid)",
-      "3": "Af te melden voor marketingcommunicatie"
-    },
+    "section5Items": [
+      "Toegang tot je gegevens te krijgen",
+      "Onjuiste informatie te corrigeren",
+      "Verwijdering aan te vragen (recht op vergetelheid)",
+      "Af te melden voor marketingcommunicatie"
+    ],
     "lastUpdated": "Laatst bijgewerkt: Februari 2024. Neem contact op via info@alpacasibiza.com voor privacyvragen."
   },
   "terms": {
@@ -587,45 +587,45 @@
     "subtitle": "Lees deze voorwaarden voordat je onze website en boekingsdiensten gebruikt",
     "section1Title": "1. Boekingen & Tours",
     "section1Intro": "Door een tour te boeken ga je akkoord met:",
-    "section1Items": {
-      "0": "Alle boerderij- en dierenveiligheidsrichtlijnen volgen",
-      "1": "15 minuten voor je geplande tijd arriveren",
-      "2": "De alpaca's en het boerderijeigendom respecteren",
-      "3": "Een geldig identiteitsbewijs meebrengen indien vereist",
-      "4": "Alle geldende gezondheids-/veiligheidsprotocollen volgen"
-    },
+    "section1Items": [
+      "Alle boerderij- en dierenveiligheidsrichtlijnen volgen",
+      "15 minuten voor je geplande tijd arriveren",
+      "De alpaca's en het boerderijeigendom respecteren",
+      "Een geldig identiteitsbewijs meebrengen indien vereist",
+      "Alle geldende gezondheids-/veiligheidsprotocollen volgen"
+    ],
     "section2Title": "2. Annulering & Terugbetaling",
-    "section2Items": {
-      "0": "Annulering tot 48 uur van tevoren: Volledige terugbetaling of verplaatsing",
-      "1": "Annulering minder dan 48 uur: 50% toeslag",
-      "2": "Niet-verschijning: Volledige betaling vervalt",
-      "3": "Sluiting door weer: Volledige terugbetaling of verplaatsing"
-    },
+    "section2Items": [
+      "Annulering tot 48 uur van tevoren: Volledige terugbetaling of verplaatsing",
+      "Annulering minder dan 48 uur: 50% toeslag",
+      "Niet-verschijning: Volledige betaling vervalt",
+      "Sluiting door weer: Volledige terugbetaling of verplaatsing"
+    ],
     "section3Title": "3. Winkelbestellingen",
     "section3Intro": "Alle producten zijn handgemaakt. Kleine variaties en onvolkomenheden zijn normaal en onderdeel van het ambachtelijke proces.",
-    "section3Items": {
-      "0": "Verzending binnen 5-7 werkdagen na bestelling",
-      "1": "Internationale bestellingen kunnen langer duren",
-      "2": "Retourneren: 30 dagen voor ongebruikte, onbeschadigde artikelen",
-      "3": "Op maat gemaakte/bestelde artikelen zijn niet retourneerbaar"
-    },
+    "section3Items": [
+      "Verzending binnen 5-7 werkdagen na bestelling",
+      "Internationale bestellingen kunnen langer duren",
+      "Retourneren: 30 dagen voor ongebruikte, onbeschadigde artikelen",
+      "Op maat gemaakte/bestelde artikelen zijn niet retourneerbaar"
+    ],
     "section4Title": "4. Commissieovereenkomsten",
-    "section4Items": {
-      "0": "50% aanbetaling vereist om je project te verzekeren",
-      "1": "Restbedrag verschuldigd voor definitieve verzending",
-      "2": "Tijdsinschattingen zijn bij benadering",
-      "3": "Annulering na start productie: alleen 50% terugbetaling"
-    },
+    "section4Items": [
+      "50% aanbetaling vereist om je project te verzekeren",
+      "Restbedrag verschuldigd voor definitieve verzending",
+      "Tijdsinschattingen zijn bij benadering",
+      "Annulering na start productie: alleen 50% terugbetaling"
+    ],
     "section5Title": "5. Fotografie & Toestemming",
     "section5Text": "Door onze boerderij te bezoeken of onze producten te kopen, stem je in met het gefotografeerd worden. Deze beelden kunnen worden gebruikt op onze website en sociale media. Als je liever niet gefotografeerd wordt, laat dit dan aan je gids weten.",
     "section6Title": "6. Aansprakelijkheidsverklaring",
     "section6Text": "Boerderijbezoeken omvatten interactie met dieren. Bezoekers nemen alle risico's op zich. We zijn niet aansprakelijk voor letsel tenzij veroorzaakt door grove nalatigheid. Kinderen moeten te allen tijde onder toezicht staan.",
     "section7Title": "7. Websitegebruik",
-    "section7Items": {
-      "0": "Reproduceer of verspreid onze content niet zonder toestemming",
-      "1": "Probeer de website niet te hacken of te verstoren",
-      "2": "Respecteer intellectuele eigendomsrechten"
-    },
+    "section7Items": [
+      "Reproduceer of verspreid onze content niet zonder toestemming",
+      "Probeer de website niet te hacken of te verstoren",
+      "Respecteer intellectuele eigendomsrechten"
+    ],
     "lastUpdated": "Laatst bijgewerkt: Februari 2024. Neem contact op via info@alpacasibiza.com bij vragen."
   },
   "cookies": {
@@ -636,52 +636,52 @@
     "typesTitle": "Soorten Cookies die We Gebruiken",
     "essentialTitle": "Essentiële Cookies",
     "essentialText": "Vereist voor het functioneren van de website. Deze omvatten:",
-    "essentialItems": {
-      "0": "Sessiecookies (voor je boeking)",
-      "1": "Beveiligingscookies (om je gegevens te beschermen)",
-      "2": "Sitefunctionaliteitscookies"
-    },
+    "essentialItems": [
+      "Sessiecookies (voor je boeking)",
+      "Beveiligingscookies (om je gegevens te beschermen)",
+      "Sitefunctionaliteitscookies"
+    ],
     "preferenceTitle": "Voorkeurscookies",
     "preferenceText": "Onthouden je keuzes (taal, thema, etc.) voor een betere ervaring.",
     "analyticsTitle": "Analytische Cookies",
     "analyticsText": "Helpen ons begrijpen hoe je onze site gebruikt zodat we deze kunnen verbeteren. We gebruiken:",
-    "analyticsItems": {
-      "0": "Google Analytics (paginaweergaven, verkeersbronnen)",
-      "1": "Conversietracking (boekingen, aankooptracking)"
-    },
+    "analyticsItems": [
+      "Google Analytics (paginaweergaven, verkeersbronnen)",
+      "Conversietracking (boekingen, aankooptracking)"
+    ],
     "marketingTitle": "Marketingcookies",
     "marketingText": "Worden gebruikt voor retargeting-advertenties en remarketingcampagnes. Je kunt je op elk moment afmelden.",
     "choicesTitle": "Je Cookiekeuzes",
-    "choicesItems": {
-      "0": "Essentiële cookies: Kunnen niet worden uitgeschakeld (vereist voor sitefunctie)",
-      "1": "Analyse & Marketing: Uitschakelen via ons cookiebanner",
-      "2": "Browserinstellingen: De meeste browsers staan cookiebeheer toe",
-      "3": "Afmelden: Gebruik de \"Niet volgen\"-instelling van je browser"
-    },
+    "choicesItems": [
+      "Essentiële cookies: Kunnen niet worden uitgeschakeld (vereist voor sitefunctie)",
+      "Analyse & Marketing: Uitschakelen via ons cookiebanner",
+      "Browserinstellingen: De meeste browsers staan cookiebeheer toe",
+      "Afmelden: Gebruik de \"Niet volgen\"-instelling van je browser"
+    ],
     "thirdPartyTitle": "Diensten van Derden",
     "thirdPartyText": "We gebruiken diensten van derden die hun eigen cookies kunnen plaatsen:",
-    "thirdPartyItems": {
-      "0": "Betalingsverwerkers (voor veilige transacties)",
-      "1": "Boekingssystemen (FareHarbor)",
-      "2": "Analyseproviders"
-    },
+    "thirdPartyItems": [
+      "Betalingsverwerkers (voor veilige transacties)",
+      "Boekingssystemen (FareHarbor)",
+      "Analyseproviders"
+    ],
     "manageTitle": "Cookies Beheren",
     "manageText": "De meeste browsers staan je toe om:",
-    "manageItems": {
-      "0": "Opgeslagen cookies te bekijken",
-      "1": "Specifieke cookies te verwijderen",
-      "2": "Nieuwe cookies te blokkeren",
-      "3": "Privacyniveaus in te stellen"
-    },
+    "manageItems": [
+      "Opgeslagen cookies te bekijken",
+      "Specifieke cookies te verwijderen",
+      "Nieuwe cookies te blokkeren",
+      "Privacyniveaus in te stellen"
+    ],
     "manageNote": "Raadpleeg je browserdocumentatie voor specifieke instructies.",
     "gdprTitle": "AVG-Naleving",
     "gdprText": "We voldoen aan de AVG en ePrivacy-regelgeving. We:",
-    "gdprItems": {
-      "0": "Plaatsen niet-essentiële cookies alleen met je toestemming",
-      "1": "Verstrekken duidelijke cookie-informatie",
-      "2": "Staan eenvoudige afmelding toe",
-      "3": "Respecteren je privacykeuzes"
-    },
+    "gdprItems": [
+      "Plaatsen niet-essentiële cookies alleen met je toestemming",
+      "Verstrekken duidelijke cookie-informatie",
+      "Staan eenvoudige afmelding toe",
+      "Respecteren je privacykeuzes"
+    ],
     "lastUpdated": "Laatst bijgewerkt: Februari 2024. Neem contact op via info@alpacasibiza.com voor cookievragen."
   },
   "notFound": {

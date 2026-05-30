@@ -56,6 +56,7 @@ export function TierComparison({
   yearlyCtaLabel,
   monthlyHref,
   yearlyHref,
+  whatYouGetLabel = 'What you get',
 }: TierComparisonProps) {
   return (
     <section aria-labelledby="tier-comparison-heading" className="w-full">
@@ -77,7 +78,7 @@ export function TierComparison({
           <thead>
             <tr>
               <th className="text-left px-6 py-5 bg-card font-semibold text-foreground/70 text-sm uppercase tracking-wide">
-                What you get
+                {whatYouGetLabel}
               </th>
               <th className="text-center px-6 py-5 bg-card font-semibold text-foreground border-l border-border">
                 <div className="text-xs uppercase tracking-wide text-foreground/50 mb-1">
