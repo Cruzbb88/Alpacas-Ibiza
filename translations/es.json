@@ -380,16 +380,24 @@
     "errorMessage": "Algo salió mal. Por favor inténtalo de nuevo o escríbenos directamente."
   },
   "alcacaPage": {
-    "title": "Estiércol de Alpaca Premium",
-    "subtitle": "Rico en nutrientes. Certificado ecológico. De origen sostenible de nuestra granja.",
-    "orderNow": "Pedir Ahora",
-    "sample": "Paquete Muestra (5L)",
-    "bulk": "Granel (25L)",
-    "wholesale": "Mayorista (100L)",
-    "whyTitle": "¿Por Qué Elegir Alcaca?",
-    "benefit1": "Fertilizante orgánico rico en nutrientes perfecto para verduras, flores y hierbas",
-    "benefit2": "Sin productos químicos agresivos ni aditivos artificiales",
-    "benefit3": "Prácticas agrícolas sostenibles que apoyan nuestra misión de bienestar animal"
+    "title": "Alcaca Oro Negro",
+    "metaTitle": "__UNTRANSLATED__",
+    "metaDescription": "__UNTRANSLATED__",
+    "subtitle": "__UNTRANSLATED__",
+    "orderNow": "Consultar",
+    "storyTitle": "__UNTRANSLATED__",
+    "storyBody": "__UNTRANSLATED__",
+    "photo1Alt": "__UNTRANSLATED__",
+    "photo2Alt": "__UNTRANSLATED__",
+    "miniTier": "__UNTRANSLATED__",
+    "bagTier": "__UNTRANSLATED__",
+    "bulkTier": "__UNTRANSLATED__",
+    "enquire": "Consultar",
+    "whyTitle": "__UNTRANSLATED__",
+    "benefit1": "__UNTRANSLATED__",
+    "benefit2": "__UNTRANSLATED__",
+    "benefit3": "__UNTRANSLATED__",
+    "benefit4": "__UNTRANSLATED__"
   },
   "about": {
     "title": "Sobre Alpacas Ibiza",
@@ -416,6 +424,28 @@
       "title": "Comunidad",
       "description": "Compartir conocimientos y crear conexiones"
     }
+  },
+  "sustainability": {
+    "title": "__UNTRANSLATED__",
+    "subtitle": "__UNTRANSLATED__",
+    "welfareTitle": "__UNTRANSLATED__",
+    "welfareBody": "__UNTRANSLATED__",
+    "craftTitle": "__UNTRANSLATED__",
+    "craftBody": "__UNTRANSLATED__",
+    "dyesTitle": "__UNTRANSLATED__",
+    "dyesBody": "__UNTRANSLATED__",
+    "wasteTitle": "__UNTRANSLATED__",
+    "wasteBody": "__UNTRANSLATED__",
+    "landTitle": "__UNTRANSLATED__",
+    "landBody": "__UNTRANSLATED__",
+    "sourcingTitle": "__UNTRANSLATED__",
+    "sourcingBody": "__UNTRANSLATED__",
+    "trustSectionTitle": "__UNTRANSLATED__",
+    "trustAbout": "__UNTRANSLATED__",
+    "trustPress": "__UNTRANSLATED__",
+    "trustContact": "__UNTRANSLATED__",
+    "ownerConfirmHeader": "__UNTRANSLATED__",
+    "ownerConfirmBody": "__UNTRANSLATED__"
   },
   "contact": {
     "title": "Ponte en Contacto",

@@ -471,18 +471,24 @@
     "errorMessage": "Something went wrong. Please try again or email us directly."
   },
   "alcacaPage": {
-    "title": "Premium Alpaca Manure",
-    "metaTitle": "Alcaca Organic Fertilizer | Alpaca Manure – Alpacas Ibiza",
-    "metaDescription": "Alcaca is premium organic alpaca-manure fertilizer from Es Currals, Ibiza. Nutrient-rich, chemical-free, and sustainably produced — available in sample, bulk, and wholesale packs.",
-    "subtitle": "Rich in nutrients. Certified organic. Sustainably sourced from our farm.",
-    "orderNow": "Order Now",
-    "sample": "Sample Pack (5L)",
-    "bulk": "Bulk (25L)",
-    "wholesale": "Wholesale (100L)",
-    "whyTitle": "Why Choose Alcaca?",
-    "benefit1": "Nutrient-rich organic fertilizer perfect for vegetables, flowers, and herbs",
-    "benefit2": "No harsh chemicals or artificial additives",
-    "benefit3": "Sustainable farming practices support our animal welfare mission"
+    "title": "Alcaca Oro Negro",
+    "metaTitle": "Alcaca Oro Negro | Alpaca Manure Fertilizer – Alpacas Ibiza",
+    "metaDescription": "Alcaca Oro Negro is natural alpaca-manure fertilizer from Es Currals, Ibiza. Called \"black gold\" in the Andes — odorless, ready-to-use, available from 125 g mini-bags to bulk orders.",
+    "subtitle": "Black gold from the Andes — the purest, most fertile natural fertilizer, made on Es Currals from our own herd.",
+    "orderNow": "Enquire",
+    "storyTitle": "Zwart Goud — Black Gold",
+    "storyBody": "In Peru, alpaca manure has been prized for centuries under the name \"Oro Negro\" — black gold. Alpacas are pseudo-ruminants with three stomach chambers; their 65-hour digestion produces the purest and most fertile manure of all animal species, in the form of small, odorless black pellets. Alcaca Oro Negro is made on Es Currals from the manure of our own herd. Bart manually designed and built a filter system to remove stones, weeds, and sand. The result: ready-to-use fertilizer that needs no composting, attracts no flies or insects, and can even be used indoors. It works optimally for months to years and is available from 125 g mini-bags to hundreds of kilograms.",
+    "photo1Alt": "Alcaca Oro Negro — alpaca manure fertilizer bags",
+    "photo2Alt": "Alcaca Oro Negro — close-up of the product",
+    "miniTier": "Mini Bag — 125 g",
+    "bagTier": "Standard Bags — various sizes",
+    "bulkTier": "Bulk Order — hundreds of kg",
+    "enquire": "Enquire",
+    "whyTitle": "Why Alcaca Oro Negro?",
+    "benefit1": "The purest, most fertile manure of all animal species — small odorless black pellets",
+    "benefit2": "Ready-to-use from the bag: no composting needed, no flies, no unpleasant smell",
+    "benefit3": "Works optimally for months to years on vegetables, flowers, herbs, and trees",
+    "benefit4": "Manually filtered at Es Currals — stones, weeds, and sand removed by hand"
   },
   "homepage": {
     "experiences": {
@@ -628,27 +634,27 @@
     "title": "About Alpacas Ibiza",
     "metaTitle": "About Alpacas Ibiza | Es Currals Farm – Bart & San",
     "storyTitle": "Our Story",
-    "storyText": "Alpacas Ibiza was founded on the belief that tourism can be meaningful, artisanal, and deeply connected to animal welfare. We created the first alpaca farm on the island to share our passion for these gentle creatures and their incredible fiber.",
+    "storyText": "Es Currals Alpacas Ibiza is the dream made real of Belgian couple San and Bart. Years ago San's weaving passion brought them into contact with alpacas and their remarkable wool — and from that moment two dreams grew together: a farm of their own, and a move to the paradise island of Ibiza. On 10 August 2019, after years of research and months of hard work making their finca alpaca-ready, five beautiful alpacas arrived in the early morning hours from Belgium: Mojo, Lewis, Marrón, Dusty and Barbarella. They found their new home — Es Currals Alpacas Ibiza — on a traditional Ibicenco finca amid the wild nature of northern Ibiza. The farm was welcomed from the start by Maria, an 81-year-old local Ibizan woman whose family had kept livestock on the land for generations. The name Es Currals is taken from the Catalan word for the stone animal enclosures found on historic Ibizan farms — a tribute to Maria and to the northern Ibiza community. Since then the herd has grown to fourteen: stud Lewis fathered three island-born cria (Chet, Toots and Bardot), and six more arrived in spring 2021 from Belgian breeder Alpaca Flanders. OWNER_REVIEW_TRANSLATION",
     "valuesTitle": "Our Values",
     "weavingTitle": "Wishfulfilling Weaving",
     "weavingSubtitle": "Made in Ibiza, embracing the world",
-    "weavingDescription": "Wishfulfilling Weaving is our exclusive weaving line. San weaves exclusive scarves on a traditional wooden loom, using high-quality alpaca wool, linen, mohair and silk. Each piece is handcrafted with intention and love in Ibiza.",
+    "weavingDescription": "San caught the weaving bug in 2013. She started with small table looms, then invested in a traditional Swedish wooden loom from a 92-year-old master weaver who gave her private lessons — she kept the loom's original name: Big Ben. Every step from shearing to finished cloth is done by hand at Es Currals. San hand-washes and hand-cards the fleece, spins the yarn, and colours it with natural plant extracts — hibiscus, avocado, and other flowers. She weaves on Big Ben using centuries-old patterns from historical manuscripts, blended with contemporary fashion. Every Wishfulfilling Weaving creation is a unique, non-duplicable work of art, made to order. OWNER_REVIEW_TRANSLATION",
     "handcraftedBadge": "Handcrafted in Ibiza",
     "welfare": {
       "title": "Animal Welfare",
-      "description": "Our alpacas come first in every decision"
+      "description": "The health and quality of life of our alpacas is our highest priority — always. OWNER_REVIEW_TRANSLATION"
     },
     "sustainability": {
       "title": "Sustainability",
-      "description": "Organic practices and environmental responsibility"
+      "description": "A private eco-family business committed to minimal impact on our animals and their natural surroundings. OWNER_REVIEW_TRANSLATION"
     },
     "quality": {
       "title": "Artisanal Quality",
-      "description": "Hand-processed, hand-checked, hand-cared for"
+      "description": "Hand-sheared, hand-washed, hand-spun, hand-woven. Every step done by San on the farm. OWNER_REVIEW_TRANSLATION"
     },
     "community": {
       "title": "Community",
-      "description": "Sharing knowledge and creating connections"
+      "description": "Rooted in northern Ibiza — named for Maria, the local woman whose land gave the farm its home. OWNER_REVIEW_TRANSLATION"
     }
   },
   "contact": {
@@ -1320,17 +1326,17 @@
     "title": "Sustainability",
     "subtitle": "How we live and work on the land at Es Currals — animal welfare, traditional craft, and low-impact farming.",
     "welfareTitle": "Animal Welfare",
-    "welfareBody": "Our alpacas come first in every decision we make. The herd at Es Currals lives on open pasture, is sheared once a year in spring, and is never subjected to anything that causes stress or harm. Each of our 14 alpacas has a name and is treated as an individual.",
+    "welfareBody": "The health and quality of life of our alpacas is the most important thing to us — full stop. Alpacas are popular and irresistibly charming animals, but as a sustainable eco-business we make it a point to keep the impact on both our animals and their natural environment as minimal as possible. Es Currals is a private family business, not a zoo or a circus. Our alpacas are not performing animals — they are individuals. Visits are by appointment only, precisely to keep stress on the herd to a minimum. OWNER_REVIEW_TRANSLATION",
     "craftTitle": "Traditional Weaving",
-    "craftBody": "San weaves on a traditional wooden loom using fleece from our own herd. The Wishfulfilling Weaving studio produces scarves and textiles by hand — slow, intentional work that uses the full value of what the alpacas give us each year.",
+    "craftBody": "Alpacas are sheared only once a year, so every lock of fleece is almost literally worth its weight in gold. San processes all of it by hand in the Wishfulfilling Weaving studio: hand-washing the raw fleece, carding it, spinning the yarn, and weaving on Big Ben — a traditional Swedish wooden loom. She works from centuries-old patterns found in historical manuscripts, combining them with contemporary design. Every piece is unique and non-duplicable, made to order, 100% sustainable. OWNER_REVIEW_TRANSLATION",
     "dyesTitle": "Natural Dyes",
-    "dyesBody": "We use natural dyes wherever possible. The colour palette comes from plants, minerals, and other natural sources rather than synthetic chemicals — keeping the process honest from fleece to finished cloth.",
+    "dyesBody": "The Wishfulfilling Weaving studio uses local flora to colour the wool through traditional methods. Hibiscus, avocado, and other plant and flower extracts give the palette its warmth. No synthetic chemical dyes and no machine processing — every colour comes directly from nature. The goal is to revive Ibiza's historical textile traditions through hands-on education in wool processing and natural dyeing. OWNER_REVIEW_TRANSLATION",
     "wasteTitle": "Zero-Waste Approach",
-    "wasteBody": "Fleece that does not go into weaving is composted or used in our Alcaca organic fertilizer programme. Nothing from the alpacas is wasted. Alcaca — our branded alpaca manure — closes the loop between animal care and land care.",
+    "wasteBody": "Nothing from the alpacas is wasted. Fleece that does not go into weaving is put back into the land through Alcaca Oro Negro — our branded alpaca manure fertilizer. Alpacas produce the purest, most fertile manure of any livestock species: small, odorless black pellets known in Peru as 'Oro Negro' (Black Gold). Bart manually filters every batch to remove stones, weeds and sand. Ready to use straight away — no composting needed — and effective for months to years. OWNER_REVIEW_TRANSLATION",
     "landTitle": "The Land",
-    "landBody": "Es Currals is an authentic Ibiza finca in the rural north of the island. We manage the land using organic practices, with no artificial fertilizers or pesticides. The alpacas graze naturally and their manure replenishes the soil.",
+    "landBody": "[UNMAPPED: confirm finca size in hectares before publishing] Es Currals is an authentic Ibicenco finca in the rural north of the island, surrounded by wild nature. The alpacas graze naturally; their manure replenishes the soil without artificial fertilizers or pesticides.",
     "sourcingTitle": "Responsible Sourcing",
-    "sourcingBody": "When we need materials beyond our own fleece — linen, mohair, silk — we source from suppliers who share our values. We do not cut corners on quality or ethics at any point in the supply chain.",
+    "sourcingBody": "When San needs materials beyond our own fleece — linen, mohair, silk for certain commissions — she sources from suppliers who share the farm's values. Every creation is 100% natural materials, designed for lasting durability. Nothing is cut-price; nothing is cut-corner. OWNER_REVIEW_TRANSLATION",
     "trustSectionTitle": "Learn more about Es Currals",
     "trustAbout": "Our Story",
     "trustPress": "Press Coverage",

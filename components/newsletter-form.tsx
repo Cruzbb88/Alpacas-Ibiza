@@ -80,6 +80,7 @@ export function NewsletterForm({ locale, source = 'footer' }: NewsletterFormProp
       setStatus('success')
       setEmail('')
       setConsent(false)
+      setSubmitAttempted(false)
       try {
         trackEvent('newsletter_signup_succeeded', { source })
       } catch {

@@ -29,6 +29,8 @@ export interface AdoptThankYouProps {
   readonly contactEmail: string
   readonly whatsappE164: string | null
   readonly siteUrl: string
+  /** Validated referral code (ALPACA-XXXXXX). Passed to ShareButtons so shares carry the donor's referral tag. */
+  readonly referralCode?: string | null
 }
 
 export function AdoptThankYou({
@@ -36,6 +38,7 @@ export function AdoptThankYou({
   contactEmail,
   whatsappE164,
   siteUrl,
+  referralCode,
 }: AdoptThankYouProps) {
   const params = useSearchParams()
   const checkoutState = params.get('checkout')
@@ -237,6 +240,7 @@ export function AdoptThankYou({
           <ShareButtons
             url={`${siteUrl}/${locale}/adopt`}
             title="I just adopted an alpaca at Es Currals Ibiza"
+            referralCode={referralCode ?? undefined}
           />
         </div>
 

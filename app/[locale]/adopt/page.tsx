@@ -38,6 +38,9 @@ import { getTenant } from '@/lib/tenants/server'
 import { getOgImage } from '@/lib/og-images'
 import { getActiveAdopterCount } from '@/lib/adopters/count'
 
+/** Mirrors the full referral-code URL format from lib/referral-codes.ts (ALPACA-XXXXXX). */
+const REFERRAL_CODE_URL_RE = /^ALPACA-[A-Z0-9]{6}$/
+
 export async function generateMetadata({
     params,
 }: {
@@ -89,13 +92,16 @@ export default async function AdoptPage({
         tier?: string
         portal?: string
         alpaca?: string
+        referral?: string
         gift_name?: string
         gift_email?: string
         gift_deliver?: string
     }>
 }) {
     const { locale } = await params
-    const { checkout, alpaca: alpacaParam, gift_name, gift_email, gift_deliver } = await searchParams
+    const { checkout, alpaca: alpacaParam, referral, gift_name, gift_email, gift_deliver } = await searchParams
+    // Validate referral code — only pass through if it matches the full URL format (ALPACA-XXXXXX).
+    const validReferral = referral && REFERRAL_CODE_URL_RE.test(referral) ? referral : null
     const translate = t(locale)
     const tenant = await getTenant()
 
@@ -105,7 +111,13 @@ export default async function AdoptPage({
     const selectedAlpacaSlug = findAlpacaName(alpacaParam ?? null) ? (alpacaParam as string) : null
 
     // Fetch live adopter count server-side; fail-quiet (returns 0 on error / unconfigured).
-    const { count: adoptedCount } = await getActiveAdopterCount()
+    // Wrapped in a 150ms race so a slow Mollie/Stripe list call never blocks SSR cold-start.
+    // On timeout adoptedCount=0 — AdopterCounter handles 0 gracefully.
+    const adopterPromise = getActiveAdopterCount()
+    const adopterTimeout = new Promise<{ count: number }>(resolve =>
+      setTimeout(() => resolve({ count: 0 }), 150),
+    )
+    const { count: adoptedCount } = await Promise.race([adopterPromise, adopterTimeout])
 
     const paymentAdapter = getPaymentAdapter()
     // Stage 1-2 of embedded checkout migration. When CHECKOUT_MODE=embedded AND
@@ -213,6 +225,7 @@ export default async function AdoptPage({
                     contactEmail={tenant.contactEmail}
                     whatsappE164={tenant.whatsappE164}
                     siteUrl={tenant.siteUrl}
+                    referralCode={validReferral}
                 />
             </Suspense>
 

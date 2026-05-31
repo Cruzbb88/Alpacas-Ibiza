@@ -64,7 +64,9 @@ export function Footer({
 
   const phoneDisplay = formatPhoneE164(phoneE164)
   const phoneHref = `tel:${phoneE164}`
-  const whatsappHref = `https://wa.me/${whatsappE164.replace(/^\+/, '')}`
+  const whatsappHref = whatsappE164
+    ? `https://wa.me/${whatsappE164.replace(/\D/g, '')}`
+    : null
   const mailHref = `mailto:${contactEmail}`
   const year = new Date().getFullYear()
 
@@ -249,6 +251,7 @@ export function Footer({
                   {phoneDisplay}
                 </a>
               </li>
+              {whatsappHref && (
               <li>
                 <a
                   href={whatsappHref}
@@ -260,6 +263,7 @@ export function Footer({
                   <span aria-hidden="true">💬</span> WhatsApp
                 </a>
               </li>
+              )}
               <li>
                 <a
                   href={mailHref}

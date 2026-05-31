@@ -15,10 +15,17 @@ const REFERRAL_CODE_RE = /^ALPACA-[A-Z0-9]{6}$/
 
 /**
  * Append `?ref=<code>` (or `&ref=<code>`) to a URL, skipping if the URL
- * already contains a `ref=` parameter.
+ * already contains a `ref=` query parameter (exact parameter name match,
+ * not substring — avoids false hits on `prefer=`, `referenced=`, etc.).
  */
 function appendRef(url: string, code: string): string {
-  if (url.includes('ref=')) return url
+  let hasRef = false
+  try {
+    hasRef = new URL(url, 'https://placeholder.invalid').searchParams.has('ref')
+  } catch {
+    hasRef = /[?&]ref=/.test(url)
+  }
+  if (hasRef) return url
   const separator = url.includes('?') ? '&' : '?'
   return `${url}${separator}ref=${encodeURIComponent(code)}`
 }

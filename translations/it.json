@@ -380,16 +380,24 @@
     "errorMessage": "Qualcosa è andato storto. Riprova o scrivici direttamente."
   },
   "alcacaPage": {
-    "title": "Letame di Alpaca Premium",
-    "subtitle": "Ricco di nutrienti. Certificato biologico. Proveniente in modo sostenibile dalla nostra fattoria.",
-    "orderNow": "Ordina Ora",
-    "sample": "Pacco Campione (5L)",
-    "bulk": "Sfuso (25L)",
-    "wholesale": "All'ingrosso (100L)",
-    "whyTitle": "Perché Scegliere Alcaca?",
-    "benefit1": "Fertilizzante biologico ricco di nutrienti, perfetto per verdure, fiori e erbe aromatiche",
-    "benefit2": "Nessun prodotto chimico aggressivo o additivo artificiale",
-    "benefit3": "Pratiche agricole sostenibili a supporto della nostra missione di benessere animale"
+    "title": "Alcaca Oro Negro",
+    "metaTitle": "__UNTRANSLATED__",
+    "metaDescription": "__UNTRANSLATED__",
+    "subtitle": "__UNTRANSLATED__",
+    "orderNow": "Informazioni",
+    "storyTitle": "__UNTRANSLATED__",
+    "storyBody": "__UNTRANSLATED__",
+    "photo1Alt": "__UNTRANSLATED__",
+    "photo2Alt": "__UNTRANSLATED__",
+    "miniTier": "__UNTRANSLATED__",
+    "bagTier": "__UNTRANSLATED__",
+    "bulkTier": "__UNTRANSLATED__",
+    "enquire": "Informazioni",
+    "whyTitle": "__UNTRANSLATED__",
+    "benefit1": "__UNTRANSLATED__",
+    "benefit2": "__UNTRANSLATED__",
+    "benefit3": "__UNTRANSLATED__",
+    "benefit4": "__UNTRANSLATED__"
   },
   "about": {
     "title": "Chi Siamo — Alpacas Ibiza",
@@ -416,6 +424,28 @@
       "title": "Comunità",
       "description": "Condividere conoscenze e creare connessioni"
     }
+  },
+  "sustainability": {
+    "title": "__UNTRANSLATED__",
+    "subtitle": "__UNTRANSLATED__",
+    "welfareTitle": "__UNTRANSLATED__",
+    "welfareBody": "__UNTRANSLATED__",
+    "craftTitle": "__UNTRANSLATED__",
+    "craftBody": "__UNTRANSLATED__",
+    "dyesTitle": "__UNTRANSLATED__",
+    "dyesBody": "__UNTRANSLATED__",
+    "wasteTitle": "__UNTRANSLATED__",
+    "wasteBody": "__UNTRANSLATED__",
+    "landTitle": "__UNTRANSLATED__",
+    "landBody": "__UNTRANSLATED__",
+    "sourcingTitle": "__UNTRANSLATED__",
+    "sourcingBody": "__UNTRANSLATED__",
+    "trustSectionTitle": "__UNTRANSLATED__",
+    "trustAbout": "__UNTRANSLATED__",
+    "trustPress": "__UNTRANSLATED__",
+    "trustContact": "__UNTRANSLATED__",
+    "ownerConfirmHeader": "__UNTRANSLATED__",
+    "ownerConfirmBody": "__UNTRANSLATED__"
   },
   "contact": {
     "title": "Contattaci",

@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { TurnstileWidget } from '@/components/turnstile-widget'
 import { HoneypotField } from '@/components/honeypot-field'
 import { InlineSpinner } from '@/components/inline-spinner'
-import { escapeHtml } from '@/lib/html'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -26,6 +25,7 @@ interface FieldErrors {
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const NAME_MIN = 2
+const COMPANY_NAME_MAX = 200
 const MESSAGE_MIN = 10
 const MESSAGE_MAX = 2000
 
@@ -43,6 +43,8 @@ function validate(
     const errors: FieldErrors = {}
     if (!companyName.trim() || companyName.trim().length < NAME_MIN) {
         errors.companyName = 'Please enter your company name.'
+    } else if (companyName.length > COMPANY_NAME_MAX) {
+        errors.companyName = `Company name must be at most ${COMPANY_NAME_MAX} characters.`
     }
     if (!contactName.trim() || contactName.trim().length < NAME_MIN) {
         errors.contactName = 'Please enter your name.'
@@ -100,10 +102,10 @@ export function CorporateEnquiryForm() {
         setServerError('')
 
         // Build the subject line with company name so the owner's inbox shows
-        // context immediately. escapeHtml is called server-side too; here it
-        // prevents a weird subject line from a malicious company name.
-        const safeCompany = escapeHtml(companyName.trim())
-        const subject = `Corporate enquiry — ${safeCompany}`
+        // context immediately. Server-side sanitizeHeader() handles escaping and
+        // truncation — no client-side escapeHtml to avoid double-encoding (e.g.
+        // AT&T → AT&amp;amp;T) and length inflation before the MAX_SUBJ check.
+        const subject = `Corporate enquiry — ${companyName.trim()}`
 
         // Compose a structured message body that maps all extra fields into the
         // single `message` field the /api/contact route accepts.
@@ -180,6 +182,11 @@ export function CorporateEnquiryForm() {
     }
 
     const isSubmitting = status === 'submitting'
+    // Disable submit until Turnstile resolves (unless the widget is not
+    // configured — mirrors the pattern in contact-form.tsx).
+    const canSubmit =
+        !isSubmitting &&
+        (captchaToken.length > 0 || process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY === undefined)
 
     return (
         <form
@@ -214,6 +221,7 @@ export function CorporateEnquiryForm() {
                         type="text"
                         autoComplete="organization"
                         required
+                        maxLength={COMPANY_NAME_MAX}
                         disabled={isSubmitting}
                         value={companyName}
                         onChange={(e) => {
@@ -400,7 +408,7 @@ export function CorporateEnquiryForm() {
 
             <button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={!canSubmit}
                 className="w-full bg-accent text-accent-foreground font-semibold py-3 px-6 rounded-lg hover:bg-accent/90 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2"
             >
                 {isSubmitting ? (

@@ -58,9 +58,14 @@ export default async function Home({
   const validRef = ref && /^ALPACA-[A-Z0-9]{6}$/.test(ref) ? ref : undefined
   function bookingHref(): string {
     if (!validRef) return FAREHARBOR_BOOKING_URL
-    const u = new URL(FAREHARBOR_BOOKING_URL)
-    u.searchParams.set('ref', validRef)
-    return u.toString()
+    try {
+      const u = new URL(FAREHARBOR_BOOKING_URL)
+      u.searchParams.set('ref', validRef)
+      return u.toString()
+    } catch {
+      console.warn('[bookingHref] FAREHARBOR_BOOKING_URL is malformed — returning raw URL', FAREHARBOR_BOOKING_URL)
+      return FAREHARBOR_BOOKING_URL
+    }
   }
   const primaryBookingUrl = bookingHref()
 

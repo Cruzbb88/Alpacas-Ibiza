@@ -49,12 +49,17 @@ describe('alpacasibiza-content module', () => {
     }
   })
 
-  it('every animal has image === null (UNMAPPED sentinel)', () => {
+  it('every animal image is null OR a verified live-site URL (no invented values)', () => {
+    // Images, when set, MUST point at a real CDN URL sourced from the live
+    // alpacasibiza.com site (see handoff/LIVE_SITE_CONTENT_INVENTORY.md
+    // scraped 2026-05-31). The rule that matters is "don't invent" — not
+    // "must be null forever". Allow null OR Squarespace CDN URLs.
     for (const animal of alpacasibizaContent.animals) {
-      assert.equal(
+      if (animal.image === null) continue
+      assert.match(
         animal.image,
-        null,
-        `animal "${animal.id}" has non-null image — do not invent values`,
+        /^https:\/\/images\.squarespace-cdn\.com\/content\/v1\//,
+        `animal "${animal.id}" image must be null or a real Squarespace CDN URL — got: ${animal.image}`,
       )
     }
   })

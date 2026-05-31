@@ -52,6 +52,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Script from 'next/script'
 import { trackEvent } from '@/lib/client-track'
+import { fetchWithRetry } from '@/lib/client-retry'
 import type { ParsedGiftFields } from '@/lib/gift-fields'
 import { ADOPT_PRICE_MONTHLY_EUR, ADOPT_PRICE_YEARLY_EUR } from '@/lib/config'
 import { formatPriceForLocale } from '@/lib/format-price'
@@ -137,7 +138,7 @@ export function EmbeddedMollieCheckout(props: EmbeddedMollieCheckoutProps) {
     let cancelled = false
     async function createIntent() {
       try {
-        const res = await fetch('/api/mollie-checkout/intent', {
+        const res = await fetchWithRetry('/api/mollie-checkout/intent', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -247,6 +248,16 @@ export function EmbeddedMollieCheckout(props: EmbeddedMollieCheckoutProps) {
       componentsRef.current = []
     }
   }, [])
+
+  // 4) SDK load timeout — if Mollie.js hasn't fired onLoad within 12 s (flaky
+  //    WiFi, CDN outage), surface the error banner + fallbackHostedUrl link so
+  //    the donor isn't left watching an infinite spinner.
+  useEffect(() => {
+    const t = setTimeout(() => {
+      if (!sdkReady) setInitError(prev => prev ?? 'Secure payment field is taking too long to load.')
+    }, 12000)
+    return () => clearTimeout(t)
+  }, [sdkReady])
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {

@@ -380,16 +380,24 @@
     "errorMessage": "Une erreur s'est produite. Veuillez réessayer ou nous écrire directement."
   },
   "alcacaPage": {
-    "title": "Fumier d'Alpaga Premium",
-    "subtitle": "Riche en nutriments. Certifié biologique. Provenance durable de notre ferme.",
-    "orderNow": "Commander",
-    "sample": "Pack Échantillon (5L)",
-    "bulk": "Vrac (25L)",
-    "wholesale": "Gros (100L)",
-    "whyTitle": "Pourquoi Choisir Alcaca ?",
-    "benefit1": "Engrais biologique riche en nutriments, parfait pour les légumes, fleurs et herbes aromatiques",
-    "benefit2": "Pas de produits chimiques agressifs ni d'additifs artificiels",
-    "benefit3": "Des pratiques agricoles durables qui soutiennent notre mission de bien-être animal"
+    "title": "Alcaca Oro Negro",
+    "metaTitle": "__UNTRANSLATED__",
+    "metaDescription": "__UNTRANSLATED__",
+    "subtitle": "__UNTRANSLATED__",
+    "orderNow": "Renseignez-vous",
+    "storyTitle": "__UNTRANSLATED__",
+    "storyBody": "__UNTRANSLATED__",
+    "photo1Alt": "__UNTRANSLATED__",
+    "photo2Alt": "__UNTRANSLATED__",
+    "miniTier": "__UNTRANSLATED__",
+    "bagTier": "__UNTRANSLATED__",
+    "bulkTier": "__UNTRANSLATED__",
+    "enquire": "Renseignez-vous",
+    "whyTitle": "__UNTRANSLATED__",
+    "benefit1": "__UNTRANSLATED__",
+    "benefit2": "__UNTRANSLATED__",
+    "benefit3": "__UNTRANSLATED__",
+    "benefit4": "__UNTRANSLATED__"
   },
   "about": {
     "title": "À Propos d'Alpacas Ibiza",
@@ -416,6 +424,28 @@
       "title": "Communauté",
       "description": "Partager les connaissances et créer des connexions"
     }
+  },
+  "sustainability": {
+    "title": "__UNTRANSLATED__",
+    "subtitle": "__UNTRANSLATED__",
+    "welfareTitle": "__UNTRANSLATED__",
+    "welfareBody": "__UNTRANSLATED__",
+    "craftTitle": "__UNTRANSLATED__",
+    "craftBody": "__UNTRANSLATED__",
+    "dyesTitle": "__UNTRANSLATED__",
+    "dyesBody": "__UNTRANSLATED__",
+    "wasteTitle": "__UNTRANSLATED__",
+    "wasteBody": "__UNTRANSLATED__",
+    "landTitle": "__UNTRANSLATED__",
+    "landBody": "__UNTRANSLATED__",
+    "sourcingTitle": "__UNTRANSLATED__",
+    "sourcingBody": "__UNTRANSLATED__",
+    "trustSectionTitle": "__UNTRANSLATED__",
+    "trustAbout": "__UNTRANSLATED__",
+    "trustPress": "__UNTRANSLATED__",
+    "trustContact": "__UNTRANSLATED__",
+    "ownerConfirmHeader": "__UNTRANSLATED__",
+    "ownerConfirmBody": "__UNTRANSLATED__"
   },
   "contact": {
     "title": "Nous Contacter",

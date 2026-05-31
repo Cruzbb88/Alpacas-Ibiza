@@ -1,5 +1,6 @@
 import { Resend } from 'resend'
 import { isSuppressed, getSuppression } from './email-suppression.ts'
+import { withRetry } from './retry'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 const DEFAULT_TO = process.env.CONTACT_EMAIL ?? 'info@alpacasibiza.com'
@@ -75,16 +76,20 @@ export async function sendEmail({
         content_type: a.contentType ?? 'application/octet-stream',
     }))
 
-    const { data, error } = await resend.emails.send({
-        from: FROM_EMAIL,
-        to,
-        subject,
-        html,
-        replyTo,
-        ...(scheduledAt ? { scheduledAt } : {}),
-        ...(Object.keys(listUnsubscribeHeaders).length > 0 ? { headers: listUnsubscribeHeaders } : {}),
-        ...(resendAttachments && resendAttachments.length > 0 ? { attachments: resendAttachments } : {}),
-    })
+    // Retry on transient Resend failures: 3 attempts, exponential backoff starting at 100ms.
+    const { data, error } = await withRetry(
+        () => resend.emails.send({
+            from: FROM_EMAIL,
+            to,
+            subject,
+            html,
+            replyTo,
+            ...(scheduledAt ? { scheduledAt } : {}),
+            ...(Object.keys(listUnsubscribeHeaders).length > 0 ? { headers: listUnsubscribeHeaders } : {}),
+            ...(resendAttachments && resendAttachments.length > 0 ? { attachments: resendAttachments } : {}),
+        }),
+        { attempts: 3, baseDelayMs: 100 },
+    )
 
     if (error) {
         throw new Error(error.message || 'Unknown email error')

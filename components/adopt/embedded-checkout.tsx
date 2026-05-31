@@ -48,6 +48,7 @@ import type { Stripe, StripeElementsOptions } from '@stripe/stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
 import { Elements, PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import { trackEvent } from '@/lib/client-track'
+import { fetchWithRetry } from '@/lib/client-retry'
 import type { ParsedGiftFields } from '@/lib/gift-fields'
 import { ADOPT_PRICE_MONTHLY_EUR, ADOPT_PRICE_YEARLY_EUR } from '@/lib/config'
 import { formatPriceForLocale } from '@/lib/format-price'
@@ -92,7 +93,7 @@ export function EmbeddedCheckout(props: EmbeddedCheckoutProps) {
     let cancelled = false
     async function createIntent() {
       try {
-        const res = await fetch('/api/checkout/intent', {
+        const res = await fetchWithRetry('/api/checkout/intent', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

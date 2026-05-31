@@ -169,6 +169,17 @@ export function ContactForm({ labels, defaultSubject }: ContactFormProps) {
         ? { ...INITIAL_DRAFT, subject: defaultSubject }
         : INITIAL_DRAFT
     const { draft: form, patch, clear } = useFormDraft<DraftShape>('contact', initialDraft)
+
+    // A2: URL-supplied defaultSubject must win over any stale localStorage draft.
+    // useFormDraft hydrates from localStorage on mount, which overwrites initialDraft.
+    // This effect re-asserts the URL value after hydration whenever defaultSubject changes.
+    useEffect(() => {
+        if (defaultSubject) {
+            patch({ subject: defaultSubject })
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [defaultSubject])
+
     const [captchaToken, setCaptchaToken] = useState<string>('')
     const [turnstileKey, setTurnstileKey] = useState(0) // bump to force-reset Turnstile after error
     const [honeypot, setHoneypot] = useState('')
