@@ -11,7 +11,10 @@
     "alpacas": "Our Alpacas",
     "gifts": "Gift Vouchers",
     "weaving": "Weaving",
-    "recoverCertificate": "Recover certificate"
+    "recoverCertificate": "Recover certificate",
+    "yoga": {
+      "title": "Alpaca Yoga"
+    }
   },
   "visit": {
     "metaTitle": "Plan Your Visit | Alpacas Ibiza – Es Currals Farm Ibiza",
@@ -188,7 +191,12 @@
     "events": {
       "title": "Events",
       "description": "Weddings, photoshoots, corporate retreats, alpaca yoga — customized experiences."
-    }
+    },
+    "compareCta": "Learn more",
+    "indexTitle": "Experiences at Alpacas Ibiza",
+    "indexSubtitle": "Seven ways to spend time with the herd at Es Currals. Pick the one that fits your trip.",
+    "compareHeading": "Compare every experience",
+    "compareSubheading": "Duration, group size, and what's included — side by side."
   },
   "cta": {
     "title": "Ready to Experience Alpacas Ibiza?",
@@ -735,7 +743,11 @@
     "terms": "Terms of Service",
     "cookies": "Cookie Policy",
     "impressum": "Legal notice",
-    "copyright": "All rights reserved."
+    "copyright": "All rights reserved.",
+    "googleReview": "Review us on Google",
+    "adopt": "Adopt an Alpaca",
+    "sustainability": "Sustainability",
+    "journal": "Journal"
   },
   "privacy": {
     "title": "Privacy Policy",
@@ -980,7 +992,11 @@
     "featuredTitle": "As featured in",
     "ownerConfirmHeader": "Owner action required before launch",
     "ownerConfirmBody": "Upload the following files to public/press/, then flip enabled: true in app/[locale]/press-kit/page.tsx PRESS_ASSETS.",
-    "comingSoonBadge": "Coming soon"
+    "comingSoonBadge": "Coming soon",
+    "meta": {
+      "title": "Press Kit | Alpacas Ibiza",
+      "description": "Download logos, hi-res photos, fact sheet and founder bio for Alpacas Ibiza."
+    }
   },
   "adopt": {
     "title": "Adopt an Alpaca",
@@ -1116,7 +1132,23 @@
     },
     "share": {
       "message": "I just adopted {name} at Alpacas Ibiza!"
-    }
+    },
+    "comparisonTitle": "Compare plans",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "monthlyCtaLabel": "Adopt monthly",
+    "yearlyCtaLabel": "Adopt yearly",
+    "feature": {
+      "certificate": "Digital adoption certificate",
+      "updates": "Monthly alpaca photo & updates",
+      "farmTour": "Farm tour invitation",
+      "weavingDiscount": "10% Wishfulfilling Weaving discount",
+      "shopDiscount": "15% Farm Shop discount",
+      "fertilizer": "Alpaca fertilizer bag",
+      "photoshoot": "Professional alpaca photoshoot"
+    },
+    "embeddedHeading": "Pay securely without leaving the page",
+    "embeddedSubtext": "Card or SEPA — your payment never leaves alpacasibiza.com."
   },
   "journal": {
     "title": "Journal",
@@ -1128,7 +1160,11 @@
     "emptyCtaHref": "/contact",
     "emptyCtaLabel": "Get in touch →",
     "ownerConfirmHeader": "Owner: add posts to activate",
-    "ownerConfirmBody": "Add entries to lib/data/journal.ts with status: 'live'. Drop hero images at public/images/journal/<slug>.webp. Empty state shows publicly until then."
+    "ownerConfirmBody": "Add entries to lib/data/journal.ts with status: 'live'. Drop hero images at public/images/journal/<slug>.webp. Empty state shows publicly until then.",
+    "latestTitle": "Latest from the journal",
+    "latestSubtitle": "Field notes from the herd, the studio, and the finca.",
+    "readAll": "Read all stories",
+    "minRead": "min read"
   },
   "share": {
     "label": "Share",
@@ -1424,7 +1460,8 @@
     "emptyTitle": "Photos coming soon",
     "emptyBody": "We're building the gallery. Follow us on Instagram for updates.",
     "ownerConfirmHeader": "Owner: drop photos to activate",
-    "ownerConfirmBody": "Add files to public/images/gallery/ and entries to lib/data/media.ts with status: 'live'. Empty state shows publicly until then."
+    "ownerConfirmBody": "Add files to public/images/gallery/ and entries to lib/data/media.ts with status: 'live'. Empty state shows publicly until then.",
+    "emptyCta": "View gallery"
   },
   "press": {
     "title": "Press & Media",
@@ -1461,6 +1498,41 @@
     "faq": {
       "howItWorksTitle": "How it works",
       "howItWorksText": "Choose a tour, pay securely, and we send a branded voucher by email to the recipient. They pick a date that works for them and book through the same system."
+    },
+    "flow": {
+      "heading": "Send the gift of alpacas",
+      "subheading": "Four short steps. We email a branded voucher to your recipient on the day you choose.",
+      "stepGift": "Gift type",
+      "stepRecipient": "Recipient",
+      "stepMessage": "Message",
+      "stepReview": "Review",
+      "tourTitle": "Tour voucher",
+      "tourPrice": "From €45 / guest",
+      "tourDescription": "90-min farm tour, valid for 12 months. Choose any tour type at booking.",
+      "adoptMonthlyTitle": "Monthly adoption",
+      "adoptMonthlyPrice": "€75 / month",
+      "adoptMonthlyDescription": "Year-long adoption with farm tours, certificate, photoshoot, and seasonal gifts.",
+      "adoptYearlyTitle": "Yearly adoption",
+      "adoptYearlyPrice": "€900 / year prepaid",
+      "adoptYearlyDescription": "Same perks as monthly, paid upfront. The committed gift.",
+      "shopCreditTitle": "Farm shop credit",
+      "shopCreditPrice": "Custom amount",
+      "shopCreditDescription": "Use against woven textiles, alpaca fibre, and farm shop items.",
+      "continue": "Continue",
+      "back": "Back",
+      "checkout": "Open secure checkout",
+      "recipientName": "Recipient name",
+      "recipientEmail": "Recipient email",
+      "senderName": "Your name",
+      "message": "Personal message",
+      "messagePlaceholder": "A short note that appears on the voucher.",
+      "sendDate": "When to send",
+      "sendToday": "Send today",
+      "sendFuture": "Schedule for a future date",
+      "reviewTitle": "You’re gifting",
+      "reviewGiftFor": "Gift for",
+      "reviewFrom": "From",
+      "reviewSendDate": "Send date"
     }
   },
   "legal": {
@@ -1595,5 +1667,62 @@
     "skip": "Skip — go to the adopt page",
     "thankYou": "Thank you for your feedback — it genuinely helps us improve.",
     "reAdoptLink": "Re-adopt an alpaca"
+  },
+  "commission": {
+    "form": {
+      "errors": {
+        "name": "Please enter your name (min 2 characters).",
+        "email": "Please enter a valid email address.",
+        "projectType": "Please choose a project type.",
+        "timeline": "Please choose a timeline.",
+        "specificDate": "Please pick a date.",
+        "references": "Reference links must start with http:// or https://.",
+        "consent": "Please agree to the privacy policy to continue."
+      },
+      "success": {
+        "heading": "Thanks!",
+        "again": "Submit another inquiry"
+      },
+      "aria": {
+        "formLabel": "Custom commission inquiry"
+      },
+      "phone": "Phone",
+      "optional": "optional",
+      "projectTypeLegend": "Project type",
+      "projectTypeHelper": "Pick the closest match — we can refine in the conversation.",
+      "size": "Approximate size",
+      "sizePlaceholder": "e.g. 80×120 cm",
+      "notes": "Color & material notes",
+      "budget": {
+        "label": "Budget"
+      },
+      "timeline": {
+        "legend": "Timeline",
+        "specificDateLabel": "Target date"
+      },
+      "references": {
+        "label": "Reference images",
+        "itemAria": "Reference link",
+        "remove": "Remove reference",
+        "add": "Add another reference"
+      },
+      "message": {
+        "label": "Tell us about the piece"
+      },
+      "consent": "I agree to the privacy policy"
+    }
+  },
+  "cookieConsent": {
+    "ariaLabel": "Cookie consent",
+    "message": "We use cookies for analytics and to make the booking experience smoother. You can accept all or reject non-essential cookies. See our ",
+    "policyLink": "cookie policy",
+    "reject": "Reject non-essential",
+    "accept": "Accept all"
+  },
+  "a11y": {
+    "skipToMain": "Skip to main content"
+  },
+  "cancellation": {
+    "freeUp24h": "Free cancellation up to 24h before your visit"
   }
 }
