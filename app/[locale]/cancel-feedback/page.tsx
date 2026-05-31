@@ -26,23 +26,27 @@ export default async function CancelFeedbackPage({
   const { locale } = await params
   const tr = t(locale)
 
-  const title = tr('cancelFeedback.title', 'Before you go…')
+  // Every key gets an EN fallback so the page never renders blank when a
+  // locale translation is missing. The fallback strings ARE the source of
+  // truth until translators ship the keys; the sentinel-strip resolver in
+  // lib/translations.ts handles graceful per-locale fallback to EN.
+  const title = tr('cancelFeedback.title', 'Before you go')
   const subhead = tr(
     'cancelFeedback.subhead',
     "We're sorry to see you go. Would you mind telling us why you cancelled?",
   )
-  const labelPrice = tr('cancelFeedback.reason.price', 'The price was too high')
-  const labelForgot = tr('cancelFeedback.reason.forgot', 'I forgot I had an adoption')
-  const labelUnused = tr('cancelFeedback.reason.unused', 'I no longer needed it')
+  const labelPrice = tr('cancelFeedback.reason.price', 'It was too expensive')
+  const labelForgot = tr('cancelFeedback.reason.forgot', "I forgot I was subscribed")
+  const labelUnused = tr('cancelFeedback.reason.unused', "I no longer need this")
   const labelOther = tr('cancelFeedback.reason.other', 'Other reason')
   const labelNotes = tr('cancelFeedback.notesLabel', 'Anything else? (optional)')
   const submitLabel = tr('cancelFeedback.submit', 'Send feedback')
-  const skipLabel = tr('cancelFeedback.skip', 'Skip — take me to re-adopt')
+  const skipLabel = tr('cancelFeedback.skip', 'Skip — go to adopt page')
   const thankYouMessage = tr(
     'cancelFeedback.thankYou',
     'Thank you for your feedback — it helps us improve.',
   )
-  const reAdoptLabel = tr('cancelFeedback.reAdoptLink', 'If you change your mind, you can re-adopt here')
+  const reAdoptLabel = tr('cancelFeedback.reAdoptLink', 'Re-adopt an alpaca')
 
   return (
     <main className="min-h-[60vh] py-20 px-4">
