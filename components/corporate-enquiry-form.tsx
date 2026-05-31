@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { TurnstileWidget } from '@/components/turnstile-widget'
 import { HoneypotField } from '@/components/honeypot-field'
 import { InlineSpinner } from '@/components/inline-spinner'
+import { trackEvent } from '@/lib/client-track'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -134,6 +135,14 @@ export function CorporateEnquiryForm() {
 
             if (res.ok) {
                 setStatus('success')
+                try {
+                    trackEvent('corporate_enquiry_submitted', {
+                        has_company_name: companyName.trim().length > 0,
+                        has_group_size: groupSize.trim().length > 0,
+                    })
+                } catch {
+                    // Never block the form on analytics failure.
+                }
                 return
             }
 

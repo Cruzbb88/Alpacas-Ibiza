@@ -258,7 +258,12 @@
         "bestFor": "Fotógrafos, redes sociales, recuerdos"
       }
     },
-    "backHome": "Volver a Inicio"
+    "backHome": "Volver a Inicio",
+    "adoptCrossSell": {
+      "heading": "__UNTRANSLATED__",
+      "body": "__UNTRANSLATED__",
+      "cta": "__UNTRANSLATED__"
+    }
   },
   "guestStories": {
     "title": "Historias de Visitantes",
@@ -806,6 +811,10 @@
     "cancelledFullBody": "__UNTRANSLATED__",
     "cancelledTryAgain": "__UNTRANSLATED__",
     "cancelledTellUs": "__UNTRANSLATED__",
+    "thankYou": {
+      "calendarDownload": "__UNTRANSLATED__",
+      "calendarHint": "__UNTRANSLATED__"
+    },
     "legal": {
       "withdrawalWaiver": "__UNTRANSLATED__",
       "waiverRequired": "__UNTRANSLATED__"

@@ -108,6 +108,12 @@ export interface EventParamsMap {
     tier: 'monthly' | 'yearly'
     ref_code: string
   }
+  // gd-018 — corporate enquiry form. Privacy: send only boolean flags, never
+  // the actual company name or headcount.
+  corporate_enquiry_submitted: {
+    has_company_name: boolean
+    has_group_size: boolean
+  }
 }
 
 export type EventName = keyof EventParamsMap
@@ -132,6 +138,7 @@ export const EVENT_CATEGORY: Record<EventName, EventCategory> = {
   adopt_referral_link_copied: 'engagement',
   referral_link_displayed: 'engagement',
   adopt_checkout_started_via_referral: 'checkout',
+  corporate_enquiry_submitted: 'engagement',
 }
 
 // ── gtag / dataLayer minimal types ──────────────────────────────────────────

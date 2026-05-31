@@ -15,6 +15,8 @@ import { buildLocaleAlternates } from '@/lib/i18n-metadata'
 import { getOgImage } from '@/lib/og-images'
 import { GoogleReviewsBadge } from '@/components/google-reviews-badge'
 import { localBusinessSchema, toJsonLd } from '@/lib/structured-data'
+import { AlpacaOfTheDay } from '@/components/alpaca-of-the-day'
+import { AdoptersCounterBadge } from '@/components/adopters-counter-badge'
 
 export async function generateMetadata({
   params,
@@ -225,6 +227,12 @@ export default async function Home({
         }}
       />
 
+      {/* ── 1b. Adopters social proof badge — rendered beneath the hero trust bar.
+               Server component; returns null when count is 0 / unconfigured.  ── */}
+      <div className="w-full flex justify-center py-3 bg-background border-b border-border/50">
+        <AdoptersCounterBadge locale={locale} />
+      </div>
+
       {/* ── 2. Choose Your Path ── */}
       <ChoicePaths
         paths={pathOptions}
@@ -244,6 +252,10 @@ export default async function Home({
 
       {/* ── 3b. Travel Awards Band ── */}
       <AwardsBadges category="travel-award" title={translate('awards.recognizedBy')} />
+
+      {/* ── 3c. Alpaca-of-the-day spotlight — deterministic per UTC day; server component;
+               returns null when no animals have both image + fun_fact set.          ── */}
+      <AlpacaOfTheDay locale={locale} />
 
       {/* ── 4. Why Alpacas Ibiza ── */}
       <section className="w-full py-16 md:py-24 px-4 bg-background">

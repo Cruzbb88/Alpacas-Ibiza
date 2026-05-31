@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { sendEmail } from '@/lib/mailer'
 import { buildAdopterMilestoneEmail } from '@/lib/email-templates'
 import { getMollieClient } from '@/lib/integrations/payment-mollie'
+import { importStripe } from '@/lib/integrations/stripe-sdk'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
 import { verifyCronSecret } from '@/lib/cron-auth'
 import { pingHeartbeat } from '@/lib/heartbeat'
@@ -197,6 +198,71 @@ export async function GET(request: Request) {
             message,
             partialCount: recipients.length,
         })
+    }
+
+    // ── Stripe subscription iteration ────────────────────────────────────────
+    // Wrapped in try/catch so Mollie-only deploys (STRIPE_SECRET_KEY unset or
+    // stripe SDK absent) skip silently — Mollie recipients already accumulated
+    // above are unaffected.
+    try {
+        const stripeSecretKey = process.env.STRIPE_SECRET_KEY
+        if (!stripeSecretKey) {
+            log.info('STRIPE_SECRET_KEY unset — skipping Stripe milestone path')
+        } else {
+            const stripeFactory = await importStripe()
+            if (!stripeFactory) {
+                log.info('stripe SDK not installed — skipping Stripe milestone path')
+            } else {
+                const stripe = stripeFactory(stripeSecretKey, { apiVersion: '2024-06-20' })
+                const STRIPE_CAP = 1000
+                let stripeCount = 0
+
+                for await (const sub of stripe.subscriptions.list({ status: 'active', limit: 100 })) {
+                    stripeCount++
+                    scanned++
+                    if (stripeCount >= STRIPE_CAP) {
+                        capped = true
+                        log.warn(`[milestone] Stripe iteration capped at ${STRIPE_CAP}`)
+                        break
+                    }
+
+                    // Use `created` (unix seconds) — the subscription start date.
+                    // `current_period_start` would reset every billing cycle; we want
+                    // the original adoption date for anniversary milestones.
+                    const createdMs = sub.created * 1000
+                    if (!Number.isFinite(createdMs)) continue
+                    const createdDate = new Date(createdMs)
+
+                    const milestone = getDonorMilestone(createdDate, now)
+                    if (milestone === null) continue
+
+                    // Resolve email: prefer metadata.donorEmail, then expanded customer.
+                    const meta = sub.metadata as Record<string, string>
+                    const email: string | null =
+                        meta.donorEmail ??
+                        (typeof (sub as { customer?: { email?: string } }).customer === 'object'
+                            ? (sub as { customer?: { email?: string } }).customer?.email ?? null
+                            : null)
+
+                    if (!email || !isValidEmail(email)) {
+                        log.warn('[milestone] Skipping Stripe sub — no resolvable email', { subId: sub.id, milestone })
+                        continue
+                    }
+
+                    recipients.push({
+                        subId: sub.id,
+                        email,
+                        donorName: meta.donorName ?? null,
+                        alpacaName: meta.alpacaName ?? meta.alpaca ?? null,
+                        locale: meta.locale ?? 'en',
+                        milestoneDays: milestone,
+                    })
+                }
+            }
+        }
+    } catch (stripeErr) {
+        const message = stripeErr instanceof Error ? stripeErr.message : String(stripeErr)
+        log.warn('[milestone] Stripe iteration failed — continuing with Mollie-only results', { message })
     }
 
     const milestonesProcessed = recipients.length

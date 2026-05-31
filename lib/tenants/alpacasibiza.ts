@@ -49,7 +49,12 @@ export const alpacasibiza = Object.freeze({
    */
   noreplyEmail: null,
   phoneE164: '+32475586544',    // Belgian mobile; confirmed in lib/structured-data.ts
-  whatsappE164: '+32475586544', // same number; confirmed in OWNER_INPUT_NEEDED.md
+  /**
+   * WhatsApp Business number confirmed from live-site /algemene-voorwaarden Art 2 (2026-05-31 scrape).
+   * Spanish mobile +34 689 446 781 — distinct from the Belgian phoneE164 above.
+   * OWNER_INPUT_NEEDED: confirm this is still the active WhatsApp Business number before go-live.
+   */
+  whatsappE164: '+34689446781', // from live-site /algemene-voorwaarden Art 2 (2026-05-31 scrape)
 
   // ── Location ────────────────────────────────────────────────────────────────
   address: Object.freeze({
@@ -93,10 +98,14 @@ export const alpacasibiza = Object.freeze({
     themeColor: BRAND_COLORS.themeColor, // ⚠️ diverges from primary — see lib/brand.ts
   }),
   /**
-   * UNMAPPED — /images/logo.webp referenced in OWNER_INPUT_NEEDED.md "Real photos"
-   * but asset does not exist. Do not emit a broken URL.
+   * Live site CDN URL — extracted 2026-05-31 from https://www.alpacasibiza.com/
+   * via LIVE_SITE_BRAND_ASSETS.md (handoff/LIVE_SITE_BRAND_ASSETS.md §1).
+   * File: LOGO-alpacas-ibiza-DEF.png (full-size Squarespace CDN variant).
+   * ACTION: per CONTENT-MIGRATION-2026-05-31-OWNER-REVIEW.md §6, owner to decide
+   * between keeping this Squarespace CDN URL (a) or self-hosting (b, recommended).
+   * If Squarespace subscription lapses, this URL will 404.
    */
-  logoUrl: null,
+  logoUrl: 'https://images.squarespace-cdn.com/content/v1/63f5dee81e8cfc3a0d2638e3/db346187-6229-47b0-b5d1-57ba89a893d1/LOGO-alpacas-ibiza-DEF.png',
   /**
    * UNMAPPED — /public/images/og-default.webp listed in OWNER_INPUT_NEEDED.md
    * content shopping list but file does not exist.

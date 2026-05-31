@@ -196,7 +196,9 @@ async function handleCheckout(request: Request, method: 'GET' | 'POST') {
   // donor abandons checkout and comes back. Success URL doesn't need it —
   // the AdoptThankYou screen takes over and reads from Stripe's metadata via webhook.
   const cancelAlpacaQuery = alpacaSlug ? `&alpaca=${encodeURIComponent(alpacaSlug)}` : ''
-  const successUrl = `${SITE_BASE_URL}/${locale}/adopt?checkout=success&tier=${tier}`
+  // {CHECKOUT_SESSION_ID} is a Stripe template variable substituted server-side
+  // when the donor completes payment. Used by AdoptThankYou to offer calendar download.
+  const successUrl = `${SITE_BASE_URL}/${locale}/adopt?checkout=success&tier=${tier}&session_id={CHECKOUT_SESSION_ID}`
   const cancelUrl  = `${SITE_BASE_URL}/${locale}/adopt?checkout=cancelled${cancelAlpacaQuery}`
 
   const stripeFactory = await importStripe()

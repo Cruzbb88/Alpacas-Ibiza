@@ -21,6 +21,7 @@ import { buildLocaleAlternates } from '@/lib/i18n-metadata'
 import { getOgImage } from '@/lib/og-images'
 import { TourComparison } from '@/components/tour-comparison'
 import type { TourSpec } from '@/components/tour-comparison'
+import { WhatToBringChecklist } from '@/components/tours/what-to-bring-checklist'
 
 export async function generateMetadata({
   params,
@@ -372,6 +373,13 @@ export default async function ToursPage({ params }: { params: Promise<{ locale: 
               <strong className="text-foreground">{translate('tours.bookingSection.questions')}</strong> {translate('tours.bookingSection.questionsText')}
             </p>
           </div>
+        </div>
+      </section>
+
+      {/* What to Bring Checklist */}
+      <section className="w-full py-12 md:py-16 px-4 bg-secondary/20">
+        <div className="max-w-2xl mx-auto">
+          <WhatToBringChecklist />
         </div>
       </section>
 

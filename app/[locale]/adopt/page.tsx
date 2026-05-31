@@ -37,6 +37,7 @@ import { GoogleReviewsWall } from '@/components/google-reviews-wall'
 import { getTenant } from '@/lib/tenants/server'
 import { getOgImage } from '@/lib/og-images'
 import { getActiveAdopterCount } from '@/lib/adopters/count'
+import { AdoptersCounterBadge } from '@/components/adopters-counter-badge'
 
 /** Mirrors the full referral-code URL format from lib/referral-codes.ts (ALPACA-XXXXXX). */
 const REFERRAL_CODE_URL_RE = /^ALPACA-[A-Z0-9]{6}$/
@@ -353,9 +354,14 @@ export default async function AdoptPage({
             {/* Pricing tiers — extracted to AdoptTierCard (monthly + yearly variants).
                 Both cards link to checkout URLs already built with the alpaca slug. */}
             <PageSection bg="default" width="narrow" className="py-16">
-                <h2 className="text-2xl font-bold text-foreground text-center mb-10">
+                <h2 className="text-2xl font-bold text-foreground text-center mb-4">
                     {translate('adopt.tierLabel')}
                 </h2>
+                {/* Adopters social proof badge — rendered between heading and tier cards.
+                    Server component; returns null when count is 0 / unconfigured. */}
+                <div className="flex justify-center mb-8">
+                    <AdoptersCounterBadge locale={locale} />
+                </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <AdoptTierCard
                         locale={locale}

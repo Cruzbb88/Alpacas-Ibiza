@@ -258,7 +258,12 @@
         "bestFor": "Fotografen, Erinnerungsfotos"
       }
     },
-    "backHome": "Zurück zur Startseite"
+    "backHome": "Zurück zur Startseite",
+    "adoptCrossSell": {
+      "heading": "__UNTRANSLATED__",
+      "body": "__UNTRANSLATED__",
+      "cta": "__UNTRANSLATED__"
+    }
   },
   "guestStories": {
     "title": "Gästegeschichten",
@@ -806,6 +811,10 @@
     "cancelledFullBody": "__UNTRANSLATED__",
     "cancelledTryAgain": "__UNTRANSLATED__",
     "cancelledTellUs": "__UNTRANSLATED__",
+    "thankYou": {
+      "calendarDownload": "__UNTRANSLATED__",
+      "calendarHint": "__UNTRANSLATED__"
+    },
     "legal": {
       "withdrawalWaiver": "__UNTRANSLATED__",
       "waiverRequired": "__UNTRANSLATED__"
@@ -826,5 +835,9 @@
     "emailLabel": "__UNTRANSLATED__",
     "submit": "__UNTRANSLATED__",
     "successMessage": "__UNTRANSLATED__"
+  },
+  "floatingWhatsapp": {
+    "defaultMessage": "__UNTRANSLATED__",
+    "aria": "__UNTRANSLATED__"
   }
 }

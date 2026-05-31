@@ -162,6 +162,9 @@ export function AdoptThankYou({
     : null
 
   const waNumber = whatsappE164 ? whatsappE164.replace(/[^\d]/g, '') : null
+  // session_id is threaded from Stripe's {CHECKOUT_SESSION_ID} template in the
+  // success_url. Mollie and gift flows won't have it — hide the calendar button.
+  const sessionId = params.get('session_id')
 
   return (
     <section className="w-full py-20 px-4 bg-gradient-to-br from-primary/10 to-accent/10">
@@ -261,6 +264,25 @@ export function AdoptThankYou({
             </a>
           )
         })()}
+
+        {/* Calendar download — only available when session_id is present (Stripe flow).
+            Mollie and gift paths skip this block gracefully. */}
+        {sessionId && (
+          <div className="mb-4">
+            <a
+              href={`/api/calendar/renewal/${sessionId}`}
+              className="inline-block rounded-lg border border-primary px-6 py-3 text-sm font-semibold text-primary hover:bg-primary/5"
+            >
+              {tr('adopt.thankYou.calendarDownload', 'Add renewal to your calendar')}
+            </a>
+            <p className="mt-2 text-xs text-foreground/50">
+              {tr(
+                'adopt.thankYou.calendarHint',
+                "Get a 7-day-before reminder so your card isn't a surprise",
+              )}
+            </p>
+          </div>
+        )}
 
         {/* Back to farm */}
         <Link

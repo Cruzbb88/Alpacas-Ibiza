@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { sendEmail } from '@/lib/mailer'
 import { buildAdoptQuarterlyUpdateEmail } from '@/lib/email-templates'
 import { getMollieClient } from '@/lib/integrations/payment-mollie'
+import { importStripe } from '@/lib/integrations/stripe-sdk'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
 import { verifyCronSecret } from '@/lib/cron-auth'
 import { pingHeartbeat } from '@/lib/heartbeat'
@@ -176,6 +177,57 @@ export async function GET(request: Request) {
             message,
             partialCount: recipients.length,
         })
+    }
+
+    // ── Stripe subscription iteration ────────────────────────────────────────
+    // Wrapped in try/catch so Mollie-only deploys skip silently.
+    try {
+        const stripeSecretKey = process.env.STRIPE_SECRET_KEY
+        if (!stripeSecretKey) {
+            log.info('[quarterly] STRIPE_SECRET_KEY unset — skipping Stripe path')
+        } else {
+            const stripeFactory = await importStripe()
+            if (!stripeFactory) {
+                log.info('[quarterly] stripe SDK not installed — skipping Stripe path')
+            } else {
+                const stripe = stripeFactory(stripeSecretKey, { apiVersion: '2024-06-20' })
+                const STRIPE_CAP = 1000
+                let stripeCount = 0
+
+                for await (const sub of stripe.subscriptions.list({ status: 'active', limit: 100 })) {
+                    stripeCount++
+                    if (stripeCount >= STRIPE_CAP) {
+                        capped = true
+                        log.warn(`[quarterly] Stripe iteration capped at ${STRIPE_CAP}`)
+                        break
+                    }
+
+                    // Resolve email: prefer metadata.donorEmail, then expanded customer.
+                    const meta = sub.metadata as Record<string, string>
+                    const email: string | null =
+                        meta.donorEmail ??
+                        (typeof (sub as { customer?: { email?: string } }).customer === 'object'
+                            ? (sub as { customer?: { email?: string } }).customer?.email ?? null
+                            : null)
+
+                    if (!email || !isValidEmail(email)) {
+                        log.warn('[quarterly] Skipping Stripe sub — no resolvable email', { subId: sub.id })
+                        continue
+                    }
+
+                    recipients.push({
+                        subId: sub.id,
+                        email,
+                        donorName: meta.donorName ?? null,
+                        alpacaName: meta.alpacaName ?? meta.alpaca ?? null,
+                        locale: meta.locale ?? 'en',
+                    })
+                }
+            }
+        }
+    } catch (stripeErr) {
+        const message = stripeErr instanceof Error ? stripeErr.message : String(stripeErr)
+        log.warn('[quarterly] Stripe iteration failed — continuing with Mollie-only results', { message })
     }
 
     log.info(`Quarterly fan-out starting`, {

@@ -342,7 +342,28 @@
         "bestFor": "Photographers, social media, memories"
       }
     },
-    "backHome": "Back to Home"
+    "backHome": "Back to Home",
+    "checklist": {
+      "title": "What to bring",
+      "items": {
+        "closedShoes": "Closed shoes — paddocks can be dusty or muddy",
+        "sunHat": "Sun hat",
+        "sunscreen": "Sunscreen",
+        "water": "Water bottle",
+        "camera": "Camera — tag us @alpacasibiza on Instagram",
+        "layeredClothing": "Layered clothing for cooler mornings",
+        "allergyNotes": "Any allergy notes to share with the host",
+        "validId": "Valid ID (required for booking check-in)"
+      },
+      "shareButton": "Save / share list",
+      "shareTitle": "Alpacas Ibiza — What to bring",
+      "shareText": "My packing list for the alpaca experience at Alpacas Ibiza"
+    },
+    "adoptCrossSell": {
+      "heading": "Coming back often?",
+      "body": "Adopt an alpaca — your tour fees for the year are included.",
+      "cta": "Become a sponsor →"
+    }
   },
   "guestStories": {
     "title": "Guest Stories",
@@ -1040,7 +1061,9 @@
       "pendingDetail": "Your bank is confirming the transfer. We'll email you the moment it clears (usually 1-2 business days for SEPA).",
       "alpacaLine": "You've adopted {name}",
       "needHelpPrefix": "Need help? Reach the team at",
-      "orWhatsApp": "or"
+      "orWhatsApp": "or",
+      "calendarDownload": "Add renewal to your calendar",
+      "calendarHint": "Get a 7-day-before reminder so your card isn't a surprise"
     },
     "comparison": {
       "whatYouGet": "What you get"
@@ -1504,5 +1527,9 @@
     "emailLabel": "Email",
     "submit": "Send certificate",
     "successMessage": "Check your inbox — if we have a record matching that email, your certificate is on the way."
+  },
+  "floatingWhatsapp": {
+    "defaultMessage": "Hi! I have a question about Alpacas Ibiza.",
+    "aria": "Chat with us on WhatsApp"
   }
 }

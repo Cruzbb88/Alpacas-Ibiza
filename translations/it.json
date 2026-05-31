@@ -806,6 +806,10 @@
     "cancelledFullBody": "__UNTRANSLATED__",
     "cancelledTryAgain": "__UNTRANSLATED__",
     "cancelledTellUs": "__UNTRANSLATED__",
+    "thankYou": {
+      "calendarDownload": "__UNTRANSLATED__",
+      "calendarHint": "__UNTRANSLATED__"
+    },
     "legal": {
       "withdrawalWaiver": "__UNTRANSLATED__",
       "waiverRequired": "__UNTRANSLATED__"

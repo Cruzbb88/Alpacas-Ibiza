@@ -8,7 +8,14 @@
  */
 
 export const FILTER_PERSONALITIES = ['calm', 'playful', 'bold', 'shy', 'sociable', 'independent'] as const
-export const FILTER_COLORS = ['white', 'grey', 'brown', 'mixed'] as const
+// Derived from the union of distinct color words present across the 14-animal roster:
+// white (Dusty, Lewis/milk white, Nelson/white with orange tint),
+// grey  (Barbarella/light rose grey, Bardot/greyish-brown),
+// brown (Bardot/greyish-brown, Fela, Marron, Mojo/brown tones),
+// fawn  (Suki/medium fawn),
+// orange (Toots/orange-reddish).
+// 'mixed' removed — matched zero animals in the real roster.
+export const FILTER_COLORS = ['white', 'grey', 'brown', 'fawn', 'orange'] as const
 export const FILTER_BREEDS = ['huacaya', 'suri'] as const
 
 export type PersonalityFilter = typeof FILTER_PERSONALITIES[number]

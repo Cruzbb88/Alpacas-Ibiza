@@ -171,6 +171,30 @@ Items 4, 8, 9, 10 each have their own runbook in `docs/runbooks/` — `EMAIL_DNS
 
 ---
 
+## Integrated this cycle (2026-05-31 — brand assets pass)
+
+### Fields populated
+
+| File | Field | Source | Before | After |
+|---|---|---|---|---|
+| `lib/tenants/alpacasibiza.ts` | `logoUrl` | `handoff/LIVE_SITE_BRAND_ASSETS.md` §1 — Header (primary) CDN URL extracted from homepage HTML | `null` | `'https://images.squarespace-cdn.com/content/v1/63f5dee81e8cfc3a0d2638e3/db346187-6229-47b0-b5d1-57ba89a893d1/LOGO-alpacas-ibiza-DEF.png'` |
+
+### Slots NOT updated this cycle and why
+
+| Slot | Reason |
+|---|---|
+| `lib/brand.ts` — all color constants | Squarespace 7.1 does not render the brand palette as static CSS. Zero hex values extractable from the 564 KB homepage fetch. Colors remain owner-input-blocked. Owner must run the DevTools snippet in `handoff/LIVE_SITE_BRAND_ASSETS.md` §"Get the palette yourself" and paste the output. Rule 5 holds — no approximation. |
+| `app/globals.css` — `--primary`, `--accent`, `--background`, etc. | Same reason — no verified hex/HSL source values in scrape file. |
+| `app/[locale]/page.tsx` Hero `backgroundImage` prop | No hero photo URL in scrape file. `LIVE_SITE_CONTENT_INVENTORY.md` has image URLs but no single designated hero asset was identified in `LIVE_SITE_BRAND_ASSETS.md`. |
+| `lib/tenants/alpacasibiza.ts` — `faviconUrl` | Field is not present on the `Tenant` interface (specs reference it but `_types.ts` does not define it). No favicon URL in scrape file regardless. |
+| Fonts (`freight-text-pro`, `Cabin`) | Font names identified but no font slots exist in `lib/brand.ts` or `lib/tenants/alpacasibiza.ts`. `freight-text-pro` requires Adobe Fonts subscription — not free. No code change warranted without owner decision and font-slot spec. |
+
+### tsc result
+
+`pnpm tsc --noEmit` — **0 errors**.
+
+---
+
 ## Approval
 
 If any of the above needs revision, paste the specific item and the change you want.
