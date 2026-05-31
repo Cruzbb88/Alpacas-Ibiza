@@ -192,6 +192,9 @@ This file grows automatically as Crystal Ball discovers new constraints during a
 ## Prophet (Time Series)
 - **cmdstan dependency**: Prophet requires cmdstan (~200MB). May exceed Railway free tier 512MB RAM limit when combined with FastAPI + other services. Consider lightweight ARIMA or pre-computed batch jobs as alternative. -- discovered 2026-04-07
 
+## Vercel Cron (Plan Limits)
+- **Cron job count**: Hobby/free plan caps the number of cron jobs (historically 2 jobs, 1×/day). `alpaca-farm-redesign/vercel.json` declares 6 crons (owner-digest, owner-mrr-digest, adopt-quarterly-update, adopt-deferred-gifts, adopt-renewal-reminders, adopt-milestone-emails). Requires Pro plan or excess crons silently never fire. Verify plan tier before relying on any scheduled job — discovered 2026-05-31 (alpaca cb-004)
+
 ## Adding New Constraints
 
 When Crystal Ball discovers a new constraint during an audit:

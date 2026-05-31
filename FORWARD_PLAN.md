@@ -360,3 +360,18 @@ Source: `handoff/LIVE_SITE_CONTENT_INVENTORY.md` (full 32-page scrape of alpacas
 
 1. `lib/tenants/alpacasibiza.ts` line 31: `cif: null` → `cif: 'ESY6917111J'` (from `/algemene-voorwaarden`)
 2. `lib/tenants/alpacasibiza.ts` address block: `streetAddress: 'C/3 Bungalow Park 22'`, `postalCode: '07850'` (verify 07819 vs 07850 discrepancy with owner before applying)
+
+## 2026-05-31 — Skill audit recheck (crystal-ball cb-004 / task-radar rd-004 / matrix-reload mr-001)
+
+Cortex reads unblocked (hook 005 now write-only). All 3 skills ran with real recall. Composite scores: crystal-ball 74 (+3), matrix-reload 72. Findings VERIFIED against current code — several skill claims were stale:
+
+| Finding | Verified state | Action |
+|---|---|---|
+| CIF + address "still null" (cb-004 #1, rd-004 QW#1) | **REFUTED** — `cif: 'Y6917111J'`, full address already set in lib/tenants/alpacasibiza.ts (landed cycle 6) | none — done |
+| `createReferralCoupon` called nowhere — Stripe discount loop inert (cb-004 #2) | **CONFIRMED** — HMAC attribution (lib/referral-codes.ts) works, but the actual Stripe coupon mint is wired to nothing | **OWNER/DEFER**: needs STRIPE_SECRET_KEY to build+test; v2 scope |
+| 6 crons in vercel.json vs Vercel Hobby 2-cron cap | **CONFIRMED** — 6 `schedule` entries | **OWNER**: confirm Vercel Pro plan, else 4 crons silently never fire (milestone/quarterly/renewal/digest) |
+| ADR-025 locale drift: ADR says `['nl','en']` at launch, i18n.config ships all 6 | **CONFIRMED** — `locales: ['en','de','it','es','nl','fr']` | **OWNER DECISION**: ship 6 (de/it/es/fr fall back to EN via sentinel-strip — incomplete but not broken) OR restrict to en/nl per ADR. SEO: indexing half-translated locales is a liability. Recommend hreflang/sitemap emit only en+nl while keeping all 6 routable. |
+| Cancel-survey is log-only (cb-004 #5) | **CONFIRMED** — reason/notes → Vercel logs, no aggregation | acceptable v1; aggregation is a nicety |
+| Two-data-source drift: roster (alpacas.ts, checkout) vs content (content.ts, display) | **CONFIRMED risk** — scrape populated content not roster | **FIXED this commit**: lib/alpaca-roster-sync.test.ts asserts both ID sets stay identical |
+
+Reports: reports/crystal-ball/cb-004-2026-05-31-*.md, reports/task-radar/rd-004-2026-05-31.md, reports/matrix-reload/mr-001-2026-05-31.md
