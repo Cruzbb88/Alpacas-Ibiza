@@ -33,8 +33,22 @@ export async function generateMetadata({
   }
 }
 
-export default async function ContactPage({ params }: { params: Promise<{ locale: Locale }> }) {
+export default async function ContactPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: Locale }>
+  searchParams?: Promise<Record<string, string | string[] | undefined>>
+}) {
   const { locale } = await params
+  const rawSearchParams = searchParams ? await searchParams : {}
+  const rawSubject = rawSearchParams['subject']
+  const subjectRaw = typeof rawSubject === 'string' ? rawSubject : ''
+  // Sanitise: cap at 200 chars, strip HTML tags.
+  const defaultSubject = subjectRaw
+    .slice(0, 200)
+    .replace(/<[^>]*>/g, '')
+    .trim()
   const translate = t(locale)
   const tenant = getDefaultTenant()
 
@@ -74,7 +88,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
             <h2 className="text-2xl font-bold text-foreground mb-6">
               {translate('contact.formTitle')}
             </h2>
-            <ContactForm labels={formLabels} />
+            <ContactForm labels={formLabels} defaultSubject={defaultSubject || undefined} />
           </div>
 
           {/* Contact Info */}

@@ -323,3 +323,95 @@ ${bodyBlock}
 
     return { subject, html }
 }
+
+// ── Certificate recovery ──────────────────────────────────────────────────────
+
+export interface CertificateRecoveryEmailOpts {
+    /** Donor's display name — user-controlled, will be HTML-escaped. */
+    donorName: string | null
+    /** Name of the adopted alpaca — user-controlled, will be HTML-escaped. */
+    alpacaName: string | null
+    /** Full URL to the certificate PDF, e.g. /api/adopt-certificate?donor_name=…&alpaca_name=… */
+    certificateUrl: string
+    /** Two-letter locale slug for locale-prefixed site links, e.g. "en". */
+    locale: string
+}
+
+/**
+ * Build the certificate-recovery email.
+ *
+ * Subject: "Your alpaca certificate"
+ * Content blocks:
+ *   (a) Warm "here it is again" greeting
+ *   (b) Reminder of which alpaca
+ *   (c) Big "Download your PDF certificate" CTA button → certificateUrl
+ *   (d) "Was this a mistake? You can ignore this email."
+ *   (e) Footer with billing portal + contact (from retentionEmailLayout)
+ *
+ * All dynamic user fields go through escapeHtml before HTML injection.
+ * certificateUrl is server-constructed (SITE_BASE_URL + encoded params) —
+ * still escaped for defence-in-depth in case alpaca slug contains markup.
+ */
+export function buildCertificateRecoveryEmail(
+    opts: CertificateRecoveryEmailOpts,
+): { subject: string; html: string } {
+    const { donorName, alpacaName, certificateUrl, locale } = opts
+
+    const safeDonorName = donorName ? escapeHtml(donorName) : null
+    const safeAlpacaName = alpacaName ? escapeHtml(alpacaName) : null
+    // certificateUrl is server-constructed — escape for defence-in-depth.
+    const safeCertUrl = escapeHtml(certificateUrl)
+    const safeLocale = escapeHtml(locale || 'en')
+
+    const subject = `Your alpaca certificate`
+
+    // --- Greeting ---
+    const greeting = safeDonorName
+        ? `<h2 style="color:${BRAND.primary}">Hi ${safeDonorName} 🦙</h2>`
+        : `<h2 style="color:${BRAND.primary}">Here's your certificate 🦙</h2>`
+
+    // --- Alpaca reminder ---
+    const alpacaLine = safeAlpacaName
+        ? `<p>You asked us to re-send your adoption certificate for <strong>${safeAlpacaName}</strong> — here it is again.</p>`
+        : `<p>You asked us to re-send your adoption certificate — here it is again.</p>`
+
+    // --- CTA button ---
+    const ctaBlock = `
+<div style="margin:24px 0;text-align:center">
+  <a href="${safeCertUrl}"
+     style="display:inline-block;padding:14px 28px;background:${BRAND.primary};color:#fff;text-decoration:none;border-radius:6px;font-size:15px;font-weight:600">
+    Download your PDF certificate
+  </a>
+</div>
+<p style="font-size:13px;color:#777;text-align:center">
+  The link above opens or downloads your certificate as a PDF.
+</p>
+`
+
+    // --- Mistake note ---
+    const mistakeNote = `
+<p style="margin-top:24px;font-size:13px;color:#999;border-top:1px solid #eee;padding-top:16px">
+  Was this a mistake? You can safely ignore this email — no changes have been made to your adoption.
+</p>
+`
+
+    // --- Billing portal link ---
+    const billingPortalUrl = `${SITE_BASE_URL_INLINE}/${safeLocale}/adopt#manage`
+    const safePortalUrl = escapeHtml(billingPortalUrl)
+    const manageNote = `
+<p style="font-size:13px;color:#777">
+  Need to manage your subscription?
+  <a href="${safePortalUrl}" style="color:${BRAND.primary}">Visit your adoption portal →</a>
+</p>
+`
+
+    const html = retentionEmailLayout(`
+${greeting}
+${alpacaLine}
+${ctaBlock}
+${mistakeNote}
+${manageNote}
+`)
+
+    return { subject, html }
+}

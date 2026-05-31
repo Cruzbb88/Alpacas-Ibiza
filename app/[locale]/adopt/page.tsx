@@ -386,6 +386,7 @@ export default async function AdoptPage({
                         alpacaSlug={selectedAlpacaSlug}
                         isGift={hasGiftFields}
                         locale={locale}
+                        fallbackHostedUrl={monthlyUrl}
                     />
                 </PageSection>
             )}

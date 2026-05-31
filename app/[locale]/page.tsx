@@ -7,12 +7,14 @@ import { ExperienceCards } from '@/components/experience-cards'
 import { ReviewCard } from '@/components/review-card'
 import type { Review } from '@/components/review-card'
 import { t } from '@/lib/translations'
-import { FAREHARBOR_BOOKING_URL } from '@/lib/config'
+import { FAREHARBOR_BOOKING_URL, SITE_BASE_URL } from '@/lib/config'
 import type { Locale } from '@/i18n.config'
 import { NewsletterForm } from '@/components/newsletter-form'
 import { AwardsBadges } from '@/components/awards-badges'
 import { buildLocaleAlternates } from '@/lib/i18n-metadata'
 import { getOgImage } from '@/lib/og-images'
+import { GoogleReviewsBadge } from '@/components/google-reviews-badge'
+import { localBusinessSchema, toJsonLd } from '@/lib/structured-data'
 
 export async function generateMetadata({
   params,
@@ -41,9 +43,38 @@ export async function generateMetadata({
   }
 }
 
-export default async function Home({ params }: { params: Promise<{ locale: Locale }> }) {
+export default async function Home({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: Locale }>
+  searchParams: Promise<{ ref?: string; utm_source?: string; utm_medium?: string; utm_campaign?: string }>
+}) {
   const { locale } = await params
+  const { ref } = await searchParams
   const translate = t(locale)
+
+  /* ─── UTM / referral passthrough ─── */
+  const validRef = ref && /^ALPACA-[A-Z0-9]{6}$/.test(ref) ? ref : undefined
+  function bookingHref(): string {
+    if (!validRef) return FAREHARBOR_BOOKING_URL
+    const u = new URL(FAREHARBOR_BOOKING_URL)
+    u.searchParams.set('ref', validRef)
+    return u.toString()
+  }
+  const primaryBookingUrl = bookingHref()
+
+  /* ─── JSON-LD structured data ─── */
+  const websiteSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    url: SITE_BASE_URL,
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: `${SITE_BASE_URL}/${locale}/journal?q={search_term_string}`,
+      'query-input': 'required name=search_term_string',
+    },
+  }
 
   /* ─── Choice Path Cards ─── */
   const pathOptions = [
@@ -163,6 +194,16 @@ export default async function Home({ params }: { params: Promise<{ locale: Local
 
   return (
     <main>
+      {/* ── JSON-LD structured data ── */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: toJsonLd(localBusinessSchema()) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: toJsonLd(websiteSchema) }}
+      />
+
       {/* ── 1. Hero Section ── */}
       <Hero
         title={translate('hero.title')}
@@ -171,7 +212,7 @@ export default async function Home({ params }: { params: Promise<{ locale: Local
         trustSignals={["Ibiza's first alpaca farm", "By appointment in San Carlos"]}
         cta={{
           label: translate('hero.ctaPrimary'),
-          href: FAREHARBOR_BOOKING_URL,
+          href: primaryBookingUrl,
         }}
         secondary={{
           label: translate('hero.ctaSecondary'),
@@ -225,6 +266,7 @@ export default async function Home({ params }: { params: Promise<{ locale: Local
       <section className="w-full py-16 md:py-24 px-4 bg-background">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
+            <GoogleReviewsBadge className="mb-4 justify-center" />
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
               {translate('guestStories.title')}
             </h2>
@@ -274,7 +316,7 @@ export default async function Home({ params }: { params: Promise<{ locale: Local
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href={FAREHARBOR_BOOKING_URL}
+              href={primaryBookingUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center px-6 py-3 bg-accent hover:bg-accent/90 text-accent-foreground rounded-lg font-medium transition-colors"

@@ -10,10 +10,25 @@
 import { useState } from 'react'
 import { Link2, MessageCircle, Twitter, Facebook } from 'lucide-react'
 
+/** Regex for a valid donor referral code. */
+const REFERRAL_CODE_RE = /^ALPACA-[A-Z0-9]{6}$/
+
+/**
+ * Append `?ref=<code>` (or `&ref=<code>`) to a URL, skipping if the URL
+ * already contains a `ref=` parameter.
+ */
+function appendRef(url: string, code: string): string {
+  if (url.includes('ref=')) return url
+  const separator = url.includes('?') ? '&' : '?'
+  return `${url}${separator}ref=${encodeURIComponent(code)}`
+}
+
 export interface ShareButtonsProps {
   readonly url: string      // absolute URL
   readonly title: string    // article title
   readonly excerpt?: string // article excerpt (unused in current share targets but kept for future use)
+  /** Donor referral code. Must match /^ALPACA-[A-Z0-9]{6}$/. When valid, appended as ?ref= to every share target. */
+  readonly referralCode?: string
   readonly labels?: {
     share?: string
     copyLink?: string
@@ -24,7 +39,11 @@ export interface ShareButtonsProps {
   }
 }
 
-export function ShareButtons({ url, title, labels = {} }: ShareButtonsProps) {
+export function ShareButtons({ url, title, referralCode, labels = {} }: ShareButtonsProps) {
+  const shareUrl =
+    referralCode && REFERRAL_CODE_RE.test(referralCode)
+      ? appendRef(url, referralCode)
+      : url
   const [copied, setCopied] = useState(false)
 
   const {
@@ -39,11 +58,11 @@ export function ShareButtons({ url, title, labels = {} }: ShareButtonsProps) {
   async function handleCopy() {
     try {
       if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(url)
+        await navigator.clipboard.writeText(shareUrl)
       } else {
         // Fallback: textarea execCommand for older browsers / http://
         const ta = document.createElement('textarea')
-        ta.value = url
+        ta.value = shareUrl
         ta.style.position = 'fixed'
         ta.style.opacity = '0'
         document.body.appendChild(ta)
@@ -59,9 +78,9 @@ export function ShareButtons({ url, title, labels = {} }: ShareButtonsProps) {
     }
   }
 
-  const waHref = `https://wa.me/?text=${encodeURIComponent(`${title}\n\n${url}`)}`
-  const xHref = `https://x.com/intent/post?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`
-  const fbHref = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`
+  const waHref = `https://wa.me/?text=${encodeURIComponent(`${title}\n\n${shareUrl}`)}`
+  const xHref = `https://x.com/intent/post?text=${encodeURIComponent(title)}&url=${encodeURIComponent(shareUrl)}`
+  const fbHref = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`
 
   const btnBase =
     'inline-flex items-center justify-center rounded-md p-2 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'

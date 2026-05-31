@@ -51,6 +51,14 @@ export interface ContactFormLabels {
 
 interface ContactFormProps {
     labels: ContactFormLabels
+    /**
+     * Pre-fill the subject dropdown/field from a ?subject= URL query parameter.
+     * Sanitised by the page (200-char cap, HTML stripped) before being passed in.
+     * If the value doesn't match a known SubjectKey label it is used verbatim as
+     * the initial subject state so any arbitrary string from the URL is honoured.
+     * A saved localStorage draft takes precedence (the user's own prior typing wins).
+     */
+    defaultSubject?: string
 }
 
 /* -------------------------------------------------------------------------- */
@@ -149,7 +157,7 @@ function inputCls(invalid: boolean) {
 
 type Status = 'idle' | 'submitting' | 'success' | 'error'
 
-export function ContactForm({ labels }: ContactFormProps) {
+export function ContactForm({ labels, defaultSubject }: ContactFormProps) {
     const [status, setStatus] = useState<Status>('idle')
     const [serverError, setServerError] = useState<string>('')
     const [submitted, setSubmitted] = useState({
@@ -157,7 +165,10 @@ export function ContactForm({ labels }: ContactFormProps) {
         email: '',
     })
 
-    const { draft: form, patch, clear } = useFormDraft<DraftShape>('contact', INITIAL_DRAFT)
+    const initialDraft: DraftShape = defaultSubject
+        ? { ...INITIAL_DRAFT, subject: defaultSubject }
+        : INITIAL_DRAFT
+    const { draft: form, patch, clear } = useFormDraft<DraftShape>('contact', initialDraft)
     const [captchaToken, setCaptchaToken] = useState<string>('')
     const [turnstileKey, setTurnstileKey] = useState(0) // bump to force-reset Turnstile after error
     const [honeypot, setHoneypot] = useState('')

@@ -23,8 +23,11 @@ import type { Locale } from '@/i18n.config'
 import { SITE_BASE_URL } from '@/lib/config'
 import { findAlpacaName } from '@/lib/data/alpacas'
 
-type SearchParams = Promise<{ alpaca?: string }>
+type SearchParams = Promise<{ alpaca?: string; ref?: string }>
 type Params = Promise<{ locale: Locale }>
+
+/** Regex for a valid donor referral code. */
+const REFERRAL_CODE_RE = /^ALPACA-[A-Z0-9]{6}$/
 
 function resolveAlpacaName(raw: string | undefined): string | null {
   if (!raw) return null
@@ -85,13 +88,17 @@ export default async function ShareAdoptionPage({
   searchParams: SearchParams
 }) {
   const { locale } = await params
-  const { alpaca } = await searchParams
+  const { alpaca, ref } = await searchParams
   const alpacaName = resolveAlpacaName(alpaca)
+  const validRef = ref && REFERRAL_CODE_RE.test(ref) ? ref : null
 
   const headline = alpacaName
     ? `Sample Donor adopted ${alpacaName} at Alpacas Ibiza.`
     : 'Sample Donor supports Alpacas Ibiza.'
   const subline = 'Want to adopt one too?'
+  const adoptHref = validRef
+    ? `/${locale}/adopt?referral=${encodeURIComponent(validRef)}`
+    : `/${locale}/adopt`
 
   return (
     <main
@@ -152,7 +159,7 @@ export default async function ShareAdoptionPage({
         </p>
 
         <Link
-          href={`/${locale}/adopt`}
+          href={adoptHref}
           style={{
             display: 'inline-block',
             background: '#556B2F',

@@ -356,7 +356,7 @@ export default async function MyAdoptionPage({
           referral URL displayed here is what donors can copy manually.
           Follow-up round will thread the code into ShareCTA's clipboard
           payload once that component opens up for edits. */}
-      {isLive && <ShareCTA alpacaSlug={result.subscription.alpacaSlug} locale={locale} />}
+      {isLive && <ShareCTA alpacaSlug={result.subscription.alpacaSlug} locale={locale} referralCode={referralCode} />}
       {isLive && referralCode && (
         <ReferralCodeBadge code={referralCode} shareUrl={referralShareUrl} />
       )}

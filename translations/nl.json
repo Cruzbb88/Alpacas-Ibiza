@@ -1,12 +1,119 @@
 {
   "nav": {
     "tours": "Tours en Bezoeken",
+    "visit": "Bezoek",
     "shop": "Winkel",
     "about": "Over Ons",
     "contact": "Contact",
     "bookTour": "Tour Boeken",
     "language": "Taal",
-    "weaving": "Weven"
+    "weaving": "Weven",
+    "recoverCertificate": "Certificaat opnieuw versturen"
+  },
+  "visit": {
+    "metaTitle": "Plan Je Bezoek | Alpacas Ibiza – Es Currals Boerderij Ibiza",
+    "metaDescription": "Alles wat je nodig hebt voor je aankomst op de Es Currals alpacaboerderij in het noorden van Ibiza — routebeschrijving, parkeren, toegankelijkheid, wat mee te nemen en annuleringsbeleid.",
+    "title": "Je bezoek plannen",
+    "subhead": "Alles wat je nodig hebt voordat je aankomt bij Es Currals, de boerderij in het noorden van Ibiza.",
+    "gettingHere": {
+      "heading": "Hoe kom je hier",
+      "byCar": {
+        "title": "Met de auto",
+        "body": "Vanuit Ibiza Town: ca. [UNMAPPED] minuten via PM-810. Vanuit Santa Eulàlia: ca. [UNMAPPED] minuten. Gratis parkeren ter plaatse."
+      },
+      "fromAirport": {
+        "title": "Vanaf het vliegveld",
+        "body": "Ibiza Airport (IBZ) is ca. [UNMAPPED] km — ongeveer [UNMAPPED] minuten per auto of taxi. Taxis beschikbaar bij de standplaats; geen reservering nodig."
+      },
+      "byBus": {
+        "title": "Met de bus",
+        "body": "Dichtstbijzijnde bushalte: [UNMAPPED] — ca. [UNMAPPED] minuten lopen naar de boerderij. Zie ibizabus.com voor routes. Een auto of taxi is aanbevolen voor het laatste stuk."
+      },
+      "gps": {
+        "title": "GPS & kaarten",
+        "body": "GPS: 38.9861° N, 1.5228° E. Zoek op «Alpacas Ibiza, San Carlos» als de links niet openen.",
+        "googleMaps": "Openen in Google Maps",
+        "appleMaps": "Openen in Apple Maps"
+      }
+    },
+    "onArrival": {
+      "heading": "Bij aankomst",
+      "parking": {
+        "title": "Waar parkeren",
+        "body": "[UNMAPPED: parkeerplaats details]. Gratis parkeren op het terrein."
+      },
+      "meetingPoint": {
+        "title": "Ontmoetingspunt",
+        "body": "Tref je gids bij de toegangspoort van de boerderij. Je gastheer/gastvrouw verwelkomt je en begeleidt je naar binnen."
+      },
+      "duration": {
+        "title": "Tourduur",
+        "body": "De duur hangt af van het type tour.",
+        "link": "Zie alle tours →"
+      },
+      "bring": {
+        "title": "Wat meenemen",
+        "shoes": "Comfortabele, gesloten schoenen",
+        "hat": "Zonnehoed (de boerderij is buiten)",
+        "water": "Waterfles",
+        "noPerfume": "Geen sterk parfum — alpaca's zijn gevoelig voor geur"
+      }
+    },
+    "accessibility": {
+      "heading": "Toegankelijkheid & gasten",
+      "mobility": {
+        "title": "Mobiliteit",
+        "body": "Het grootste deel van de boerderij is vlak zand en gras. Sommige gedeelten hebben ongelijk terrein. Neem vooraf contact met ons op zodat we de beste route kunnen plannen."
+      },
+      "children": {
+        "title": "Kinderen",
+        "body": "Kinderen zijn van harte welkom. Ze moeten altijd onder toezicht staan van een volwassene in de buurt van de kudde."
+      },
+      "pets": {
+        "title": "Huisdieren",
+        "body": "Huisdieren zijn niet toegestaan op de boerderij. De aanwezigheid van honden en katten brengt de kudde van streek."
+      },
+      "serviceAnimals": {
+        "title": "Assistentiedieren",
+        "bodyPrefix": "Assistentiedieren zijn welkom met voorafgaande melding. Neem",
+        "contactLink": "contact op",
+        "bodySuffix": "voor je bezoek zodat we de kudde kunnen voorbereiden."
+      }
+    },
+    "cancellation": {
+      "heading": "Annuleringsbeleid",
+      "free": {
+        "title": "Gratis annulering",
+        "body": "Annuleer tot 24 uur voor je bezoek voor volledige terugbetaling. Terugbetalingen worden binnen 5–10 werkdagen verwerkt."
+      },
+      "weather": {
+        "title": "Slecht weer",
+        "body": "Lichte regen: de tour gaat door. Onweer of extreem weer: we plannen gratis opnieuw."
+      },
+      "lateNotice": {
+        "title": "Late annulering",
+        "body": "Annuleringen binnen 24 uur kunnen kosten met zich meebrengen. Neem zo vroeg mogelijk contact op en we doen ons best om je te helpen."
+      }
+    },
+    "photos": {
+      "heading": "Foto's & film",
+      "personal": {
+        "title": "Persoonlijke fotografie",
+        "body": "Ja — fotografeer en film overal op de boerderij voor persoonlijk gebruik. De alpaca's zijn beroemd fotogeniek."
+      },
+      "commercial": {
+        "title": "Commercieel gebruik",
+        "bodyPrefix": "Voor commerciële shoots, branded content of media, bekijk onze",
+        "pressKitLink": "perskit",
+        "bodySuffix": "en neem contact met ons op voor je bezoek."
+      }
+    },
+    "ctas": {
+      "heading": "Klaar om te bezoeken?",
+      "bookTour": "Boek een tour",
+      "seeHerd": "Zie de kudde",
+      "contact": "Contacteer ons"
+    }
   },
   "hero": {
     "title": "Es Currals Alpacas Ibiza",
@@ -703,8 +810,11 @@
     }
   },
   "search": {
-    "placeholder": "Zoeken...",
+    "trigger": "Zoeken",
+    "placeholder": "Zoek alpaca's, tours, dagboek...",
     "noResults": "Geen resultaten",
+    "empty": "Geen resultaten voor \"{query}\"",
+    "loading": "Laden...",
     "openShortcut": "Druk op / om te zoeken",
     "browseJournal": "Alle journaalberichten bekijken"
   },
@@ -737,9 +847,21 @@
     "errorRef": "Foutreferentie"
   },
   "adopt": {
+    "canceledBody": "Geen zorgen — je adoptie is niet verwerkt. Je kunt het op elk moment opnieuw proberen.",
+    "cancelledHeading": "Geen kosten — je adoptie is niet voltooid",
+    "cancelledFullBody": "Je hebt het afrekenvenster gesloten voordat je betaalde. Er is geen betaling afgeschreven. Je alpaca is nog beschikbaar — kom terug wanneer je er klaar voor bent.",
+    "cancelledTryAgain": "Opnieuw proberen",
+    "cancelledTellUs": "Vertel ons wat er is gebeurd",
     "legal": {
       "withdrawalWaiver": "Ik ga er uitdrukkelijk mee akkoord dat mijn adoptie onmiddellijk begint en erken dat ik mijn 14-daagse herroepingsrecht verlies zodra de prestatie begint. (Vereist door EU-richtlijn 2011/83 art. 16(m).)",
       "waiverRequired": "Accepteer de bovenstaande herroepingsverklaring om door te gaan naar betaling."
     }
+  },
+  "recoverCertificate": {
+    "title": "Je certificaat opvragen",
+    "subhead": "Welkomstmail kwijt? Geef het e-mailadres op waarmee je hebt geadopteerd en we sturen je certificaat opnieuw.",
+    "emailLabel": "E-mail",
+    "submit": "Certificaat versturen",
+    "successMessage": "Controleer je inbox — als we een account vinden dat overeenkomt met dat e-mailadres, is je certificaat onderweg."
   }
 }

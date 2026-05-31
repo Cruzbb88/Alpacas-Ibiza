@@ -59,6 +59,9 @@ export interface EmbeddedCheckoutProps {
   /** Parsed gift fields when isGift is true. Threaded into PaymentIntent metadata. */
   giftFields?: ParsedGiftFields | null
   locale: string
+  /** Optional fallback URL for the hosted checkout page. When provided, an
+   *  escape-hatch link is shown inside the error banner so donors can still pay. */
+  fallbackHostedUrl?: string
 }
 
 // Module-level cache so we only load the Stripe.js bundle once per session.
@@ -79,6 +82,7 @@ function getStripePromise(): Promise<Stripe | null> | null {
  * useStripe() / useElements() must be called INSIDE <Elements>.
  */
 export function EmbeddedCheckout(props: EmbeddedCheckoutProps) {
+  const { fallbackHostedUrl } = props
   const stripePromise = useMemo(() => getStripePromise(), [])
   const [clientSecret, setClientSecret] = useState<string | null>(null)
   const [paymentIntentId, setPaymentIntentId] = useState<string | null>(null)
@@ -137,6 +141,16 @@ export function EmbeddedCheckout(props: EmbeddedCheckoutProps) {
         className="rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900"
       >
         Embedded payment unavailable: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY is not configured.
+        {fallbackHostedUrl && (
+          <a
+            href={fallbackHostedUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-3 block w-fit rounded-lg border border-amber-700 bg-amber-100 px-4 py-2 text-xs font-semibold text-amber-900 hover:bg-amber-200 transition-colors"
+          >
+            Try our hosted checkout instead
+          </a>
+        )}
       </div>
     )
   }
@@ -149,6 +163,16 @@ export function EmbeddedCheckout(props: EmbeddedCheckoutProps) {
       >
         Could not start checkout. Please try again or email info@alpacasibiza.com.
         <span className="block mt-1 text-xs opacity-70">{initError}</span>
+        {fallbackHostedUrl && (
+          <a
+            href={fallbackHostedUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-3 inline-flex items-center rounded-lg border border-destructive/40 bg-background px-4 py-2 text-xs font-semibold text-destructive hover:bg-destructive/5 transition-colors"
+          >
+            Try our hosted checkout instead
+          </a>
+        )}
       </div>
     )
   }

@@ -145,6 +145,7 @@ This file holds two catalogs that PRACTICES doesn't: the in-code failsafe map (w
 | IP rate-limit on `/api/contact` + `/api/commission` (2 req / 5 min per IP) | [app/api/contact/route.ts](app/api/contact/route.ts), [app/api/commission/route.ts](app/api/commission/route.ts) via [lib/rate-limit.ts](lib/rate-limit.ts) | per-IP in-memory sliding window; 429 + Retry-After; supplements Turnstile + honeypot on those routes |
 | `lib/checkout-states.ts` canonical checkout-state constants | [lib/checkout-states.ts](lib/checkout-states.ts) | `MOLLIE_PENDING_STATES` + `SUCCESS_LIKE_CHECKOUT_STATES` — single source of truth for checkout-state branching used by adopt page + thank-you component; prevents drift between callers |
 | `app/manifest.ts` `short_name` word-boundary truncation | [app/manifest.ts](app/manifest.ts) `toShortName()` | W3C App Manifest ≤ 12-char limit; `toShortName()` clips at last space (never mid-word); fallback to hard slice only if first word itself exceeds 12 chars |
+| Recover-certificate route always-200 anti-enumeration | [app/api/recover-certificate/route.ts](app/api/recover-certificate/route.ts) | mirrors billing-portal email-oracle closure pattern — never reveals whether a given email is on file |
 
 **Adding a new failsafe?** PRACTICES.md "Append protocol" applies. After landing the code, add the row above with file:line.
 

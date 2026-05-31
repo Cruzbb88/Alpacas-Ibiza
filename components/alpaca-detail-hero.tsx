@@ -18,6 +18,7 @@ import type { Locale } from '@/i18n.config'
 import type { AnimalEntity } from '@/lib/integrations/content-types'
 import { t } from '@/lib/translations'
 import { resolveAnimalBio } from '@/lib/alpacas/resolve-bio'
+import { ShareAlpacaButton } from '@/components/alpacas/share-alpaca-button'
 
 interface AlpacaDetailHeroProps {
   locale: Locale
@@ -111,6 +112,11 @@ export function AlpacaDetailHero({ locale, animal }: AlpacaDetailHeroProps) {
           >
             {translate('alpacas.backToHerd', 'Back to the herd')}
           </Link>
+          {/* Web Share API — renders null on desktop / unsupported browsers */}
+          <ShareAlpacaButton
+            name={animal.name}
+            label={translate('share.label', 'Share')}
+          />
         </div>
       </div>
     </div>

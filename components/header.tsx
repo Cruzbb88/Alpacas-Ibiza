@@ -7,7 +7,7 @@ import { Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { LanguageSwitcher } from '@/components/language-switcher'
 import { BookingButton } from '@/components/booking/button'
-import { HeaderSearch } from '@/components/header-search'
+import { SiteSearch } from '@/components/search/site-search'
 import { useParams, usePathname } from 'next/navigation'
 import type { Locale } from '@/i18n.config'
 import { useLocaleT } from '@/lib/locale-context'
@@ -23,6 +23,7 @@ interface NavItem {
 
 const NAV_ITEMS: ReadonlyArray<NavItem> = [
   { key: 'nav.tours', fallback: 'Tours', slug: 'tours' },
+  { key: 'nav.visit', fallback: 'Visit', slug: 'visit' },
   { key: 'nav.alpacas', fallback: 'Alpacas', slug: 'alpacas' },
   { key: 'nav.adopt', fallback: 'Adopt', slug: 'adopt' },
   { key: 'nav.shop', fallback: 'Shop', slug: 'shop' },
@@ -226,7 +227,7 @@ export function Header({ logoUrl = null, brandName = 'Alpacas Ibiza' }: HeaderPr
 
         {/* Desktop right cluster */}
         <div className="hidden md:flex items-center gap-2 lg:gap-3 flex-shrink-0">
-          <HeaderSearch locale={locale} />
+          <SiteSearch locale={locale} />
           <LanguageSwitcher />
           <BookingButton
             product="general"

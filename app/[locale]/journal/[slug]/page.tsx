@@ -128,10 +128,11 @@ export default async function JournalPostPage({
   // Related posts — same category, excluding current, max 3
   const related = livePosts(post.category).filter((p) => p.slug !== post.slug).slice(0, 3)
 
-  // Article JSON-LD
+  // BlogPosting JSON-LD
+  const ogImageFallback = getOgImage('journal', post.title)
   const articleSchema = {
     '@context': 'https://schema.org',
-    '@type': 'Article',
+    '@type': 'BlogPosting',
     headline: post.title,
     description: post.excerpt,
     datePublished: post.date,
@@ -145,7 +146,7 @@ export default async function JournalPostPage({
       logo: { '@type': 'ImageObject', url: `${BASE_URL}/images/logo.webp` },
     },
     mainEntityOfPage: { '@type': 'WebPage', '@id': `${BASE_URL}/${locale}/journal/${post.slug}` },
-    ...(post.heroImage ? { image: `${BASE_URL}${post.heroImage}` } : {}),
+    image: post.heroImage ? `${BASE_URL}${post.heroImage}` : ogImageFallback.url,
   }
 
   const categoryLabel = post.category.replace(/-/g, ' ')

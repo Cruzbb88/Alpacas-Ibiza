@@ -1,6 +1,7 @@
 {
   "nav": {
     "tours": "Tours & Visits",
+    "visit": "Visit",
     "shop": "Shop",
     "about": "About",
     "contact": "Contact",
@@ -9,7 +10,113 @@
     "home": "Home",
     "alpacas": "Our Alpacas",
     "gifts": "Gift Vouchers",
-    "weaving": "Weaving"
+    "weaving": "Weaving",
+    "recoverCertificate": "Recover certificate"
+  },
+  "visit": {
+    "metaTitle": "Plan Your Visit | Alpacas Ibiza – Es Currals Farm Ibiza",
+    "metaDescription": "Everything you need before arriving at Es Currals alpaca farm in northern Ibiza — directions, parking, accessibility, what to bring, and cancellation policy.",
+    "title": "Planning your visit",
+    "subhead": "Everything you need before you arrive at Es Currals, the farm in northern Ibiza.",
+    "gettingHere": {
+      "heading": "Getting here",
+      "byCar": {
+        "title": "By car",
+        "body": "From Ibiza Town: approx. [UNMAPPED] minutes via PM-810. From Santa Eulàlia: approx. [UNMAPPED] minutes. Free parking on-site."
+      },
+      "fromAirport": {
+        "title": "From the airport",
+        "body": "Ibiza Airport (IBZ) is approx. [UNMAPPED] km — roughly [UNMAPPED] minutes by car or taxi. Taxis available at the airport rank; no pre-booking required."
+      },
+      "byBus": {
+        "title": "By bus",
+        "body": "Nearest bus stop: [UNMAPPED] — approx. [UNMAPPED] minutes walk to the farm. Check ibizabus.com for routes. A car or taxi is recommended for the final stretch."
+      },
+      "gps": {
+        "title": "GPS & maps",
+        "body": "GPS: 38.9861° N, 1.5228° E. Search «Alpacas Ibiza, San Carlos» if deep links don't open.",
+        "googleMaps": "Open in Google Maps",
+        "appleMaps": "Open in Apple Maps"
+      }
+    },
+    "onArrival": {
+      "heading": "When you arrive",
+      "parking": {
+        "title": "Where to park",
+        "body": "[UNMAPPED: parking location details]. Free on-site parking available."
+      },
+      "meetingPoint": {
+        "title": "Meeting point",
+        "body": "Meet your guide at the farm gate. Your host will greet you and walk you in."
+      },
+      "duration": {
+        "title": "Tour duration",
+        "body": "Duration depends on your tour type.",
+        "link": "See all tours →"
+      },
+      "bring": {
+        "title": "What to bring",
+        "shoes": "Comfortable, closed-toe shoes",
+        "hat": "Sun hat (the farm is outdoors)",
+        "water": "Water bottle",
+        "noPerfume": "No strong perfume — alpacas are sensitive to scent"
+      }
+    },
+    "accessibility": {
+      "heading": "Accessibility & guests",
+      "mobility": {
+        "title": "Mobility",
+        "body": "Most of the farm is flat dirt and grass. Some sections are uneven terrain. Please contact us in advance so we can plan the best route for you."
+      },
+      "children": {
+        "title": "Children",
+        "body": "Children are welcome at all ages. They must be supervised by an adult at all times near the herd."
+      },
+      "pets": {
+        "title": "Pets",
+        "body": "Pets are not permitted on the farm. The presence of dogs and cats unsettles the herd."
+      },
+      "serviceAnimals": {
+        "title": "Service animals",
+        "bodyPrefix": "Service animals are permitted with advance notice. Please",
+        "contactLink": "contact us",
+        "bodySuffix": "before your visit so we can prepare the herd."
+      }
+    },
+    "cancellation": {
+      "heading": "Cancellation policy",
+      "free": {
+        "title": "Free cancellation",
+        "body": "Cancel up to 24 hours before your visit for a full refund. Refunds are processed within 5–10 business days."
+      },
+      "weather": {
+        "title": "Bad weather",
+        "body": "Light rain: we still run the tour. Thunderstorm or severe weather: we reschedule for free."
+      },
+      "lateNotice": {
+        "title": "Late cancellations",
+        "body": "Cancellations within 24 hours may incur a fee. Contact us as early as possible and we'll do our best to accommodate you."
+      }
+    },
+    "photos": {
+      "heading": "Photos & filming",
+      "personal": {
+        "title": "Personal photography",
+        "body": "Yes — photograph and film anywhere on the farm for personal use. The alpacas are famously photogenic."
+      },
+      "commercial": {
+        "title": "Commercial use",
+        "bodyPrefix": "For commercial shoots, branded content, or media, please review our",
+        "pressKitLink": "press kit",
+        "bodySuffix": "and contact us before your visit."
+      }
+    },
+    "ctas": {
+      "heading": "Ready to visit?",
+      "bookTour": "Book a tour",
+      "seeHerd": "See the herd",
+      "contact": "Contact us"
+    }
   },
   "hero": {
     "title": "Es Currals Alpacas Ibiza",
@@ -778,8 +885,11 @@
     }
   },
   "search": {
-    "placeholder": "Search...",
+    "trigger": "Search",
+    "placeholder": "Search alpacas, tours, journal...",
     "noResults": "No matches",
+    "empty": "No results for \"{query}\"",
+    "loading": "Loading...",
     "openShortcut": "Press / to search",
     "browseJournal": "Browse all journal posts"
   },
@@ -877,6 +987,10 @@
     "successTierMonthly": "monthly",
     "successTierYearly": "yearly",
     "canceledBody": "No worries — your adoption was not processed. You can try again any time.",
+    "cancelledHeading": "No charge — your adoption isn't complete",
+    "cancelledFullBody": "You closed the checkout window before paying. No payment was taken. Your alpaca is still available to adopt — come back when you're ready.",
+    "cancelledTryAgain": "Try again",
+    "cancelledTellUs": "Tell us what happened",
     "ownerConfirmHeader": "Owner action required before launch",
     "ownerConfirmBody": "The items below are owner-blocked. Replace the empty-string placeholders with confirmed content.",
     "gift": {
@@ -1350,5 +1464,39 @@
     "goTours": "Browse tours",
     "goAdopt": "Adopt an alpaca",
     "errorRef": "Error ref"
+  },
+  "whatsapp": {
+    "prefilledMessage": "Hi! I'd like to know more about visiting Alpacas Ibiza.",
+    "aria": "Chat with us on WhatsApp",
+    "fab": {
+      "label": "Open WhatsApp chat"
+    },
+    "panel": {
+      "greeting": "Hi! How can we help? Pick a topic to start the chat:",
+      "online": "Typically replies within 1 hour",
+      "footer": "Or message us directly",
+      "close": "Close WhatsApp chat starter"
+    },
+    "quickReplies": {
+      "bookTour": "Book a tour",
+      "commission": "Custom commission",
+      "adopt": "Adopt an alpaca",
+      "directions": "Visit & directions",
+      "other": "Something else"
+    },
+    "prefill": {
+      "bookTour": "Hi! I'd like to book a tour at Alpacas Ibiza. Could you tell me the availability for...",
+      "commission": "Hi! I'm interested in a custom handwoven piece. Could we discuss the details?",
+      "adopt": "Hi! I'd like to learn more about adopting an alpaca.",
+      "directions": "Hi! Could you tell me how to find the farm and your opening hours?",
+      "other": ""
+    }
+  },
+  "recoverCertificate": {
+    "title": "Recover your certificate",
+    "subhead": "Lost the welcome email? Tell us the email you adopted with and we'll re-send your certificate.",
+    "emailLabel": "Email",
+    "submit": "Send certificate",
+    "successMessage": "Check your inbox — if we have a record matching that email, your certificate is on the way."
   }
 }

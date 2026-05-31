@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button'
 import { t } from '@/lib/translations'
 import { localBusinessSchema, faqPageSchema, toJsonLd } from '@/lib/structured-data'
 import type { Locale } from '@/i18n.config'
+import { CorporateEnquiryForm } from '@/components/corporate-enquiry-form'
 
 import { SITE_BASE_URL as BASE_URL, FAREHARBOR_ITEM_BUSINESS_INCENTIVES } from '@/lib/config'
 import { getOgImage } from '@/lib/og-images'
@@ -106,6 +107,22 @@ export default async function CorporatePage({ params }: { params: Promise<{ loca
                     <div className="bg-white rounded-[16px] p-6 md:p-8 shadow-sm border border-[#F5F5DC]">
                         <FareHarborCalendar itemId={FAREHARBOR_ITEM_BUSINESS_INCENTIVES} />
                     </div>
+                </div>
+            </section>
+
+            {/* Get a custom quote */}
+            <section className="w-full py-16 md:py-24 px-4 bg-white" aria-labelledby="corporate-quote-heading">
+                <div className="max-w-2xl mx-auto">
+                    <div className="text-center mb-10">
+                        <h2 id="corporate-quote-heading" className="text-3xl font-bold text-[#556B2F] mb-3">
+                            Get a custom quote
+                        </h2>
+                        <p className="text-[#708090]">
+                            Every corporate retreat is bespoke. Share your details and we&apos;ll send a
+                            tailored proposal within 48 hours.
+                        </p>
+                    </div>
+                    <CorporateEnquiryForm />
                 </div>
             </section>
 

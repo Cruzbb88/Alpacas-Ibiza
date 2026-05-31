@@ -102,6 +102,17 @@ export function BillingPortalLink({ locale, vendor = 'mollie' }: BillingPortalLi
           )}
         </form>
       )}
+      {/* Certificate recovery link — below the portal form so donors who lost
+          their certificate can self-serve without searching for support. */}
+      <p className="mt-4 text-xs text-muted-foreground">
+        Lost your certificate?{' '}
+        <a
+          href={`/${locale}/recover-certificate`}
+          className="text-primary underline hover:text-primary/80"
+        >
+          Recover it →
+        </a>
+      </p>
     </details>
   )
 }

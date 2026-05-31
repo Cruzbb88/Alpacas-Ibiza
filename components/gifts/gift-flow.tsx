@@ -108,7 +108,7 @@ export function GiftFlow({
     /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(recipientEmail.trim()) &&
     senderName.trim().length > 0
   const canAdvanceFromStep2 =
-    message.trim().length > 0 &&
+    (message.trim().length === 0 || message.trim().length >= 2) &&
     (sendDateMode === 'today' || sendDateValue.length > 0)
 
   // Build the final checkout URL by appending gift recipient fields as query

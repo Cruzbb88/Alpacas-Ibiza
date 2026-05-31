@@ -23,6 +23,7 @@ export function NewsletterForm({ locale, source = 'footer' }: NewsletterFormProp
   const [consent, setConsent] = useState(false)
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
   const [error, setError] = useState<string | null>(null)
+  const [submitAttempted, setSubmitAttempted] = useState(false)
 
   const translate = useLocaleT()
 
@@ -35,6 +36,7 @@ export function NewsletterForm({ locale, source = 'footer' }: NewsletterFormProp
       // Belt-and-braces: the submit button is disabled until consent is
       // ticked, but a synthetic submit (Enter key on the email field while
       // the checkbox is empty) still routes through here.
+      setSubmitAttempted(true)
       setStatus('error')
       setError(
         translate(
@@ -125,7 +127,7 @@ export function NewsletterForm({ locale, source = 'footer' }: NewsletterFormProp
         id="newsletter-marketing-consent"
         disabled={status === 'sending'}
       />
-      {!consent && (
+      {!consent && submitAttempted && (
         <p id="newsletter-consent-help" className="text-xs text-foreground/60">
           {translate(
             'legal.marketingConsentRequired',

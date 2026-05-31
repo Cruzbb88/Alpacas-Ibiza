@@ -1,11 +1,38 @@
 {
   "nav": {
     "tours": "Tour e Visite",
+    "visit": "__UNTRANSLATED__",
     "shop": "Negozio",
     "about": "Chi siamo",
     "contact": "Contatti",
     "bookTour": "Prenota Tour",
-    "language": "Lingua"
+    "language": "Lingua",
+    "recoverCertificate": "__UNTRANSLATED__"
+  },
+  "visit": {
+    "title": "__UNTRANSLATED__",
+    "subhead": "__UNTRANSLATED__",
+    "gettingHere": {
+      "heading": "__UNTRANSLATED__"
+    },
+    "onArrival": {
+      "heading": "__UNTRANSLATED__"
+    },
+    "accessibility": {
+      "heading": "__UNTRANSLATED__"
+    },
+    "cancellation": {
+      "heading": "__UNTRANSLATED__"
+    },
+    "photos": {
+      "heading": "__UNTRANSLATED__"
+    },
+    "ctas": {
+      "heading": "__UNTRANSLATED__",
+      "bookTour": "__UNTRANSLATED__",
+      "seeHerd": "__UNTRANSLATED__",
+      "contact": "__UNTRANSLATED__"
+    }
   },
   "hero": {
     "title": "Es Currals Alpacas Ibiza",
@@ -745,9 +772,29 @@
     "errorRef": "Riferimento errore"
   },
   "adopt": {
+    "cancelledHeading": "__UNTRANSLATED__",
+    "cancelledFullBody": "__UNTRANSLATED__",
+    "cancelledTryAgain": "__UNTRANSLATED__",
+    "cancelledTellUs": "__UNTRANSLATED__",
     "legal": {
       "withdrawalWaiver": "__UNTRANSLATED__",
       "waiverRequired": "__UNTRANSLATED__"
     }
+  },
+  "search": {
+    "trigger": "__UNTRANSLATED__",
+    "placeholder": "__UNTRANSLATED__",
+    "noResults": "__UNTRANSLATED__",
+    "empty": "__UNTRANSLATED__",
+    "loading": "__UNTRANSLATED__",
+    "openShortcut": "__UNTRANSLATED__",
+    "browseJournal": "__UNTRANSLATED__"
+  },
+  "recoverCertificate": {
+    "title": "__UNTRANSLATED__",
+    "subhead": "__UNTRANSLATED__",
+    "emailLabel": "__UNTRANSLATED__",
+    "submit": "__UNTRANSLATED__",
+    "successMessage": "__UNTRANSLATED__"
   }
 }

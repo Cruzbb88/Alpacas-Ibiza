@@ -33,21 +33,29 @@ import { trackEvent } from '@/lib/analytics-events'
 import { SITE_BASE_URL } from '@/lib/config'
 import type { Locale } from '@/i18n.config'
 
+/** Regex for a valid donor referral code — mirrors the guard in share-buttons.tsx. */
+const REFERRAL_CODE_RE = /^ALPACA-[A-Z0-9]{6}$/
+
 interface ShareCTAProps {
   /** Alpaca slug from the donor's subscription metadata. null = "let us pick". */
   alpacaSlug: string | null
   /** Active locale for the share-adoption landing-page URL. */
   locale: Locale
+  /** Donor referral code. When valid, appended as ?ref= to the share URL. */
+  referralCode?: string | null
 }
 
 type FeedbackState = 'idle' | 'copied' | 'mailto'
 
-function buildShareUrl(locale: Locale, alpacaSlug: string | null): string {
-  const search = alpacaSlug ? `?alpaca=${encodeURIComponent(alpacaSlug)}` : ''
-  return `${SITE_BASE_URL}/${locale}/share-adoption${search}`
+function buildShareUrl(locale: Locale, alpacaSlug: string | null, referralCode?: string | null): string {
+  const params = new URLSearchParams()
+  if (alpacaSlug) params.set('alpaca', alpacaSlug)
+  if (referralCode && REFERRAL_CODE_RE.test(referralCode)) params.set('ref', referralCode)
+  const search = params.toString()
+  return `${SITE_BASE_URL}/${locale}/share-adoption${search ? `?${search}` : ''}`
 }
 
-export function ShareCTA({ alpacaSlug, locale }: ShareCTAProps) {
+export function ShareCTA({ alpacaSlug, locale, referralCode }: ShareCTAProps) {
   const [feedback, setFeedback] = useState<FeedbackState>('idle')
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -66,7 +74,7 @@ export function ShareCTA({ alpacaSlug, locale }: ShareCTAProps) {
   }, [])
 
   const handleShare = useCallback(async () => {
-    const shareUrl = buildShareUrl(locale, alpacaSlug)
+    const shareUrl = buildShareUrl(locale, alpacaSlug, referralCode)
 
     // Fire analytics first — even if the clipboard write fails, the donor's
     // intent to share is a real signal we want to capture.
@@ -99,7 +107,7 @@ export function ShareCTA({ alpacaSlug, locale }: ShareCTAProps) {
       window.location.href = `mailto:?subject=${subject}&body=${body}`
     }
     flashFeedback('mailto')
-  }, [alpacaSlug, locale, flashFeedback])
+  }, [alpacaSlug, locale, referralCode, flashFeedback])
 
   const buttonLabel =
     feedback === 'copied'

@@ -63,6 +63,9 @@ export interface EmbeddedMollieCheckoutProps {
   /** Parsed gift fields when isGift is true. Threaded into Payment metadata. */
   giftFields?: ParsedGiftFields | null
   locale: string
+  /** Optional fallback URL for the hosted checkout page. When provided, an
+   *  escape-hatch link is shown inside the error banner so donors can still pay. */
+  fallbackHostedUrl?: string
 }
 
 // ── Mollie SDK shapes ───────────────────────────────────────────────────────
@@ -316,6 +319,16 @@ export function EmbeddedMollieCheckout(props: EmbeddedMollieCheckoutProps) {
         >
           Could not start checkout. Please try again or email info@alpacasibiza.com.
           <span className="block mt-1 text-xs opacity-70">{initError}</span>
+          {props.fallbackHostedUrl && (
+            <a
+              href={props.fallbackHostedUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 inline-flex items-center rounded-lg border border-destructive/40 bg-background px-4 py-2 text-xs font-semibold text-destructive hover:bg-destructive/5 transition-colors"
+            >
+              Try our hosted checkout instead
+            </a>
+          )}
         </div>
       </>
     )

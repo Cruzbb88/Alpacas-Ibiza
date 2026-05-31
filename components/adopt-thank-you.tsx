@@ -3,9 +3,10 @@
 /**
  * AdoptThankYou — post-checkout success/cancelled screen.
  *
- * Renders ONLY when ?checkout=success (full-bleed thank-you) or
- * ?checkout=cancelled (dismissible banner). Returns null otherwise so
- * the parent page renders its normal marketing content.
+ * Renders ONLY when ?checkout=success (full-bleed thank-you),
+ * ?checkout=cancelled (full-page no-charge notice),
+ * or ?checkout=mollie-return&status=canceled (same). Returns null otherwise
+ * so the parent page renders its normal marketing content.
  *
  * Failsafe: if tier param is missing or unrecognised, defaults to 'monthly'
  * so a paid donor never sees the marketing pitch instead of a success screen.
@@ -15,7 +16,7 @@
  */
 
 import { useSearchParams } from 'next/navigation'
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { ShareButtons } from '@/components/share-buttons'
 import { trackEvent } from '@/lib/client-track'
@@ -38,31 +39,34 @@ export function AdoptThankYou({
 }: AdoptThankYouProps) {
   const params = useSearchParams()
   const checkoutState = params.get('checkout')
-  const [cancelledVisible, setCancelledVisible] = useState(true)
 
-  // Auto-hide the cancelled banner after 5 seconds
-  useEffect(() => {
-    if (checkoutState !== 'cancelled') return
-    const id = setTimeout(() => setCancelledVisible(false), 5000)
-    return () => clearTimeout(id)
-  }, [checkoutState])
+  // Detect Mollie cancelled: donor closed the hosted checkout before paying.
+  // Mollie sends them back with ?checkout=mollie-return&status=canceled.
+  // Must be computed BEFORE isPending so mollie-return+canceled is excluded
+  // from the success path.
+  const mollieCancelled =
+    checkoutState === 'mollie-return' && params.get('status') === 'canceled'
 
   // A donor returning from Mollie hosted/embedded lands with one of these
   // states. They are NOT 'success' yet — for SEPA the bank can take 1-5 days
   // to confirm — but the marketing page must NOT re-render under them or the
   // donor will think payment failed and pay again. Treat as a success surface
   // with a pending-state banner.
-  const isPending = (MOLLIE_PENDING_STATES as ReadonlyArray<string>).includes(checkoutState ?? '')
+  // Exception: mollie-return with status=canceled is a cancellation, not pending.
+  const isPending =
+    !mollieCancelled &&
+    (MOLLIE_PENDING_STATES as ReadonlyArray<string>).includes(checkoutState ?? '')
   const isSuccessLike = checkoutState === 'success' || isPending
 
   // ── Funnel analytics ────────────────────────────────────────────────────
   // Fire adopt_checkout_succeeded / adopt_checkout_cancelled exactly once per
   // mount. The ref guards against StrictMode double-effect in dev. Tier is
   // already a public query param — no PII, no amount, no donor identifiers.
+  const isCancelledState = checkoutState === 'cancelled' || mollieCancelled
   const trackedRef = useRef(false)
   useEffect(() => {
     if (trackedRef.current) return
-    if (!isSuccessLike && checkoutState !== 'cancelled') return
+    if (!isSuccessLike && !isCancelledState) return
     const rawTier = params.get('tier')
     const tier: 'monthly' | 'yearly' = rawTier === 'yearly' ? 'yearly' : 'monthly'
     trackedRef.current = true
@@ -74,30 +78,42 @@ export function AdoptThankYou({
     } catch {
       // Never let analytics break the thank-you render.
     }
-  }, [checkoutState, params, isSuccessLike, isPending])
+  }, [checkoutState, params, isSuccessLike, isPending, isCancelledState])
 
   const tr = useLocaleT()
 
-  // ── Cancelled banner ────────────────────────────────────────────────────────
-  if (checkoutState === 'cancelled') {
-    if (!cancelledVisible) return null
+  // ── Cancelled full-page state ───────────────────────────────────────────────
+  // Handles ?checkout=cancelled (Stripe) and ?checkout=mollie-return&status=canceled
+  // (Mollie hosted checkout — donor closed before paying). Both: no charge taken.
+  if (isCancelledState) {
     return (
       <div
-        role="status"
-        aria-live="polite"
-        className="animate-fade-out-slow bg-muted border-l-4 border-border px-4 py-4 my-4 max-w-3xl mx-auto rounded flex items-center justify-between gap-4"
+        role="alert"
+        className="mx-auto max-w-2xl text-center py-10 px-4"
       >
-        <p className="text-foreground text-sm">
-          {tr('adopt.canceledBody', 'No worries — your adoption was not processed. You can try again any time.')}
+        <h1 className="text-2xl font-bold text-foreground">
+          {tr('adopt.cancelledHeading', "No charge — your adoption isn't complete")}
+        </h1>
+        <p className="mt-4 text-foreground/70">
+          {tr(
+            'adopt.cancelledFullBody',
+            "You closed the checkout window before paying. No payment was taken. Your alpaca is still available to adopt — come back when you're ready.",
+          )}
         </p>
-        <button
-          type="button"
-          onClick={() => setCancelledVisible(false)}
-          aria-label="Dismiss"
-          className="text-muted-foreground hover:text-foreground text-xs shrink-0"
-        >
-          ✕
-        </button>
+        <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
+          <a
+            href={`/${locale}/adopt#cta`}
+            className="inline-block rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
+          >
+            {tr('adopt.cancelledTryAgain', 'Try again')}
+          </a>
+          <a
+            href={`/${locale}/contact`}
+            className="inline-block rounded-lg border border-border px-6 py-3 text-sm font-semibold text-foreground hover:bg-primary/5"
+          >
+            {tr('adopt.cancelledTellUs', 'Tell us what happened')}
+          </a>
+        </div>
       </div>
     )
   }
@@ -249,6 +265,18 @@ export function AdoptThankYou({
         >
           {tr('adopt.thankYou.backToFarm', 'Back to the farm →')}
         </Link>
+
+        {/* Certificate recovery — shown below the main CTAs so donors who
+            misplaced a prior certificate can self-serve without contacting support. */}
+        <p className="mt-6 text-xs text-foreground/50">
+          {tr('adopt.thankYou.lostCertPrefix', 'Lost a certificate from a previous adoption?')}{' '}
+          <Link
+            href={`/${locale}/recover-certificate`}
+            className="text-primary underline hover:text-primary/80"
+          >
+            {tr('adopt.thankYou.lostCertLink', 'Recover it →')}
+          </Link>
+        </p>
       </div>
     </section>
   )
