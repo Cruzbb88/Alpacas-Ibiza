@@ -486,3 +486,257 @@ All under CDN base `https://images.squarespace-cdn.com/content/v1/63f5dee81e8cfc
 - **Alcaca Oro Negro** — Fully described product page found at `/weddings-photoshoots-1` (slug mismatch). Copy + 2 product images extracted. This revenue line should have its own page in the redesign.
 - **Media/Press page** — Found at `/wat-doen-wij-1` (slug mismatch). 15+ press clipping images extracted. Candidate content for a redesign `/press` or `/media` page.
 - **New revenue line identified: Alcaca Oro Negro (alpaca manure fertilizer)** — Not covered in redesign at all. Has dedicated product copy, brand name, origin story (Peru/"Oro Negro"), sizing options (125g mini-bag to hundreds of kg). Owner should confirm whether this ships or is farm-only.
+
+---
+
+## Round 2 extraction (2026-05-31)
+
+### Sitemap reality check
+
+The live sitemap at `https://www.alpacasibiza.com/sitemap.xml` contains exactly **32 `<loc>` entries** — identical to the Round 1 crawl. The "41 URLs" estimate in the extraction brief was pre-crawl speculation; 41 never existed. Round 1 already achieved **32/32 sitemap coverage**. This round adds depth on under-extracted pages and surfaces the one new data point (phone number) missed in the initial pass.
+
+---
+
+### Newly scraped / deeper-extracted URLs
+
+#### /home-1 — re-attempted
+- **Title:** Home — Alpacas Ibiza
+- **H1:** "The collar everyone's been talking about"
+- **H2:** "Welcome to the Wesley pack" / "Featured" / "Vulputate Commodo Ligula" / "What our friends are saying" / "Follow us on Instagram"
+- **Body extract:** Squarespace default demo content. Dog accessories (collars, leashes, harnesses). Testimonials from "June the Hound", "Vince the Poodle", "Pepito the Bull Terrier". Not Alpacas Ibiza content.
+- **Verdict:** Confirmed stale draft — Squarespace boilerplate pet-store template left in place, never populated. **Disregard entirely.** Navigation links in the shell do resolve to real Alpacas Ibiza pages (Squarespace injects the live nav into every page), but the page body is 100% placeholder.
+- **Images:** Squarespace demo CDN images (not alpaca farm assets)
+- **JSON-LD:** None
+- **Status:** JS-thin / template boilerplate — no extractable Alpacas Ibiza content
+
+#### /algemene-voorwaarden — full verbatim text (see Legal copy section below)
+- **Title:** Algemene voorwaarden — Alpacas Ibiza
+- **Meta description:** Not provided
+- **New data point vs Round 1:** Phone number **+34 689446781** (was absent from Round 1 inventory)
+- **Full article-by-article summary:** See "Legal copy verbatim" section below
+- **JSON-LD:** None
+
+#### /informatie-weaving-1 (Onze collectie) — re-attempted
+- **Title:** Onze collectie — Alpacas Ibiza
+- **H1:** ONE WITH NATURE Made in Ibiza, embracing the world
+- **H3:** Ontdek onze eigen collectie
+- **Body extract:** "During the weaving process, master weaver San De Wilde adds her own touch to both the design and structure of the creations. Weaving is an organic process, a state of mind. Passion and art are interwoven and each creation organically comes to life at the loom during the intensive manual weaving process. Each Wishfulfilling Weaving creation is therefore a unique artwork."
+- **Images:** 17 stencil images (`stencil-53.jpg` through `stencil-69.jpg`) plus logo. No additional CDN GUIDs resolved beyond what Round 1 captured.
+- **Products/Prices:** None rendered server-side. Confirmed JS-commerce block — Squarespace requires client-side JS to render product grid with titles and prices.
+- **FareHarbor:** `https://fareharbor.com/embeds/book/alpacasibiza/?full-items=yes&flow=1257173` and `https://fareharbor.com/embeds/book/alpacasibiza/?full-items=yes`
+- **JSON-LD:** None
+- **Status:** Page loaded fully; collection imagery confirmed. Individual product titles/prices remain JS-rendered only. **Owner must supply product list.**
+
+#### /contact-1 — deeper extract
+- **Title:** Contact — Alpacas Ibiza
+- **H1:** Contacteer ons.
+- **H2:** Plan je bezoek.
+- **Body extract (verbatim):**
+  - "Interesse in de weefcreaties van Wishfulfilling Weaving?"
+  - "Wil je Lewis, Dusty en onze andere alpaca's een keertje ontmoeten?"
+  - "Of snakt je groententuin naar een vitaminenkuur met onze wonderbaarlijke alpacamest Alcaca Oro Negro?"
+  - "Stuur ons dan via dit contactformulier of gewoon via mail een berichtje."
+  - "**Opgelet wel: Es Currals Alpacas Ibiza is een privé-boerderij dus er is geen vrije toegang!**"
+  - "We openen met plezier onze poort voor bezoekers maar enkel op afspraak."
+  - "Hier nog een tekst voorzien." ← **Unfilled placeholder — owner still needs to write this section**
+- **Email:** info@alpacasibiza.com
+- **Social:** Instagram `https://www.instagram.com/wishfulfillingweaving/` / Facebook `https://www.facebook.com/people/Es-Currals-Alpacas-Ibiza/100066379310193/`
+- **FareHarbor:** `https://fareharbor.com/embeds/book/alpacasibiza/?full-items=yes&flow=1257173`
+- **Form fields:** Contact form present (Squarespace native form); field names not exposed in SSR HTML
+- **Images:** Logo only (two CDN variants confirmed)
+- **JSON-LD:** None
+- **Notable:** "Hier nog een tekst voorzien" is live on the production site — an unfilled placeholder paragraph visible to visitors
+
+---
+
+### Newly surfaced revenue lines / pages we didn't know existed
+
+None. All 32 sitemap pages were already covered in Round 1. No new pages exist.
+
+**Confirmed from deeper `/contact-1` extract:** The three product lines named in the contact page CTA copy are: (1) Wishfulfilling Weaving creations, (2) alpaca visits/meetings, (3) Alcaca Oro Negro manure — exactly the three revenue streams already inventoried.
+
+---
+
+### Legal copy verbatim
+
+**Source:** `/algemene-voorwaarden` — Dutch consumer-law terms & conditions (distance selling), 18 articles
+
+**Business identity (complete):**
+- Legal name: Sandra De Wilde
+- Trading as: Es Currals Alpacas Ibiza & Wishfulfilling Weaving
+- Address: C/3 Bungalow Park 22, 07850 San Carlos Baleares España
+- Phone: **+34 689446781** (newly confirmed — not in Round 1)
+- Email: info@alpacasibiza.com
+- VAT: ESY6917111J
+
+**Article summaries (verbatim-faithful):**
+
+**Art. 1 – Definities:** Establishes 12 definitions: consumer (natural person not acting for business purposes), entrepreneur, distance contract, right of withdrawal, cooling-off period, digital content, durable data medium, and associated terms.
+
+**Art. 2 – Identiteit van de ondernemer:** "Sandra De Wilde – Es Currals Alpacas Ibiza & Wishfulfilling Weaving, C/3 Bungalow Park 22, 07850 San Carlos Baleares Espana" — phone +34 689446781, email info@alpacasibiza.com, VAT ESY6917111J.
+
+**Art. 3 – Toepasselijkheid:** Terms apply to all offers and distance contracts; must be made available before contract conclusion (physical or electronic durable medium).
+
+**Art. 4 – Het aanbod:** Offers must include complete product descriptions, accurate images, clear rights and obligations. "Kennelijke vergissingen of kennelijke fouten in het aanbod binden de ondernemer niet" (obvious errors don't bind the entrepreneur).
+
+**Art. 5 – De overeenkomst:** Contract forms upon consumer acceptance. Electronic confirmation required. Outlines payment verification rights and mandatory information delivery within 14 days of delivery.
+
+**Art. 6 – Herroepingsrecht:** Minimum 14 days without stating reasons to cancel products, services, and digital content. Cooling-off begins upon receipt. Extended to 12 months if proper withdrawal information was not provided.
+
+**Art. 7 – Verplichtingen consument tijdens bedenktijd:** Consumer must handle products carefully, limiting inspection to retail-equivalent examination. Only liable for value loss from handling beyond reasonable inspection.
+
+**Art. 8 – Uitoefening herroepingsrecht:** Consumer notifies via provided form or unambiguous method. Return within 14 days. Consumer bears direct return costs unless entrepreneur states otherwise.
+
+**Art. 9 – Verplichtingen ondernemer bij herroeping:** Written confirmation required; full refund including delivery costs within 14 days, via original payment method, at no cost to consumer.
+
+**Art. 10 – Uitsluiting herroepingsrecht:** 16 exclusion categories including: market-price-dependent items, auctions, fully-executed services with prior consent, travel packages, custom-made products, perishables, sealed hygiene products, alcoholic beverages, unsealed media/software.
+
+**Art. 11 – Prijs:** Prices fixed during offer validity except VAT changes. Variable pricing allowed if clearly disclosed. Price increases within 3 months only for legal changes. After 3 months, increases permitted only if consumer can cancel.
+
+**Art. 12 – Nakoming en extra garantie:** Products warranted to meet specifications, reasonable quality, and applicable laws. Extra warranties cannot limit statutory consumer rights.
+
+**Art. 13 – Levering en uitvoering:** Maximum care with orders. Delivery within 30 days unless otherwise agreed. Late or partial delivery entitles consumer to cancellation and damages. Entrepreneur bears risk until delivery.
+
+**Art. 14 – Duurtransacties:** Indefinite contracts cancelable anytime with max one-month notice. Fixed-term at term end, same notice. No automatic renewal except newspapers/magazines (max 3 months). After one year, consumer can cancel with one-month notice regardless of term.
+
+**Art. 15 – Betaling:** Payment due within 14 days of contract or cooling-off start. Advance payment capped at 50%. Late payment incurs statutory interest plus collection costs (max 15% on amounts under €2,500). Consumer must report payment errors immediately.
+
+**Art. 16 – Klachtenregeling:** Published complaints process required. Complaints must be detailed and timely. Responses within 14 days of receipt. Four weeks to resolve before formal dispute proceedings.
+
+**Art. 17 – Geschillen:** "Op overeenkomsten tussen de ondernemer en de consument waarop deze algemene voorwaarden betrekking hebben, is uitsluitend Spaans recht van toepassing." (Spanish law exclusively applies.)
+
+**Art. 18 – Aanvullende of afwijkende bepalingen:** Additional terms cannot disadvantage consumers and must be in writing or accessible durable media.
+
+**Usage note for redesign:** This legal copy can be migrated to the redesign's `/terms` or `/algemene-voorwaarden` page subject to owner/legal review. The text is standard Dutch consumer-law boilerplate with the owner's specific business identity inserted. The phone number (+34 689446781) is the only piece of contact data not otherwise appearing on the site — add to Contact page / footer.
+
+---
+
+### Per-tour FareHarbor URL inventory
+
+All booking buttons across all pages use the same two FareHarbor embed patterns. No per-tour item IDs were found in SSR HTML beyond the adoption item already captured in Round 1.
+
+| Tour / page | FareHarbor URL | items param | flow param |
+|---|---|---|---|
+| Adopt-a-Paca | `https://fareharbor.com/embeds/book/alpacasibiza/items/577841/?full-items=yes&flow=1257173` | `577841` | `1257173` |
+| All other tours (yoga, weddings, workshops, business) | `https://fareharbor.com/embeds/book/alpacasibiza/?full-items=yes&flow=1257173` | none (main calendar) | `1257173` |
+| Generic / fallback | `https://fareharbor.com/embeds/book/alpacasibiza/?full-items=yes` | none | none |
+
+**Conclusion:** Per-tour item IDs for yoga, weddings, workshops, and business incentives are not exposed in SSR HTML. They are either (a) set only in JS-rendered FareHarbor widget config, or (b) not yet assigned. Owner must supply from FareHarbor dashboard. These populate `FAREHARBOR_ITEM_YOGA`, `FAREHARBOR_ITEM_WEDDINGS`, `FAREHARBOR_ITEM_WORKSHOPS`, `FAREHARBOR_ITEM_BUSINESS` in `.env`.
+
+---
+
+### Owner photos newly inventoried
+
+No new image URLs surfaced in Round 2 beyond what Round 1 captured. The `/home-1` images are Squarespace demo assets (dog accessories) — not usable.
+
+| URL location | Image URL | Suggested redesign slot |
+|---|---|---|
+| (all new portrait/farm URLs are in Round 1 Image URL Inventory above) | — | — |
+
+---
+
+### Still-missing pages (couldn't extract)
+
+| URL | Reason |
+|---|---|
+| `https://www.alpacasibiza.com/home-1` | Squarespace dog-accessories boilerplate template — confirmed on re-attempt. No Alpacas Ibiza content. Permanently disregard. |
+| `https://fareharbor.com/embeds/book/alpacasibiza/?full-items=yes` | JS-rendered FareHarbor embed — `no-assets` error on both attempts. Per-tour item IDs not exposed. Owner/FareHarbor dashboard access required. |
+| `https://fareharbor.com/alpacasibiza/items/` | Same — JS-rendered, no SSR. |
+| `/informatie-weaving-1` product prices | Page body loaded; Squarespace commerce product grid is client-side JS only. Individual titles and prices require owner input. |
+| `/contact-1` form fields | Squarespace native form — field names not in SSR HTML. Form action posts to Squarespace's own endpoint. |
+
+---
+
+### Round 2 summary
+
+- **Sitemap confirmed:** 32 URLs total (not 41). Round 1 already scraped all 32.
+- **New data found:** Phone number +34 689446781 (from `/algemene-voorwaarden` Art. 2 — add to Contact page and footer in redesign).
+- **Confirmed live placeholder:** `/contact-1` contains "Hier nog een tekst voorzien" visible to production visitors — owner action needed.
+- **Legal copy:** Full 18-article Dutch T&C text now documented above for migration with owner/legal sign-off.
+- **FareHarbor item IDs:** Only `577841` (adoption) confirmed. All other tours fall back to main calendar. Owner must supply remaining item IDs from FareHarbor admin.
+
+---
+
+## Per-tour FareHarbor item ID extraction (2026-05-31)
+
+Goal: populate `FAREHARBOR_ITEM_*` env vars without owner having to log into FareHarbor admin.
+
+### Pages inspected (this pass)
+
+11 pages crawled for `items=` parameters: `/home`, `/wat-doen-wij`, `/alpaca-yoga`, `/alpaca-yoga-1`, `/weddings-photoshoots`, `/weddings-photoshoots-1`, `/business-incentives-brainstormsessies`, `/informatie-weaving`, `/informatie-weaving-1`, `/adopt-a-paca`, `/wie-zijn-wij`.
+
+### Extracted item IDs
+
+| Tour / experience (NL) | Tour (EN equivalent) | items= | flow= | Source page | Suggested env var name |
+|---|---|---|---|---|---|
+| Weaving / adoption (exact product TBC) | Weaving workshop or Adopt-a-Paca | 577841 | 1257173 | `/home` mid-page CTA, `/informatie-weaving` mid-page CTA | Candidate: `FAREHARBOR_ITEM_TOUR_WEAVING_WORKSHOP` or `FAREHARBOR_ITEM_WOVEN` — **owner must confirm** |
+
+**Only one distinct `items=` value found across all 11 pages: `577841`.** It was already noted in Round 1/2 as "adoption item" based on homepage placement but appears equally on the weaving-info page — the product identity is ambiguous without FareHarbor admin access.
+
+### URLs to set in our redesign
+
+The redesign's `getProductBookingUrl()` → `getFareHarborItemUrl(itemId)` in `lib/config.ts` produces:
+```
+https://fareharbor.com/embeds/book/alpacasibiza/?items=577841
+```
+The live site uses the `/items/<id>/` path variant:
+```
+https://fareharbor.com/embeds/book/alpacasibiza/items/577841/?full-items=yes&flow=1257173
+```
+Both are valid FareHarbor embed patterns. Do NOT change `getFareHarborItemUrl()` to use the path format — confirm with FareHarbor support which is canonical before modifying. The existing query-param format in `lib/config.ts` is correct per FareHarbor's documented embed API.
+
+### Tours/experiences with NO FareHarbor per-tour `items=` URL on the page
+
+Every dedicated tour page uses only the master `flow=1257173` calendar link — no `items=` parameter:
+
+- `/alpaca-yoga` — Alpaca Yoga: generic flow only
+- `/alpaca-yoga-1` — Workshops Weven & Spinnen: generic flow only
+- `/weddings-photoshoots` — Weddings & Photoshoots: generic flow only
+- `/business-incentives-brainstormsessies` — Business Incentives: generic flow only
+- `/adopt-a-paca` — Adopt-a-Paca: generic flow only (item 577841 appears only on /home and /informatie-weaving, not the adopt page itself)
+- `/informatie-weaving-1` — Weaving collection: no FareHarbor link at all
+
+### Match against redesign product slugs (`lib/fareharbor-products.ts`)
+
+| Redesign slug | Env var | Live site evidence | items= found? |
+|---|---|---|---|
+| `meet-herd` | `FAREHARBOR_ITEM_TOUR_MEET_HERD` | No dedicated live page | NO — owner-blocked |
+| `weaving-workshop` | `FAREHARBOR_ITEM_TOUR_WEAVING_WORKSHOP` | `/alpaca-yoga-1` (slug mismatch) — generic flow only | CANDIDATE 577841 (unconfirmed) |
+| `farm-experience` | `FAREHARBOR_ITEM_TOUR_FARM_EXPERIENCE` | No dedicated live page | NO — owner-blocked |
+| `photo-session` | `FAREHARBOR_ITEM_TOUR_PHOTO_SESSION` | No dedicated live page | NO — owner-blocked |
+| `yoga` | `FAREHARBOR_ITEM_YOGA` | `/alpaca-yoga` — generic flow only | NO — owner-blocked |
+| `weddings` | `FAREHARBOR_ITEM_WEDDINGS` | `/weddings-photoshoots` — generic flow only | NO — owner-blocked |
+| `photoshoots` | `FAREHARBOR_ITEM_PHOTOSHOOTS` | `/weddings-photoshoots` (shared) — generic flow only | NO — owner-blocked |
+| `business-incentives` | `FAREHARBOR_ITEM_BUSINESS_INCENTIVES` | `/business-incentives-brainstormsessies` — generic flow only | NO — owner-blocked |
+| `gift-card` | `FAREHARBOR_ITEM_GIFT_CARD` | No dedicated live page | NO — owner-blocked |
+| `romantic-sunset` | `FAREHARBOR_ITEM_ROMANTIC_SUNSET` | No dedicated live page | NO — owner-blocked |
+| `family-farm-days` | `FAREHARBOR_ITEM_FAMILY_FARM_DAYS` | No dedicated live page | NO — owner-blocked |
+
+**Additional RUNBOOK env vars not in fareharbor-products.ts (from RUNBOOK section 2a):**
+
+| Env var | Live site evidence | items= found? |
+|---|---|---|
+| `FAREHARBOR_ITEM_WOVEN` | `/informatie-weaving` CTA | CANDIDATE 577841 (unconfirmed) |
+| `FAREHARBOR_ITEM_ALCACA` | No FareHarbor link on Alcaca page (`/weddings-photoshoots-1`) | NO — likely email/contact-only |
+| `FAREHARBOR_ITEM_COMMISSION` | No FareHarbor link anywhere for commissions | NO — email-only |
+
+### OWNER_LAUNCH_RUNBOOK env var status after this extraction
+
+| Env var | Status after live HTML extraction |
+|---|---|
+| `FAREHARBOR_ITEM_TOUR_MEET_HERD` | OWNER-BLOCKED |
+| `FAREHARBOR_ITEM_TOUR_WEAVING_WORKSHOP` | OWNER-BLOCKED (577841 is a candidate but unconfirmed) |
+| `FAREHARBOR_ITEM_TOUR_FARM_EXPERIENCE` | OWNER-BLOCKED |
+| `FAREHARBOR_ITEM_TOUR_PHOTO_SESSION` | OWNER-BLOCKED |
+| `FAREHARBOR_ITEM_YOGA` | OWNER-BLOCKED |
+| `FAREHARBOR_ITEM_WEDDINGS` | OWNER-BLOCKED |
+| `FAREHARBOR_ITEM_PHOTOSHOOTS` | OWNER-BLOCKED |
+| `FAREHARBOR_ITEM_BUSINESS_INCENTIVES` | OWNER-BLOCKED |
+| `FAREHARBOR_ITEM_GIFT_CARD` | OWNER-BLOCKED |
+| `FAREHARBOR_ITEM_ROMANTIC_SUNSET` | OWNER-BLOCKED |
+| `FAREHARBOR_ITEM_FAMILY_FARM_DAYS` | OWNER-BLOCKED |
+| `FAREHARBOR_ITEM_WOVEN` | OWNER-BLOCKED (577841 candidate — owner must confirm) |
+| `FAREHARBOR_ITEM_ALCACA` | OWNER-BLOCKED (no FareHarbor link found — may be contact-only) |
+| `FAREHARBOR_ITEM_COMMISSION` | OWNER-BLOCKED (email-only — no FareHarbor link found) |
+
+**Bottom line: 0 of 14 env vars are populatable from live HTML alone.** Item `577841` is the only per-tour ID in the SSR HTML; its product identity cannot be confirmed without FareHarbor admin access. All 14 `FAREHARBOR_ITEM_*` vars remain owner-blocked. The fail-open fallback to `flow=1257173` main calendar is already wired in `getProductBookingUrl()` and will remain active until owner supplies IDs.

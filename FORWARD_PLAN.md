@@ -287,3 +287,76 @@ Full detail in `CANT_BE_DONE.md`. Summary of immovable limits:
 _For section-by-section step-by-step instructions, see `OWNER_LAUNCH_RUNBOOK.md`._
 _For items flagged as permanently infeasible, see `CANT_BE_DONE.md`._
 _For the original owner-input inventory (historical), see `OWNER_INPUT_NEEDED.md`._
+
+---
+
+## 2026-05-31 — Post-scrape gap recheck
+
+Source: `handoff/LIVE_SITE_CONTENT_INVENTORY.md` (full 32-page scrape of alpacasibiza.com, scraped 2026-05-31).
+
+**Pre-scrape owner-blocked gap count: 28**
+**Post-scrape true-owner-action count: 17** (11 gaps satisfied or moved to "integration pending")
+
+---
+
+### Newly satisfied / data-exists-integration-pending
+
+| Gap | Pre-scrape status | Post-scrape status | Evidence |
+|---|---|---|---|
+| Founder names (San De Wilde + Bart) | UNMAPPED | Data exists — integration pending | `/wie-zijn-wij`: H4 "Bart (Oprichter & eigenaar) / San (Oprichter & eigenares)"; legal name Sandra De Wilde on VAT reg |
+| Physical address (LSSI-CE Art. 10) | UNMAPPED in `lib/tenants/alpacasibiza.ts` `address` | Data exists — integration pending | `/algemene-voorwaarden`: C/3 Bungalow Park 22, 07850 San Carlos, Baleares, España. Code currently has partial "San Carlos" only. |
+| CIF / tax ID | `cif: null` in `lib/tenants/alpacasibiza.ts` | Data exists — integration pending | VAT: **ESY6917111J** extracted from `/algemene-voorwaarden`. Field still `null` in code — developer must set `cif: 'ESY6917111J'`. |
+| Legal entity name | UNMAPPED | Data exists — integration pending | Sandra De Wilde — Es Currals Alpacas Ibiza & Wishfulfilling Weaving (from terms page) |
+| All 14 alpaca bios (localizedBio) | `bio: null`, `localizedBio` absent | Populated in code | `lib/tenants/alpacasibiza-content.ts` now has NL (verbatim) + EN (translated, OWNER_REVIEW_TRANSLATION flag set) for all 14. Note: `bio` field is still `null` — only `localizedBio` is populated. |
+| All 14 alpaca portrait images | `image: null` | CDN URLs set in code | All 14 full-size Squarespace CDN URLs in `lib/tenants/alpacasibiza-content.ts`. Owner must confirm licence/usage rights before launch. |
+| Alpaca fun_fact + personality (carousel + filter) | UNMAPPED | Populated in code | All 14 entries have `fun_fact` and `personality` set; filter chips are now functional. |
+| Phone number confirmation | Belgian +32 475 58 65 44 — unconfirmed | Confirmed | Live site footer uses same number. Still needs owner decision: is +32 the correct public-facing number for Ibiza operations? Confirmed it is live; owner sign-off pending. |
+| Yoga schedule, instructor, price, duration, capacity | UNMAPPED | Data exists — integration pending | `/alpaca-yoga`: Wed + Sat mornings, Elena (10+ yr Hatha Yoga), €30/person, 1h 15m, max 6 pax, private sessions on request. Matches 5 of the 9 UNMAPPED yoga fields. |
+| Weaving studio copy (history, process, loom name) | UNMAPPED | Data exists — integration pending | `/informatie-weaving`: San started 2013, Swedish loom named "Big Ben" from 92-yr-old master weaver, natural dyes (hibiscus, avocado), full process narrative extracted. |
+| FareHarbor account + flow ID | flow=1257173 hardcoded; adoption item=577841 unconfirmed | Confirmed on live site | All booking buttons use `flow=1257173`; adoption product `items/577841` confirmed from homepage link. Remaining item IDs (yoga, weddings, workshops, etc.) still unresolvable — FH embeds are JS-rendered. |
+
+---
+
+### Still true owner action required
+
+| Gap | Category | Why scrape cannot resolve it |
+|---|---|---|
+| Privacy policy / Terms / Cookies / Impressum body text | BLOCKING (LEGAL) | Not on live site. Lawyer-approved copy required. `LEGAL_CONTENT_LIVE` stays false. |
+| GDPR consent checkbox (newsletter, gift, adopt flows) | BLOCKING (LEGAL) | Owner must confirm checkbox copy; developer wires it. |
+| Payment vendor setup (Mollie KYC + live API key, or Stripe) | BLOCKING (REVENUE) | Requires owner to create accounts, complete KYC, generate live keys. |
+| Tier 1 secrets (RESEND_API_KEY, NEXTAUTH_SECRET, ADMIN_*, CRON_SECRET, FAREHARBOR_WEBHOOK_SECRET) | BLOCKING (INFRA) | Requires owner to provision Resend account and generate secure random values. |
+| Resend sender domain DKIM/SPF/DMARC | BLOCKING (DELIVERABILITY) | DNS records must be set at owner's registrar. |
+| Vercel deployment + domain DNS cutover | BLOCKING (INFRA) | Owner must create Vercel account, connect repo, set env vars, update DNS. |
+| FareHarbor item IDs (yoga, weddings, workshops, business, gift, romantic-sunset, family-farm-days, alcaca, woven, commission, photoshoots) | POST-LAUNCH | FH embed pages are JS-rendered. Only item 577841 (adopt) confirmed. Owner must log into FH admin dashboard. |
+| Cloudflare Turnstile site key + secret key | POST-LAUNCH | Requires Cloudflare account + domain registration. |
+| Google Places API key + Place ID | POST-LAUNCH | Requires GCP account + Places API billing. |
+| Wedding/photoshoot pricing model | POST-LAUNCH | Live site says "contact us" — owner decision needed on flat rate vs per-hour, alpacas included, travel radius, handler cost. |
+| Workshop pricing | POST-LAUNCH | Live site says "on request". Owner must supply price or confirm "on request" is intended in redesign. |
+| Weaving collection product titles + prices | POLISH | Collection page is JS-rendered Squarespace commerce — prices not in SSR HTML. Owner must provide product list. |
+| Team headshots (San, Bart portrait photos) | POLISH | Owner photos exist on live site but are Squarespace CDN assets — licence for redesign use unconfirmed. Owner must supply or approve. |
+| CIF integration into code | INTEGRATION (1 line) | `lib/tenants/alpacasibiza.ts` line 31: change `cif: null` to `cif: 'ESY6917111J'`. Data extracted; just needs developer to apply. |
+| Full address integration into code | INTEGRATION (1 edit) | `address.streetAddress` is 'San Carlos' — needs 'C/3 Bungalow Park 22'. `addressLocality` should be 'San Carlos' (07850). Postal code 07819 in code vs 07850 in terms — discrepancy, owner must confirm. |
+| Owner escalation channel (Slack / Telegram / webhook) | POST-LAUNCH | Owner must set up at least one channel and provide the webhook URL. |
+| Adopt discount codes (weaving 10%, farm shop 15%) | POST-LAUNCH | Owner must create codes in booking/shop system. |
+
+---
+
+### Items confirmed NOT gaps (scrape verified they are correct in code)
+
+| Item | Verified |
+|---|---|
+| Adopt price €75/month or €900/year | Live site `/adopt-a-paca` confirms both amounts match `lib/config.ts` constants |
+| FareHarbor shortname `alpacasibiza` | Confirmed across all 32 pages |
+| GA4 `G-Y946QDVVQV` hardcoded | Live site uses same pixel (GTM container loads it) |
+| ContactEmail `info@alpacasibiza.com` | Confirmed on `/contact` |
+| Instagram `@wishfulfillingweaving` | Confirmed as primary handle on live site |
+| Facebook `100066379310193` | Confirmed on live site |
+| Phone +32 475 58 65 44 | Confirmed as live site number |
+| Adopt benefits (6 tours, 5 kg manure, photo session, 10% weaving discount, 15% farm shop discount, keychain, framed photo, calendar) | All 8 match `/adopt-a-paca` verbatim |
+
+---
+
+### Two-line developer actions unlocked by scrape (no owner input needed)
+
+1. `lib/tenants/alpacasibiza.ts` line 31: `cif: null` → `cif: 'ESY6917111J'` (from `/algemene-voorwaarden`)
+2. `lib/tenants/alpacasibiza.ts` address block: `streetAddress: 'C/3 Bungalow Park 22'`, `postalCode: '07850'` (verify 07819 vs 07850 discrepancy with owner before applying)

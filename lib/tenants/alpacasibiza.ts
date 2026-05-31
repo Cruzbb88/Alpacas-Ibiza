@@ -24,11 +24,12 @@ export const alpacasibiza = Object.freeze({
   brandName: 'Alpacas Ibiza',
   legalName: 'Es Currals Alpacas Ibiza',
   /**
-   * UNMAPPED — CIF not yet provided by owner.
-   * OWNER_INPUT_NEEDED: Spanish law requires CIF on all commercial websites.
-   * When supplied, add it here and the footer will auto-display it.
+   * CIF extracted from /algemene-voorwaarden on the live site (2026-05-31).
+   * EU VAT ESY6917111J → ES (country prefix) + Y6917111J (Spanish CIF).
+   * Source: "VAT: ESY6917111J" in LIVE_SITE_CONTENT_INVENTORY.md.
+   * OWNER_INPUT_NEEDED: confirm this is still the active CIF before going live.
    */
-  cif: null,
+  cif: 'Y6917111J',
   tagline: 'The very first alpaca farm on Ibiza',
   siteUrl: 'https://alpacasibiza.com',
   hosts: Object.freeze([
@@ -52,8 +53,14 @@ export const alpacasibiza = Object.freeze({
 
   // ── Location ────────────────────────────────────────────────────────────────
   address: Object.freeze({
-    streetAddress: 'San Carlos',
-    addressLocality: 'Santa Eulària des Riu',
+    /**
+     * Full street extracted from /algemene-voorwaarden on the live site (2026-05-31).
+     * Source: "C/3 Bungalow Park 22, 07850 San Carlos" in LIVE_SITE_CONTENT_INVENTORY.md.
+     * ⚠️ POSTAL CODE CONFLICT: live site terms page says 07850; existing tenant config had 07819.
+     * OWNER_INPUT_NEEDED: confirm correct postal code before going live.
+     */
+    streetAddress: 'C/3 Bungalow Park 22',
+    addressLocality: 'San Carlos',
     /**
      * structured-data.ts uses 'Islas Baleares' (Spanish); spec says 'Balearic Islands'
      * (English). Both refer to the same region. Using English form here for
@@ -62,7 +69,11 @@ export const alpacasibiza = Object.freeze({
      */
     addressRegion: 'Balearic Islands',
     addressCountry: 'ES',
-    postalCode: '07819',
+    /**
+     * ⚠️ POSTAL CODE CONFLICT: live site /algemene-voorwaarden says 07850;
+     * previous value was 07819. Using inventory value (07850) — owner to confirm.
+     */
+    postalCode: '07850',
   }),
   geo: Object.freeze({
     latitude: 38.9861,

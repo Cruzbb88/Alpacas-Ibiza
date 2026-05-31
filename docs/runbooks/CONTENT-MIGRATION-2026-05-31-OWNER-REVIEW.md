@@ -140,6 +140,37 @@ Items 4, 8, 9, 10 each have their own runbook in `docs/runbooks/` — `EMAIL_DNS
 
 ---
 
+---
+
+## Integrated this cycle (2026-05-31 — prose integration pass)
+
+### Fields populated
+
+| File | Field | Source | Value |
+|---|---|---|---|
+| `lib/tenants/alpacasibiza.ts` | `cif` | `/algemene-voorwaarden` — "VAT: ESY6917111J" | `'Y6917111J'` (ES prefix stripped) |
+| `lib/tenants/alpacasibiza.ts` | `address.streetAddress` | `/algemene-voorwaarden` — "C/3 Bungalow Park 22, 07850 San Carlos" | `'C/3 Bungalow Park 22'` |
+| `lib/tenants/alpacasibiza.ts` | `address.addressLocality` | same — locality updated from area to actual place name | `'San Carlos'` |
+| `lib/tenants/alpacasibiza.ts` | `address.postalCode` | same — live site says 07850; prior value was 07819 | `'07850'` (⚠️ conflict — owner to confirm) |
+
+### Keys NOT populated this cycle and why
+
+| Key | Reason |
+|---|---|
+| `nl.json weaving.processStep*Body` | Inventory body extract for `/informatie-weaving` is English-language summary only — no verbatim Dutch paragraphs quoted. Rule 5 prohibits paraphrase. |
+| `nl.json weaving.studioHistoryBody` | Same — no verbatim Dutch source in inventory for that copy block. |
+| `en.json about.*.OWNER_REVIEW_TRANSLATION` | These were populated in the prior cycle and flagged for owner review. The `OWNER_REVIEW_TRANSLATION` suffix is a review flag, not a sentinel — content is already present. |
+| `sustainability.landBody` UNMAPPED | Finca size in hectares is not stated anywhere on the live site. Still requires owner input. |
+| `visit.*` UNMAPPED distances | Travel times/distances not in live site content. Owner input needed. |
+| `about.metaTitle` in nl.json | UI string, not site copy — not in inventory scope. |
+| Tenant `legalName` update | Full legal entity from inventory is "Sandra De Wilde — Es Currals Alpacas Ibiza & Wishfulfilling Weaving". Current value (`'Es Currals Alpacas Ibiza'`) is the trading name only. Expanding to include personal name has legal implications — flagged for owner to confirm with their Spanish advisor. |
+
+### tsc result
+
+`pnpm tsc --noEmit` — **0 errors** after all changes.
+
+---
+
 ## Approval
 
 If any of the above needs revision, paste the specific item and the change you want.

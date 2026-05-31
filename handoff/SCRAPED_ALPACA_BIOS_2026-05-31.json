@@ -1,0 +1,134 @@
+{
+  "scraped_at": "2026-05-31",
+  "source": "https://www.alpacasibiza.com",
+  "language_observed": "nl",
+  "notes": "All 14 pages returned SSR body text. color fields are verbatim from live site. sex derived from Dutch gender markers (merrie=female, hengst/gecastreerde hengst=male). birth_year extracted where stated explicitly. No fields were invented.",
+  "alpacas": {
+    "barbarella": {
+      "name": "Barbarella",
+      "sex": "female",
+      "birth_year": null,
+      "color": "light rose grey",
+      "personality": "well-behaved, reserved, somewhat vain, avoids getting dirty",
+      "facts": "Also called Babs. South American mother died of cancer after her birth. Father from Alpaca Flanders. Proud of her coat color; avoids sand baths to keep it clean.",
+      "raw_quote": "Barbarella, soms ook wel Babs genoemd door haar vriendinnen, is zonder twijfel de braafste meid van de merrieweide. Hoewel ze genoemd werd naar de hoofdrolspeelster uit de gelijknamige legendarische sf-film"
+    },
+    "avalon": {
+      "name": "Avalon",
+      "sex": "female",
+      "birth_year": null,
+      "color": null,
+      "personality": "sweet, gentle, affectionate, enjoys being touched and cuddled",
+      "facts": "Named after Roxy Music hit. Comes from a family of beauty champions. Related to Marrón (aunt/niece — Avalon's mother is Marrón's sister).",
+      "raw_quote": "Lieve, zachte Avalon...is deze merrie zonder twijfel de allerliefste alpaca op onze boerderij. Een echt schatje, dat zich graag laat aanraken en knuffelen."
+    },
+    "bardot": {
+      "name": "Bardot",
+      "sex": "female",
+      "birth_year": 2022,
+      "color": "greyish-brown (grijsbruine vacht)",
+      "personality": "not shy, very playful, approaches visitors without fear, charming",
+      "facts": "Born 19 January 2022. Youngest alpaca on the farm. Daughter of Lewis and Marrón. Inherited father's heart-shaped nose and mother's dark eyes and long legs. Parents are award-winning alpacas.",
+      "raw_quote": "Onze jongste telg, geboren op 19 januari 2022, is een echt prinsesje. Letterlijk, gezien ze de dochter is van ons koningspaar Lewis en Marrón."
+    },
+    "chet": {
+      "name": "Chet",
+      "sex": "male (gecastreerde hengst — gelding)",
+      "birth_year": 2020,
+      "color": null,
+      "personality": "kind, easily petted, affectionate",
+      "facts": "First alpaca born on Ibiza (20 November 2020). Son of Lewis and Marrón. Named after Chet Baker. Godfather is Ibizan DJ Anna Tur. Locally famous on Ibiza.",
+      "raw_quote": "Een koningskind in alle betekenissen, dat is onze eerstgeboren cria Chet (naar Chet Baker, jawel). Zoon van koning Lewis en opperdiva Marrón, zag deze alpacaprins het licht op 20 november 2020"
+    },
+    "dusty": {
+      "name": "Dusty",
+      "sex": "female",
+      "birth_year": null,
+      "color": "white (acquires orange/red tint from rolling in red Ibiza sand)",
+      "personality": "most curious in the group, always first on scene, mischievous, playful, stubborn, loves water",
+      "facts": "Born to two colored parents but has white coat. Named after Dusty Springfield before moving to Ibiza. Rolls daily in red sand. Demands the sprinkler in hot weather. Half-sister to Moloko (same mother). One of the original five who arrived 10 August 2019.",
+      "raw_quote": "Dusty is het meest nieuwsgierige merrietje van de groep en altijd en overal als eerste bij. Ze daagt haar vriendinnen voortdurend uit en die vinden"
+    },
+    "fela": {
+      "name": "Fela",
+      "sex": "male (gecastreerde hengst — gelding)",
+      "birth_year": null,
+      "color": "light brown with distinctive white mark on snout",
+      "personality": "accessible, curious, affectionate, popular with visitors",
+      "facts": "Named after Afrobeat legend Fela Kuti. Known as an enthusiastic kisser. Arrived Ibiza March 2021. Distinctive permanent white mustard-like mark on snout.",
+      "raw_quote": "Genoemd naar de Afrikaanse muzieklegende Fela Kuti, is deze jonge gecastreerde hengst een echte hartendief. Zijn glanzende lichtbruine vacht in combinatie met zijn schattige snoet"
+    },
+    "fonda": {
+      "name": "Fonda",
+      "sex": "female (merrie — implied by bio language)",
+      "birth_year": null,
+      "color": null,
+      "personality": "easy to pet, most passionate kisser in the herd, affectionate",
+      "facts": "Named after Jane Fonda. Known for sparkling dark-rimmed eyes resembling permanent makeup. Gives passionate kisses on the lips.",
+      "raw_quote": "Ze kreeg haar naam van de legendarische actrice Jane Fonda en deze jonge merrie heeft ook de looks van een Hollywood-vamp. Vooral dankzij haar fonkelende, donkeromrande ogen, waardoor het lijkt alsof"
+    },
+    "lewis": {
+      "name": "Lewis",
+      "sex": "male (dekhengst — stud)",
+      "birth_year": null,
+      "color": "milk white",
+      "personality": "alpha male, dominant, regal, intense stare, constantly eating",
+      "facts": "Stud male of the herd. Won beauty competitions across Europe as a young animal. Locals call him 'Luiz'. Notable aversion to water and hoses. Father of Chet, Toots and Bardot. One of original five who arrived 10 August 2019.",
+      "raw_quote": "Lewis is de dekhengst van onze kudde en een echte macho. Als onvervalst alfamannetje staat hij boven alles en iedereen en regeert hij als de Koning van het Noorden over de finca."
+    },
+    "marron": {
+      "name": "Marrón",
+      "sex": "female (merrie)",
+      "birth_year": null,
+      "color": "brown",
+      "personality": "diva, beauty queen, somewhat fragile",
+      "facts": "Name means 'brown' in Spanish. Resembles supermodel Naomi Campbell. Struggled with stress after moving to Ibiza but recovered with medication. Has an Australian grandmother. Favoured by stud Lewis. Mother of Chet, Toots and Bardot. One of original five who arrived 10 August 2019.",
+      "raw_quote": "Marrón – wat bruin betekent in het Spaans – is een echte diva. Met haar lange poten, haar beeldmooie snoet, haar betoverende ogen en haar ranke hals heeft ze de looks van een echt topmodel"
+    },
+    "mojo": {
+      "name": "Mojo",
+      "sex": "male (gecastreerde hengst — gelding)",
+      "birth_year": null,
+      "color": "light beige with curly coat in three brown tones",
+      "personality": "calm, peaceful, conflict-averse, cuddly giant",
+      "facts": "Castrated to share pasture with dominant Lewis. Large stature inherited from mother Pretoria. Distinctive tight jawline and pointed head. Balances Lewis's impulsive nature. One of original five who arrived 10 August 2019.",
+      "raw_quote": "Mojo is onze Grote Vriendelijke Reus. Als gecastreerde hengst gaf hij een deel van zijn mannelijkheid op om de wei te kunnen delen met de dominante kuddekoning Lewis"
+    },
+    "moloko": {
+      "name": "Moloko",
+      "sex": "female (merrie — implied by bio context)",
+      "birth_year": null,
+      "color": null,
+      "personality": "quiet, reserved, doesn't impose, not easily intimidated, easily petted",
+      "facts": "Named after dance-pop band Moloko. Singer Róisín Murphy (who lives on Ibiza) has visited her woolly namesake. Half-sister to Dusty (same mother).",
+      "raw_quote": "Genoemd naar de gelijknamige danspopsensatie waarvan de excentrieke zangeres Roisin Murphy ook op Ibiza woont en zelfs al eens haar wollige naamgenote is komen bezoeken."
+    },
+    "nelson": {
+      "name": "Nelson",
+      "sex": "male (gecastreerde hengst — gelding)",
+      "birth_year": null,
+      "color": "white with orange tint (from rolling in red Ibiza sand)",
+      "personality": "shy, skittish, startles easily, working to overcome fear, makes daily progress",
+      "facts": "Has exceptionally glossy coat. Offspring of black mare and dark brown sire — white coat is unexpected genetic surprise. Acquired orange tint from rolling in red Ibiza sand.",
+      "raw_quote": "Deze jonge gecastreerde hengst is de meest schichtige van onze alpaca's. Hij schrikt op bij elk geluid of elke beweging, maar doet moeite om zijn angst te overwinnen en maakt elke dag vorderingen."
+    },
+    "suki": {
+      "name": "Suki",
+      "sex": "female (merrie — implied by bio context)",
+      "birth_year": null,
+      "color": "medium fawn with lighter belly, muzzle, and legs",
+      "personality": "somewhat stubborn/headstrong, nervous, constantly moving, aggressive around food, alert and vigilant",
+      "facts": "Named after vampire character from TV series True Blood. Resembles a vicuña (alpaca ancestor). Acts as the farm's living security system — spits and kicks at other alpacas when food is involved.",
+      "raw_quote": "Suki, niet toevallig vernoemd naar de vurige vampierdame die de hoofdrol vertolkt in de populaire tv-reeks 'True Blood', is een speciaal geval."
+    },
+    "toots": {
+      "name": "Toots",
+      "sex": "male (gecastreerde hengst — gelding, implied)",
+      "birth_year": 2021,
+      "color": "orange/reddish with long curls, stained pink from Ibiza sand",
+      "personality": "clumsy/accident-prone, constantly grunting, very stubborn, playful, charming",
+      "facts": "Second alpaca born on Ibiza (3 February 2021). Half-brother to Chet. Named after Belgian jazz legend Toots Thielemans. Resembles mother Marrón in appearance and personality. Described as looking like an orange rastafari in full coat.",
+      "raw_quote": "Als tweede alpaca ooit op 3 februari 2021 geboren op Ibiza na zijn halfbroer Chet, is Toots – naar Belgische jazzlegende Toots Thielemans – compleet een ander type."
+    }
+  }
+}
