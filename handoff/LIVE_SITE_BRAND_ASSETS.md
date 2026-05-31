@@ -112,3 +112,26 @@ The homepage references ~25-30 image URLs in `<img>` tags, all on `images.square
 | Secondary font | ✅ identified (`Cabin` — free, Google) |
 | Brand color palette | ⏳ owner runs the DevTools snippet above + pastes result |
 | Template / site IDs | ✅ extracted (useful for FareHarbor / Squarespace dashboard work) |
+
+---
+
+## Round 2 — assets actually wired (2026-05-31 late)
+
+### Logo
+- Downloaded to `public/images/brand/logo.png`
+- Source: alpacasibiza.com Squarespace CDN
+- Wired in: `components/header.tsx`
+- License: owner's own asset
+
+### Typography
+- **Primary serif** (was freight-text-pro on Squarespace — Adobe Fonts paid):
+  - Substituted with **Spectral** (Google Fonts, OFL-1.1 license)
+  - Reasoning: geometric humanist serif, similar warmth + contrast to freight-text-pro
+  - Owner can swap to a paid freight-text-pro license later — single 1-line change in layout.tsx
+- **Secondary sans** (live site already uses):
+  - **Cabin** (Google Fonts, OFL-1.1)
+  - Direct match — owner gets identical sans-serif feel
+- Wired via `next/font/google` for self-hosted CDN serving (no third-party request at runtime)
+- CSS variables: `--font-sans` (Cabin), `--font-serif` (Spectral)
+- Theme tokens updated in `app/globals.css` `@layer base` `:root` block
+- `tailwind.config.ts` `fontFamily` extended: `sans` → `var(--font-sans)`, `serif` → `var(--font-serif)`, `display` → `var(--font-serif)` (headings use `font-display` utility)

@@ -3,7 +3,8 @@
 @tailwind utilities;
 
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  /* font-sans → Cabin via --font-sans CSS variable (next/font/google, self-hosted) */
+  font-family: var(--font-sans), Cabin, Arial, sans-serif;
 }
 
 @layer utilities {
@@ -58,7 +59,13 @@ body {
     
     /* Radius: 16px */
     --radius: 1rem;
-    
+
+    /* Typography tokens — wired via next/font/google in app/layout.tsx */
+    /* --font-sans  → Cabin (injected at runtime by next/font) */
+    /* --font-serif → Spectral (injected at runtime by next/font) */
+    /* --font-display is an alias for --font-serif used by tailwind font-display utility */
+    --font-display: var(--font-serif);
+
     --sidebar-background: 60 30% 95%;
     --sidebar-foreground: 210 13% 30%;
     --sidebar-primary: 82 39% 30%;

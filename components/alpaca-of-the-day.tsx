@@ -20,7 +20,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import type { Locale } from '@/i18n.config'
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 import { getTenant } from '@/lib/tenants/server'
 import { getProviders } from '@/lib/integrations'
 
@@ -29,7 +29,7 @@ interface AlpacaOfTheDayProps {
 }
 
 export async function AlpacaOfTheDay({ locale }: AlpacaOfTheDayProps) {
-  const translate = t(locale)
+  const translate = await getTranslations()
 
   // Resolve tenant + content provider.
   const tenant = await getTenant()
@@ -49,12 +49,9 @@ export async function AlpacaOfTheDay({ locale }: AlpacaOfTheDayProps) {
   const dayOfYear = Math.floor((Date.now() - startOfYear) / 86_400_000)
   const animal = eligible[dayOfYear % eligible.length]
 
-  const eyebrow = translate('alpacaOfDay.eyebrow', 'Alpaca of the day')
-  const funFactLabel = translate('alpacaOfDay.funFact', 'Fun fact')
-  const ctaText = translate('alpacaOfDay.cta', `Meet ${animal.name}`).replace(
-    '{name}',
-    animal.name,
-  )
+  const eyebrow = translate('alpacaOfDay.eyebrow')
+  const funFactLabel = translate('alpacaOfDay.funFact')
+  const ctaText = translate('alpacaOfDay.cta',{ name: animal.name })
 
   return (
     <section

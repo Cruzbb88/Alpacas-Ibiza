@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 import type { Locale } from '@/i18n.config'
 import { SITE_BASE_URL as BASE_URL } from '@/lib/config'
 import { getPaymentAdapter } from '@/lib/payment-vendor'
@@ -104,7 +104,7 @@ export default async function AdoptPage({
     const { checkout, alpaca: alpacaParam, referral, gift_name, gift_email, gift_deliver } = await searchParams
     // Validate referral code — only pass through if it matches the full URL format (ALPACA-XXXXXX).
     const validReferral = referral && REFERRAL_CODE_URL_RE.test(referral) ? referral : null
-    const translate = t(locale)
+    const translate = await getTranslations()
     const tenant = await getTenant()
 
     // Validate alpaca slug against the canonical roster — unknown slugs (forged

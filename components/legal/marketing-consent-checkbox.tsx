@@ -16,7 +16,7 @@
  */
 
 import type { Locale } from '@/i18n.config'
-import { useLocaleT } from '@/lib/locale-context'
+import { useTranslations } from 'next-intl'
 
 interface MarketingConsentCheckboxProps {
   locale: Locale
@@ -47,18 +47,15 @@ export function MarketingConsentCheckbox({
   id = 'marketing-consent',
   disabled = false,
 }: MarketingConsentCheckboxProps) {
-  const translate = useLocaleT()
+  const translate = useTranslations()
   // The translation file holds a single string that includes the
   // [Privacy Policy] anchor placeholder so localised copy can move the link
   // mid-sentence. We split on the placeholder and render the link as a real
   // <a>, falling back gracefully if the placeholder is missing.
-  const raw = translate(
-    'legal.marketingConsent',
-    'I agree to receive Alpacas Ibiza updates and accept the [Privacy Policy].',
-  )
+  const raw = translate('legal.marketingConsent')
 
   const privacyHref = `/${locale}/privacy`
-  const linkText = translate('legal.consentPrivacy', 'Privacy Policy')
+  const linkText = translate('legal.consentPrivacy')
 
   const placeholderMatch = raw.match(/\[([^\]]+)\]/)
   let before = raw

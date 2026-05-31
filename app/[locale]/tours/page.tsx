@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { ReviewCard } from '@/components/review-card'
 import type { Review } from '@/components/review-card'
 import Link from 'next/link'
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 import { FAREHARBOR_BOOKING_URL } from '@/lib/config'
 import { FareHarborCalendar } from '@/components/booking/fareharbor-calendar'
 import { CancellationBadge } from '@/components/booking/cancellation-badge'
@@ -54,7 +54,7 @@ export async function generateMetadata({
 
 export default async function ToursPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params
-  const translate = t(locale)
+  const translate = await getTranslations()
 
   const tourTypes = [
     {
@@ -83,54 +83,54 @@ export default async function ToursPage({ params }: { params: Promise<{ locale: 
     {
       product: 'meet-herd',
       name: translate('tours.tourTypes.meetHerd.title'),
-      duration: translate('tours.compare.meetHerd.duration', 'Contact for details'),
-      price: translate('tours.compare.meetHerd.price', 'Contact for details'),
-      capacity: translate('tours.compare.meetHerd.capacity', 'Contact for details'),
+      duration: translate('tours.compare.meetHerd.duration'),
+      price: translate('tours.compare.meetHerd.price'),
+      capacity: translate('tours.compare.meetHerd.capacity'),
       includes: [
-        translate('tours.compare.meetHerd.include1', 'Guided alpaca walk'),
-        translate('tours.compare.meetHerd.include2', 'Q&A with farm host'),
-        translate('tours.compare.meetHerd.include3', 'Photo opportunity'),
+        translate('tours.compare.meetHerd.include1'),
+        translate('tours.compare.meetHerd.include2'),
+        translate('tours.compare.meetHerd.include3'),
       ],
-      bestFor: translate('tours.compare.meetHerd.bestFor', 'First-time visitors, families'),
+      bestFor: translate('tours.compare.meetHerd.bestFor'),
     },
     {
       product: 'weaving-workshop',
       name: translate('tours.tourTypes.weaving.title'),
-      duration: translate('tours.compare.weaving.duration', 'Contact for details'),
-      price: translate('tours.compare.weaving.price', 'Contact for details'),
-      capacity: translate('tours.compare.weaving.capacity', 'Contact for details'),
+      duration: translate('tours.compare.weaving.duration'),
+      price: translate('tours.compare.weaving.price'),
+      capacity: translate('tours.compare.weaving.capacity'),
       includes: [
-        translate('tours.compare.weaving.include1', 'Hands-on fiber arts session'),
-        translate('tours.compare.weaving.include2', 'Natural dyeing introduction'),
-        translate('tours.compare.weaving.include3', 'Take-home souvenir'),
+        translate('tours.compare.weaving.include1'),
+        translate('tours.compare.weaving.include2'),
+        translate('tours.compare.weaving.include3'),
       ],
-      bestFor: translate('tours.compare.weaving.bestFor', 'Creative travellers, couples'),
+      bestFor: translate('tours.compare.weaving.bestFor'),
     },
     {
       product: 'farm-experience',
       name: translate('tours.tourTypes.farm.title'),
-      duration: translate('tours.compare.farm.duration', 'Contact for details'),
-      price: translate('tours.compare.farm.price', 'Contact for details'),
-      capacity: translate('tours.compare.farm.capacity', 'Contact for details'),
+      duration: translate('tours.compare.farm.duration'),
+      price: translate('tours.compare.farm.price'),
+      capacity: translate('tours.compare.farm.capacity'),
       includes: [
-        translate('tours.compare.farm.include1', 'Full farm tour'),
-        translate('tours.compare.farm.include2', 'Sustainable practices demo'),
-        translate('tours.compare.farm.include3', 'Alpaca feeding & interaction'),
+        translate('tours.compare.farm.include1'),
+        translate('tours.compare.farm.include2'),
+        translate('tours.compare.farm.include3'),
       ],
-      bestFor: translate('tours.compare.farm.bestFor', 'Nature lovers, groups'),
+      bestFor: translate('tours.compare.farm.bestFor'),
     },
     {
       product: 'photo-session',
       name: translate('tours.tourTypes.photo.title'),
-      duration: translate('tours.compare.photo.duration', 'Contact for details'),
-      price: translate('tours.compare.photo.price', 'Contact for details'),
-      capacity: translate('tours.compare.photo.capacity', 'Contact for details'),
+      duration: translate('tours.compare.photo.duration'),
+      price: translate('tours.compare.photo.price'),
+      capacity: translate('tours.compare.photo.capacity'),
       includes: [
-        translate('tours.compare.photo.include1', 'Styled alpaca photo session'),
-        translate('tours.compare.photo.include2', 'Scenic backdrops'),
-        translate('tours.compare.photo.include3', 'Guided positioning'),
+        translate('tours.compare.photo.include1'),
+        translate('tours.compare.photo.include2'),
+        translate('tours.compare.photo.include3'),
       ],
-      bestFor: translate('tours.compare.photo.bestFor', 'Photographers, social media, memories'),
+      bestFor: translate('tours.compare.photo.bestFor'),
     },
   ]
 
@@ -248,8 +248,8 @@ export default async function ToursPage({ params }: { params: Promise<{ locale: 
       {/* Tour Comparison Table */}
       <TourComparison
         tours={tourCompareSpecs}
-        title={translate('tours.compare.title', 'Compare Tour Types')}
-        subtitle={translate('tours.compare.subtitle', 'Find the experience that fits you best')}
+        title={translate('tours.compare.title')}
+        subtitle={translate('tours.compare.subtitle')}
       />
 
       {/* What to Expect */}

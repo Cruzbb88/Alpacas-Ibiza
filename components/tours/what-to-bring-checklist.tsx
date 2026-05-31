@@ -14,7 +14,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react'
-import { useLocaleT } from '@/lib/locale-context'
+import { useTranslations } from 'next-intl'
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -69,7 +69,7 @@ function saveChecked(state: CheckedState): void {
 // ── Component ────────────────────────────────────────────────────────────────
 
 export function WhatToBringChecklist() {
-  const tr = useLocaleT()
+  const tr = useTranslations()
 
   // Initialise from localStorage after mount (avoids SSR/hydration mismatch).
   const [checked, setChecked] = useState<CheckedState>({})
@@ -94,11 +94,8 @@ export function WhatToBringChecklist() {
     if (typeof navigator === 'undefined' || typeof navigator.share !== 'function') return
     navigator
       .share({
-        title: tr('tours.checklist.shareTitle', 'Alpacas Ibiza — What to bring'),
-        text: tr(
-          'tours.checklist.shareText',
-          'My packing list for the alpaca experience at Alpacas Ibiza',
-        ),
+        title: tr('tours.checklist.shareTitle'),
+        text: tr('tours.checklist.shareText'),
         url: typeof window !== 'undefined' ? window.location.href : 'https://alpacasibiza.com/tours',
       })
       .catch(() => {
@@ -110,11 +107,11 @@ export function WhatToBringChecklist() {
 
   return (
     <section
-      aria-label={tr('tours.checklist.title', 'What to bring')}
+      aria-label={tr('tours.checklist.title')}
       className="rounded-2xl border border-border bg-card p-6 md:p-8 shadow-sm"
     >
       <h2 className="text-2xl font-bold text-foreground mb-1">
-        {tr('tours.checklist.title', 'What to bring')}
+        {tr('tours.checklist.title')}
       </h2>
       {mounted && (
         <p className="text-sm text-foreground/60 mb-5" aria-live="polite">
@@ -125,7 +122,7 @@ export function WhatToBringChecklist() {
       <ul className="space-y-3">
         {ITEM_KEYS.map((key) => {
           const id = `checklist-${key}`
-          const label = tr(`tours.checklist.items.${key}`, key)
+          const label = tr(`tours.checklist.items.${key}` as Parameters<typeof tr>[0])
           const isChecked = mounted ? Boolean(checked[key]) : false
 
           return (
@@ -166,7 +163,7 @@ export function WhatToBringChecklist() {
             >
               <path d="M13 8a3 3 0 1 0-2.83-2H7.83A3.001 3.001 0 0 0 5 4a3 3 0 1 0 2.83 4H10.17A3.001 3.001 0 0 0 13 10a3 3 0 0 0 2.83-4H13zM5 9a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm8-4a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm-3 7a3 3 0 1 0-2.83 2H5a3 3 0 1 0 2.83-2H7.17A3.001 3.001 0 0 0 10 14a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
             </svg>
-            {tr('tours.checklist.shareButton', 'Save / share list')}
+            {tr('tours.checklist.shareButton')}
           </button>
         </div>
       )}

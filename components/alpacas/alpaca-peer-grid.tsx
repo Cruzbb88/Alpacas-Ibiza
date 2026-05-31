@@ -13,7 +13,7 @@
 import type { Locale } from '@/i18n.config'
 import type { AnimalEntity } from '@/lib/integrations/content-types'
 import { AlpacaCard } from '@/components/alpaca-card'
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 
 export const PEER_GRID_DEFAULT_LIMIT = 6
 
@@ -29,18 +29,18 @@ interface AlpacaPeerGridProps {
   heading?: string
 }
 
-export function AlpacaPeerGrid({
+export async function AlpacaPeerGrid({
   locale,
   animals,
   currentSlug,
   limit = PEER_GRID_DEFAULT_LIMIT,
   heading,
 }: AlpacaPeerGridProps) {
-  const translate = t(locale)
+  const translate = await getTranslations()
   const peers = animals.filter((a) => a.id !== currentSlug).slice(0, limit)
   if (peers.length === 0) return null
 
-  const headingText = heading ?? translate('alpacas.restOfHerd', 'Meet the rest of the herd')
+  const headingText = heading ?? translate('alpacas.restOfHerd')
 
   return (
     <section aria-labelledby="alpaca-peer-grid-heading">

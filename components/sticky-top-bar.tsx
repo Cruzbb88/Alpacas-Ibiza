@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
-import { useLocaleT } from '@/lib/locale-context'
+import { useTranslations } from 'next-intl'
 import { BookTourLink } from '@/components/booking/book-tour-link'
 
 const SESSION_KEY = 'sticky-top-bar-dismissed'
@@ -30,7 +30,7 @@ interface StickyTopBarProps {
 export function StickyTopBar({ bookHref }: StickyTopBarProps) {
   const [dismissed, setDismissed] = useState(true) // start hidden to avoid SSR flash
   const [scrolled, setScrolled] = useState(false)
-  const tr = useLocaleT()
+  const tr = useTranslations()
 
   // Hydrate from sessionStorage after mount
   useEffect(() => {

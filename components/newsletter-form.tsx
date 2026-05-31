@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useLocaleT } from '@/lib/locale-context'
+import { useTranslations } from 'next-intl'
 import type { Locale } from '@/i18n.config'
 import { TurnstileWidget } from '@/components/turnstile-widget'
 import { HoneypotField } from '@/components/honeypot-field'
@@ -25,7 +25,7 @@ export function NewsletterForm({ locale, source = 'footer' }: NewsletterFormProp
   const [error, setError] = useState<string | null>(null)
   const [submitAttempted, setSubmitAttempted] = useState(false)
 
-  const translate = useLocaleT()
+  const translate = useTranslations()
 
   const canSubmit = email.length > 0 && consent && status !== 'sending'
 
@@ -39,10 +39,7 @@ export function NewsletterForm({ locale, source = 'footer' }: NewsletterFormProp
       setSubmitAttempted(true)
       setStatus('error')
       setError(
-        translate(
-          'legal.marketingConsentRequired',
-          'Please tick this box to subscribe.',
-        ),
+        translate('legal.marketingConsentRequired'),
       )
       return
     }
@@ -96,7 +93,7 @@ export function NewsletterForm({ locale, source = 'footer' }: NewsletterFormProp
     <form onSubmit={handleSubmit} className="flex flex-col gap-3">
       <HoneypotField name="business_name" value={honeypot} onChange={setHoneypot} />
       <label htmlFor="newsletter-email-input" className="sr-only">
-        {translate('newsletter.emailLabel', 'Email address')}
+        {translate('newsletter.emailLabel')}
       </label>
       <div className="flex gap-2">
         <input
@@ -130,10 +127,7 @@ export function NewsletterForm({ locale, source = 'footer' }: NewsletterFormProp
       />
       {!consent && submitAttempted && (
         <p id="newsletter-consent-help" className="text-xs text-foreground/60">
-          {translate(
-            'legal.marketingConsentRequired',
-            'Please tick this box to subscribe.',
-          )}
+          {translate('legal.marketingConsentRequired')}
         </p>
       )}
       <TurnstileWidget onToken={setCaptchaToken} />

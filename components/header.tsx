@@ -10,7 +10,7 @@ import { BookingButton } from '@/components/booking/button'
 import { SiteSearch } from '@/components/search/site-search'
 import { useParams, usePathname } from 'next/navigation'
 import type { Locale } from '@/i18n.config'
-import { useLocaleT } from '@/lib/locale-context'
+import { useTranslations } from 'next-intl'
 
 interface NavItem {
   /** Translation key. */
@@ -45,7 +45,7 @@ export function Header({ logoUrl = null, brandName = 'Alpacas Ibiza' }: HeaderPr
   const params = useParams()
   const pathname = usePathname() || '/'
   const locale = (params.locale as Locale) || 'en'
-  const tr = useLocaleT()
+  const tr = useTranslations()
 
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
@@ -137,10 +137,9 @@ export function Header({ logoUrl = null, brandName = 'Alpacas Ibiza' }: HeaderPr
 
   const closeDrawer = useCallback(() => setOpen(false), [])
 
-  const headerLabel = (key: string, fallback: string) => {
-    const value = tr(key, fallback)
-    // tr() returns the key itself when no entry + no defaultValue — but we always
-    // pass a defaultValue, so this is just a safety net.
+  const headerLabel = (key: Parameters<typeof tr>[0], fallback: string) => {
+    const value = tr(key)
+    // tr() returns the key itself when no entry — use fallback in that case.
     return value && value !== key ? value : fallback
   }
 

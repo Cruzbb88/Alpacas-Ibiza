@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useLocaleT } from '@/lib/locale-context'
+import { useTranslations } from 'next-intl'
 import type { SearchItem } from '@/lib/search/build-index'
 
 interface SiteSearchProps {
@@ -13,7 +13,7 @@ interface SiteSearchProps {
 }
 
 export function SiteSearch({ locale }: SiteSearchProps) {
-  const tr = useLocaleT()
+  const tr = useTranslations()
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [items, setItems] = useState<SearchItem[] | null>(null)
@@ -84,10 +84,10 @@ export function SiteSearch({ locale }: SiteSearchProps) {
     }
   }
 
-  const triggerLabel = tr('search.trigger', 'Search')
-  const placeholderLabel = tr('search.placeholder', 'Search alpacas, tours, journal...')
-  const loadingLabel = tr('search.loading', 'Loading...')
-  const emptyLabel = tr('search.empty', `No results for "${query}"`)
+  const triggerLabel = tr('search.trigger')
+  const placeholderLabel = tr('search.placeholder')
+  const loadingLabel = tr('search.loading')
+  const emptyLabel = tr('search.empty',{ query })
   const indexedCount = items ? items.filter((i) => i.locale === locale).length : 0
 
   return (

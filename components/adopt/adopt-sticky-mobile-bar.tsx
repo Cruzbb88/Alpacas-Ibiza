@@ -24,7 +24,7 @@
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import type { Locale } from '@/i18n.config'
-import { useLocaleT } from '@/lib/locale-context'
+import { useTranslations } from 'next-intl'
 import { trackEvent } from '@/lib/client-track'
 
 interface AdoptStickyMobileBarProps {
@@ -71,11 +71,11 @@ export function AdoptStickyMobileBar({
       // Never block navigation on analytics failure.
     }
   }
-  const translate = useLocaleT()
-  const monthlyLabel = monthlyPriceShort ?? translate('adopt.sticky.monthlyShort', '€75/mo')
-  const yearlyLabel = yearlyPriceShort ?? translate('adopt.sticky.yearlyShort', '€900/yr')
-  const adoptVerb = translate('adopt.sticky.cta', 'Adopt')
-  const regionLabel = translate('adopt.sticky.region', 'Adopt-a-Paca quick actions')
+  const translate = useTranslations()
+  const monthlyLabel = monthlyPriceShort ?? translate('adopt.sticky.monthlyShort')
+  const yearlyLabel = yearlyPriceShort ?? translate('adopt.sticky.yearlyShort')
+  const adoptVerb = translate('adopt.sticky.cta')
+  const regionLabel = translate('adopt.sticky.region')
 
   const [visible, setVisible] = useState(false)
   const lastY = useRef(0)

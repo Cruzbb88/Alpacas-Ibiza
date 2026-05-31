@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import type { Locale } from '@/i18n.config'
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 
 interface Props {
   locale: Locale
@@ -8,8 +8,8 @@ interface Props {
   message: string
 }
 
-export function PortalErrorState({ locale, reason, message }: Props) {
-  const translate = t(locale)
+export async function PortalErrorState({ locale, reason, message }: Props) {
+  const translate = await getTranslations()
   const TITLES: Record<Props['reason'], string> = {
     'no-token': translate('portal.errorTitle.noToken'),
     expired: translate('portal.errorTitle.expired'),

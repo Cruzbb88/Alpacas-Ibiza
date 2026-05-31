@@ -17,7 +17,7 @@
  */
 
 import type { Metadata } from 'next'
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 import type { Locale } from '@/i18n.config'
 import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
 import { localBusinessSchema, toJsonLd } from '@/lib/structured-data'
@@ -53,7 +53,7 @@ export async function generateMetadata({
 
 export default async function SustainabilityPage({ params }: { params: Promise<{ locale: Locale }> }) {
     const { locale } = await params
-    const translate = t(locale)
+    const translate = await getTranslations()
 
     // ── Cards: Cruz's original 4 + 2 new sections ─────────────────────────────
     const cards = [

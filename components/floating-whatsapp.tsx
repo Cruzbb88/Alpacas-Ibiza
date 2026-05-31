@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { usePathname } from 'next/navigation'
 import { trackConversion } from '@/lib/analytics'
-import { useLocaleT } from '@/lib/locale-context'
+import { useTranslations } from 'next-intl'
 import type { Locale } from '@/i18n.config'
 
 /**
@@ -194,7 +194,7 @@ export function FloatingWhatsApp({
   const panelRef = useRef<HTMLDivElement | null>(null)
   const fabRef = useRef<HTMLButtonElement | null>(null)
 
-  const t = useLocaleT()
+  const t = useTranslations()
 
   // Mount delay so we don't impact LCP.
   useEffect(() => {
@@ -276,17 +276,13 @@ export function FloatingWhatsApp({
   if (!mounted) return null
 
   const quickReplies = getQuickReplies(brandName)
-  const fabLabel = t('whatsapp.fab.label', 'Open WhatsApp chat')
-  const greeting = t(
-    'whatsapp.panel.greeting',
-    'Hi! How can we help? Pick a topic to start the chat:',
-  )
-  const onlineLabel = t('whatsapp.panel.online', 'Typically replies within 1 hour')
+  const fabLabel = t('whatsapp.fab.label')
+  const greeting = t('whatsapp.panel.greeting')
+  const onlineLabel = t('whatsapp.panel.online')
   const footerLabel = t(
-    'whatsapp.panel.footer',
-    `Or message us directly at ${formatPhoneDisplay(phone)}`,
+    'whatsapp.panel.footer', { phone: formatPhoneDisplay(phone) },
   )
-  const closeLabel = t('whatsapp.panel.close', 'Close WhatsApp chat starter')
+  const closeLabel = t('whatsapp.panel.close')
 
   return (
     <div
@@ -356,8 +352,8 @@ export function FloatingWhatsApp({
             {/* Quick-reply pills */}
             <ul className="flex flex-col gap-2 pt-1" role="list">
               {quickReplies.map(qr => {
-                const label = t(qr.labelKey, qr.labelDefault)
-                const prefill = t(qr.textKey, qr.textDefault)
+                const label = t(qr.labelKey as Parameters<typeof t>[0])
+                const prefill = t(qr.textKey as Parameters<typeof t>[0])
                 const href = buildWaUrl(phone, prefill || undefined)
                 return (
                   <li key={qr.id}>
@@ -368,7 +364,7 @@ export function FloatingWhatsApp({
                       data-analytics-event="whatsapp_quickreply_click"
                       data-quickreply-id={qr.id}
                       onClick={handleQuickReplyClick}
-                      aria-label={`${label} — ${t('whatsapp.fab.label', 'Open WhatsApp chat')}`}
+                      aria-label={`${label} — ${t('whatsapp.fab.label')}`}
                       className="
                         group flex items-center justify-between gap-2
                         w-full px-4 py-2.5

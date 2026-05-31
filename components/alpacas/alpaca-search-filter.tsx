@@ -24,7 +24,7 @@
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useTransition } from 'react'
 import type { Locale } from '@/i18n.config'
-import { useLocaleT } from '@/lib/locale-context'
+import { useTranslations } from 'next-intl'
 import {
   FILTER_PERSONALITIES,
   FILTER_COLORS,
@@ -41,7 +41,7 @@ interface AlpacaSearchFilterProps {
 }
 
 export function AlpacaSearchFilter({ locale, matchCount, totalCount }: AlpacaSearchFilterProps) {
-  const translate = useLocaleT()
+  const translate = useTranslations()
   const router = useRouter()
   const searchParams = useSearchParams()
   const [isPending, startTransition] = useTransition()
@@ -79,7 +79,7 @@ export function AlpacaSearchFilter({ locale, matchCount, totalCount }: AlpacaSea
   return (
     <div aria-busy={isPending} className="space-y-5">
       <FilterFieldset
-        legend={translate('alpacas.filter.personality', 'Personality')}
+        legend={translate('alpacas.filter.personality')}
         options={FILTER_PERSONALITIES}
         active={activePersonalities}
         translate={translate}
@@ -87,7 +87,7 @@ export function AlpacaSearchFilter({ locale, matchCount, totalCount }: AlpacaSea
         onToggle={(v) => toggleParam('p', v)}
       />
       <FilterFieldset
-        legend={translate('alpacas.filter.color', 'Colour')}
+        legend={translate('alpacas.filter.color')}
         options={FILTER_COLORS}
         active={activeColors}
         translate={translate}
@@ -95,7 +95,7 @@ export function AlpacaSearchFilter({ locale, matchCount, totalCount }: AlpacaSea
         onToggle={(v) => toggleParam('c', v)}
       />
       <FilterFieldset
-        legend={translate('alpacas.filter.breed', 'Breed')}
+        legend={translate('alpacas.filter.breed')}
         options={FILTER_BREEDS}
         active={activeBreeds}
         translate={translate}
@@ -105,7 +105,7 @@ export function AlpacaSearchFilter({ locale, matchCount, totalCount }: AlpacaSea
 
       <div className="flex items-center justify-between text-sm" role="status" aria-live="polite">
         <span className="text-foreground/70">
-          {translate('alpacas.filter.showing', `Showing ${matchCount} of ${totalCount}`)
+          {translate('alpacas.filter.showing',{ match: matchCount, total: totalCount })
             .replace('{match}', String(matchCount))
             .replace('{total}', String(totalCount))}
         </span>
@@ -115,7 +115,7 @@ export function AlpacaSearchFilter({ locale, matchCount, totalCount }: AlpacaSea
             onClick={clearAll}
             className="text-primary hover:text-primary/80 font-semibold underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 rounded"
           >
-            {translate('alpacas.filter.clearAll', 'Clear all filters')}
+            {translate('alpacas.filter.clearAll')}
           </button>
         )}
       </div>
@@ -127,7 +127,7 @@ interface FilterFieldsetProps {
   legend: string
   options: ReadonlyArray<string>
   active: ReadonlyArray<string>
-  translate: (key: string, fallback?: string) => string
+  translate: (key: string) => string
   labelPrefix: string
   onToggle: (value: string) => void
 }
@@ -141,7 +141,7 @@ function FilterFieldset({ legend, options, active, translate, labelPrefix, onTog
       <div className="flex flex-wrap gap-2">
         {options.map((option) => {
           const isActive = active.includes(option)
-          const label = translate(`${labelPrefix}.${option}`, capitalize(option))
+          const label = translate(`${labelPrefix}.${option}` as Parameters<typeof translate>[0])
           return (
             <button
               key={option}

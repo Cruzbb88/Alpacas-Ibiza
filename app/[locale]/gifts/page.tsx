@@ -1,5 +1,5 @@
 import type { Locale } from '@/i18n.config'
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 import { Hero } from '@/components/hero'
 import { FareHarborCalendar } from '@/components/booking/fareharbor-calendar'
 import { CancellationBadge } from '@/components/booking/cancellation-badge'
@@ -17,7 +17,7 @@ export async function generateMetadata({
     params: Promise<{ locale: Locale }>
 }): Promise<Metadata> {
     const { locale } = await params
-    const tr = t(locale)
+    const tr = await getTranslations()
     const ogImage = getOgImage('alpacas', 'Gift a Visit to Alpacas Ibiza')
     return {
         title: tr('gifts.meta.title') || 'Gift Voucher – Alpacas Ibiza | Give an Alpaca Experience',
@@ -45,7 +45,7 @@ export default async function GiftsPage({
     params: Promise<{ locale: Locale }>
 }) {
     const { locale } = await params
-    const translate = t(locale)
+    const translate = await getTranslations()
 
     // Pre-compute checkout URLs per gift type so the wizard (client component)
     // can receive a serialisable map instead of a function. Adoption tiers go

@@ -1,3 +1,11 @@
+import createNextIntlPlugin from 'next-intl/plugin'
+
+// Point the plugin at the repo's request config (next-intl 4.x defaults to
+// ./i18n/request.ts; ours lives at ./next-intl.config.ts). Without this wire,
+// getMessages()/getTranslations() throw "Couldn't find next-intl config file"
+// and every page migrated off lib/translations.ts fails to render.
+const withNextIntl = createNextIntlPlugin('./next-intl.config.ts')
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   typescript: {
@@ -171,5 +179,5 @@ const nextConfig = {
   },
 }
 
-export default nextConfig
+export default withNextIntl(nextConfig)
 

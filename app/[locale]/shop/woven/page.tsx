@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import type { Locale } from '@/i18n.config'
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 import { buildLocaleAlternates } from '@/lib/i18n-metadata'
 import { shopCategoryItemListSchema, toJsonLd } from '@/lib/structured-data'
 import { getOgImage } from '@/lib/og-images'
@@ -12,21 +12,15 @@ export async function generateMetadata({
   params: Promise<{ locale: Locale }>
 }): Promise<Metadata> {
   const { locale } = await params
-  const tr = t(locale)
+  const tr = await getTranslations()
   const ogImage = getOgImage('alpacas', 'Woven Alpaca Textiles – Wishfulfilling Weaving')
   return {
-    title: tr('wovenPage.metaTitle', 'Woven Collection | Wishfulfilling Weaving – Alpacas Ibiza'),
-    description: tr(
-      'wovenPage.metaDescription',
-      'Handwoven alpaca-wool scarves, blankets, and textiles made on a traditional wooden loom at Es Currals, Ibiza. Each piece is unique — enquire for availability.',
-    ),
+    title: tr('wovenPage.metaTitle'),
+    description: tr('wovenPage.metaDescription'),
     alternates: buildLocaleAlternates(locale, 'shop/woven'),
     openGraph: {
-      title: tr('wovenPage.metaTitle', 'Woven Collection | Wishfulfilling Weaving – Alpacas Ibiza'),
-      description: tr(
-        'wovenPage.metaDescription',
-        'Handwoven alpaca-wool scarves, blankets, and textiles made on a traditional wooden loom at Es Currals, Ibiza. Each piece is unique — enquire for availability.',
-      ),
+      title: tr('wovenPage.metaTitle'),
+      description: tr('wovenPage.metaDescription'),
       images: [ogImage],
     },
     twitter: {
@@ -38,9 +32,9 @@ export async function generateMetadata({
 
 export default async function WovenPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params
-  const translate = t(locale)
+  const translate = await getTranslations()
 
-  const priceOnRequest = translate('shop.priceOnRequest', 'Contact for pricing')
+  const priceOnRequest = translate('shop.priceOnRequest')
   // No ecommerce is wired — each product links to the commission enquiry form.
   const products = [
     {
@@ -121,7 +115,7 @@ export default async function WovenPage({ params }: { params: Promise<{ locale: 
                     href={`/${locale}/shop/commission?product=${product.slug}`}
                     className="block w-full px-4 py-2 bg-accent hover:bg-accent/90 text-accent-foreground rounded-lg font-medium transition-colors text-center"
                   >
-                    {translate('wovenPage.enquire', 'Enquire')}
+                    {translate('wovenPage.enquire')}
                   </Link>
                 </div>
               </div>

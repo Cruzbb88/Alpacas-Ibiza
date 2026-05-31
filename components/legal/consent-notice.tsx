@@ -23,7 +23,7 @@
  */
 
 import type { Locale } from '@/i18n.config'
-import { useLocaleT } from '@/lib/locale-context'
+import { useTranslations } from 'next-intl'
 
 interface ConsentNoticeProps {
   locale: Locale
@@ -36,14 +36,14 @@ interface ConsentNoticeProps {
 }
 
 export function ConsentNotice({ locale, actionLabel }: ConsentNoticeProps) {
-  const translate = useLocaleT()
+  const translate = useTranslations()
   // Translation files contain a placeholder `{action}` so localised copy can
   // reorder around the verb (e.g. German verb-final). For unknown locales we
   // fall back to English. The translation helper already falls back to en,
   // and then to the default value, so we always render something readable.
-  const byTemplate = translate('legal.consentBy', 'By {action} you agree to our')
-  const termsLabel = translate('legal.consentTerms', 'Terms')
-  const privacyLabel = translate('legal.consentPrivacy', 'Privacy Policy')
+  const byTemplate = translate('legal.consentBy')
+  const termsLabel = translate('legal.consentTerms')
+  const privacyLabel = translate('legal.consentPrivacy')
 
   const [before, after] = byTemplate.includes('{action}')
     ? byTemplate.split('{action}')

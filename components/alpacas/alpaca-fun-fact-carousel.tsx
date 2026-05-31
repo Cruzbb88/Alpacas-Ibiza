@@ -20,7 +20,7 @@ import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import type { Locale } from '@/i18n.config'
 import type { AnimalEntity } from '@/lib/integrations/content-types'
-import { useLocaleT } from '@/lib/locale-context'
+import { useTranslations } from 'next-intl'
 
 interface AlpacaFunFactCarouselProps {
   locale: Locale
@@ -37,7 +37,7 @@ export function AlpacaFunFactCarousel({
   intervalMs = 6000,
   heading,
 }: AlpacaFunFactCarouselProps) {
-  const translate = useLocaleT()
+  const translate = useTranslations()
   const facts = useMemo(
     () => animals.filter((a): a is AnimalEntity & { fun_fact: string } => Boolean(a.fun_fact)),
     [animals],
@@ -78,9 +78,9 @@ export function AlpacaFunFactCarousel({
   if (facts.length === 0) return null
 
   const current = facts[index] ?? facts[0]
-  const headingText = heading ?? translate('alpacas.funFacts.heading', 'Did you know?')
-  const prevLabel = translate('alpacas.funFacts.prev', 'Previous fun fact')
-  const nextLabel = translate('alpacas.funFacts.next', 'Next fun fact')
+  const headingText = heading ?? translate('alpacas.funFacts.heading')
+  const prevLabel = translate('alpacas.funFacts.prev')
+  const nextLabel = translate('alpacas.funFacts.next')
 
   function go(delta: number) {
     setIndex((i) => (i + delta + facts.length) % facts.length)

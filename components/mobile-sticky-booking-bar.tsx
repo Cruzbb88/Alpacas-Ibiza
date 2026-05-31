@@ -23,7 +23,7 @@ import { useEffect, useRef, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { X } from 'lucide-react'
 import type { Locale } from '@/i18n.config'
-import { useLocaleT } from '@/lib/locale-context'
+import { useTranslations } from 'next-intl'
 import { getFareHarborEmbedUrl } from '@/lib/config'
 import {
   getProductBookingUrl,
@@ -129,8 +129,8 @@ export function MobileStickyBookingBar({
 
   if (dismissed) return null
 
-  const tr = useLocaleT()
-  const ctaLabel = label ?? tr('nav.bookTour', 'Book a tour')
+  const tr = useTranslations()
+  const ctaLabel = label ?? tr('nav.bookTour')
   const href = product ? getProductBookingUrl(product) : getFareHarborEmbedUrl()
   const isHidden = !visible
 

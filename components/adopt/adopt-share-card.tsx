@@ -19,7 +19,7 @@
 
 import { useEffect, useState } from 'react'
 import type { Locale } from '@/i18n.config'
-import { useLocaleT } from '@/lib/locale-context'
+import { useTranslations } from 'next-intl'
 
 interface AdoptShareCardProps {
   locale: Locale
@@ -42,17 +42,14 @@ export function AdoptShareCard({
   shareText,
   hashtags = DEFAULT_HASHTAGS,
 }: AdoptShareCardProps) {
-  const translate = useLocaleT()
-  const heading = translate('adopt.share.heading', 'Tell the world')
-  const sub = translate(
-    'adopt.share.sub',
-    'A quick share helps the farm — and lets your friends meet the herd.',
-  )
+  const translate = useTranslations()
+  const heading = translate('adopt.share.heading')
+  const sub = translate('adopt.share.sub')
   const text =
-    shareText ?? translate('adopt.share.message', `I just adopted ${alpacaName} at Alpacas Ibiza! 🦙`)
-  const copyLabel = translate('adopt.share.copyLink', 'Copy link')
-  const copiedLabel = translate('adopt.share.copied', 'Copied!')
-  const nativeShareLabel = translate('adopt.share.nativeButton', 'Share')
+    shareText ?? translate('adopt.share.message',{ name: alpacaName })
+  const copyLabel = translate('adopt.share.copyLink')
+  const copiedLabel = translate('adopt.share.copied')
+  const nativeShareLabel = translate('adopt.share.nativeButton')
 
   const [hasNativeShare, setHasNativeShare] = useState(false)
   const [copied, setCopied] = useState(false)

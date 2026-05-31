@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 import type { Locale } from '@/i18n.config'
 import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
 import { buildLocaleAlternates } from '@/lib/i18n-metadata'
@@ -13,15 +13,15 @@ export async function generateMetadata({
   params: Promise<{ locale: Locale }>
 }): Promise<Metadata> {
   const { locale } = await params
-  const tr = t(locale)
+  const tr = await getTranslations()
   const ogImage = getOgImage('about', 'About Alpacas Ibiza – Es Currals Farm')
   return {
-    title: tr('about.metaTitle', 'About Alpacas Ibiza | Es Currals Farm – Bart & San'),
+    title: tr('about.metaTitle'),
     description:
       "Meet the team and story behind Es Currals, Ibiza's first alpaca farm. Belgian founders Bart & San, the Wishfulfilling Weaving studio, and 14 alpacas.",
     alternates: buildLocaleAlternates(locale, 'about'),
     openGraph: {
-      title: tr('about.metaTitle', 'About Alpacas Ibiza | Es Currals Farm – Bart & San'),
+      title: tr('about.metaTitle'),
       description:
         "Meet the team and story behind Es Currals, Ibiza's first alpaca farm.",
       images: [ogImage],
@@ -35,7 +35,7 @@ export async function generateMetadata({
 
 export default async function AboutPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params
-  const translate = t(locale)
+  const translate = await getTranslations()
 
   // Founder Person JSON-LD
   // Names + roles verbatim from LIVE_SITE_CONTENT_INVENTORY.md §/wie-zijn-wij H4

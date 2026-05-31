@@ -1,8 +1,8 @@
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 import type { Locale } from '@/i18n.config'
 
-export function SkipToMain({ locale }: { locale: Locale }) {
-  const translate = t(locale)
+export async function SkipToMain({ locale }: { locale: Locale }) {
+  const translate = await getTranslations()
   return (
     <a
       href="#main-content"

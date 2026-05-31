@@ -3,7 +3,7 @@ import { GradientPageHero, PageSection } from '@/components/layout'
 import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
 import { ExperienceCompare } from '@/components/experiences/experience-compare'
 import type { ExperienceVibe } from '@/components/experiences/experience-compare'
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 import { buildLocaleAlternates } from '@/lib/i18n-metadata'
 import { getOgImage } from '@/lib/og-images'
 import type { Locale } from '@/i18n.config'
@@ -199,7 +199,7 @@ export default async function ExperiencesIndexPage({
   params: Promise<{ locale: Locale }>
 }) {
   const { locale } = await params
-  const translate = t(locale)
+  const translate = await getTranslations()
 
   const rows = EXPERIENCES.map((spec) => ({
     slug: spec.slug,

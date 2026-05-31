@@ -1,7 +1,7 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation'
-import { useLocaleT } from '@/lib/locale-context'
+import { useTranslations } from 'next-intl'
 import type { Locale } from '@/i18n.config'
 
 const REFERRAL_CODE_RE = /^ALPACA-[A-Z0-9]{6}$/
@@ -23,7 +23,7 @@ export function ReferralAppliedBanner({ locale }: { locale: Locale }) {
 
   if (!code || !REFERRAL_CODE_RE.test(code)) return null
 
-  const tr = useLocaleT()
+  const tr = useTranslations()
 
   return (
     <div
@@ -34,10 +34,10 @@ export function ReferralAppliedBanner({ locale }: { locale: Locale }) {
       <span className="text-xl" aria-hidden="true">🎁</span>
       <div>
         <p className="text-sm sm:text-base font-bold text-primary">
-          {tr('adopt.referral.welcomeFromFriend', '🎁 Welcome from a friend — your first month is €5 off.')}
+          {tr('adopt.referral.welcomeFromFriend')}
         </p>
         <p className="text-xs sm:text-sm text-foreground/70 mt-1">
-          {tr('adopt.referral.codeApplied', 'Discount applied automatically at checkout with code')}{' '}
+          {tr('adopt.referral.codeApplied')}{' '}
           <code className="font-mono font-semibold">{code}</code>.
         </p>
       </div>

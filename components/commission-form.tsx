@@ -5,7 +5,7 @@ import { TurnstileWidget } from '@/components/turnstile-widget'
 import { HoneypotField } from '@/components/honeypot-field'
 import { InlineSpinner } from '@/components/inline-spinner'
 import { useFormDraft } from '@/lib/hooks/use-form-draft'
-import { useLocaleT } from '@/lib/locale-context'
+import { useTranslations } from 'next-intl'
 import type { Locale } from '@/i18n.config'
 import { formatPriceForLocale } from '@/lib/format-price'
 
@@ -135,9 +135,9 @@ interface CommissionFormProps {
  * ------------------------------------------------------------------------- */
 
 export function CommissionForm({ labels, locale = 'en', defaultProductInterest }: CommissionFormProps) {
-    const tr = useLocaleT()
-    const text = (key: string, fallback: string) => {
-        const value = tr(key, '')
+    const tr = useTranslations()
+    const text = (key: Parameters<typeof tr>[0], fallback: string) => {
+        const value = tr(key)
         return value && value !== key ? value : fallback
     }
 

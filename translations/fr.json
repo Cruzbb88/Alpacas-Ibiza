@@ -555,7 +555,9 @@
     },
     "planTitle": "Prêt à Organiser Votre Événement ?",
     "planText": "Nous personnalisons chaque forfait entreprise selon la taille et les objectifs de votre équipe. Contactez-nous pour un devis.",
-    "planCta": "Demander un Devis"
+    "planCta": "Demander un Devis",
+    "liveBodyEN": "__UNTRANSLATED__: There is no better place to reflect on the past and plan for the future with your business colleagues than among our alpacas in the unspoilt nature of northern Ibiza. An environment of pure zen that can only inspire fresh ideas and brilliant insights! On request we put together a complete package with catering on-site or at one of the charming nearby restaurants.",
+    "subheadAlt": "__UNTRANSLATED__: Reflecting and planning amidst our alpacas in the unspoilt nature of northern Ibiza"
   },
   "romantic": {
     "title": "Promenades Romantiques au Coucher de Soleil",
@@ -708,7 +710,46 @@
       "N'essayez pas de pirater ou d'interférer avec le site web",
       "Respectez les droits de propriété intellectuelle"
     ],
-    "lastUpdated": "Dernière mise à jour : Février 2024. Contactez info@alpacasibiza.com pour toute question."
+    "lastUpdated": "Dernière mise à jour : Février 2024. Contactez info@alpacasibiza.com pour toute question.",
+    "art1Title": "__UNTRANSLATED__: Article 1 - Definitions",
+    "art1Items": "__UNTRANSLATED__: ['Supplementary agreement: a contract whereby the consumer acquires products or services at a distance in relation to an earlier distance contract.', 'Cooling-off period: the period within which the consumer may exercise their right of withdrawal.', 'Consumer: the natural person who does not act for purposes relating to their trade, business, craft or professional activity.', 'Day: calendar day.', 'Digital content: data produced and supplied in digital form.', 'Duration contract: a contract for the regular supply of goods, services and/or digital content over a set period.', 'Durable medium: any tool enabling the consumer or entrepreneur to store information for future reference.', \"Right of withdrawal: the consumer's ability to cancel a distance contract within the cooling-off period.\", 'Model withdrawal form: the European model withdrawal form made available on the website.', 'Entrepreneur: the natural or legal person offering products, access to digital content and/or services to consumers at a distance.', 'Distance contract: a contract concluded between the entrepreneur and the consumer within an organised distance-selling system.', 'Distance communication technique: any means enabling a contract to be concluded without the consumer and entrepreneur being simultaneously present in the same space.']",
+    "art2Title": "__UNTRANSLATED__: Article 2 - Entrepreneur Identity",
+    "art2Items": "__UNTRANSLATED__: ['Name: Sandra De Wilde - Es Currals Alpacas Ibiza & Wishfulfilling Weaving', 'Address: C/3 Bungalow Park 22, 07850 San Carlos Baleares Spain', 'Telephone: +34 689 446 781', 'Email: info@alpacasibiza.com', 'VAT number: ESY6917111J']",
+    "art3Title": "__UNTRANSLATED__: Article 3 - Applicability",
+    "art3Text": "__UNTRANSLATED__: These general terms and conditions apply to every offer by the entrepreneur and to every distance contract concluded. Before a distance contract is formed, the text of these terms is made available to the consumer either in writing or on a durable medium.",
+    "art4Title": "__UNTRANSLATED__: Article 4 - The Offer",
+    "art4Text": "__UNTRANSLATED__: Images truthfully represent the products offered. Obvious errors do not bind the entrepreneur. Every offer contains sufficient information for the consumer to understand the rights and obligations arising from acceptance.",
+    "art5Title": "__UNTRANSLATED__: Article 5 - The Agreement",
+    "art5Text": "__UNTRANSLATED__: The contract is formed at the moment the consumer accepts the offer and meets its conditions. The entrepreneur confirms receipt of acceptance electronically. Until receipt is confirmed, the consumer may cancel the contract.",
+    "art6Title": "__UNTRANSLATED__: Article 6 - Right of Withdrawal",
+    "art6ProductText": "__UNTRANSLATED__: For products: the consumer may cancel a product purchase within a minimum cooling-off period of 14 days without stating reasons.",
+    "art6ServicesText": "__UNTRANSLATED__: For services and non-physical digital content: the consumer may cancel within a minimum of 14 days without stating reasons. The period begins the day after the contract is formed.",
+    "art6ExtendedText": "__UNTRANSLATED__: Extended cooling-off period: if the entrepreneur fails to provide the required withdrawal information, the cooling-off period expires twelve months after the end of the original period.",
+    "art7Title": "__UNTRANSLATED__: Article 7 - Consumer Obligations During the Cooling-Off Period",
+    "art7Text": "__UNTRANSLATED__: The consumer shall handle the product and its packaging with care. They may only unpack or use the product to the extent necessary to assess its nature, characteristics and functioning. The consumer is liable for any diminished value resulting from handling that goes beyond what is permitted.",
+    "art8Title": "__UNTRANSLATED__: Article 8 - Exercising the Right of Withdrawal and Associated Costs",
+    "art8Text": "__UNTRANSLATED__: If the consumer exercises their right of withdrawal, they must notify the entrepreneur within the cooling-off period using the model withdrawal form or another unambiguous statement. The product must be returned within 14 days of notification in its original condition with all accessories. The consumer bears the direct cost of return shipping.",
+    "art9Title": "__UNTRANSLATED__: Article 9 - Entrepreneur Obligations Upon Withdrawal",
+    "art9Text": "__UNTRANSLATED__: The entrepreneur shall refund all consumer payments, including delivery costs, as quickly as possible and within 14 days of the withdrawal notice. Refunds are made via the same payment method used by the consumer, unless the consumer agrees to a different method.",
+    "art10Title": "__UNTRANSLATED__: Article 10 - Exclusions from the Right of Withdrawal",
+    "art10Text": "__UNTRANSLATED__: The entrepreneur may exclude the following products and services from the right of withdrawal:",
+    "art10Items": "__UNTRANSLATED__: ['Products whose price depends on fluctuations in the financial market', 'Products purchased via a public auction', 'Fully performed services (with prior explicit consumer consent)', 'Package travel and passenger transport', 'Accommodation bookings for a specified date', 'Events and performances with a scheduled date', 'Made-to-measure or personalised products', 'Rapidly perishable products', 'Sealed health or hygiene products opened after delivery', 'Products irreversibly mixed with other products after delivery', 'Alcoholic beverages with prices agreed at the time of order', 'Sealed audio, video or software recordings opened after delivery', 'Newspapers, magazines (except subscriptions)', 'Non-physical digital content (with prior explicit consent)']",
+    "art11Title": "__UNTRANSLATED__: Article 11 - Pricing",
+    "art11Text": "__UNTRANSLATED__: During the stated validity period, prices of offered products and/or services will not be increased except for VAT changes. Stated prices include VAT. Price increases within 3 months of contract formation are only permitted if required by law. After 3 months, a price increase is only permitted if agreed with the consumer.",
+    "art12Title": "__UNTRANSLATED__: Article 12 - Contract Performance and Extended Warranty",
+    "art12Text": "__UNTRANSLATED__: The entrepreneur guarantees that products and/or services conform to the contract, the advertised specifications, reasonable standards of quality and usability, and applicable laws and regulations in effect on the date the contract was formed.",
+    "art13Title": "__UNTRANSLATED__: Article 13 - Delivery and Execution",
+    "art13Text": "__UNTRANSLATED__: The entrepreneur shall exercise the utmost care in receiving and fulfilling product orders. Accepted orders will be fulfilled promptly and no later than 30 days, unless a different delivery period was agreed. The risk of damage or loss rests with the entrepreneur until delivery to the consumer.",
+    "art14Title": "__UNTRANSLATED__: Article 14 - Duration Contracts: Term, Cancellation and Renewal",
+    "art14Text": "__UNTRANSLATED__: The consumer may cancel an indefinite-duration contract at any time with a maximum one-month notice period. Fixed-term contracts run for a maximum of two years. Tacit renewal is only permitted for newspapers, magazines and periodicals with a maximum renewal period of three months.",
+    "art15Title": "__UNTRANSLATED__: Article 15 - Payment",
+    "art15Text": "__UNTRANSLATED__: Amounts owed by the consumer must be paid within 14 days after the start of the cooling-off period, or, where no cooling-off period applies, within 14 days of contract formation. Prepayment may not exceed 50% of the purchase price. Late payment triggers statutory interest after the entrepreneur gives notice.",
+    "art16Title": "__UNTRANSLATED__: Article 16 - Complaints Procedure",
+    "art16Text": "__UNTRANSLATED__: The entrepreneur maintains a sufficiently publicised complaints procedure. Complaints about contract performance must be submitted promptly after the consumer discovers a defect, fully and clearly described. Submitted complaints are answered within 14 days of receipt.",
+    "art17Title": "__UNTRANSLATED__: Article 17 - Disputes",
+    "art17Text": "__UNTRANSLATED__: Contracts between the entrepreneur and the consumer to which these general terms and conditions apply are exclusively governed by Spanish law.",
+    "art18Title": "__UNTRANSLATED__: Article 18 - Additional or Divergent Provisions",
+    "art18Text": "__UNTRANSLATED__: Additional or divergent provisions may not be to the detriment of the consumer and must be recorded in writing or stored in a way that is accessible to the consumer on a durable medium."
   },
   "cookies": {
     "title": "Politique de Cookies",
@@ -818,6 +859,23 @@
     "legal": {
       "withdrawalWaiver": "__UNTRANSLATED__",
       "waiverRequired": "__UNTRANSLATED__"
+    },
+    "share": {
+      "message": "Je viens d'adopter {name} chez Alpacas Ibiza !"
+    },
+    "campaign": {
+      "daysLeft": "{count, plural, =0 {Dernieres heures} one {# jour restant} other {# jours restants}}",
+      "daysRemainingAria": "{count, plural, =0 {Dernieres heures restantes} one {# jour restant} other {# jours restants}}"
+    },
+    "counter": {
+      "heading": "Le troupeau en chiffres",
+      "empty": "Liste en cours de preparation.",
+      "full": "Chaque alpaga a un sponsor.",
+      "almostFull": "{remaining, plural, one {Seulement # alpaga cherche un sponsor.} other {Seulement # alpagas cherchent un sponsor.}}",
+      "overHalf": "{remaining, plural, one {Plus de la moitie a un sponsor. # attend.} other {Plus de la moitie a un sponsor. # attendent.}}",
+      "plenty": "{remaining, plural, one {# sur {total} disponibles.} other {# sur {total} disponibles.}}",
+      "ariaEmpty": "Compteur adoptants",
+      "ariaPopulated": "{adopted} sur {total} alpagas ont un sponsor ({pct} pour cent)."
     }
   },
   "search": {
@@ -839,5 +897,29 @@
   "floatingWhatsapp": {
     "defaultMessage": "__UNTRANSLATED__",
     "aria": "__UNTRANSLATED__"
+  },
+  "alpacaOfDay": {
+    "cta": "Rencontrer {name}"
+  },
+  "alpacas": {
+    "filter": {
+      "showing": "Affichage de {match, number} sur {total, number}"
+    }
+  },
+  "whatsapp": {
+    "panel": {
+      "footer": "Ou ecrivez-nous directement au {phone}"
+    }
+  },
+  "weddings": {
+    "subtitleLive": "__UNTRANSLATED__: Alpaca weddings and photoshoots have been a US trend for years — now available in Europe. As the first and only alpaca farm on Ibiza, we offer unique wedding experiences among our 14 alpacas."
+  },
+  "weaving": {
+    "studioHistoryBody": "__UNTRANSLATED__: San fell in love with weaving in 2013. She started on small table looms, then invested in a traditional Swedish wooden loom from a 92-year-old master weaver who gave her private lessons and named the loom Big Ben. Every step from shearing to finished cloth is done by hand on Es Currals. Softer than silk, rarer than cashmere, warmer than sheep's wool — and hypoallergenic.",
+    "processStep1Body": "__UNTRANSLATED__: Each spring the alpacas are hand-shorn at Es Currals. The soft fleece is carefully stored per animal.",
+    "processStep2Body": "__UNTRANSLATED__: San washes and cards the fleece by hand. No industrial process — pure craftsmanship.",
+    "processStep3Body": "__UNTRANSLATED__: The yarn is spun and dyed with natural plant extracts — hibiscus, avocado, and other flowers.",
+    "processStep4Body": "__UNTRANSLATED__: San weaves on Big Ben, a traditional Swedish wooden loom, using centuries-old patterns from historical manuscripts combined with contemporary fashion.",
+    "collectionSubhead": "__UNTRANSLATED__: Made in Ibiza, embracing the world — Discover our own collection"
   }
 }

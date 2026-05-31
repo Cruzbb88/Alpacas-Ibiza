@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 import type { Locale } from '@/i18n.config'
 import { ContactForm } from '@/components/contact-form'
 import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
@@ -14,15 +14,15 @@ export async function generateMetadata({
   params: Promise<{ locale: Locale }>
 }): Promise<Metadata> {
   const { locale } = await params
-  const tr = t(locale)
+  const tr = await getTranslations()
   const ogImage = getOgImage('about', 'Contact Alpacas Ibiza – Get in touch')
   return {
-    title: tr('contact.metaTitle', 'Contact Alpacas Ibiza | San Carlos Farm – Get in Touch'),
+    title: tr('contact.metaTitle'),
     description:
       'Get in touch with Alpacas Ibiza. Visit our farm in San Carlos, Ibiza — contact us by phone, email, or through the form.',
     alternates: buildLocaleAlternates(locale, 'contact'),
     openGraph: {
-      title: tr('contact.metaTitle', 'Contact Alpacas Ibiza | San Carlos Farm – Get in Touch'),
+      title: tr('contact.metaTitle'),
       description: 'Contact Alpacas Ibiza – farm location, opening hours, and enquiry form.',
       images: [ogImage],
     },
@@ -49,7 +49,7 @@ export default async function ContactPage({
     .slice(0, 200)
     .replace(/<[^>]*>/g, '')
     .trim()
-  const translate = t(locale)
+  const translate = await getTranslations()
   const tenant = getDefaultTenant()
 
   const formLabels = {

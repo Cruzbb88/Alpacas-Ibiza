@@ -4,7 +4,7 @@ import { AlpacaDetailHero } from '@/components/alpaca-detail-hero'
 import { AlpacaPeerGrid } from '@/components/alpacas/alpaca-peer-grid'
 import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
 import { PageSection } from '@/components/layout'
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 import { toJsonLd, animalSchema } from '@/lib/structured-data'
 import { tenantMetadata } from '@/lib/tenants/metadata'
 import { getTenant } from '@/lib/tenants/server'
@@ -49,21 +49,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!animal) {
     return { title: 'Alpaca not found' }
   }
-  const translate = t(locale)
+  const translate = await getTranslations()
   // Templates with {name} placeholder so each locale controls word order.
   // Fallback strings are English defaults; non-EN locales should override
   // alpacas.detailTitle / .detailDescriptionWithPersonality / .detailDescription
   // in translations/<locale>.json to avoid English SEO meta on those pages.
-  const titleTemplate = translate('alpacas.detailTitle', 'Meet {name} | Alpacas Ibiza')
+  const titleTemplate = translate('alpacas.detailTitle')
   const descTemplate = animal.personality != null
-    ? translate(
-        'alpacas.detailDescriptionWithPersonality',
-        '{name} — {personality}. Adopt {name} or visit the herd at Es Currals, Ibiza.',
-      )
-    : translate(
-        'alpacas.detailDescription',
-        'Meet {name}, part of the Es Currals herd. Adopt {name} or visit the farm in Ibiza.',
-      )
+    ? translate('alpacas.detailDescriptionWithPersonality')
+    : translate('alpacas.detailDescription')
   const interpolate = (tmpl: string): string =>
     tmpl
       .replaceAll('{name}', animal.name)
@@ -83,7 +77,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function AlpacaDetailPage({ params }: PageProps) {
   const { locale, slug } = await params
-  const translate = t(locale)
+  const translate = await getTranslations()
 
   const tenant = await getTenant()
   const providers = getProviders(tenant)

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { Hero } from '@/components/hero'
-import { t, ta } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 import type { Locale } from '@/i18n.config'
 import { buildLocaleAlternates } from '@/lib/i18n-metadata'
 import { LegalContentPendingNotice, isLegalContentLive } from '@/components/legal-content-pending-notice'
@@ -11,7 +11,7 @@ export async function generateMetadata({
     params: Promise<{ locale: Locale }>
 }): Promise<Metadata> {
     const { locale } = await params
-    const tr = t(locale)
+    const tr = await getTranslations()
     return {
         title: tr('privacy.title'),
         alternates: buildLocaleAlternates(locale, 'privacy'),
@@ -20,9 +20,7 @@ export async function generateMetadata({
 
 export default async function PrivacyPage({ params }: { params: Promise<{ locale: Locale }> }) {
     const { locale } = await params
-    const translate = t(locale)
-    const translateArray = ta(locale)
-
+    const translate = await getTranslations()
     if (!isLegalContentLive()) {
         return (
             <>
@@ -46,7 +44,7 @@ export default async function PrivacyPage({ params }: { params: Promise<{ locale
                     </h2>
                     <p>{translate('privacy.section1Intro')}</p>
                     <ul className="list-disc list-inside space-y-2 mb-6">
-                        {translateArray('privacy.section1Items').map((item, i) => (
+                        {(translate.raw('privacy.section1Items') as string[]).map((item, i) => (
                             <li key={i}>{item}</li>
                         ))}
                     </ul>
@@ -55,7 +53,7 @@ export default async function PrivacyPage({ params }: { params: Promise<{ locale
                         {translate('privacy.section2Title')}
                     </h2>
                     <ul className="list-disc list-inside space-y-2 mb-6">
-                        {translateArray('privacy.section2Items').map((item, i) => (
+                        {(translate.raw('privacy.section2Items') as string[]).map((item, i) => (
                             <li key={i}>{item}</li>
                         ))}
                     </ul>
@@ -65,7 +63,7 @@ export default async function PrivacyPage({ params }: { params: Promise<{ locale
                     </h2>
                     <p>{translate('privacy.section3Intro')}</p>
                     <ul className="list-disc list-inside space-y-2 mb-6">
-                        {translateArray('privacy.section3Items').map((item, i) => (
+                        {(translate.raw('privacy.section3Items') as string[]).map((item, i) => (
                             <li key={i}>{item}</li>
                         ))}
                     </ul>
@@ -80,7 +78,7 @@ export default async function PrivacyPage({ params }: { params: Promise<{ locale
                     </h2>
                     <p>{translate('privacy.section5Intro')}</p>
                     <ul className="list-disc list-inside space-y-2 mb-6">
-                        {translateArray('privacy.section5Items').map((item, i) => (
+                        {(translate.raw('privacy.section5Items') as string[]).map((item, i) => (
                             <li key={i}>{item}</li>
                         ))}
                     </ul>

@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, type ReactNode } from 'react'
 import type { Locale } from '@/i18n.config'
-import { useLocaleT } from '@/lib/locale-context'
+import { useTranslations } from 'next-intl'
 
 /**
  * CheckoutGate — EU Directive 2011/83 Art 16(m) consent gate for adopt checkout.
@@ -43,7 +43,7 @@ interface CheckoutGateProps {
 }
 
 export function CheckoutGate({ locale, children }: CheckoutGateProps) {
-  const translate = useLocaleT()
+  const translate = useTranslations()
   const [accepted, setAccepted] = useState(false)
   const [errorVisible, setErrorVisible] = useState(false)
 
@@ -80,19 +80,13 @@ export function CheckoutGate({ locale, children }: CheckoutGateProps) {
             {/* OWNER_INPUT_NEEDED: final waiver copy pending owner approval per ADR-022.
                 Current text is the deep-research-derived placeholder satisfying Art 16(m)
                 minimums. A EU consumer-law lawyer should review before go-live. */}
-            {translate(
-              'adopt.legal.withdrawalWaiver',
-              'I expressly consent to my adoption beginning immediately and acknowledge I lose my 14-day right of withdrawal once performance starts. (Required by EU Directive 2011/83 Art 16(m).)',
-            )}
+            {translate('adopt.legal.withdrawalWaiver')}
           </span>
         </label>
 
         {errorVisible && !accepted && (
           <p id="waiver-error" className="text-xs text-destructive" role="alert">
-            {translate(
-              'adopt.legal.waiverRequired',
-              'Please accept the withdrawal-rights notice above to proceed to payment.',
-            )}
+            {translate('adopt.legal.waiverRequired')}
           </p>
         )}
       </div>

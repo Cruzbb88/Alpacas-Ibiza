@@ -19,10 +19,10 @@ import { ServiceWorkerRegister } from '@/components/sw-register'
 import { NavProgressBar } from '@/components/nav-progress-bar'
 import { MobileStickyBookingBar } from '@/components/mobile-sticky-booking-bar'
 import { VercelInstrumentation } from '@/components/vercel-instrumentation'
+import { NextIntlClientProvider } from 'next-intl'
+import { getMessages } from 'next-intl/server'
 
 import { SITE_BASE_URL as BASE_URL } from '@/lib/config'
-import { getLocaleTranslations } from '@/lib/translations'
-import { LocaleTranslationsProvider } from '@/lib/locale-context'
 
 export async function generateStaticParams() {
     return i18nConfig.locales.map((locale) => ({ locale }))
@@ -75,10 +75,10 @@ export default async function LocaleLayout({
     const tenant = await getTenant()
     const schemas = [localBusinessSchema(), organizationSchema(tenant), websiteSearchSchema(), siteNavigationSchema(locale)]
 
-    const localeData = getLocaleTranslations(locale as import('@/i18n.config').Locale)
+    const messages = await getMessages()
 
     return (
-        <LocaleTranslationsProvider data={localeData}>
+        <NextIntlClientProvider locale={locale} messages={messages}>
         <div className="flex min-h-screen flex-col">
             {schemas.map((schema, i) => (
                 <script
@@ -94,7 +94,7 @@ export default async function LocaleLayout({
             >
                 Skip to main content
             </a>
-            <Header />
+            <Header logoUrl="/images/brand/logo.png" />
             <main id="main-content" className="flex-1">{children}</main>
             <Footer
                 legalName={tenant.legalName}
@@ -121,6 +121,6 @@ export default async function LocaleLayout({
             </Suspense>
             <MobileStickyBookingBar locale={locale as Locale} />
         </div>
-        </LocaleTranslationsProvider>
+        </NextIntlClientProvider>
     )
 }

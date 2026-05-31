@@ -1,11 +1,11 @@
 'use client'
 
 import Link from 'next/link'
-import { useLocaleT, useLocale } from '@/lib/locale-context'
+import { useTranslations, useLocale } from 'next-intl'
 import { MapPin, Calendar, ShoppingBag, HelpCircle, Home, ArrowRight } from 'lucide-react'
 
 export function DidYouMean() {
-  const tr = useLocaleT()
+  const tr = useTranslations()
   const locale = useLocale()
 
   const suggestedPages = [

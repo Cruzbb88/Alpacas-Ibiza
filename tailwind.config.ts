@@ -11,7 +11,9 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        display: ['var(--font-display)', 'Georgia', 'serif'],
+        sans: ['var(--font-sans)', 'Cabin', 'Arial', 'sans-serif'],
+        serif: ['var(--font-serif)', 'Spectral', 'Georgia', 'serif'],
+        display: ['var(--font-serif)', 'Spectral', 'Georgia', 'serif'],
       },
       colors: {
         background: 'hsl(var(--background))',

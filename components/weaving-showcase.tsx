@@ -21,7 +21,7 @@ import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import type { Locale } from '@/i18n.config'
-import { useLocaleT } from '@/lib/locale-context'
+import { useTranslations } from 'next-intl'
 
 // ─── Editorial (new) types ──────────────────────────────────────
 
@@ -89,7 +89,7 @@ function WeavingShowcaseEditorial({
   subtitle,
   layout = 'mosaic',
 }: WeavingShowcaseEditorialProps) {
-  const translate = useLocaleT()
+  const translate = useTranslations()
 
   if (!pieces || pieces.length === 0) return null
 
@@ -142,7 +142,7 @@ function MosaicLayout({
 }: {
   pieces: WeavingPiece[]
   defaultHref: string
-  translate: (key: string, defaultValue?: string) => string
+  translate: (key: string) => string
 }) {
   const single = pieces.length === 1
 
@@ -197,7 +197,7 @@ function MosaicLayout({
                   href={href}
                   className="inline-flex items-center gap-2 text-accent hover:text-accent/80 font-semibold transition-colors group/cta"
                 >
-                  {translate('shop.cta.viewPiece', 'View piece')}
+                  {translate('shop.cta.viewPiece')}
                   <ArrowRight className="h-4 w-4 transition-transform group-hover/cta:translate-x-1" />
                 </Link>
               </div>
@@ -218,7 +218,7 @@ function CarouselLayout({
 }: {
   pieces: WeavingPiece[]
   defaultHref: string
-  translate: (key: string, defaultValue?: string) => string
+  translate: (key: string) => string
 }) {
   const scrollerRef = useRef<HTMLDivElement | null>(null)
 
@@ -227,7 +227,7 @@ function CarouselLayout({
       <div
         ref={scrollerRef}
         className="flex gap-6 overflow-x-auto snap-x snap-mandatory pb-4 -mx-4 px-4 scroll-smooth"
-        aria-label={translate('shop.weaving.carouselLabel', 'Weaving pieces carousel')}
+        aria-label={translate('shop.weaving.carouselLabel')}
       >
         {pieces.map((piece) => {
           const href = piece.href ?? defaultHref
@@ -255,7 +255,7 @@ function CarouselLayout({
                   href={href}
                   className="inline-flex items-center gap-2 text-accent hover:text-accent/80 font-semibold transition-colors text-sm pt-1"
                 >
-                  {translate('shop.cta.viewPiece', 'View piece')}
+                  {translate('shop.cta.viewPiece')}
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
@@ -289,13 +289,13 @@ function WeavingImage({
   translate,
 }: {
   piece: WeavingPiece
-  translate: (key: string, defaultValue?: string) => string
+  translate: (key: string) => string
 }) {
   if (piece.image == null || piece.image === '') {
     return (
       <div
         className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-primary/10 via-secondary to-accent/10"
-        aria-label={`${translate('shop.imageComingSoon', 'Photo coming soon')}: ${piece.title}`}
+        aria-label={`${translate('shop.imageComingSoon')}: ${piece.title}`}
       >
         <span className="text-xl font-bold text-muted-foreground/40 px-6 text-center">
           {piece.title}

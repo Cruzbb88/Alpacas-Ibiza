@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import type { Locale } from '@/i18n.config'
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 import { buildLocaleAlternates } from '@/lib/i18n-metadata'
 import { shopCategoryItemListSchema, toJsonLd } from '@/lib/structured-data'
 import { getOgImage } from '@/lib/og-images'
@@ -20,21 +20,15 @@ export async function generateMetadata({
   params: Promise<{ locale: Locale }>
 }): Promise<Metadata> {
   const { locale } = await params
-  const tr = t(locale)
+  const tr = await getTranslations()
   const ogImage = getOgImage('alpacas', 'Alcaca Oro Negro – Alpacas Ibiza')
   return {
-    title: tr('alcacaPage.metaTitle', 'Alcaca Oro Negro | Alpaca Manure Fertilizer – Alpacas Ibiza'),
-    description: tr(
-      'alcacaPage.metaDescription',
-      'Alcaca Oro Negro is natural alpaca-manure fertilizer from Es Currals, Ibiza. Called "black gold" in the Andes — odorless, ready-to-use, available from 125 g mini-bags to bulk orders.',
-    ),
+    title: tr('alcacaPage.metaTitle'),
+    description: tr('alcacaPage.metaDescription'),
     alternates: buildLocaleAlternates(locale, 'shop/alcaca'),
     openGraph: {
-      title: tr('alcacaPage.metaTitle', 'Alcaca Oro Negro | Alpaca Manure Fertilizer – Alpacas Ibiza'),
-      description: tr(
-        'alcacaPage.metaDescription',
-        'Alcaca Oro Negro is natural alpaca-manure fertilizer from Es Currals, Ibiza. Called "black gold" in the Andes — odorless, ready-to-use, available from 125 g mini-bags to bulk orders.',
-      ),
+      title: tr('alcacaPage.metaTitle'),
+      description: tr('alcacaPage.metaDescription'),
       images: [ogImage],
     },
     twitter: {
@@ -46,9 +40,9 @@ export async function generateMetadata({
 
 export default async function AlcacaPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params
-  const translate = t(locale)
+  const translate = await getTranslations()
 
-  const priceOnRequest = translate('shop.priceOnRequest', 'Contact for pricing')
+  const priceOnRequest = translate('shop.priceOnRequest')
   // TODO OWNER_INPUT_NEEDED: confirm current Alcaca Oro Negro prices for each size tier.
   // Scrape recorded size tiers (125 g → bulk) but no specific prices.
   // All tiers currently show price-on-request with mailto CTA.
@@ -105,7 +99,7 @@ export default async function AlcacaPage({ params }: { params: Promise<{ locale:
           <div className="relative aspect-[4/3] rounded-lg overflow-hidden border border-border">
             <Image
               src={ALCACA_PHOTO_1}
-              alt={translate('alcacaPage.photo1Alt', 'Alcaca Oro Negro — alpaca manure fertilizer bags')}
+              alt={translate('alcacaPage.photo1Alt')}
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 50vw"
@@ -114,7 +108,7 @@ export default async function AlcacaPage({ params }: { params: Promise<{ locale:
           <div className="relative aspect-[4/3] rounded-lg overflow-hidden border border-border">
             <Image
               src={ALCACA_PHOTO_2}
-              alt={translate('alcacaPage.photo2Alt', 'Alcaca Oro Negro — close-up of the product')}
+              alt={translate('alcacaPage.photo2Alt')}
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 50vw"
@@ -149,7 +143,7 @@ export default async function AlcacaPage({ params }: { params: Promise<{ locale:
                   href={`/${locale}/shop/commission?product=${product.slug}`}
                   className="block w-full px-4 py-2 bg-accent hover:bg-accent/90 text-accent-foreground rounded-lg font-medium transition-colors text-center"
                 >
-                  {translate('alcacaPage.enquire', 'Enquire')}
+                  {translate('alcacaPage.enquire')}
                 </Link>
               </div>
             ))}

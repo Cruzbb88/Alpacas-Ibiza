@@ -20,7 +20,7 @@
 import type { Metadata } from 'next'
 import type { Locale } from '@/i18n.config'
 import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 import { getTenant } from '@/lib/tenants/server'
 import { tenantMetadata } from '@/lib/tenants/metadata'
 import { localBusinessSchema, toJsonLd } from '@/lib/structured-data'
@@ -56,7 +56,7 @@ export async function generateMetadata({
 
 export default async function PressPage({ params }: { params: Promise<{ locale: string }> }) {
     const { locale } = await params
-    const translate = t(locale as Locale)
+    const translate = await getTranslations()
 
     // Failsafe: detect whether ANY entry is actionable (has logo OR article URL)
     const hasAnyAsset = press.some((p) => p.logoUrl !== null || p.articleUrl !== null)

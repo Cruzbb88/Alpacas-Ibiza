@@ -2,11 +2,6 @@
  * AdopterCounter — social-proof widget showing how many of the herd already
  * have a sponsor.
  *
- * No DB today, so the count is derived from the content provider's animals
- * list with an `isAdopted` flag (currently a static field; will hook into
- * the adoption DB when that lands). Falls back gracefully when all flags
- * are absent or when the herd is empty.
- *
  * Renders:
  *   - Big number (X of N)
  *   - Inline progress bar
@@ -20,7 +15,7 @@
  */
 
 import type { Locale } from '@/i18n.config'
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 
 export interface AdopterCounterProps {
   locale: Locale
@@ -34,50 +29,35 @@ export interface AdopterCounterProps {
   className?: string
 }
 
-export function AdopterCounter({ locale, total, adopted, heading, className }: AdopterCounterProps) {
-  const translate = t(locale)
+export async function AdopterCounter({ total, adopted, heading, className }: AdopterCounterProps) {
+  const translate = await getTranslations()
   const safeTotal = Math.max(0, Math.floor(total))
   const safeAdopted = Math.max(0, Math.min(Math.floor(adopted), safeTotal))
   const remaining = safeTotal - safeAdopted
   const pct = safeTotal === 0 ? 0 : Math.round((safeAdopted / safeTotal) * 100)
 
-  const headingText = heading ?? translate('adopt.counter.heading', 'The herd, by the numbers')
+  const headingText = heading ?? translate('adopt.counter.heading')
 
   let microcopy: string
   if (safeTotal === 0) {
-    microcopy = translate(
-      'adopt.counter.empty',
-      'Roster being prepared — check back soon.',
-    )
+    microcopy = translate('adopt.counter.empty')
   } else if (safeAdopted === safeTotal) {
-    microcopy = translate(
-      'adopt.counter.full',
-      'Every alpaca has a sponsor right now. Join the waitlist and we\'ll match you when a spot opens.',
-    )
+    microcopy = translate('adopt.counter.full')
   } else if (pct >= 90) {
-    microcopy = translate(
-      'adopt.counter.almostFull',
-      `Only ${remaining} alpaca${remaining === 1 ? '' : 's'} still need a sponsor — pick yours fast.`,
-    )
+    // ICU plural: "Only # alpaca(s) still need a sponsor"
+    microcopy = translate('adopt.counter.almostFull',{ remaining })
   } else if (pct >= 50) {
-    microcopy = translate(
-      'adopt.counter.overHalf',
-      `More than half of the herd already have a sponsor. ${remaining} still waiting.`,
-    )
+    // ICU plural: "More than half ... # still waiting"
+    microcopy = translate('adopt.counter.overHalf',{ remaining })
   } else {
-    microcopy = translate(
-      'adopt.counter.plenty',
-      `Plenty of alpacas still need a sponsor. ${remaining} of ${safeTotal} available.`,
-    )
+    // ICU plural: "# of {total} available"
+    microcopy = translate('adopt.counter.plenty',{ remaining, total: safeTotal })
   }
 
   const ariaLabel =
     safeTotal === 0
-      ? translate('adopt.counter.ariaEmpty', 'Adopter count, herd being prepared')
-      : translate(
-          'adopt.counter.ariaPopulated',
-          `${safeAdopted} of ${safeTotal} alpacas have a sponsor (${pct} percent).`,
-        )
+      ? translate('adopt.counter.ariaEmpty')
+      : translate('adopt.counter.ariaPopulated',{ adopted: safeAdopted, total: safeTotal, pct })
 
   return (
     <section

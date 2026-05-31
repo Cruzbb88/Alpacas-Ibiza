@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Hero } from '@/components/hero'
 import { Button } from '@/components/ui/button'
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 import { buildLocaleAlternates } from '@/lib/i18n-metadata'
 import { getOgImage } from '@/lib/og-images'
 import { getProductBookingUrl } from '@/lib/fareharbor-products'
@@ -16,15 +16,15 @@ export async function generateMetadata({
     params: Promise<{ locale: string }>
 }): Promise<Metadata> {
     const { locale } = await params
-    const tr = t(locale as any)
+    const tr = await getTranslations()
     const ogImage = getOgImage('alpacas', 'Romantic Sunset Walks – Alpacas Ibiza')
     return {
-        title: tr('romantic.metaTitle', 'Romantic Sunset Walk with Alpacas | Couples – Alpacas Ibiza'),
+        title: tr('romantic.metaTitle'),
         description:
             'A private sunset walk with alpacas at Es Currals, Ibiza. Perfect for couples — cava, tapas, and a professional photographer included.',
         alternates: buildLocaleAlternates(locale, 'experiences/romantic-sunset'),
         openGraph: {
-            title: tr('romantic.metaTitle', 'Romantic Sunset Walk with Alpacas | Couples – Alpacas Ibiza'),
+            title: tr('romantic.metaTitle'),
             description:
                 'Private golden-hour walk through the alpaca paddocks with cava, tapas, and photography.',
             images: [ogImage],
@@ -38,7 +38,7 @@ export async function generateMetadata({
 
 export default async function RomanticPage({ params }: { params: Promise<{ locale: string }> }) {
     const { locale } = await params
-    const translate = t(locale as any)
+    const translate = await getTranslations()
 
     return (
         <main>

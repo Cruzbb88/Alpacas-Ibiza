@@ -14,7 +14,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import type { Locale } from '@/i18n.config'
 import type { AnimalEntity } from '@/lib/integrations/content-types'
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 
 interface AlpacaCardProps {
   alpaca: AnimalEntity
@@ -27,8 +27,8 @@ interface AlpacaCardProps {
   showAdoptCta?: boolean
 }
 
-export function AlpacaCard({ alpaca, locale, showAdoptCta = false }: AlpacaCardProps) {
-  const translate = t(locale)
+export async function AlpacaCard({ alpaca, locale, showAdoptCta = false }: AlpacaCardProps) {
+  const translate = await getTranslations()
   const hasImage = alpaca.image !== null && alpaca.image !== undefined
 
   // Bio resolution: localized map → plain string → i18n key

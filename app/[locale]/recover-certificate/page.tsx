@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import type { Locale } from '@/i18n.config'
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 import { RecoverCertificateForm } from '@/components/adopt/recover-certificate-form'
 
 export const metadata: Metadata = {
@@ -29,19 +29,13 @@ export default async function RecoverCertificatePage({
   params: Promise<{ locale: Locale }>
 }) {
   const { locale } = await params
-  const tr = t(locale)
+  const tr = await getTranslations()
 
-  const title = tr('recoverCertificate.title', 'Recover your certificate')
-  const subhead = tr(
-    'recoverCertificate.subhead',
-    "Lost the welcome email? Tell us the email you adopted with and we'll re-send your certificate.",
-  )
-  const emailLabel = tr('recoverCertificate.emailLabel', 'Email')
-  const submitLabel = tr('recoverCertificate.submit', 'Send certificate')
-  const successMessage = tr(
-    'recoverCertificate.successMessage',
-    "Check your inbox — if we have a record matching that email, your certificate is on the way.",
-  )
+  const title = tr('recoverCertificate.title')
+  const subhead = tr('recoverCertificate.subhead')
+  const emailLabel = tr('recoverCertificate.emailLabel')
+  const submitLabel = tr('recoverCertificate.submit')
+  const successMessage = tr('recoverCertificate.successMessage')
 
   return (
     <main className="min-h-[60vh] py-20 px-4">

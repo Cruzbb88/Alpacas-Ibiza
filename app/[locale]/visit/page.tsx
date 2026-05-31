@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 import type { Locale } from '@/i18n.config'
 import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
 import { buildLocaleAlternates } from '@/lib/i18n-metadata'
@@ -13,21 +13,15 @@ export async function generateMetadata({
   params: Promise<{ locale: Locale }>
 }): Promise<Metadata> {
   const { locale } = await params
-  const tr = t(locale)
+  const tr = await getTranslations()
   const ogImage = getOgImage('about', 'Plan Your Visit – Alpacas Ibiza Es Currals')
   return {
-    title: tr('visit.metaTitle', 'Plan Your Visit | Alpacas Ibiza – Es Currals Farm Ibiza'),
-    description: tr(
-      'visit.metaDescription',
-      'Everything you need before arriving at Es Currals alpaca farm in northern Ibiza — directions, parking, accessibility, what to bring, and cancellation policy.',
-    ),
+    title: tr('visit.metaTitle'),
+    description: tr('visit.metaDescription'),
     alternates: buildLocaleAlternates(locale, 'visit'),
     openGraph: {
-      title: tr('visit.metaTitle', 'Plan Your Visit | Alpacas Ibiza – Es Currals Farm Ibiza'),
-      description: tr(
-        'visit.metaDescription',
-        'Everything you need before arriving at Es Currals alpaca farm in northern Ibiza.',
-      ),
+      title: tr('visit.metaTitle'),
+      description: tr('visit.metaDescription'),
       images: [ogImage],
     },
     twitter: {
@@ -66,7 +60,7 @@ function visitPlaceSchema() {
 
 export default async function VisitPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params
-  const tr = t(locale)
+  const tr = await getTranslations()
 
   return (
     <main>
@@ -89,13 +83,10 @@ export default async function VisitPage({ params }: { params: Promise<{ locale: 
       <section className="w-full py-20 px-4 bg-gradient-to-br from-primary/10 to-accent/10">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-            {tr('visit.title', 'Planning your visit')}
+            {tr('visit.title')}
           </h1>
           <p className="text-lg text-foreground/70 max-w-2xl mx-auto">
-            {tr(
-              'visit.subhead',
-              'Everything you need before you arrive at Es Currals, the farm in northern Ibiza.',
-            )}
+            {tr('visit.subhead')}
           </p>
         </div>
       </section>
@@ -104,7 +95,7 @@ export default async function VisitPage({ params }: { params: Promise<{ locale: 
       <section className="w-full py-16 md:py-24 px-4 bg-background" aria-labelledby="getting-here-heading">
         <div className="max-w-6xl mx-auto">
           <h2 id="getting-here-heading" className="text-3xl font-bold text-foreground mb-10 text-center">
-            {tr('visit.gettingHere.heading', 'Getting here')}
+            {tr('visit.gettingHere.heading')}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
@@ -112,13 +103,10 @@ export default async function VisitPage({ params }: { params: Promise<{ locale: 
             <div className="rounded-2xl border border-border bg-card p-6 space-y-3">
               <div className="text-3xl" aria-hidden="true">🚗</div>
               <h3 className="font-semibold text-foreground text-lg">
-                {tr('visit.gettingHere.byCar.title', 'By car')}
+                {tr('visit.gettingHere.byCar.title')}
               </h3>
               <p className="text-sm text-foreground/70 leading-relaxed">
-                {tr(
-                  'visit.gettingHere.byCar.body',
-                  'From Ibiza Town: approx. [UNMAPPED] minutes via PM-810. From Santa Eulàlia: approx. [UNMAPPED] minutes. Free parking on-site.',
-                )}
+                {tr('visit.gettingHere.byCar.body')}
               </p>
             </div>
 
@@ -126,13 +114,10 @@ export default async function VisitPage({ params }: { params: Promise<{ locale: 
             <div className="rounded-2xl border border-border bg-card p-6 space-y-3">
               <div className="text-3xl" aria-hidden="true">✈️</div>
               <h3 className="font-semibold text-foreground text-lg">
-                {tr('visit.gettingHere.fromAirport.title', 'From the airport')}
+                {tr('visit.gettingHere.fromAirport.title')}
               </h3>
               <p className="text-sm text-foreground/70 leading-relaxed">
-                {tr(
-                  'visit.gettingHere.fromAirport.body',
-                  'Ibiza Airport (IBZ) is approx. [UNMAPPED] km — roughly [UNMAPPED] minutes by car or taxi. Taxis available at the airport rank; no pre-booking required.',
-                )}
+                {tr('visit.gettingHere.fromAirport.body')}
               </p>
             </div>
 
@@ -140,13 +125,10 @@ export default async function VisitPage({ params }: { params: Promise<{ locale: 
             <div className="rounded-2xl border border-border bg-card p-6 space-y-3">
               <div className="text-3xl" aria-hidden="true">🚌</div>
               <h3 className="font-semibold text-foreground text-lg">
-                {tr('visit.gettingHere.byBus.title', 'By bus')}
+                {tr('visit.gettingHere.byBus.title')}
               </h3>
               <p className="text-sm text-foreground/70 leading-relaxed">
-                {tr(
-                  'visit.gettingHere.byBus.body',
-                  'Nearest bus stop: [UNMAPPED] — approx. [UNMAPPED] minutes walk to the farm. Check ibizabus.com for routes. A car or taxi is recommended for the final stretch.',
-                )}
+                {tr('visit.gettingHere.byBus.body')}
               </p>
             </div>
 
@@ -154,10 +136,10 @@ export default async function VisitPage({ params }: { params: Promise<{ locale: 
             <div className="rounded-2xl border border-border bg-card p-6 space-y-3">
               <div className="text-3xl" aria-hidden="true">📍</div>
               <h3 className="font-semibold text-foreground text-lg">
-                {tr('visit.gettingHere.gps.title', 'GPS & maps')}
+                {tr('visit.gettingHere.gps.title')}
               </h3>
               <p className="text-sm text-foreground/70 leading-relaxed mb-3">
-                {tr('visit.gettingHere.gps.body', 'GPS: 38.9861° N, 1.5228° E. Search «Alpacas Ibiza, San Carlos» if deep links don\'t open.')}
+                {tr('visit.gettingHere.gps.body')}
               </p>
               <div className="flex flex-col gap-2">
                 <a
@@ -166,7 +148,7 @@ export default async function VisitPage({ params }: { params: Promise<{ locale: 
                   rel="noopener noreferrer"
                   className="text-xs font-medium text-primary underline hover:text-primary/80"
                 >
-                  {tr('visit.gettingHere.gps.googleMaps', 'Open in Google Maps')}
+                  {tr('visit.gettingHere.gps.googleMaps')}
                 </a>
                 <a
                   href="https://maps.apple.com/?ll=38.9861,1.5228"
@@ -174,7 +156,7 @@ export default async function VisitPage({ params }: { params: Promise<{ locale: 
                   rel="noopener noreferrer"
                   className="text-xs font-medium text-primary underline hover:text-primary/80"
                 >
-                  {tr('visit.gettingHere.gps.appleMaps', 'Open in Apple Maps')}
+                  {tr('visit.gettingHere.gps.appleMaps')}
                 </a>
               </div>
             </div>
@@ -186,55 +168,49 @@ export default async function VisitPage({ params }: { params: Promise<{ locale: 
       <section className="w-full py-16 md:py-24 px-4 bg-muted/40" aria-labelledby="on-arrival-heading">
         <div className="max-w-4xl mx-auto">
           <h2 id="on-arrival-heading" className="text-3xl font-bold text-foreground mb-10 text-center">
-            {tr('visit.onArrival.heading', 'When you arrive')}
+            {tr('visit.onArrival.heading')}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
 
             <div className="rounded-2xl border border-border bg-card p-6 space-y-2">
               <h3 className="font-semibold text-foreground">
-                {tr('visit.onArrival.parking.title', 'Where to park')}
+                {tr('visit.onArrival.parking.title')}
               </h3>
               <p className="text-sm text-foreground/70 leading-relaxed">
-                {tr(
-                  'visit.onArrival.parking.body',
-                  '[UNMAPPED: parking location details]. Free on-site parking available.',
-                )}
+                {tr('visit.onArrival.parking.body')}
               </p>
             </div>
 
             <div className="rounded-2xl border border-border bg-card p-6 space-y-2">
               <h3 className="font-semibold text-foreground">
-                {tr('visit.onArrival.meetingPoint.title', 'Meeting point')}
+                {tr('visit.onArrival.meetingPoint.title')}
               </h3>
               <p className="text-sm text-foreground/70 leading-relaxed">
-                {tr(
-                  'visit.onArrival.meetingPoint.body',
-                  'Meet your guide at the farm gate. Your host will greet you and walk you in.',
-                )}
+                {tr('visit.onArrival.meetingPoint.body')}
               </p>
             </div>
 
             <div className="rounded-2xl border border-border bg-card p-6 space-y-2">
               <h3 className="font-semibold text-foreground">
-                {tr('visit.onArrival.duration.title', 'Tour duration')}
+                {tr('visit.onArrival.duration.title')}
               </h3>
               <p className="text-sm text-foreground/70 leading-relaxed">
-                {tr('visit.onArrival.duration.body', 'Duration depends on your tour type.')}{' '}
+                {tr('visit.onArrival.duration.body')}{' '}
                 <Link href={`/${locale}/tours`} className="text-primary underline hover:text-primary/80 text-sm">
-                  {tr('visit.onArrival.duration.link', 'See all tours →')}
+                  {tr('visit.onArrival.duration.link')}
                 </Link>
               </p>
             </div>
 
             <div className="rounded-2xl border border-border bg-card p-6 space-y-2">
               <h3 className="font-semibold text-foreground">
-                {tr('visit.onArrival.bring.title', 'What to bring')}
+                {tr('visit.onArrival.bring.title')}
               </h3>
               <ul className="text-sm text-foreground/70 leading-relaxed space-y-1 list-disc list-inside">
-                <li>{tr('visit.onArrival.bring.shoes', 'Comfortable, closed-toe shoes')}</li>
-                <li>{tr('visit.onArrival.bring.hat', 'Sun hat (the farm is outdoors)')}</li>
-                <li>{tr('visit.onArrival.bring.water', 'Water bottle')}</li>
-                <li>{tr('visit.onArrival.bring.noPerfume', 'No strong perfume — alpacas are sensitive to scent')}</li>
+                <li>{tr('visit.onArrival.bring.shoes')}</li>
+                <li>{tr('visit.onArrival.bring.hat')}</li>
+                <li>{tr('visit.onArrival.bring.water')}</li>
+                <li>{tr('visit.onArrival.bring.noPerfume')}</li>
               </ul>
             </div>
           </div>
@@ -245,56 +221,47 @@ export default async function VisitPage({ params }: { params: Promise<{ locale: 
       <section className="w-full py-16 md:py-24 px-4 bg-background" aria-labelledby="accessibility-heading">
         <div className="max-w-4xl mx-auto">
           <h2 id="accessibility-heading" className="text-3xl font-bold text-foreground mb-10 text-center">
-            {tr('visit.accessibility.heading', 'Accessibility & guests')}
+            {tr('visit.accessibility.heading')}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
 
             <div className="rounded-2xl border border-border bg-card p-6 space-y-2">
               <h3 className="font-semibold text-foreground">
-                {tr('visit.accessibility.mobility.title', 'Mobility')}
+                {tr('visit.accessibility.mobility.title')}
               </h3>
               <p className="text-sm text-foreground/70 leading-relaxed">
-                {tr(
-                  'visit.accessibility.mobility.body',
-                  'Most of the farm is flat dirt and grass. Some sections are uneven terrain. Please contact us in advance so we can plan the best route for you.',
-                )}
+                {tr('visit.accessibility.mobility.body')}
               </p>
             </div>
 
             <div className="rounded-2xl border border-border bg-card p-6 space-y-2">
               <h3 className="font-semibold text-foreground">
-                {tr('visit.accessibility.children.title', 'Children')}
+                {tr('visit.accessibility.children.title')}
               </h3>
               <p className="text-sm text-foreground/70 leading-relaxed">
-                {tr(
-                  'visit.accessibility.children.body',
-                  'Children are welcome at all ages. They must be supervised by an adult at all times near the herd.',
-                )}
+                {tr('visit.accessibility.children.body')}
               </p>
             </div>
 
             <div className="rounded-2xl border border-border bg-card p-6 space-y-2">
               <h3 className="font-semibold text-foreground">
-                {tr('visit.accessibility.pets.title', 'Pets')}
+                {tr('visit.accessibility.pets.title')}
               </h3>
               <p className="text-sm text-foreground/70 leading-relaxed">
-                {tr(
-                  'visit.accessibility.pets.body',
-                  'Pets are not permitted on the farm. The presence of dogs and cats unsettles the herd.',
-                )}
+                {tr('visit.accessibility.pets.body')}
               </p>
             </div>
 
             <div className="rounded-2xl border border-border bg-card p-6 space-y-2">
               <h3 className="font-semibold text-foreground">
-                {tr('visit.accessibility.serviceAnimals.title', 'Service animals')}
+                {tr('visit.accessibility.serviceAnimals.title')}
               </h3>
               <p className="text-sm text-foreground/70 leading-relaxed">
-                {tr('visit.accessibility.serviceAnimals.bodyPrefix', 'Service animals are permitted with advance notice. Please')}{' '}
+                {tr('visit.accessibility.serviceAnimals.bodyPrefix')}{' '}
                 <Link href={`/${locale}/contact`} className="text-primary underline hover:text-primary/80 text-sm">
-                  {tr('visit.accessibility.serviceAnimals.contactLink', 'contact us')}
+                  {tr('visit.accessibility.serviceAnimals.contactLink')}
                 </Link>{' '}
-                {tr('visit.accessibility.serviceAnimals.bodySuffix', 'before your visit so we can prepare the herd.')}
+                {tr('visit.accessibility.serviceAnimals.bodySuffix')}
               </p>
             </div>
           </div>
@@ -305,43 +272,34 @@ export default async function VisitPage({ params }: { params: Promise<{ locale: 
       <section className="w-full py-16 md:py-24 px-4 bg-muted/40" aria-labelledby="cancellation-heading">
         <div className="max-w-4xl mx-auto">
           <h2 id="cancellation-heading" className="text-3xl font-bold text-foreground mb-10 text-center">
-            {tr('visit.cancellation.heading', 'Cancellation policy')}
+            {tr('visit.cancellation.heading')}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
 
             <div className="rounded-2xl border border-border bg-card p-6 space-y-2">
               <h3 className="font-semibold text-foreground">
-                {tr('visit.cancellation.free.title', 'Free cancellation')}
+                {tr('visit.cancellation.free.title')}
               </h3>
               <p className="text-sm text-foreground/70 leading-relaxed">
-                {tr(
-                  'visit.cancellation.free.body',
-                  'Cancel up to 24 hours before your visit for a full refund. Refunds are processed within 5–10 business days.',
-                )}
+                {tr('visit.cancellation.free.body')}
               </p>
             </div>
 
             <div className="rounded-2xl border border-border bg-card p-6 space-y-2">
               <h3 className="font-semibold text-foreground">
-                {tr('visit.cancellation.weather.title', 'Bad weather')}
+                {tr('visit.cancellation.weather.title')}
               </h3>
               <p className="text-sm text-foreground/70 leading-relaxed">
-                {tr(
-                  'visit.cancellation.weather.body',
-                  'Light rain: we still run the tour. Thunderstorm or severe weather: we reschedule for free.',
-                )}
+                {tr('visit.cancellation.weather.body')}
               </p>
             </div>
 
             <div className="rounded-2xl border border-border bg-card p-6 space-y-2">
               <h3 className="font-semibold text-foreground">
-                {tr('visit.cancellation.lateNotice.title', 'Late cancellations')}
+                {tr('visit.cancellation.lateNotice.title')}
               </h3>
               <p className="text-sm text-foreground/70 leading-relaxed">
-                {tr(
-                  'visit.cancellation.lateNotice.body',
-                  'Cancellations within 24 hours may incur a fee. Contact us as early as possible and we\'ll do our best to accommodate you.',
-                )}
+                {tr('visit.cancellation.lateNotice.body')}
               </p>
             </div>
           </div>
@@ -352,32 +310,29 @@ export default async function VisitPage({ params }: { params: Promise<{ locale: 
       <section className="w-full py-16 md:py-24 px-4 bg-background" aria-labelledby="photos-heading">
         <div className="max-w-4xl mx-auto">
           <h2 id="photos-heading" className="text-3xl font-bold text-foreground mb-10 text-center">
-            {tr('visit.photos.heading', 'Photos & filming')}
+            {tr('visit.photos.heading')}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
 
             <div className="rounded-2xl border border-border bg-card p-6 space-y-2">
               <h3 className="font-semibold text-foreground">
-                {tr('visit.photos.personal.title', 'Personal photography')}
+                {tr('visit.photos.personal.title')}
               </h3>
               <p className="text-sm text-foreground/70 leading-relaxed">
-                {tr(
-                  'visit.photos.personal.body',
-                  'Yes — photograph and film anywhere on the farm for personal use. The alpacas are famously photogenic.',
-                )}
+                {tr('visit.photos.personal.body')}
               </p>
             </div>
 
             <div className="rounded-2xl border border-border bg-card p-6 space-y-2">
               <h3 className="font-semibold text-foreground">
-                {tr('visit.photos.commercial.title', 'Commercial use')}
+                {tr('visit.photos.commercial.title')}
               </h3>
               <p className="text-sm text-foreground/70 leading-relaxed">
-                {tr('visit.photos.commercial.bodyPrefix', 'For commercial shoots, branded content, or media, please review our')}{' '}
+                {tr('visit.photos.commercial.bodyPrefix')}{' '}
                 <Link href={`/${locale}/press-kit`} className="text-primary underline hover:text-primary/80 text-sm">
-                  {tr('visit.photos.commercial.pressKitLink', 'press kit')}
+                  {tr('visit.photos.commercial.pressKitLink')}
                 </Link>{' '}
-                {tr('visit.photos.commercial.bodySuffix', 'and contact us before your visit.')}
+                {tr('visit.photos.commercial.bodySuffix')}
               </p>
             </div>
           </div>
@@ -388,26 +343,26 @@ export default async function VisitPage({ params }: { params: Promise<{ locale: 
       <section className="w-full py-16 px-4 bg-gradient-to-br from-primary/10 to-accent/10">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-2xl font-bold text-foreground mb-8">
-            {tr('visit.ctas.heading', 'Ready to visit?')}
+            {tr('visit.ctas.heading')}
           </h2>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href={`/${locale}/tours`}
               className="inline-block rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
             >
-              {tr('visit.ctas.bookTour', 'Book a tour')}
+              {tr('visit.ctas.bookTour')}
             </Link>
             <Link
               href={`/${locale}/alpacas`}
               className="inline-block rounded-lg border border-border px-6 py-3 text-sm font-semibold text-foreground hover:bg-primary/5"
             >
-              {tr('visit.ctas.seeHerd', 'See the herd')}
+              {tr('visit.ctas.seeHerd')}
             </Link>
             <Link
               href={`/${locale}/contact`}
               className="inline-block rounded-lg border border-border px-6 py-3 text-sm font-semibold text-foreground hover:bg-primary/5"
             >
-              {tr('visit.ctas.contact', 'Contact us')}
+              {tr('visit.ctas.contact')}
             </Link>
           </div>
         </div>

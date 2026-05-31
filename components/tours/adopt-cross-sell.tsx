@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 import type { Locale } from '@/i18n.config'
 import { ADOPT_PRICE_MONTHLY_EUR, ADOPT_PRICE_YEARLY_EUR } from '@/lib/config'
 
@@ -20,21 +20,12 @@ interface AdoptCrossSellProps {
  * Fail-quiet: no async calls, no env gates — always renders on tour pages.
  * Photo falls back to /placeholder.svg when owner hasn't supplied an image.
  */
-export function AdoptCrossSell({ locale, photoSrc }: AdoptCrossSellProps) {
-    const translate = t(locale as Locale)
+export async function AdoptCrossSell({ locale, photoSrc }: AdoptCrossSellProps) {
+    const translate = await getTranslations()
 
-    const heading = translate(
-        'tours.adoptCrossSell.heading',
-        'Coming back often?',
-    )
-    const body = translate(
-        'tours.adoptCrossSell.body',
-        'Adopt an alpaca — your tour fees for the year are included.',
-    )
-    const cta = translate(
-        'tours.adoptCrossSell.cta',
-        'Become a sponsor →',
-    )
+    const heading = translate('tours.adoptCrossSell.heading')
+    const body = translate('tours.adoptCrossSell.body')
+    const cta = translate('tours.adoptCrossSell.cta')
 
     const resolvedPhoto = photoSrc ?? '/placeholder.svg'
 

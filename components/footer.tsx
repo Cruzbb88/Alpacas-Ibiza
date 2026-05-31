@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useLocaleT, useLocale } from '@/lib/locale-context'
+import { useTranslations, useLocale } from 'next-intl'
 
 export interface FooterProps {
   legalName: string
@@ -59,7 +59,7 @@ export function Footer({
   social,
   brandName,
 }: FooterProps) {
-  const tr = useLocaleT()
+  const tr = useTranslations()
   const locale = useLocale()
 
   const phoneDisplay = formatPhoneE164(phoneE164)
@@ -325,7 +325,7 @@ export function Footer({
                 href={`/${locale}/impressum`}
                 className="hover:text-foreground"
               >
-                {tr('footer.impressum', 'Legal notice')}
+                {tr('footer.impressum')}
               </Link>
             </li>
           </ul>

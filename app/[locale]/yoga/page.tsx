@@ -19,7 +19,7 @@
 
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 import type { Locale } from '@/i18n.config'
 import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
 import { GradientPageHero, PageSection, OwnerConfirmBanner } from '@/components/layout'
@@ -84,7 +84,7 @@ export async function generateMetadata({
 
 export default async function YogaPage({ params }: { params: Promise<{ locale: string }> }) {
     const { locale } = await params
-    const translate = t(locale as Locale)
+    const translate = await getTranslations()
 
     const faqItems = [
         {

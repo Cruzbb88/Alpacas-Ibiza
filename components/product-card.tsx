@@ -23,7 +23,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Heart, ShoppingCart } from 'lucide-react'
 import type { Locale } from '@/i18n.config'
-import { useLocaleT } from '@/lib/locale-context'
+import { useTranslations } from 'next-intl'
 import { getFareHarborCategoryUrl } from '@/lib/config'
 import { formatPriceForLocale } from '@/lib/format-price'
 
@@ -173,7 +173,7 @@ export function ProductCard({
   onAddToCart,
   onWishlist,
 }: ProductCardProps) {
-  const translate = useLocaleT()
+  const translate = useTranslations()
   const [hovered, setHovered] = useState(false)
 
   const isCompact = variant === 'compact'
@@ -201,18 +201,18 @@ export function ProductCard({
   const hasSale = salePriceLabel !== undefined
 
   // CTA resolution.
-  let ctaLabel = translate('shop.cta.addToCart', 'Add to cart')
+  let ctaLabel = translate('shop.cta.addToCart')
   let ctaHref =
     `mailto:${contactEmail}?subject=` + encodeURIComponent(`Order: ${product.name}`)
   let ctaEvent = 'add_to_cart_click'
 
   if (isSoldOut) {
-    ctaLabel = translate('shop.cta.notifyMe', 'Notify me')
+    ctaLabel = translate('shop.cta.notifyMe')
     ctaHref =
       `mailto:${contactEmail}?subject=` + encodeURIComponent(`Notify me: ${product.name}`)
     ctaEvent = 'notify_me_click'
   } else if (isMadeToOrder) {
-    ctaLabel = translate('shop.cta.commission', 'Commission this')
+    ctaLabel = translate('shop.cta.commission')
     ctaHref = `/${locale}/shop/commission?item=${encodeURIComponent(slug)}`
     ctaEvent = 'commission_click'
   }
@@ -243,7 +243,7 @@ export function ProductCard({
       {/* ── Image area ───────────────────────────────────────────── */}
       <div
         className={`relative ${aspect} bg-secondary/40 overflow-hidden`}
-        aria-label={isSoldOut ? translate('shop.status.soldOut', 'Sold out') : undefined}
+        aria-label={isSoldOut ? translate('shop.status.soldOut') : undefined}
       >
         {hasImage ? (
           <ImageOrLink href={linkHref} ariaLabel={product.name}>
@@ -283,7 +283,7 @@ export function ProductCard({
         ) : (
           <div
             className="absolute inset-0 flex items-center justify-center"
-            aria-label={`${translate('shop.imageComingSoon', 'Photo coming soon')}: ${product.name}`}
+            aria-label={`${translate('shop.imageComingSoon')}: ${product.name}`}
           >
             <span className="text-lg font-bold text-muted-foreground/40 px-4 text-center">
               {product.name}
@@ -301,7 +301,7 @@ export function ProductCard({
         {/* Made-to-order chip top-right */}
         {isMadeToOrder && !isSoldOut && (
           <span className="absolute top-3 right-3 z-10 bg-background/90 text-foreground px-2.5 py-1 rounded-full text-[10px] font-medium uppercase tracking-widest border border-border">
-            {translate('shop.status.madeToOrder', 'Made to order')}
+            {translate('shop.status.madeToOrder')}
           </span>
         )}
 
@@ -312,7 +312,7 @@ export function ProductCard({
             aria-hidden="true"
           >
             <span className="bg-background/95 text-foreground px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest shadow">
-              {translate('shop.status.soldOut', 'Sold out')}
+              {translate('shop.status.soldOut')}
             </span>
           </div>
         )}
@@ -322,7 +322,7 @@ export function ProductCard({
           <button
             type="button"
             onClick={onWishlist}
-            aria-label={translate('shop.cta.wishlist', 'Add to wishlist')}
+            aria-label={translate('shop.cta.wishlist')}
             className="absolute bottom-3 right-3 z-10 p-2 rounded-full bg-background/90 text-foreground/70 hover:text-accent hover:bg-background transition-colors shadow-sm"
           >
             <Heart className="h-4 w-4" />
@@ -361,7 +361,7 @@ export function ProductCard({
           <StarRating
             rating={product.rating as number}
             count={reviewCount}
-            label={`${product.rating} ${translate('shop.outOf5', 'out of 5 stars')}`}
+            label={`${product.rating} ${translate('shop.outOf5')}`}
           />
         )}
 
@@ -411,7 +411,7 @@ export function ProductCard({
 
           {isLowStock && (
             <p className="text-xs font-semibold text-destructive" role="status">
-              {translate('shop.status.lowStock', 'Only a few left')}
+              {translate('shop.status.lowStock')}
             </p>
           )}
         </div>

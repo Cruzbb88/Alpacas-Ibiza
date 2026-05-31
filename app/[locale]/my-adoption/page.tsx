@@ -6,7 +6,7 @@ import { getMollieClient } from '@/lib/integrations/payment-mollie'
 import { fetchDonorPortalData } from '@/lib/donor-portal-data'
 import { getTenant } from '@/lib/tenants/server'
 import { getProviders } from '@/lib/integrations'
-import { t } from '@/lib/translations'
+import { getTranslations, getFormatter } from 'next-intl/server'
 import { PortalErrorState } from './error-state'
 import { PhotoGallery } from '@/components/donor-portal/photo-gallery'
 import { PaymentHistoryTable } from '@/components/donor-portal/payment-history-table'
@@ -55,7 +55,8 @@ export default async function MyAdoptionPage({
 }) {
   const { locale } = await params
   const { token } = await searchParams
-  const translate = t(locale)
+  const translate = await getTranslations()
+  const fmt = await getFormatter()
 
   // No token at all → bounce to the adopt page where they can request a fresh
   // portal email. We don't render an error state for the literally-empty case
@@ -215,20 +216,20 @@ export default async function MyAdoptionPage({
           <dt style={{ color: '#71717a' }}>{translate('portal.nextCharge')}</dt>
           <dd style={{ margin: 0, fontWeight: 500 }}>
             {result.subscription.nextPaymentDate
-              ? new Date(result.subscription.nextPaymentDate).toLocaleDateString(locale === 'en' ? 'en-GB' : locale, { day: '2-digit', month: 'short', year: 'numeric' })
+              ? fmt.dateTime(new Date(result.subscription.nextPaymentDate), { day: '2-digit', month: 'short', year: 'numeric' })
               : '—'}
           </dd>
           <dt style={{ color: '#71717a' }}>{translate('portal.started')}</dt>
           <dd style={{ margin: 0, fontWeight: 500 }}>
             {result.subscription.createdAt
-              ? new Date(result.subscription.createdAt).toLocaleDateString(locale === 'en' ? 'en-GB' : locale, { day: '2-digit', month: 'short', year: 'numeric' })
+              ? fmt.dateTime(new Date(result.subscription.createdAt), { day: '2-digit', month: 'short', year: 'numeric' })
               : '—'}
           </dd>
           {result.subscription.canceledAt && (
             <>
               <dt style={{ color: '#71717a' }}>{translate('portal.canceled')}</dt>
               <dd style={{ margin: 0, fontWeight: 500 }}>
-                {new Date(result.subscription.canceledAt).toLocaleDateString(locale === 'en' ? 'en-GB' : locale, { day: '2-digit', month: 'short', year: 'numeric' })}
+                {fmt.dateTime(new Date(result.subscription.canceledAt), { day: '2-digit', month: 'short', year: 'numeric' })}
               </dd>
             </>
           )}
@@ -302,7 +303,7 @@ export default async function MyAdoptionPage({
                   <dt style={{ color: '#71717a' }}>Signed</dt>
                   <dd style={{ margin: 0, fontWeight: 500 }}>
                     {m.signatureDate
-                      ? new Date(m.signatureDate).toLocaleDateString(locale === 'en' ? 'en-GB' : locale, { day: '2-digit', month: 'short', year: 'numeric' })
+                      ? fmt.dateTime(new Date(m.signatureDate), { day: '2-digit', month: 'short', year: 'numeric' })
                       : '—'}
                   </dd>
                 </dl>

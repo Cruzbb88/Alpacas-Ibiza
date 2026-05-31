@@ -11,7 +11,7 @@
  */
 
 import type { Locale } from '@/i18n.config'
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 
 interface TimelineStep {
   /** Translation key under `adopt.timeline.<key>`. Component appends `.title` / `.when` / `.desc`. */
@@ -78,11 +78,11 @@ interface AdoptionTimelineProps {
   subheading?: string
 }
 
-export function AdoptionTimeline({ locale, heading, subheading }: AdoptionTimelineProps) {
-  const translate = t(locale)
-  const headingText = heading ?? translate('adopt.timeline.heading', 'What you\'ll receive')
+export async function AdoptionTimeline({ locale, heading, subheading }: AdoptionTimelineProps) {
+  const translate = await getTranslations()
+  const headingText = heading ?? translate('adopt.timeline.heading')
   const subheadingText =
-    subheading ?? translate('adopt.timeline.subheading', 'Your first year with the herd, step by step.')
+    subheading ?? translate('adopt.timeline.subheading')
 
   return (
     <section aria-labelledby="adoption-timeline-heading">
@@ -96,9 +96,9 @@ export function AdoptionTimeline({ locale, heading, subheading }: AdoptionTimeli
       {/* Mobile (≤md): vertical timeline with connecting line on the left */}
       <ol className="md:hidden relative space-y-6 pl-10 before:absolute before:top-2 before:bottom-2 before:left-4 before:w-px before:bg-primary/30">
         {STEPS.map((step) => {
-          const title = translate(`adopt.timeline.${step.key}.title`, step.defaults.title)
-          const when = translate(`adopt.timeline.${step.key}.when`, step.defaults.when)
-          const desc = translate(`adopt.timeline.${step.key}.desc`, step.defaults.desc)
+          const title = translate(`adopt.timeline.${step.key}.title` as Parameters<typeof translate>[0])
+          const when = translate(`adopt.timeline.${step.key}.when` as Parameters<typeof translate>[0])
+          const desc = translate(`adopt.timeline.${step.key}.desc` as Parameters<typeof translate>[0])
           return (
             <li key={step.key} className="relative">
               <span
@@ -118,9 +118,9 @@ export function AdoptionTimeline({ locale, heading, subheading }: AdoptionTimeli
       {/* Desktop (≥md): horizontal 5-column grid */}
       <ol className="hidden md:grid md:grid-cols-5 gap-6">
         {STEPS.map((step, index) => {
-          const title = translate(`adopt.timeline.${step.key}.title`, step.defaults.title)
-          const when = translate(`adopt.timeline.${step.key}.when`, step.defaults.when)
-          const desc = translate(`adopt.timeline.${step.key}.desc`, step.defaults.desc)
+          const title = translate(`adopt.timeline.${step.key}.title` as Parameters<typeof translate>[0])
+          const when = translate(`adopt.timeline.${step.key}.when` as Parameters<typeof translate>[0])
+          const desc = translate(`adopt.timeline.${step.key}.desc` as Parameters<typeof translate>[0])
           return (
             <li key={step.key} className="relative text-center">
               {/* Connecting line to next step — omitted on the last item */}

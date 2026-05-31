@@ -11,7 +11,7 @@ import { useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { useLocaleT, useLocale } from '@/lib/locale-context'
+import { useTranslations, useLocale } from 'next-intl'
 
 export default function Error({
   error,
@@ -25,7 +25,7 @@ export default function Error({
   // Falls back to 'en' if the path is somehow missing a locale prefix.
   const seg = pathname?.split('/')[1] ?? 'en'
   const locale = useLocale() || seg
-  const tr = useLocaleT()
+  const tr = useTranslations()
 
   useEffect(() => {
     fetch('/api/log-error', {

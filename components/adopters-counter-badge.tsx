@@ -20,7 +20,7 @@
 
 import { getActiveAdopterCount } from '@/lib/adopters/count'
 import type { Locale } from '@/i18n.config'
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 
 interface AdoptersCounterBadgeProps {
   locale: Locale
@@ -39,8 +39,8 @@ export async function AdoptersCounterBadge({ locale, className }: AdoptersCounte
   // Render nothing when count is zero (unconfigured, error, or timeout).
   if (count <= 0) return null
 
-  const translate = t(locale)
-  const template = translate('adopters.badge', 'Join {count} alpaca adopters')
+  const translate = await getTranslations()
+  const template = translate('adopters.badge')
   const label = template.replace('{count}', String(count))
 
   return (

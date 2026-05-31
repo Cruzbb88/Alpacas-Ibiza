@@ -27,7 +27,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import type { Locale } from '@/i18n.config'
 import type { AnimalEntity } from '@/lib/integrations/content-types'
-import { useLocaleT } from '@/lib/locale-context'
+import { useTranslations } from 'next-intl'
 
 type Trait = 'calm' | 'playful' | 'shy' | 'bold' | 'sociable' | 'independent'
 
@@ -91,14 +91,14 @@ interface MatchProps {
 }
 
 export function AlpacaPersonalityMatch({ locale, animals, heading, intro }: MatchProps) {
-  const translate = useLocaleT()
+  const translate = useTranslations()
   const [step, setStep] = useState(0) // 0..QUESTIONS.length — last is the result
   const [weights, setWeights] = useState<Record<Trait, number>>({
     calm: 0, playful: 0, shy: 0, bold: 0, sociable: 0, independent: 0,
   })
 
-  const headingText = heading ?? translate('adopt.match.heading', 'Find your alpaca match')
-  const introText = intro ?? translate('adopt.match.intro', 'Three quick questions and we\'ll suggest one for you.')
+  const headingText = heading ?? translate('adopt.match.heading')
+  const introText = intro ?? translate('adopt.match.intro')
 
   function handleAnswer(answer: Answer) {
     setWeights((prev) => {
@@ -142,7 +142,7 @@ export function AlpacaPersonalityMatch({ locale, animals, heading, intro }: Matc
         aria-valuenow={progressPct}
         aria-valuemin={0}
         aria-valuemax={100}
-        aria-label={translate('adopt.match.progressAria', 'Quiz progress')}
+        aria-label={translate('adopt.match.progressAria')}
       >
         <div
           className="h-full bg-primary transition-all duration-300 ease-out motion-reduce:transition-none"
@@ -153,7 +153,7 @@ export function AlpacaPersonalityMatch({ locale, animals, heading, intro }: Matc
       {!showResult && (
         <div>
           <p className="text-sm font-medium text-foreground/60 mb-3">
-            {translate('adopt.match.questionLabel', 'Question')} {step + 1} / {QUESTIONS.length}
+            {translate('adopt.match.questionLabel')} {step + 1} / {QUESTIONS.length}
           </p>
           <h3 className="text-lg font-semibold text-foreground mb-5">
             {QUESTIONS[step].prompt}
@@ -176,7 +176,7 @@ export function AlpacaPersonalityMatch({ locale, animals, heading, intro }: Matc
       {showResult && match && (
         <div className="text-center" aria-live="polite">
           <p className="text-sm font-medium text-foreground/60 mb-2">
-            {translate('adopt.match.resultLabel', 'Your match')}
+            {translate('adopt.match.resultLabel')}
           </p>
           <p className="text-3xl font-bold text-primary mb-2">{match.name}</p>
           {match.personality && (
@@ -187,13 +187,13 @@ export function AlpacaPersonalityMatch({ locale, animals, heading, intro }: Matc
               href={`/${locale}/adopt?alpaca=${encodeURIComponent(match.id)}`}
               className="inline-flex items-center justify-center rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
             >
-              {translate('alpacas.adoptCta', 'Adopt')} {match.name} →
+              {translate('alpacas.adoptCta')} {match.name} →
             </Link>
             <Link
               href={`/${locale}/alpacas/${encodeURIComponent(match.id)}`}
               className="inline-flex items-center justify-center rounded-lg border border-primary px-6 py-3 text-sm font-semibold text-primary hover:bg-primary/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
             >
-              {translate('adopt.match.learnMore', 'Read full bio')}
+              {translate('adopt.match.learnMore')}
             </Link>
           </div>
           <button
@@ -201,14 +201,14 @@ export function AlpacaPersonalityMatch({ locale, animals, heading, intro }: Matc
             onClick={reset}
             className="mt-6 text-xs text-foreground/60 underline hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 rounded"
           >
-            {translate('adopt.match.retake', 'Try again')}
+            {translate('adopt.match.retake')}
           </button>
         </div>
       )}
 
       {showResult && !match && (
         <p className="text-center text-sm text-foreground/70">
-          {translate('adopt.match.noMatch', 'We couldn\'t find a match right now — try Pick for me on the adopt page.')}
+          {translate('adopt.match.noMatch')}
         </p>
       )}
     </section>

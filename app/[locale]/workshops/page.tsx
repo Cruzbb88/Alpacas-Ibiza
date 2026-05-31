@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Hero } from '@/components/hero'
 import { FAQ } from '@/components/faq'
 import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 import { localBusinessSchema, workshopHowToSchema, toJsonLd } from '@/lib/structured-data'
 import { SITE_BASE_URL as BASE_URL, FAREHARBOR_ITEM_TOUR_WEAVING_WORKSHOP } from '@/lib/config'
 import type { Locale } from '@/i18n.config'
@@ -82,7 +82,7 @@ export default async function WorkshopsPage({
     params: Promise<{ locale: string }>
 }) {
     const { locale } = await params
-    const translate = t(locale as Locale)
+    const translate = await getTranslations()
 
     const faqItems = [
         {
@@ -113,66 +113,42 @@ export default async function WorkshopsPage({
     const facts = [
         {
             icon: '📅',
-            title: translate('workshops.facts.duration.title', 'Duration'),
-            desc: translate('workshops.facts.duration.desc', '2 days'),
+            title: translate('workshops.facts.duration.title'),
+            desc: translate('workshops.facts.duration.desc'),
         },
         {
             icon: '🧑‍🎨',
-            title: translate('workshops.facts.instructor.title', 'Instructor'),
-            desc: translate('workshops.facts.instructor.desc', 'San'),
+            title: translate('workshops.facts.instructor.title'),
+            desc: translate('workshops.facts.instructor.desc'),
         },
         {
             icon: '👥',
-            title: translate('workshops.facts.groupSize.title', 'Group Size'),
-            desc: translate(
-                'workshops.facts.groupSize.desc',
-                'Small group — contact for details',
-            ),
+            title: translate('workshops.facts.groupSize.title'),
+            desc: translate('workshops.facts.groupSize.desc'),
         },
         {
             icon: '🗓️',
-            title: translate('workshops.facts.schedule.title', 'Schedule'),
-            desc: translate(
-                'workshops.facts.schedule.desc',
-                'Off-season only — on request',
-            ),
+            title: translate('workshops.facts.schedule.title'),
+            desc: translate('workshops.facts.schedule.desc'),
         },
         {
             icon: '💶',
-            title: translate('workshops.facts.price.title', 'Price'),
-            desc: translate(
-                'workshops.facts.price.desc',
-                'Contact us for pricing',
-            ),
+            title: translate('workshops.facts.price.title'),
+            desc: translate('workshops.facts.price.desc'),
         },
         {
             icon: '🧣',
-            title: translate('workshops.facts.takeaway.title', 'Takeaway'),
-            desc: translate(
-                'workshops.facts.takeaway.desc',
-                'Your own handwoven scarf',
-            ),
+            title: translate('workshops.facts.takeaway.title'),
+            desc: translate('workshops.facts.takeaway.desc'),
         },
     ]
 
     // What you'll learn — all 4 items verified from REALITY_CHECK.md Tier 2
     const curriculum = [
-        translate(
-            'workshops.curriculum.wash',
-            'Wash and card alpaca fleece from our own herd',
-        ),
-        translate(
-            'workshops.curriculum.spin',
-            'Spin yarn on a spinning wheel',
-        ),
-        translate(
-            'workshops.curriculum.weave',
-            'Weave on a traditional wooden loom',
-        ),
-        translate(
-            'workshops.curriculum.scarf',
-            'Take home the scarf you wove yourself',
-        ),
+        translate('workshops.curriculum.wash'),
+        translate('workshops.curriculum.spin'),
+        translate('workshops.curriculum.weave'),
+        translate('workshops.curriculum.scarf'),
     ]
 
     return (
@@ -189,10 +165,10 @@ export default async function WorkshopsPage({
             {/* BreadcrumbList JSON-LD */}
             <PageBreadcrumbs
                 locale={locale}
-                homeLabel={translate('nav.home', 'Home')}
+                homeLabel={translate('nav.home')}
                 crumbs={[
                     {
-                        name: translate('workshops.breadcrumb', 'Workshops'),
+                        name: translate('workshops.breadcrumb'),
                         path: 'workshops',
                     },
                 ]}
@@ -205,19 +181,10 @@ export default async function WorkshopsPage({
 
             {/* Hero — title and subtitle use verified facts only */}
             <Hero
-                title={translate(
-                    'workshops.title',
-                    'Weaving + Spinning Workshops with San',
-                )}
-                subtitle={translate(
-                    'workshops.subtitle',
-                    'A 2-day deep-dive into the full journey from alpaca fleece to finished scarf. Taught by San of Wishfulfilling Weaving, off-season and on request.',
-                )}
+                title={translate('workshops.title')}
+                subtitle={translate('workshops.subtitle')}
                 cta={{
-                    label: translate(
-                        'workshops.cta',
-                        'Request a Workshop Date',
-                    ),
+                    label: translate('workshops.cta'),
                     href: `/contact?subject=${encodeURIComponent('Workshop inquiry')}`,
                 }}
             />
@@ -226,16 +193,10 @@ export default async function WorkshopsPage({
             <section className="w-full py-16 px-4 bg-secondary/30">
                 <div className="max-w-4xl mx-auto">
                     <h2 className="text-2xl font-bold mb-2 text-center text-primary">
-                        {translate(
-                            'workshops.curriculum.title',
-                            "What You'll Learn",
-                        )}
+                        {translate('workshops.curriculum.title')}
                     </h2>
                     <p className="text-center text-muted-foreground mb-8">
-                        {translate(
-                            'workshops.curriculum.subtitle',
-                            'Every step of the craft, from raw fleece to finished cloth',
-                        )}
+                        {translate('workshops.curriculum.subtitle')}
                     </p>
                     <ul className="max-w-xl mx-auto space-y-4">
                         {curriculum.map((item, i) => (
@@ -262,16 +223,10 @@ export default async function WorkshopsPage({
             <section className="w-full py-16 px-4 bg-muted">
                 <div className="max-w-4xl mx-auto">
                     <h2 className="text-2xl font-bold mb-2 text-center text-primary">
-                        {translate(
-                            'workshops.facts.title',
-                            'Workshop at a Glance',
-                        )}
+                        {translate('workshops.facts.title')}
                     </h2>
                     <p className="text-center text-muted-foreground mb-8">
-                        {translate(
-                            'workshops.facts.subtitle',
-                            'Everything you need to know before you request a date',
-                        )}
+                        {translate('workshops.facts.subtitle')}
                     </p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                         {facts.map((fact, i) => (
@@ -297,13 +252,10 @@ export default async function WorkshopsPage({
                 <div className="max-w-2xl mx-auto text-center">
                     <div className="text-5xl mb-4">🧵</div>
                     <h2 className="text-2xl font-bold mb-4 text-primary">
-                        {translate('workshops.san.title', 'About San')}
+                        {translate('workshops.san.title')}
                     </h2>
                     <p className="text-foreground/70 leading-relaxed">
-                        {translate(
-                            'workshops.san.body',
-                            'San is the weaver behind Wishfulfilling Weaving — the artisan studio at the heart of Es Currals alpaca farm. She works on a traditional wooden loom, turning fleece from our own herd into exclusive handcrafted textiles. The workshop is her invitation to share that craft with guests who want to go beyond watching and actually make something.',
-                        )}
+                        {translate('workshops.san.body')}
                     </p>
                 </div>
             </section>
@@ -312,25 +264,16 @@ export default async function WorkshopsPage({
             <section className="w-full py-16 px-4 bg-secondary/30">
                 <div className="max-w-2xl mx-auto text-center">
                     <h2 className="text-2xl font-bold mb-4 text-primary">
-                        {translate(
-                            'workshops.booking.title',
-                            'How to Book',
-                        )}
+                        {translate('workshops.booking.title')}
                     </h2>
                     <p className="text-foreground/70 mb-6 leading-relaxed">
-                        {translate(
-                            'workshops.booking.body',
-                            'The workshop runs off-season, when the farm is quieter and San has time to give you her full attention. There is no fixed calendar — send us a message with your preferred dates and we will confirm availability.',
-                        )}
+                        {translate('workshops.booking.body')}
                     </p>
                     <Link
                         href={`/${locale}/contact?subject=${encodeURIComponent('Workshop inquiry')}`}
                         className="inline-flex items-center gap-2 px-8 py-3 bg-accent hover:bg-accent/90 text-accent-foreground rounded-lg font-medium transition-colors"
                     >
-                        {translate(
-                            'workshops.booking.cta',
-                            'Request a Workshop Date',
-                        )}
+                        {translate('workshops.booking.cta')}
                     </Link>
                 </div>
             </section>

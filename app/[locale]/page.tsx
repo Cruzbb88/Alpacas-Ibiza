@@ -6,7 +6,7 @@ import { WeavingShowcase } from '@/components/weaving-showcase'
 import { ExperienceCards } from '@/components/experience-cards'
 import { ReviewCard } from '@/components/review-card'
 import type { Review } from '@/components/review-card'
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 import { FAREHARBOR_BOOKING_URL, SITE_BASE_URL } from '@/lib/config'
 import type { Locale } from '@/i18n.config'
 import { NewsletterForm } from '@/components/newsletter-form'
@@ -54,7 +54,7 @@ export default async function Home({
 }) {
   const { locale } = await params
   const { ref } = await searchParams
-  const translate = t(locale)
+  const translate = await getTranslations()
 
   /* ─── UTM / referral passthrough ─── */
   const validRef = ref && /^ALPACA-[A-Z0-9]{6}$/.test(ref) ? ref : undefined
@@ -215,7 +215,7 @@ export default async function Home({
       <Hero
         title={translate('hero.title')}
         subtitle={translate('hero.subtitle')}
-        eyebrow={translate('hero.eyebrow', 'San Carlos, Ibiza')}
+        eyebrow={translate('hero.eyebrow')}
         trustSignals={["Ibiza's first alpaca farm", "By appointment in San Carlos"]}
         cta={{
           label: translate('hero.ctaPrimary'),

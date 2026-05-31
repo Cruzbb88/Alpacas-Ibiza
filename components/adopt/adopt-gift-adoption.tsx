@@ -30,7 +30,7 @@
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useRef, useTransition } from 'react'
 import type { Locale } from '@/i18n.config'
-import { useLocaleT } from '@/lib/locale-context'
+import { useTranslations } from 'next-intl'
 import { trackEvent } from '@/lib/client-track'
 
 interface AdoptGiftAdoptionProps {
@@ -40,7 +40,7 @@ interface AdoptGiftAdoptionProps {
 }
 
 export function AdoptGiftAdoption({ locale, heading }: AdoptGiftAdoptionProps) {
-  const translate = useLocaleT()
+  const translate = useTranslations()
   const router = useRouter()
   const searchParams = useSearchParams()
   const [isPending, startTransition] = useTransition()
@@ -126,11 +126,8 @@ export function AdoptGiftAdoption({ locale, heading }: AdoptGiftAdoptionProps) {
     })
   }
 
-  const headingText = heading ?? translate('adopt.gift.heading', 'Adopting for someone else?')
-  const subheading = translate(
-    'adopt.gift.sub',
-    'Make this a gift — we\'ll personalise the certificate and time the welcome to arrive on the date you choose.',
-  )
+  const headingText = heading ?? translate('adopt.gift.heading')
+  const subheading = translate('adopt.gift.sub')
 
   return (
     <details
@@ -145,8 +142,8 @@ export function AdoptGiftAdoption({ locale, heading }: AdoptGiftAdoptionProps) {
             <p className="font-semibold text-foreground text-sm sm:text-base">{headingText}</p>
             <p className="text-xs text-foreground/60 mt-0.5">
               {isGift
-                ? translate('adopt.gift.activeBadge', `Gift mode active — for ${giftName || 'recipient'}`).replace('{name}', giftName)
-                : translate('adopt.gift.expandHint', 'Click to personalise as a gift')}
+                ? translate('adopt.gift.activeBadge',{ name: giftName || 'recipient' })
+                : translate('adopt.gift.expandHint')}
             </p>
           </div>
         </div>
@@ -164,7 +161,7 @@ export function AdoptGiftAdoption({ locale, heading }: AdoptGiftAdoptionProps) {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <label className="block">
             <span className="block text-xs font-semibold uppercase tracking-wide text-foreground/60 mb-1">
-              {translate('adopt.gift.nameLabel', 'Recipient name')}
+              {translate('adopt.gift.nameLabel')}
               <span aria-hidden="true" className="text-primary"> *</span>
             </span>
             <input
@@ -172,7 +169,7 @@ export function AdoptGiftAdoption({ locale, heading }: AdoptGiftAdoptionProps) {
               required={isGift}
               value={giftName}
               onChange={(e) => debouncedUpdate('gift_name', e.target.value)}
-              placeholder={translate('adopt.gift.namePlaceholder', 'e.g. Marta')}
+              placeholder={translate('adopt.gift.namePlaceholder')}
               maxLength={80}
               className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-foreground/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
             />
@@ -180,13 +177,13 @@ export function AdoptGiftAdoption({ locale, heading }: AdoptGiftAdoptionProps) {
 
           <label className="block">
             <span className="block text-xs font-semibold uppercase tracking-wide text-foreground/60 mb-1">
-              {translate('adopt.gift.emailLabel', 'Recipient email (optional)')}
+              {translate('adopt.gift.emailLabel')}
             </span>
             <input
               type="email"
               value={giftEmail}
               onChange={(e) => debouncedUpdate('gift_email', e.target.value)}
-              placeholder={translate('adopt.gift.emailPlaceholder', 'marta@example.com')}
+              placeholder={translate('adopt.gift.emailPlaceholder')}
               maxLength={254}
               className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-foreground/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
             />
@@ -194,7 +191,7 @@ export function AdoptGiftAdoption({ locale, heading }: AdoptGiftAdoptionProps) {
 
           <label className="block sm:col-span-2">
             <span className="block text-xs font-semibold uppercase tracking-wide text-foreground/60 mb-1">
-              {translate('adopt.gift.deliverLabel', 'Deliver the welcome on')}
+              {translate('adopt.gift.deliverLabel')}
             </span>
             <input
               type="date"
@@ -204,7 +201,7 @@ export function AdoptGiftAdoption({ locale, heading }: AdoptGiftAdoptionProps) {
               className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
             />
             <span className="block text-xs text-foreground/60 mt-1">
-              {translate('adopt.gift.deliverHint', 'Leave blank to send the welcome immediately after checkout.')}
+              {translate('adopt.gift.deliverHint')}
             </span>
           </label>
         </div>
@@ -212,14 +209,14 @@ export function AdoptGiftAdoption({ locale, heading }: AdoptGiftAdoptionProps) {
         {isGift && (
           <div className="flex items-center justify-between pt-2">
             <p className="text-xs text-foreground/60" role="status" aria-live="polite">
-              {translate('adopt.gift.confirmation', 'Your tier buttons above will checkout as a gift.')}
+              {translate('adopt.gift.confirmation')}
             </p>
             <button
               type="button"
               onClick={resetGift}
               className="text-xs text-foreground/60 hover:text-foreground underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 rounded"
             >
-              {translate('adopt.gift.reset', 'Remove gift details')}
+              {translate('adopt.gift.reset')}
             </button>
           </div>
         )}

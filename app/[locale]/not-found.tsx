@@ -1,7 +1,7 @@
 import { headers } from 'next/headers'
 import { logNotFound } from '@/lib/notfound-log'
 import { DidYouMean } from '@/components/did-you-mean'
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 import type { Locale } from '@/i18n.config'
 
 export default async function LocaleNotFound() {
@@ -18,7 +18,7 @@ export default async function LocaleNotFound() {
   const locales = ['en', 'de', 'it', 'es', 'nl', 'fr'] as const
   const seg = pathname.split('/')[1] ?? 'en'
   const locale: Locale = (locales as readonly string[]).includes(seg) ? (seg as Locale) : 'en'
-  const tr = t(locale)
+  const tr = await getTranslations()
 
   return (
     <div className="flex flex-col items-center px-4 py-16 md:py-24" aria-live="polite">

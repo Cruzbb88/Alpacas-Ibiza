@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import type { Locale } from '@/i18n.config'
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 import { CommissionForm } from '@/components/commission-form'
 import { buildLocaleAlternates } from '@/lib/i18n-metadata'
 import { shopCategoryItemListSchema, toJsonLd } from '@/lib/structured-data'
@@ -12,21 +12,15 @@ export async function generateMetadata({
   params: Promise<{ locale: Locale }>
 }): Promise<Metadata> {
   const { locale } = await params
-  const tr = t(locale)
+  const tr = await getTranslations()
   const ogImage = getOgImage('alpacas', 'Commission a Custom Woven Piece – Alpacas Ibiza')
   return {
-    title: tr('commissionPage.metaTitle', 'Custom Commission | Wishfulfilling Weaving – Alpacas Ibiza'),
-    description: tr(
-      'commissionPage.metaDescription',
-      'Commission a bespoke hand-woven piece from San at Es Currals, Ibiza. Choose your colours, pattern, and dimensions — made to order on a traditional wooden loom.',
-    ),
+    title: tr('commissionPage.metaTitle'),
+    description: tr('commissionPage.metaDescription'),
     alternates: buildLocaleAlternates(locale, 'shop/commission'),
     openGraph: {
-      title: tr('commissionPage.metaTitle', 'Custom Commission | Wishfulfilling Weaving – Alpacas Ibiza'),
-      description: tr(
-        'commissionPage.metaDescription',
-        'Commission a bespoke hand-woven piece from San at Es Currals, Ibiza. Choose your colours, pattern, and dimensions — made to order on a traditional wooden loom.',
-      ),
+      title: tr('commissionPage.metaTitle'),
+      description: tr('commissionPage.metaDescription'),
       images: [ogImage],
     },
     twitter: {
@@ -45,7 +39,7 @@ export default async function CommissionPage({
 }) {
   const { locale } = await params
   const { product } = await searchParams
-  const translate = t(locale)
+  const translate = await getTranslations()
 
   const formLabels = {
     name: translate('commissionPage.name'),

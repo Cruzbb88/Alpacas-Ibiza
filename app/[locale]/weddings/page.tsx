@@ -3,7 +3,7 @@
 // VERIFIED SOURCE: REALITY_CHECK.md line 57-60 (wedding/photoshoots as real revenue line)
 // UNMAPPED: price, package details, photographer arrangement, off-site delivery radius, handler count
 import type { Metadata } from 'next'
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 import type { Locale } from '@/i18n.config'
 import { BookingButton } from '@/components/booking/button'
 import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
@@ -32,7 +32,7 @@ export async function generateMetadata({
 
 export default async function WeddingsPage({ params }: { params: Promise<{ locale: Locale }> }) {
     const { locale } = await params
-    const translate = t(locale)
+    const translate = await getTranslations()
 
     // UNMAPPED grid items — every cell shows "Contact us for details" per Rule 5
     const unmappedDetails = [

@@ -1,7 +1,7 @@
 'use client'
 
 import type { Locale } from '@/i18n.config'
-import { useLocaleT } from '@/lib/locale-context'
+import { useTranslations } from 'next-intl'
 
 interface WithdrawalWaiverCheckboxProps {
   locale: Locale
@@ -28,7 +28,7 @@ interface WithdrawalWaiverCheckboxProps {
  * See handoff/PEER_REVIEW_2026-05-29-mollie-management.md Cycle 11.
  */
 export function WithdrawalWaiverCheckbox({ locale, name = 'withdrawal_waiver', required = true }: WithdrawalWaiverCheckboxProps) {
-  const translate = useLocaleT()
+  const translate = useTranslations()
   return (
     <label className="flex items-start gap-2 text-xs text-foreground/80 cursor-pointer">
       <input
@@ -39,10 +39,7 @@ export function WithdrawalWaiverCheckbox({ locale, name = 'withdrawal_waiver', r
         className="mt-0.5 h-4 w-4 rounded border-border accent-primary focus-visible:ring-2 focus-visible:ring-primary/50"
       />
       <span>
-        {translate(
-          'adopt.legal.withdrawalWaiver',
-          'I expressly consent to my adoption beginning immediately and acknowledge I lose my 14-day right of withdrawal once performance starts. (Required by EU Directive 2011/83 Art 16(m).)',
-        )}
+        {translate('adopt.legal.withdrawalWaiver')}
       </span>
     </label>
   )

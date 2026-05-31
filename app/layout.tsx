@@ -1,7 +1,7 @@
 import React from 'react'
 import Script from 'next/script'
 import type { Metadata, Viewport } from 'next'
-import { Geist, Playfair_Display } from 'next/font/google'
+import { Spectral, Cabin } from 'next/font/google'
 import { cookies } from 'next/headers'
 
 import './globals.css'
@@ -10,8 +10,21 @@ import { SpeculationRules } from '@/components/speculation-rules'
 import { SITE_BASE_URL } from '@/lib/config'
 import { i18nConfig } from '@/i18n.config'
 
-const _geistSans = Geist({ subsets: ['latin'], display: 'swap' })
-const _playfairDisplay = Playfair_Display({ subsets: ['latin'], variable: '--font-display', display: 'swap' })
+const spectral = Spectral({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  style: ['normal', 'italic'],
+  variable: '--font-serif',
+  display: 'swap',
+})
+
+const cabin = Cabin({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  style: ['normal', 'italic'],
+  variable: '--font-sans',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_BASE_URL),
@@ -58,7 +71,7 @@ export default async function RootLayout({
       : i18nConfig.defaultLocale
   return (
     <html lang={lang}>
-      <body className={`font-sans antialiased ${_playfairDisplay.variable}`}>
+      <body className={`${spectral.variable} ${cabin.variable} font-sans antialiased`}>
         {/* GDPR Consent Mode v2 default — must load BEFORE any GA/GTM script */}
         <Script id="consent-default" strategy="beforeInteractive">
           {`window.dataLayer = window.dataLayer || [];

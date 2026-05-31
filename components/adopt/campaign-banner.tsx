@@ -1,26 +1,19 @@
 import { CAMPAIGN_HEADLINE, CAMPAIGN_SUBLINE, CAMPAIGN_END_DATE } from '@/lib/config'
-import { getTranslation } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 import type { Locale } from '@/i18n.config'
 
-export function CampaignBanner({ locale, className }: { locale: Locale; className?: string }) {
+export async function CampaignBanner({ locale: _locale, className }: { locale: Locale; className?: string }) {
   if (!CAMPAIGN_HEADLINE || !CAMPAIGN_END_DATE) return null
   const endMs = Date.parse(CAMPAIGN_END_DATE)
   if (!Number.isFinite(endMs) || endMs < Date.now()) return null
   const daysLeft = Math.max(0, Math.ceil((endMs - Date.now()) / (1000 * 60 * 60 * 24)))
 
-  const tr = (key: string, fallback: string) => getTranslation(locale, key, fallback)
+  const tr = await getTranslations()
 
-  const daysLeftLabel =
-    daysLeft === 0
-      ? tr('adopt.campaign.finalHours', 'Final hours')
-      : daysLeft === 1
-        ? tr('adopt.campaign.oneDayLeft', '1 day left')
-        : tr('adopt.campaign.daysLeft', '{count} days left').replace('{count}', String(daysLeft))
+  // ICU plural: {count, plural, =0 {Final hours} one {# day left} other {# days left}}
+  const daysLeftLabel = tr('adopt.campaign.daysLeft',{ count: daysLeft })
 
-  const daysRemainingAria =
-    daysLeft === 1
-      ? tr('adopt.campaign.daysRemainingAria', '{count} days remaining').replace('{count}', '1')
-      : tr('adopt.campaign.daysRemainingAria', '{count} days remaining').replace('{count}', String(daysLeft))
+  const daysRemainingAria = tr('adopt.campaign.daysRemainingAria',{ count: daysLeft })
 
   return (
     <div

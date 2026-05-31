@@ -6,7 +6,7 @@ import { Search, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { searchAll, type SearchEntry } from '@/lib/data/search-index'
 import { JOURNAL_POSTS } from '@/lib/data/journal-posts'
-import { useLocaleT } from '@/lib/locale-context'
+import { useTranslations } from 'next-intl'
 import type { Locale } from '@/i18n.config'
 
 interface HeaderSearchProps {
@@ -20,7 +20,7 @@ const TYPE_LABEL: Record<SearchEntry['type'], string> = {
 }
 
 export function HeaderSearch({ locale }: HeaderSearchProps) {
-  const tr = useLocaleT()
+  const tr = useTranslations()
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<ReadonlyArray<SearchEntry>>([])

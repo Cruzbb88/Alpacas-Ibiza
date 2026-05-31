@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { ArrowRight, Calendar } from 'lucide-react'
-import { useLocaleT, useLocale } from '@/lib/locale-context'
+import { useTranslations, useLocale } from 'next-intl'
 import { FAREHARBOR_BOOKING_URL } from '@/lib/config'
 import { CancellationBadge } from '@/components/booking/cancellation-badge'
 
@@ -16,7 +16,7 @@ export function BookingSection() {
     const [availableDates, setAvailableDates] = useState<AvailableDate[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
-    const tr = useLocaleT()
+    const tr = useTranslations()
     const locale = useLocale()
 
     useEffect(() => {

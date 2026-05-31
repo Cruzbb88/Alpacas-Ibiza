@@ -22,7 +22,7 @@
  */
 
 import type { Locale } from '@/i18n.config'
-import { useLocaleT } from '@/lib/locale-context'
+import { useTranslations } from 'next-intl'
 import { AdoptCheckoutLink } from '@/components/adopt/adopt-checkout-link'
 import { ConsentNotice } from '@/components/legal/consent-notice'
 
@@ -61,24 +61,24 @@ export function AdoptTierCard({
   processor = 'unknown',
   isGift = false,
 }: AdoptTierCardProps) {
-  const translate = useLocaleT()
+  const translate = useTranslations()
   const isYearly = tier === 'yearly'
   const tierName =
     tier === 'monthly'
-      ? translate('adopt.tier.monthly', 'Monthly')
-      : translate('adopt.tier.yearly', 'Yearly — prepaid')
+      ? translate('adopt.tier.monthly')
+      : translate('adopt.tier.yearly')
   const sub =
     subLabel ??
     (tier === 'monthly'
-      ? translate('adopt.tier.monthlySub', 'Cancel any time.')
-      : translate('adopt.tier.yearlySub', 'Same total as monthly, paid upfront.'))
+      ? translate('adopt.tier.monthlySub')
+      : translate('adopt.tier.yearlySub'))
   const cta =
     ctaLabel ??
     (tier === 'monthly'
-      ? translate('adopt.tier.ctaMonthly', 'Adopt monthly')
-      : translate('adopt.tier.ctaYearly', 'Adopt yearly'))
+      ? translate('adopt.tier.ctaMonthly')
+      : translate('adopt.tier.ctaYearly'))
   const badge =
-    isYearly && (popularBadge ?? translate('adopt.tier.popularBadge', 'Most popular'))
+    isYearly && (popularBadge ?? translate('adopt.tier.popularBadge'))
 
   return (
     <article
@@ -137,7 +137,7 @@ export function AdoptTierCard({
        */}
       <ConsentNotice
         locale={locale}
-        actionLabel={translate('legal.adoptAction', 'adopting')}
+        actionLabel={translate('legal.adoptAction')}
       />
     </article>
   )

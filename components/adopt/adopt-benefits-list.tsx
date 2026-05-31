@@ -13,7 +13,7 @@
  */
 
 import type { Locale } from '@/i18n.config'
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 
 const DEFAULT_BENEFITS = [
   'benefit1',
@@ -47,21 +47,18 @@ interface AdoptBenefitsListProps {
   className?: string
 }
 
-export function AdoptBenefitsList({
+export async function AdoptBenefitsList({
   locale,
   heading,
   intro,
   benefits = DEFAULT_BENEFITS,
   className,
 }: AdoptBenefitsListProps) {
-  const translate = t(locale)
-  const headingText = heading ?? translate('adopt.benefitsTitle', 'What\'s included')
+  const translate = await getTranslations()
+  const headingText = heading ?? translate('adopt.benefitsTitle')
   const introText =
     intro ??
-    translate(
-      'adopt.benefitsIntro',
-      'Every adoption directly funds feed, veterinary care, and the daily work of running an ethical alpaca farm.',
-    )
+    translate('adopt.benefitsIntro')
 
   return (
     <section aria-labelledby="adopt-benefits-heading" className={className}>
@@ -75,8 +72,7 @@ export function AdoptBenefitsList({
 
       <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 list-none p-0">
         {benefits.map((key) => {
-          const fallback = DEFAULT_BENEFIT_COPY[key] ?? key
-          const copy = translate(`adopt.${key}`, fallback)
+          const copy = translate(`adopt.${key}` as Parameters<typeof translate>[0])
           return (
             <li
               key={key}

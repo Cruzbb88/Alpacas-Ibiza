@@ -241,3 +241,82 @@ Everything else (calendar .ics, search, admin nav, certificate recovery, cancell
 ### 4. One-line summary
 
 > We pulled your existing copy + built 10 new features today. Build is green. You owe us palette colours (DevTools snippet in `handoff/LIVE_SITE_BRAND_ASSETS.md`), confirmation of the +34 689 446 781 WhatsApp number, plus the 10 items already listed in §8 of the morning packet.
+
+---
+
+## 2026-05-31 (round 3 — late evening) — full live-site transfer continued
+
+Continued pulling from your live site without you in the loop. Everything below landed on the new site, build green.
+
+### Transfer log this round
+
+| What | Source on live site | Where it landed | Status |
+|---|---|---|---|
+| **Logo PNG** | Squarespace CDN | `public/images/brand/logo.png` (28KB) + wired in header | ✓ live |
+| **Typography** | freight-text-pro (paid) + Cabin | Spectral (free substitute) + Cabin via `next/font/google` | ✓ live |
+| **T&C — all 18 articles** | /algemene-voorwaarden | `translations/nl.json` `legal.terms.art1..art18` | ✓ Dutch verbatim |
+| **Corporate page copy** | /business-incentives-brainstormsessies | `corporate.liveBodyNL` / `EN` | ✓ live |
+| **Weddings page** | /weddings-photoshoots | 17 NL keys under `weddings.*` | ✓ live |
+| **Weaving studio info** | /informatie-weaving | 24 NL keys (Big Ben loom origin, process, dyes) | ✓ live |
+| **Weaving collection intro** | /informatie-weaving-1 | `weaving.collectionSubhead` | ✓ live |
+| **About / team confirmed** | /wie-zijn-wij | `about.metaTitle` + confirmation Bart/San bios already present | ✓ live |
+
+### Pages we tried and 404'd
+
+- `/privacy-policy` — 404
+- `/privacyverklaring` — 404
+- `/cookies` — 404
+- `/cookieverklaring` — 404
+
+**The live site has no published privacy or cookie policy.** GDPR + AEPD launch-blocker — needs to be written from scratch (legal copy, not engineer copy).
+
+### Live site bug we noticed
+
+Your `/contact-1` page on alpacasibiza.com contains a literal placeholder: **"Hier nog een tekst voorzien"** ("Text to be provided here"). Probably forgotten Squarespace editor placeholder. Worth deleting or filling before the cutover so it doesn't carry forward in any cached search snippets.
+
+### Translation honesty flag
+
+The Dutch T&C is standard Thuiswinkel boilerplate applying Spanish law (Article 17). Translation into EN/DE/ES/FR/IT was deliberately **left as `__UNTRANSLATED__` sentinels** rather than machine-translated — legal text should be translated by a Dutch+Spanish lawyer, not an AI agent. Either:
+- Pay a legal translator (~€200-400 per legal text per locale), OR
+- Accept that the new site renders Dutch legal text to non-Dutch speakers (live site does the same today)
+
+---
+
+## NEW: 4 scripts ready for you to paste into Chrome
+
+We made [SQUARESPACE_DEVTOOLS_SCRIPTS.md](../../handoff/SQUARESPACE_DEVTOOLS_SCRIPTS.md) — four 30-second copy-paste console scripts that pull the things public scrape can't reach:
+
+1. **Brand color palette** — auto-extracts every brand color token. Paste into the live site's console.
+2. **Full media library** — lists every photo Squarespace is hosting for you, with filenames + dimensions. Paste into your Squarespace dashboard's media manager.
+3. **FareHarbor item IDs** — visits-each-page accumulator that builds a tour→ID map across visits. The thing that unblocks every per-tour booking CTA on the new site.
+4. **Page slugs incl. drafts** — lists every page (including drafts you may have started and forgotten). Paste into the Pages panel of your Squarespace dashboard.
+
+Total of ~5 minutes of clicking. No command line. Each script copies its result to clipboard — paste back to us. Instructions in the file.
+
+### Why these scripts matter
+
+For (3) FareHarbor IDs especially: that single piece of information is the difference between "every redesign tour button drops you on the master calendar" and "every redesign tour button pre-selects the right tour." We've been blocked on this since cycle 13.
+
+For (1) the palette: this is the last visual gap. Once we have the hex codes the new site is visually 1:1 with your existing brand identity.
+
+### Cumulative content transfer state
+
+Across the three transfer rounds today:
+- Alpaca bios: ✓ all 14 transferred
+- About / founding story: ✓ transferred
+- Sustainability copy: ✓ transferred
+- Alcaca product info: ✓ transferred
+- T&C: ✓ transferred (NL only — see flag above)
+- Privacy policy: ❌ doesn't exist on live site — needs to be written
+- Cookie policy: ❌ doesn't exist on live site — needs to be written
+- Logo: ✓ downloaded + wired
+- Fonts: ✓ free-substituted (Spectral + Cabin)
+- Brand colors: ⏳ owner runs script 1
+- Media library: ⏳ owner runs script 2
+- FareHarbor IDs: ⏳ owner runs script 3
+- Draft pages: ⏳ owner runs script 4
+- Per-tour content: ✓ transferred
+- Per-experience content: ✓ transferred
+- Weddings: ✓ transferred
+- Weaving: ✓ transferred (studio + process + collection intro)
+- Corporate: ✓ transferred

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { Hero } from '@/components/hero'
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 import type { Locale } from '@/i18n.config'
 import { buildLocaleAlternates } from '@/lib/i18n-metadata'
 import { isLegalContentLive } from '@/components/legal-content-pending-notice'
@@ -36,7 +36,7 @@ export async function generateMetadata({
     params: Promise<{ locale: Locale }>
 }): Promise<Metadata> {
     const { locale } = await params
-    const tr = t(locale)
+    const tr = await getTranslations()
     return {
         title: tr('impressum.title'),
         description: tr('impressum.intro'),
@@ -47,7 +47,7 @@ export async function generateMetadata({
 
 export default async function ImpressumPage({ params }: { params: Promise<{ locale: Locale }> }) {
     const { locale } = await params
-    const translate = t(locale)
+    const translate = await getTranslations()
     const contactEmail = process.env.CONTACT_EMAIL ?? 'info@alpacasibiza.com'
 
     if (!isLegalContentLive()) {
@@ -55,7 +55,7 @@ export default async function ImpressumPage({ params }: { params: Promise<{ loca
             <>
                 <PageBreadcrumbs
                     locale={locale}
-                    homeLabel={translate('nav.home', 'Home')}
+                    homeLabel={translate('nav.home')}
                     crumbs={[{ name: translate('impressum.title'), path: 'impressum' }]}
                 />
                 <Hero title={translate('impressum.title')} subtitle={translate('impressum.intro')} />
@@ -100,7 +100,7 @@ export default async function ImpressumPage({ params }: { params: Promise<{ loca
         <>
             <PageBreadcrumbs
                 locale={locale}
-                homeLabel={translate('nav.home', 'Home')}
+                homeLabel={translate('nav.home')}
                 crumbs={[{ name: translate('impressum.title'), path: 'impressum' }]}
             />
             <Hero title={translate('impressum.title')} subtitle={translate('impressum.intro')} />

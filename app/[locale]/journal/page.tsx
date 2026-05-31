@@ -11,7 +11,7 @@
 
 import type { Metadata } from 'next'
 import type { Locale } from '@/i18n.config'
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 import { getTenant } from '@/lib/tenants/server'
 import { tenantMetadata } from '@/lib/tenants/metadata'
 import { localBusinessSchema, toJsonLd } from '@/lib/structured-data'
@@ -58,7 +58,7 @@ export default async function JournalPage({
 }) {
   const { locale } = await params
   const { q } = await searchParams
-  const translate = t(locale)
+  const translate = await getTranslations()
 
   const schema = localBusinessSchema()
   const postsExist = hasLivePosts()

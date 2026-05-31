@@ -17,7 +17,7 @@ import type { Locale } from '@/i18n.config'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import { t } from '@/lib/translations'
+import { getTranslations, getFormatter } from 'next-intl/server'
 import { getTenant } from '@/lib/tenants/server'
 import { tenantMetadata } from '@/lib/tenants/metadata'
 import { toJsonLd } from '@/lib/structured-data'
@@ -117,7 +117,8 @@ export default async function JournalPostPage({
   params: Promise<{ locale: Locale; slug: string }>
 }) {
   const { locale, slug } = await params
-  const translate = t(locale)
+  const translate = await getTranslations()
+  const fmt = await getFormatter()
 
   const post = findPost(slug)
   if (!post) notFound()
@@ -151,11 +152,7 @@ export default async function JournalPostPage({
 
   const categoryLabel = post.category.replace(/-/g, ' ')
   const bcp47Locale = locale === 'en' ? 'en-GB' : locale
-  const dateLabel = new Date(post.date).toLocaleDateString(bcp47Locale, {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  })
+  const dateLabel = fmt.dateTime(new Date(post.date), { day: 'numeric', month: 'long', year: 'numeric' })
 
   const { blocks, tocItems } = parseBody(post.body)
 

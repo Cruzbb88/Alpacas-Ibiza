@@ -15,7 +15,7 @@
 
 import type { Metadata } from 'next'
 import type { Locale } from '@/i18n.config'
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
 import { PressLogos } from '@/components/press-logos'
 import { OwnerConfirmBanner } from '@/components/layout/owner-confirm-banner'
@@ -55,7 +55,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>
 }): Promise<Metadata> {
   const { locale } = await params
-  const tr = t(locale as Locale)
+  const tr = await getTranslations()
   const alts = buildLocaleAlternates(locale, 'press-kit')
   const ogImage = getOgImage('press-kit', 'Press Kit – Alpacas Ibiza')
   return {
@@ -135,7 +135,7 @@ export default async function PressKitPage({
   params: Promise<{ locale: Locale }>
 }) {
   const { locale } = await params
-  const translate = t(locale)
+  const translate = await getTranslations()
 
   const comingSoon = translate('pressKit.comingSoonBadge') || 'Coming soon'
 

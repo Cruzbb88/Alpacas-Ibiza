@@ -14,7 +14,8 @@
 import type { AnimalEntity } from '@/lib/integrations/content-types'
 import type { Locale } from '@/i18n.config'
 
-export type TranslateFn = (key: string, defaultValue?: string) => string
+/** Minimal translator interface compatible with next-intl's getTranslations() return type. */
+export type TranslateFn = (key: string) => string
 
 export function resolveAnimalBio(
   animal: AnimalEntity,
@@ -27,5 +28,5 @@ export function resolveAnimalBio(
     if (localized != null) return localized
   }
   if (animal.bio != null) return animal.bio
-  return translate('alpacas.bioComingSoon', 'Bio coming soon')
+  return translate('alpacas.bioComingSoon')
 }

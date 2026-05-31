@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import type { Locale } from '@/i18n.config'
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 import { buildLocaleAlternates } from '@/lib/i18n-metadata'
 import { getOgImage } from '@/lib/og-images'
 
@@ -11,21 +11,15 @@ export async function generateMetadata({
   params: Promise<{ locale: Locale }>
 }): Promise<Metadata> {
   const { locale } = await params
-  const tr = t(locale)
+  const tr = await getTranslations()
   const ogImage = getOgImage('alpacas', 'Alpacas Ibiza Farm Shop – Woven Textiles & Alcaca')
   return {
-    title: tr('shop.metaTitle', 'Shop | Wishfulfilling Weaving & Alcaca – Alpacas Ibiza'),
-    description: tr(
-      'shop.metaDescription',
-      "Hand-woven scarves on traditional wooden looms, custom commissions, and Alcaca organic fertilizer — all from Es Currals, Ibiza's first alpaca farm.",
-    ),
+    title: tr('shop.metaTitle'),
+    description: tr('shop.metaDescription'),
     alternates: buildLocaleAlternates(locale, 'shop'),
     openGraph: {
-      title: tr('shop.metaTitle', 'Shop | Wishfulfilling Weaving & Alcaca – Alpacas Ibiza'),
-      description: tr(
-        'shop.metaDescription',
-        "Hand-woven scarves on traditional wooden looms, custom commissions, and Alcaca organic fertilizer — all from Es Currals, Ibiza's first alpaca farm.",
-      ),
+      title: tr('shop.metaTitle'),
+      description: tr('shop.metaDescription'),
       images: [ogImage],
     },
     twitter: {
@@ -37,24 +31,24 @@ export async function generateMetadata({
 
 export default async function ShopPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params
-  const translate = t(locale)
+  const translate = await getTranslations()
 
   const shopCategories = [
     {
-      title: translate('shop.woven.title', translate('shop.categories.woven.title')),
-      description: translate('shop.woven.description', translate('shop.categories.woven.description')),
+      title: translate('shop.woven.title'),
+      description: translate('shop.woven.description'),
       icon: '🧣',
       href: `/${locale}/shop/woven`,
     },
     {
-      title: translate('shop.commission.title', translate('shop.categories.commission.title')),
-      description: translate('shop.commission.description', translate('shop.categories.commission.description')),
+      title: translate('shop.commission.title'),
+      description: translate('shop.commission.description'),
       icon: '✨',
       href: `/${locale}/shop/commission`,
     },
     {
-      title: translate('shop.manure.title', translate('shop.categories.alcaca.title')),
-      description: translate('shop.manure.description', translate('shop.categories.alcaca.description')),
+      title: translate('shop.manure.title'),
+      description: translate('shop.manure.description'),
       icon: '🌿',
       href: `/${locale}/shop/alcaca`,
     },

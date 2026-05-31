@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 import { Card } from '@/components/ui/card'
 import { ArrowRight } from 'lucide-react'
 import type { Locale } from '@/i18n.config'
-import { useLocaleT } from '@/lib/locale-context'
+import { useTranslations } from 'next-intl'
 
 /* ──────────────────────────────────────────────────────────
  * Public types
@@ -113,8 +113,8 @@ export function ChoicePaths({
   const pathname = usePathname()
   if (!paths || paths.length === 0) return null
 
-  const translate = useLocaleT()
-  const defaultCta = translate('paths.explore', 'Explore')
+  const translate = useTranslations()
+  const defaultCta = translate('paths.explore')
 
   const normalized = paths.map(normalize)
   const colsClass = gridColsFor(normalized.length)

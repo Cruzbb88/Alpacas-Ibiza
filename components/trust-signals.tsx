@@ -8,7 +8,7 @@ import {
   Zap,
 } from 'lucide-react'
 import type { Locale } from '@/i18n.config'
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 
 export type TrustSignalKey =
   | 'cancellation'
@@ -58,12 +58,12 @@ function TrustItem({
   )
 }
 
-export function TrustSignals({
+export async function TrustSignals({
   variant = 'horizontal',
   locale,
   items = DEFAULT_ITEMS,
 }: TrustSignalsProps) {
-  const tr = t(locale)
+  const tr = await getTranslations()
 
   // verified-reviews: only render when Google Places is configured
   // The API signals this via the /api/google-reviews route returning {configured:true}
@@ -89,25 +89,13 @@ export function TrustSignals({
   }
 
   const labelMap: Record<TrustSignalKey, string> = {
-    cancellation: tr(
-      'trustSignals.cancellation',
-      'Free cancellation 24h'
-    ),
-    'small-groups': tr('trustSignals.smallGroups', 'Small group visits'),
-    languages: tr(
-      'trustSignals.languages',
-      'EN · NL · DE · ES · FR · IT'
-    ),
-    'family-friendly': tr('trustSignals.familyFriendly', 'Family friendly'),
-    'animal-welfare': tr(
-      'trustSignals.animalWelfare',
-      'Animal welfare first'
-    ),
-    'verified-reviews': tr('trustSignals.verifiedReviews', 'Guest reviews'),
-    'instant-confirmation': tr(
-      'trustSignals.instantConfirmation',
-      'Instant booking confirmation'
-    ),
+    cancellation: tr('trustSignals.cancellation'),
+    'small-groups': tr('trustSignals.smallGroups'),
+    languages: tr('trustSignals.languages'),
+    'family-friendly': tr('trustSignals.familyFriendly'),
+    'animal-welfare': tr('trustSignals.animalWelfare'),
+    'verified-reviews': tr('trustSignals.verifiedReviews'),
+    'instant-confirmation': tr('trustSignals.instantConfirmation'),
   }
 
   const visibleItems = items.filter(

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Hero } from '@/components/hero'
 import { AlpacaCard } from '@/components/alpaca-card'
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 import { localBusinessSchema, herdAttractionSchema, toJsonLd } from '@/lib/structured-data'
 import type { Locale } from '@/i18n.config'
 import { getTenant } from '@/lib/tenants/server'
@@ -45,7 +45,7 @@ export default async function AlpacasPage({
 }) {
     const { locale } = await params
     const { p, c, b } = await searchParams
-    const translate = t(locale)
+    const translate = await getTranslations()
 
     const tenant = await getTenant()
     const providers = getProviders(tenant)
@@ -109,7 +109,7 @@ export default async function AlpacasPage({
             <PageSection>
                 {filtered.length === 0 ? (
                     <p className="text-center text-foreground/60 py-12">
-                        {translate('alpacas.filter.noMatches', 'No alpacas match those filters. Try clearing one.')}
+                        {translate('alpacas.filter.noMatches')}
                     </p>
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">

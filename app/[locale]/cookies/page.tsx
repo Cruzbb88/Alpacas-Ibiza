@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { Hero } from '@/components/hero'
-import { t, ta } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 import type { Locale } from '@/i18n.config'
 import { buildLocaleAlternates } from '@/lib/i18n-metadata'
 import { LegalContentPendingNotice, isLegalContentLive } from '@/components/legal-content-pending-notice'
@@ -11,7 +11,7 @@ export async function generateMetadata({
     params: Promise<{ locale: Locale }>
 }): Promise<Metadata> {
     const { locale } = await params
-    const tr = t(locale)
+    const tr = await getTranslations()
     return {
         title: tr('cookies.title'),
         alternates: buildLocaleAlternates(locale, 'cookies'),
@@ -20,9 +20,7 @@ export async function generateMetadata({
 
 export default async function CookiesPage({ params }: { params: Promise<{ locale: Locale }> }) {
     const { locale } = await params
-    const translate = t(locale)
-    const translateArray = ta(locale)
-
+    const translate = await getTranslations()
     if (!isLegalContentLive()) {
         return (
             <>
@@ -55,7 +53,7 @@ export default async function CookiesPage({ params }: { params: Promise<{ locale
                     </h3>
                     <p>{translate('cookies.essentialText')}</p>
                     <ul className="list-disc list-inside space-y-2 mb-6">
-                        {translateArray('cookies.essentialItems').map((item, i) => (
+                        {(translate.raw('cookies.essentialItems') as string[]).map((item, i) => (
                             <li key={i}>{item}</li>
                         ))}
                     </ul>
@@ -70,7 +68,7 @@ export default async function CookiesPage({ params }: { params: Promise<{ locale
                     </h3>
                     <p>{translate('cookies.analyticsText')}</p>
                     <ul className="list-disc list-inside space-y-2 mb-6">
-                        {translateArray('cookies.analyticsItems').map((item, i) => (
+                        {(translate.raw('cookies.analyticsItems') as string[]).map((item, i) => (
                             <li key={i}>{item}</li>
                         ))}
                     </ul>
@@ -84,7 +82,7 @@ export default async function CookiesPage({ params }: { params: Promise<{ locale
                         {translate('cookies.choicesTitle')}
                     </h2>
                     <ul className="list-disc list-inside space-y-2 mb-6">
-                        {translateArray('cookies.choicesItems').map((item, i) => (
+                        {(translate.raw('cookies.choicesItems') as string[]).map((item, i) => (
                             <li key={i}>{item}</li>
                         ))}
                     </ul>
@@ -94,7 +92,7 @@ export default async function CookiesPage({ params }: { params: Promise<{ locale
                     </h2>
                     <p>{translate('cookies.thirdPartyText')}</p>
                     <ul className="list-disc list-inside space-y-2 mb-6">
-                        {translateArray('cookies.thirdPartyItems').map((item, i) => (
+                        {(translate.raw('cookies.thirdPartyItems') as string[]).map((item, i) => (
                             <li key={i}>{item}</li>
                         ))}
                     </ul>
@@ -104,7 +102,7 @@ export default async function CookiesPage({ params }: { params: Promise<{ locale
                     </h2>
                     <p>{translate('cookies.manageText')}</p>
                     <ul className="list-disc list-inside space-y-2 mb-6">
-                        {translateArray('cookies.manageItems').map((item, i) => (
+                        {(translate.raw('cookies.manageItems') as string[]).map((item, i) => (
                             <li key={i}>{item}</li>
                         ))}
                     </ul>
@@ -115,7 +113,7 @@ export default async function CookiesPage({ params }: { params: Promise<{ locale
                     </h2>
                     <p>{translate('cookies.gdprText')}</p>
                     <ul className="list-disc list-inside space-y-2 mb-6">
-                        {translateArray('cookies.gdprItems').map((item, i) => (
+                        {(translate.raw('cookies.gdprItems') as string[]).map((item, i) => (
                             <li key={i}>{item}</li>
                         ))}
                     </ul>

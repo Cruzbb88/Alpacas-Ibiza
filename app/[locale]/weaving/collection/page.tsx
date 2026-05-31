@@ -10,7 +10,7 @@
 
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 import type { Locale } from '@/i18n.config'
 import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
 import { getTenant } from '@/lib/tenants/server'
@@ -57,7 +57,7 @@ export default async function WeavingCollectionPage({
   params: Promise<{ locale: Locale }>
 }) {
   const { locale } = await params
-  const tr = t(locale)
+  const tr = await getTranslations()
 
   return (
     <main>

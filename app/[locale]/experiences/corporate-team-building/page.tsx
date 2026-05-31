@@ -7,7 +7,7 @@ import { Features } from '@/components/features'
 import { FAQ } from '@/components/faq'
 import { FareHarborCalendar } from '@/components/booking/fareharbor-calendar'
 import { Button } from '@/components/ui/button'
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 import { localBusinessSchema, faqPageSchema, toJsonLd } from '@/lib/structured-data'
 import type { Locale } from '@/i18n.config'
 import { CorporateEnquiryForm } from '@/components/corporate-enquiry-form'
@@ -45,7 +45,7 @@ export async function generateMetadata({
 
 export default async function CorporatePage({ params }: { params: Promise<{ locale: string }> }) {
     const { locale } = await params
-    const translate = t(locale as Locale)
+    const translate = await getTranslations()
 
     const faqItems = [
         {
@@ -106,10 +106,10 @@ export default async function CorporatePage({ params }: { params: Promise<{ loca
             <section className="w-full py-12 md:py-16 px-4 bg-[#F9F9F9]">
                 <div className="max-w-4xl mx-auto text-center">
                     <h2 className="text-2xl md:text-3xl font-bold text-[#708090] mb-4">
-                        {translate('tours.bookingSection.title', 'Book Your Team Event')}
+                        {translate('tours.bookingSection.title')}
                     </h2>
                     <p className="text-[#708090]/70 mb-8 max-w-2xl mx-auto">
-                        {translate('tours.bookingSection.subtitle', 'Select your preferred date and time to reserve your alpaca experience.')}
+                        {translate('tours.bookingSection.subtitle')}
                     </p>
                     <div className="bg-white rounded-[16px] p-6 md:p-8 shadow-sm border border-[#F5F5DC]">
                         <FareHarborCalendar itemId={FAREHARBOR_ITEM_BUSINESS_INCENTIVES} />

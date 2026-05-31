@@ -1,6 +1,6 @@
 import type { LegalPageMeta } from '@/lib/data/legal-meta'
 import type { Locale } from '@/i18n.config'
-import { getTranslation } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 
 interface LegalVersionStampProps {
   meta: LegalPageMeta | null
@@ -21,11 +21,12 @@ function formatDate(isoDate: string, locale: Locale): string {
   }
 }
 
-export function LegalVersionStamp({ meta, locale }: LegalVersionStampProps) {
+export async function LegalVersionStamp({ meta, locale }: LegalVersionStampProps) {
   if (!meta) return null
 
-  const lastUpdatedLabel = getTranslation(locale, 'legal.lastUpdated', 'Last updated')
-  const versionLabel = getTranslation(locale, 'legal.version', 'Version')
+  const translate = await getTranslations()
+  const lastUpdatedLabel = translate('legal.lastUpdated')
+  const versionLabel = translate('legal.version')
 
   const formattedDate = formatDate(meta.updatedAt, locale)
 

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import type { Locale } from '@/i18n.config'
-import { t } from '@/lib/translations'
+import { getTranslations } from 'next-intl/server'
 import { CancelFeedbackForm } from '@/components/adopt/cancel-feedback-form'
 
 export const metadata: Metadata = {
@@ -24,29 +24,23 @@ export default async function CancelFeedbackPage({
   params: Promise<{ locale: Locale }>
 }) {
   const { locale } = await params
-  const tr = t(locale)
+  const tr = await getTranslations()
 
   // Every key gets an EN fallback so the page never renders blank when a
   // locale translation is missing. The fallback strings ARE the source of
   // truth until translators ship the keys; the sentinel-strip resolver in
   // lib/translations.ts handles graceful per-locale fallback to EN.
-  const title = tr('cancelFeedback.title', 'Before you go')
-  const subhead = tr(
-    'cancelFeedback.subhead',
-    "We're sorry to see you go. Would you mind telling us why you cancelled?",
-  )
-  const labelPrice = tr('cancelFeedback.reason.price', 'It was too expensive')
-  const labelForgot = tr('cancelFeedback.reason.forgot', "I forgot I was subscribed")
-  const labelUnused = tr('cancelFeedback.reason.unused', "I no longer need this")
-  const labelOther = tr('cancelFeedback.reason.other', 'Other reason')
-  const labelNotes = tr('cancelFeedback.notesLabel', 'Anything else? (optional)')
-  const submitLabel = tr('cancelFeedback.submit', 'Send feedback')
-  const skipLabel = tr('cancelFeedback.skip', 'Skip — go to adopt page')
-  const thankYouMessage = tr(
-    'cancelFeedback.thankYou',
-    'Thank you for your feedback — it helps us improve.',
-  )
-  const reAdoptLabel = tr('cancelFeedback.reAdoptLink', 'Re-adopt an alpaca')
+  const title = tr('cancelFeedback.title')
+  const subhead = tr('cancelFeedback.subhead')
+  const labelPrice = tr('cancelFeedback.reason.price')
+  const labelForgot = tr('cancelFeedback.reason.forgot')
+  const labelUnused = tr('cancelFeedback.reason.unused')
+  const labelOther = tr('cancelFeedback.reason.other')
+  const labelNotes = tr('cancelFeedback.notesLabel')
+  const submitLabel = tr('cancelFeedback.submit')
+  const skipLabel = tr('cancelFeedback.skip')
+  const thankYouMessage = tr('cancelFeedback.thankYou')
+  const reAdoptLabel = tr('cancelFeedback.reAdoptLink')
 
   return (
     <main className="min-h-[60vh] py-20 px-4">
