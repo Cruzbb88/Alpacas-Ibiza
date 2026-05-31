@@ -299,3 +299,7 @@ export async function GET(request: Request) {
         reqId,
     )
 }
+
+// ADR-024: Vercel Cron dispatches POST. Alias POST→GET so the scheduled
+// tick does not 405. GET stays for manual/CRON_SECRET Bearer testing.
+export const POST = GET

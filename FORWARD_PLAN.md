@@ -375,3 +375,41 @@ Cortex reads unblocked (hook 005 now write-only). All 3 skills ran with real rec
 | Two-data-source drift: roster (alpacas.ts, checkout) vs content (content.ts, display) | **CONFIRMED risk** — scrape populated content not roster | **FIXED this commit**: lib/alpaca-roster-sync.test.ts asserts both ID sets stay identical |
 
 Reports: reports/crystal-ball/cb-004-2026-05-31-*.md, reports/task-radar/rd-004-2026-05-31.md, reports/matrix-reload/mr-001-2026-05-31.md
+
+## 2026-05-31 — BUILD BLOCKER: next-intl migration is incomplete (skill audit + verify)
+
+The working tree contains an in-flight migration from the custom `t()` system to
+`next-intl`, driven by `migrate_i18n.py` / `migrate_fallback.py`. It is **87 files
+deep but does not build**. Status:
+
+- `lib/translations.ts` + `lib/locale-context.tsx` DELETED (uncommitted)
+- 87 files now call `getTranslations()` / `useTranslations()`
+- **`next-intl` is NOT in package.json** (phantom dep — resolves transitively today, will break on any lockfile change)
+- **`createNextIntlPlugin` is NOT wired in `next.config.mjs`** — only a bare `next-intl.config.ts` exists, which next-intl does not auto-load
+- Result: `getTranslations()` throws "Couldn't find next-intl config file" at runtime; `pnpm build` fails
+
+**To finish the migration (owner/migration-process action — do NOT half-do this):**
+1. `pnpm add next-intl` (declare the dep)
+2. Wire `createNextIntlPlugin('./next-intl.config.ts')` around the config in `next.config.mjs`
+3. Create the request config (`i18n/request.ts`) that loads messages per locale
+4. Confirm `NextIntlClientProvider` wraps `app/[locale]/layout.tsx`
+5. Backfill missing keys — `cancelFeedback.*`, `cookieConsent.*`, `trustSignals.*` were added to en.json this session; audit the rest
+6. Write **ADR-027** documenting the next-intl switch (currently un-ADR'd architectural change)
+
+Until those 6 steps land, the build is red. New feature work should NOT stack on top.
+
+### ADR drift found this session (architecture-decision-tracker)
+| ADR | Drift | Action |
+|---|---|---|
+| 024 | owner-digest + owner-mrr-digest were GET-only → 405 on every Vercel cron POST | **FIXED this commit** (added `export const POST = GET`) |
+| 008 | availability `revalidate = 7200`, ADR mandates 1800 (rejected 7200 as "2h stale sold-out slots") | code-fix OR ADR amendment — owner call |
+| 013/015 | superseded by ADR-019 but no "Superseded by" line | doc edit |
+| 018 | stripe + @mollie/api-client are now hard deps, not optional | update ADR-018 |
+| 022 | waiver checkbox is wired but ADR says "Proposed/not wired" | flip to Accepted |
+| 005 | GB flag dropped for EN text label, no superseding ADR | doc edit |
+
+### Build blocker FIXED this commit (was red since cycle 8, shipped on tsc-only)
+- `app/[locale]/alpacas/[slug]/opengraph-image.tsx`: removed `generateImageMetadata`
+  (it forces a `[__metadata_id__]` segment that Next rejects under edge runtime —
+  "Edge runtime is not supported with generateStaticParams"). Lesson: a NEW route
+  needs `pnpm build`, not just `tsc` — the no-retest rule's carve-out.

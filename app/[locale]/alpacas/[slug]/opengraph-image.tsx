@@ -7,31 +7,21 @@ export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
 interface Params {
-  params: { locale: string; slug: string }
+  params: Promise<{ locale: string; slug: string }>
 }
 
-/**
- * generateImageMetadata produces one variant per slug so Next prerendering
- * can statically emit one OG image per alpaca at build time.
- * The `id` is not used here (each slug already maps to one image), but
- * Next requires the export when you want to drive multi-variant prerender.
- */
-export async function generateImageMetadata({ params }: Params) {
-  return [
-    {
-      id: params.slug,
-      alt: `Meet ${params.slug} · Alpacas Ibiza`,
-      size,
-      contentType,
-    },
-  ]
-}
+// NOTE: deliberately NO generateImageMetadata — it forces a [__metadata_id__]
+// route segment which Next rejects under the edge runtime
+// ("Edge runtime is not supported with generateStaticParams"). Each [slug]
+// already maps to exactly one OG image via params, so the single default
+// export is all that's needed.
 
 export default async function Image({ params }: Params) {
+  const { slug } = await params
   const tenant = getDefaultTenant()
   const providers = getProviders(tenant)
   const animals = providers.content.listAnimals()
-  const animal = animals.find((a) => a.id === params.slug)
+  const animal = animals.find((a) => a.id === slug)
 
   // Guard: if no image, fall back to a branded gradient (never broken)
   const hasPortrait = animal?.image != null
