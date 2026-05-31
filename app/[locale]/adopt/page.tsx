@@ -38,6 +38,7 @@ import { getTenant } from '@/lib/tenants/server'
 import { getOgImage } from '@/lib/og-images'
 import { getActiveAdopterCount } from '@/lib/adopters/count'
 import { AdoptersCounterBadge } from '@/components/adopters-counter-badge'
+import { AdoptersWall } from '@/components/adopt/adopters-wall'
 
 /** Mirrors the full referral-code URL format from lib/referral-codes.ts (ALPACA-XXXXXX). */
 const REFERRAL_CODE_URL_RE = /^ALPACA-[A-Z0-9]{6}$/
@@ -359,8 +360,13 @@ export default async function AdoptPage({
                 </h2>
                 {/* Adopters social proof badge — rendered between heading and tier cards.
                     Server component; returns null when count is 0 / unconfigured. */}
-                <div className="flex justify-center mb-8">
+                <div className="flex justify-center mb-4">
                     <AdoptersCounterBadge locale={locale} />
+                </div>
+                {/* Adopters wall — horizontal chip row of recent adopters.
+                    Server component; renders null until payment vendor is configured. */}
+                <div className="mb-8">
+                    <AdoptersWall heading={null} />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <AdoptTierCard

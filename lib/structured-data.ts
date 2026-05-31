@@ -334,6 +334,8 @@ export interface PersonInput {
     name: string
     role?: string | null
     url?: string | null
+    /** Organization name for worksFor → Organization node. */
+    worksForOrgName?: string | null
     // image?: string | null  // omitted until owner provides photo per Rule 5
 }
 
@@ -344,6 +346,15 @@ export function personSchema(p: PersonInput) {
         name: p.name,
         ...(p.role ? { jobTitle: p.role } : {}),
         ...(p.url ? { url: p.url } : {}),
+        ...(p.worksForOrgName
+            ? {
+                  worksFor: {
+                      '@type': 'Organization',
+                      name: p.worksForOrgName,
+                      url: BASE_URL,
+                  },
+              }
+            : {}),
     }
 }
 
@@ -572,6 +583,37 @@ export function breadcrumbListSchema(opts: {
         '@type': 'BreadcrumbList',
         itemListElement: items,
     }
+}
+
+// ─── Animal (per-alpaca detail page) ─────────────────────────────────────────
+
+/**
+ * Schema.org Animal schema for a single alpaca detail page.
+ * Uses `Thing` properties — schema.org/Animal is a valid subtype of Thing
+ * and is accepted by Google's Rich Results validator.
+ *
+ * Callers MUST omit this schema entirely when `description` and `image` are
+ * both null (nothing meaningful to emit, and Rule 5 forbids inventing values).
+ */
+export interface AnimalSchemaInput {
+  name: string
+  /** Bio or localised bio. Caller resolves locale before passing. Null = omit. */
+  description: string | null
+  /** Canonical portrait URL. Null = omit (caller should skip schema). */
+  image: string | null
+  /** Breed descriptor, e.g. "Huacaya". Null = omit. */
+  breed?: string | null
+}
+
+export function animalSchema({ name, description, image, breed }: AnimalSchemaInput) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Animal',
+    name,
+    ...(description ? { description } : {}),
+    ...(image ? { image } : {}),
+    ...(breed ? { breed } : {}),
+  }
 }
 
 // ─── Helper: inject as <script> tag string ────────────────────────────────────

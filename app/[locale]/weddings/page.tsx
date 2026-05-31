@@ -10,6 +10,9 @@ import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
 import { localBusinessSchema, faqPageSchema, weddingsServiceSchema, toJsonLd } from '@/lib/structured-data'
 import { getTenant } from '@/lib/tenants/server'
 import { tenantMetadata } from '@/lib/tenants/metadata'
+import { FAREHARBOR_ITEM_WEDDINGS } from '@/lib/config'
+import { SpotsLeftBanner } from '@/components/tours/spots-left-banner'
+import { AdoptCrossSell } from '@/components/tours/adopt-cross-sell'
 
 export async function generateMetadata({
     params,
@@ -92,6 +95,11 @@ export default async function WeddingsPage({ params }: { params: Promise<{ local
                     { name: translate('weddings.title'), path: 'weddings' },
                 ]}
             />
+
+            {/* Spots-left urgency widget */}
+            <div className="w-full px-4 pt-6 max-w-4xl mx-auto">
+                <SpotsLeftBanner itemId={FAREHARBOR_ITEM_WEDDINGS} tourLabel="Alpaca Wedding" />
+            </div>
 
             {/* ── Hero ───────────────────────────────────────────────────────── */}
             {/* OWNER_INPUT_NEEDED: supply wedding/photoshoot hero .webp to replace gradient */}
@@ -247,6 +255,9 @@ export default async function WeddingsPage({ params }: { params: Promise<{ local
                     </div>
                 </div>
             </section>
+
+            {/* Adopt cross-sell */}
+            <AdoptCrossSell locale={locale} />
 
             {/* ── Owner-confirm banner (dev/staging only) ─────────────────────── */}
             {process.env.NODE_ENV !== 'production' && (

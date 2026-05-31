@@ -33,6 +33,8 @@ import {
 } from '@/lib/config'
 import { getTenant } from '@/lib/tenants/server'
 import { tenantMetadata } from '@/lib/tenants/metadata'
+import { SpotsLeftBanner } from '@/components/tours/spots-left-banner'
+import { AdoptCrossSell } from '@/components/tours/adopt-cross-sell'
 
 // ─── Yoga activity schema (SportsActivityLocation + Offer) ───────────────────
 // Price €30 verified live 2026-05-27. Duration / style / schedule verified same source.
@@ -129,6 +131,11 @@ export default async function YogaPage({ params }: { params: Promise<{ locale: s
                 homeLabel={translate('nav.home') || 'Home'}
                 crumbs={[{ name: translate('yoga.title') || 'Alpaca Yoga', path: 'yoga' }]}
             />
+
+            {/* Spots-left urgency widget */}
+            <div className="w-full px-4 pt-6 max-w-4xl mx-auto">
+                <SpotsLeftBanner itemId={FAREHARBOR_ITEM_YOGA} tourLabel="Alpaca Yoga" />
+            </div>
 
             {/* Hero — gradient until owner supplies public/images/heroes/yoga.webp */}
             <GradientPageHero
@@ -258,6 +265,9 @@ export default async function YogaPage({ params }: { params: Promise<{ locale: s
             <section className="w-full bg-muted">
                 <FAQ items={faqItems} />
             </section>
+
+            {/* Adopt cross-sell */}
+            <AdoptCrossSell locale={locale} />
 
             {/* ── Owner-confirm banner — dev/staging only ──────────────────────── */}
             <OwnerConfirmBanner

@@ -158,6 +158,63 @@ async function sendTelegram(
   }
 }
 
+// ── Discord ──────────────────────────────────────────────────────────────────
+// Discord incoming webhooks accept the same `{ content, embeds }` JSON shape as
+// Slack — no additional auth header required beyond the URL token itself.
+
+async function sendDiscord(
+  webhookUrl: string,
+  input: EscalationNotification,
+): Promise<void> {
+  const donorDisplay = input.donorEmail ?? 'anon'
+  const payloadText = `🦙 Alpaca adoption: ${severityUpper(input.severity)} — failureCount=${input.failureCount} on ${input.vendor} customer ${input.customerId} (${donorDisplay})`
+
+  const body = JSON.stringify({
+    text: payloadText,
+    blocks: [
+      {
+        type: 'header',
+        text: {
+          type: 'plain_text',
+          text: 'Adopt-a-Paca escalation',
+        },
+      },
+      {
+        type: 'section',
+        fields: [
+          { type: 'mrkdwn', text: `*Severity:* ${input.severity}` },
+          { type: 'mrkdwn', text: `*Failures:* ${input.failureCount}` },
+          { type: 'mrkdwn', text: `*Vendor:* ${input.vendor}` },
+          { type: 'mrkdwn', text: `*Donor:* ${donorDisplay}` },
+        ],
+      },
+      {
+        type: 'context',
+        elements: [
+          {
+            type: 'mrkdwn',
+            text: `Customer: \`${input.customerId}\` | Ref: \`${input.paymentRef ?? '—'}\``,
+          },
+        ],
+      },
+    ],
+  })
+
+  const res = await fetchWithTimeout(
+    webhookUrl,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body,
+    },
+    NOTIFY_TIMEOUT_MS,
+  )
+
+  if (!res.ok) {
+    throw new Error(`Discord webhook returned HTTP ${res.status}`)
+  }
+}
+
 // ── Generic webhook ──────────────────────────────────────────────────────────
 
 async function sendGenericWebhook(
@@ -199,6 +256,7 @@ export async function notifyOwnerOnEscalation(
   const telegramToken = process.env.OWNER_TELEGRAM_BOT_TOKEN
   const telegramChatId = process.env.OWNER_TELEGRAM_CHAT_ID
   const genericUrl = process.env.OWNER_GENERIC_WEBHOOK_URL
+  const discordUrl = process.env.OWNER_NOTIFY_DISCORD_URL
 
   // Fan out all configured channels concurrently. Each is wrapped in its own
   // try/catch so a failure in one does not abort the others.
@@ -218,6 +276,12 @@ export async function notifyOwnerOnEscalation(
     genericUrl
       ? sendGenericWebhook(genericUrl, input).catch((err: unknown) => {
           console.error('[owner-notify] Generic webhook send failed', { err: sanitizeErrorForLog(err) })
+        })
+      : Promise.resolve(),
+
+    discordUrl
+      ? sendDiscord(discordUrl, input).catch((err: unknown) => {
+          console.error('[owner-notify] Discord send failed', { err: sanitizeErrorForLog(err) })
         })
       : Promise.resolve(),
   ])

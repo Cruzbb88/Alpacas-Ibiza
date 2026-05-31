@@ -67,6 +67,8 @@ export async function POST(request: Request) {
         renewalDate: string           // ISO date string
         referralCode: string | null
         locale: string
+        /** ISO date string of when the subscription was created (for months-supported calc). */
+        createdAt: string | null
         /** Callback to stamp renewal_reminded = today after successful send. */
         stampReminded: () => Promise<void>
     }
@@ -128,6 +130,9 @@ export async function POST(request: Request) {
                         renewalDate: new Date(periodEnd * 1000).toISOString().slice(0, 10),
                         referralCode: meta.referral_code ?? null,
                         locale: meta.locale ?? 'en',
+                        createdAt: typeof sub.created === 'number'
+                            ? new Date(sub.created * 1000).toISOString()
+                            : null,
                         stampReminded: async () => {
                             try {
                                 await stripe.subscriptions.update(sub.id, {
@@ -162,6 +167,7 @@ export async function POST(request: Request) {
                 customerId?: string | null
                 status?: string
                 nextPaymentDate?: string | null
+                createdAt?: string | null
                 metadata?: Record<string, string> | null
             }
 
@@ -213,6 +219,7 @@ export async function POST(request: Request) {
                         renewalDate:  raw.nextPaymentDate.slice(0, 10),
                         referralCode: meta.referral_code ?? null,
                         locale:       meta.locale ?? 'en',
+                        createdAt:    raw.createdAt ?? null,
                         stampReminded: async () => {
                             if (!customerId) return
                             try {
@@ -256,6 +263,71 @@ export async function POST(request: Request) {
         // Billing portal URL: send donor to the manage-my-adoption anchor
         const billingPortalUrl = `${SITE_BASE_URL}/${locale}/adopt#manage`
 
+        // ── Impact data: total paid + months supported ────────────────────────
+        // Fetch payment history to auto-populate the impact block. Fail-quiet:
+        // if the API call fails or returns nothing, totalPaidEur/monthsSupported
+        // remain null and the template falls back to the owner-action placeholder.
+        // Bounded by the same per-recipient idempotency stamp — no extra rate concern.
+        let totalPaidEur: number | null = null
+        let monthsSupported: number | null = null
+
+        try {
+            if (r.vendor === 'stripe' && stripeSecretKey) {
+                const stripeFactory2 = await importStripe()
+                if (stripeFactory2) {
+                    const stripeInst = stripeFactory2(stripeSecretKey, { apiVersion: '2024-06-20' })
+                    // List invoices for this subscription (paid only, last 100)
+                    const invoices = await stripeInst.invoices.list({
+                        subscription: r.subId,
+                        status: 'paid',
+                        limit: 100,
+                    })
+                    const totalMinor = invoices.data.reduce(
+                        (sum, inv) => sum + (inv.amount_paid ?? 0),
+                        0,
+                    )
+                    if (totalMinor > 0) totalPaidEur = Math.round(totalMinor) / 100
+                }
+            } else if (r.vendor === 'mollie' && mollieApiKey) {
+                const mollieInst = await getMollieClient(mollieApiKey)
+                if (mollieInst) {
+                    // List payments for this customer filtered to this subscription
+                    const paymentsPage = await (mollieInst as unknown as {
+                        payments: {
+                            list: (opts: {
+                                customerId: string
+                                limit: number
+                            }) => Promise<{ _embedded?: { payments?: Array<{
+                                status?: string
+                                subscriptionId?: string
+                                amount?: { value?: string; currency?: string }
+                            }> } }>
+                        }
+                    }).payments.list({ customerId: r.customerId, limit: 250 })
+                    const rawPayments = paymentsPage._embedded?.payments ?? []
+                    const paidPayments = rawPayments.filter(
+                        (p) => p.status === 'paid' && p.subscriptionId === r.subId,
+                    )
+                    const total = paidPayments.reduce(
+                        (sum, p) => sum + parseFloat(p.amount?.value ?? '0'),
+                        0,
+                    )
+                    if (total > 0) totalPaidEur = Math.round(total * 100) / 100
+                }
+            }
+        } catch {
+            // Fail-quiet — impact data is a nice-to-have; don't block the reminder
+        }
+
+        // months-supported from createdAt regardless of vendor
+        if (r.createdAt) {
+            const createdMs = Date.parse(r.createdAt)
+            if (Number.isFinite(createdMs)) {
+                monthsSupported = Math.floor((Date.now() - createdMs) / (1000 * 60 * 60 * 24 * 30))
+                if (monthsSupported < 1) monthsSupported = null // don't show "0 months"
+            }
+        }
+
         const { subject, html } = buildRenewalReminderEmail({
             donorName:      r.donorName,
             alpacaName:     r.alpacaName,
@@ -264,6 +336,8 @@ export async function POST(request: Request) {
             referralCode:   r.referralCode,
             billingPortalUrl,
             locale,
+            totalPaidEur,
+            monthsSupported,
         })
 
         try {

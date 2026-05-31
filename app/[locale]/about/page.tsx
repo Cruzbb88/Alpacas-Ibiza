@@ -5,6 +5,7 @@ import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
 import { buildLocaleAlternates } from '@/lib/i18n-metadata'
 import { AwardsBadges } from '@/components/awards-badges'
 import { getOgImage } from '@/lib/og-images'
+import { personSchema, toJsonLd } from '@/lib/structured-data'
 
 export async function generateMetadata({
   params,
@@ -36,8 +37,29 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
   const { locale } = await params
   const translate = t(locale)
 
+  // Founder Person JSON-LD
+  // Names + roles verbatim from LIVE_SITE_CONTENT_INVENTORY.md §/wie-zijn-wij H4
+  // and Step 4d ("Co-founder & owner"). Rule 5 — no invented values.
+  const founderSchemas = [
+    personSchema({
+      name: 'San De Wilde',
+      role: 'Co-founder & owner',
+      worksForOrgName: 'Alpacas Ibiza',
+    }),
+    personSchema({
+      name: 'Bart',
+      role: 'Co-founder & owner',
+      worksForOrgName: 'Alpacas Ibiza',
+    }),
+  ]
+
   return (
     <main>
+      {/* Founder structured data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: toJsonLd(founderSchemas) }}
+      />
       <PageBreadcrumbs
         locale={locale}
         homeLabel={translate('nav.home') || 'Home'}

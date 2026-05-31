@@ -15,11 +15,11 @@
  * duplicate-send disasters if a transient email failure bubbled up as a 500.
  */
 
-import { welcomeAdoptionEmailHtml, welcomeAdoptionSubject, buildAdoptDiscountCodesEmail, donorPaymentFailedSubject } from './email-templates.ts'
+import { welcomeAdoptionEmailHtml, welcomeAdoptionSubject, buildAdoptDiscountCodesEmail, donorPaymentFailedSubject, buildDunningRecoveredEmail } from './email-templates.ts'
 import { escapeHtml } from './html.ts'
 import { findAlpacaName } from './data/alpacas.ts'
 import { SITE_BASE_URL } from './config.ts'
-import { recordFailure, resetFailures, type FailureSeverity } from './payment-failure-tracker.ts'
+import { recordFailure, resetFailures, type FailureSeverity, type PriorFailureState } from './payment-failure-tracker.ts'
 import { notifyOwnerOnEscalation } from './owner-notify.ts'
 import { emit } from './events.ts'
 
@@ -663,6 +663,73 @@ function buildOwnerPaymentFailedHtml(
   `.trim()
 }
 
+// ── Stripe invoice.paid handler (recurring renewal + dunning recovery) ───────
+
+export interface InvoicePaidDeps {
+  sendEmail: SendEmailFn
+}
+
+export interface InvoicePaidResult {
+  /**
+   * true  → prior failure existed and recovery email was sent successfully
+   * false → prior failure existed but recovery email send failed (fail-quiet)
+   * null  → no prior failure; clean renewal; no email needed
+   */
+  recoveryEmailSent: boolean | null
+  meta: {
+    invoiceId: string
+    customerId?: string | null
+  }
+}
+
+/**
+ * Handle Stripe's `invoice.paid` event for recurring subscription renewals.
+ *
+ * On every successful renewal, resets the per-customer failure counter.
+ * When a prior failure existed (dunning recovery), sends the donor a
+ * "your adoption is back on track" email via the onReset callback.
+ *
+ * Fail-quiet: never throws — webhook always returns 200.
+ */
+export async function handleStripeInvoicePaid(
+  invoice: StripeInvoiceLike,
+  deps: InvoicePaidDeps,
+): Promise<InvoicePaidResult> {
+  const meta = {
+    invoiceId: invoice.id,
+    customerId: invoice.customer,
+  }
+
+  if (!invoice.customer || typeof invoice.customer !== 'string') {
+    return { recoveryEmailSent: null, meta }
+  }
+
+  const donorEmail = invoice.customer_email ?? undefined
+  const donorName = invoice.customer_name ?? undefined
+  const locale = invoice.metadata?.locale ?? undefined
+
+  let recoveryEmailSent: boolean | null = null
+
+  await resetFailures('stripe', invoice.customer, {
+    onReset: async (_state: PriorFailureState) => {
+      if (!donorEmail) return
+      try {
+        const { subject, html } = buildDunningRecoveredEmail({
+          escapedName: donorName ? escapeHtml(donorName) : undefined,
+          tier: 'monthly', // Stripe recurring invoices are always the monthly tier
+          locale,
+        })
+        await deps.sendEmail({ to: donorEmail, subject, html })
+        recoveryEmailSent = true
+      } catch {
+        recoveryEmailSent = false
+      }
+    },
+  })
+
+  return { recoveryEmailSent, meta }
+}
+
 // ── Mollie payment.paid handler (parity with Stripe — see ADR 016) ──────────
 
 /**
@@ -728,6 +795,15 @@ export interface MolliePaidDeps {
    * webhook still returns 200 to avoid Mollie retry duplicating the donor email.
    */
   ownerEmail?: string
+  /**
+   * Donor email for the recurring-renewal path, used for the dunning-recovery
+   * confirmation email. Resolved from the Mollie customer record by the caller
+   * (mollie-webhook route already fetches the customer for other purposes).
+   * When absent, the recovery email is silently skipped.
+   */
+  recurringDonorEmail?: string
+  /** Donor display name for the dunning-recovery email copy. */
+  recurringDonorName?: string | null
 }
 
 export interface MolliePaidResult {
@@ -763,12 +839,36 @@ export async function handleMolliePaymentPaid(
   const tier = payment.metadata?.tier
   const isAdopt = payment.metadata?.product === 'adopt-a-paca'
 
-  // Reset any prior failure count for this customer on ANY successful Mollie
-  // payment.paid event — recurring renewal, first-of-mandate, or yearly one-off.
-  // A new success means the donor is current again; future fails should start
-  // fresh at severity='first'.
+  // Reset failure counter on ANY successful Mollie payment.paid event. For
+  // recurring renewals (the dunning-recovery path) we pass an onReset callback
+  // that fires ONLY when there was a prior failure — sends the "back on track"
+  // email. For first/oneoff flows the donor already gets a welcome email so we
+  // use a plain reset (no callback).
+  //
+  // IMPORTANT: resetFailures must be called BEFORE the branch checks below so
+  // the counter is flushed regardless of which branch exits early.
   if (payment.customerId) {
-    resetFailures('mollie', payment.customerId)
+    if (payment.sequenceType === 'recurring') {
+      const donorEmailForRecovery = deps.recurringDonorEmail
+      const donorNameForRecovery  = deps.recurringDonorName ?? undefined
+      await resetFailures('mollie', payment.customerId, {
+        onReset: async (_state: PriorFailureState) => {
+          if (!donorEmailForRecovery) return
+          try {
+            const { subject, html } = buildDunningRecoveredEmail({
+              escapedName: donorNameForRecovery ? escapeHtml(donorNameForRecovery) : undefined,
+              tier: 'monthly', // Mollie recurring = monthly SEPA
+              locale: payment.metadata?.locale ?? undefined,
+            })
+            await deps.sendEmail({ to: donorEmailForRecovery, subject, html })
+          } catch {
+            // Fail-quiet — webhook 200 contract must never be broken
+          }
+        },
+      })
+    } else {
+      await resetFailures('mollie', payment.customerId)
+    }
   }
 
   // ── Monthly first-of-mandate: create sub + welcome (parallel) ────────────

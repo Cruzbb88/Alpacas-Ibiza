@@ -221,12 +221,27 @@ export async function POST(request: Request) {
     return attachRequestId(NextResponse.json({ received: true, flow: 'update-payment' }), reqId)
   }
 
+  // Pre-fetch customer for the recurring path so we can pass donor email/name
+  // to the dunning-recovery callback inside handleMolliePaymentPaid.
+  // Only fetch on recurring — first/oneoff paths do their own fetchCustomer call
+  // inside the handler. Fail-quiet: if customer lookup fails, onReset simply
+  // skips the recovery email (donorEmailForRecovery is undefined).
+  let recurringDonorEmail: string | undefined
+  let recurringDonorName: string | null | undefined
+  if (payment.sequenceType === 'recurring' && payment.customerId) {
+    const c = await fetchMollieCustomer(payment.customerId, mollie)
+    recurringDonorEmail = c.email ?? undefined
+    recurringDonorName  = c.name
+  }
+
   try {
     const result = await handleMolliePaymentPaid(payment, {
       sendEmail,
       fetchCustomer: (customerId) => fetchMollieCustomer(customerId, mollie),
       createSubscription: (p) => createMonthlySubscription(p, mollie, webhookSecret),
       ownerEmail: process.env.CONTACT_EMAIL,
+      recurringDonorEmail,
+      recurringDonorName,
     })
 
     const level = result.reason === 'ok' ? 'log' : result.reason === 'missing-email' || result.reason === 'unmatched' ? 'warn' : 'error'

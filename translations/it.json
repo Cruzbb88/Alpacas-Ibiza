@@ -258,7 +258,12 @@
         "bestFor": "Fotografi, social media, ricordi"
       }
     },
-    "backHome": "Torna alla Home"
+    "backHome": "Torna alla Home",
+    "adoptCrossSell": {
+      "heading": "__UNTRANSLATED__",
+      "body": "__UNTRANSLATED__",
+      "cta": "__UNTRANSLATED__"
+    }
   },
   "guestStories": {
     "title": "Storie degli Ospiti",
@@ -830,5 +835,9 @@
     "emailLabel": "__UNTRANSLATED__",
     "submit": "__UNTRANSLATED__",
     "successMessage": "__UNTRANSLATED__"
+  },
+  "floatingWhatsapp": {
+    "defaultMessage": "__UNTRANSLATED__",
+    "aria": "__UNTRANSLATED__"
   }
 }

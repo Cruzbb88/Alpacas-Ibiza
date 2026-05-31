@@ -198,3 +198,46 @@ Items 4, 8, 9, 10 each have their own runbook in `docs/runbooks/` — `EMAIL_DNS
 ## Approval
 
 If any of the above needs revision, paste the specific item and the change you want.
+
+---
+
+## 2026-05-31 (evening) — new features built
+
+After the morning content drop, the team built and shipped 10 user-facing features. Everything below is on the new site, build-green, and ready for your approval at cutover.
+
+### 1. What was built today
+
+| # | Feature | Where it lives | Owner content needed? |
+|---|---|---|---|
+| 1 | **WhatsApp button** — floating, sitewide, opens chat with pre-filled greeting | every page (locale layout) | confirm +34 number is current ⚠️ |
+| 2 | **Calendar (.ics) download** for renewal — donors add their renewal date to Google/Apple/Outlook with 7-day + 1-day reminders, yearly/monthly recurrence | adopt-thank-you success state | no — automatic |
+| 3 | **Spots-left urgency banner** — "Only N spots in the next 7 days" pulled from FareHarbor availability | 7 tour pages (yoga / workshops / weddings / 3 experiences / tours hub) | needs `FAREHARBOR_ITEM_*` env vars |
+| 4 | **Tour → adopt cross-sell** — "Coming back often? Adopt — tours included for the year" | same 7 tour pages | placeholder photo until you approve option (b) re-host |
+| 5 | **Withdrawal-waiver checkout gate** — EU Directive 2011/83 Art 16(m) compliance | adopt page tier cards | final copy needs legal sign-off |
+| 6 | **Site-wide search** — Cmd/⌘K modal, indexes all 14 alpacas + every page | header (every locale) | no — automatic |
+| 7 | **`/admin` index nav** — 11 admin tools now discoverable instead of memorising URLs | `/admin` | no — automatic |
+| 8 | **`/visit` page** — directions, parking, accessibility, cancellation, photos. Matches the dominant CTA on your live site ("Plan je bezoek") | `/visit` | 3 photos (arrival / gate / herd path) |
+| 9 | **`/recover-certificate` flow** — donor lost their welcome email, enters email, gets cert re-sent (anti-enumeration always-200) | `/recover-certificate` | no — automatic |
+| 10 | **Cancelled-checkout state** — donor closes payment window, lands on "no charge — try again / tell us what happened" instead of confused on `/adopt` | adopt thank-you component | no — automatic |
+
+### 2. Critical fix to flag ⚠️
+
+The WhatsApp number in the redesign was set to **+32 475 58 65 44** — a Belgian mobile inherited from an earlier tenant template (probably while you were in Belgium pre-2019). Every WhatsApp button click was opening a chat to the wrong country.
+
+We fixed it to **+34 689 446 781**, pulled from Article 2 of your live site's `/algemene-voorwaarden` page.
+
+**You need to confirm:** is +34 689446781 the current active WhatsApp number you want visitors to reach? If you've changed numbers since the T&C was written, send the correct one.
+
+### 3. What still needs your content
+
+- **#1 WhatsApp** — only needs you to confirm the number above is right
+- **#3 Spots-left widget** — needs `FAREHARBOR_ITEM_*` env vars from your FareHarbor dashboard (per-tour item IDs — we couldn't extract these from the live HTML; flagged in the morning packet §8 item 8)
+- **#4 Tour-to-adopt cross-sell** — uses a placeholder photo until you pick option (b) photo re-host in morning packet §6
+- **#5 Withdrawal-waiver** — needs your final approved legal copy (morning packet §8 item 4)
+- **#8 Visit page** — 3 photos (morning packet §8 item 6)
+
+Everything else (calendar .ics, search, admin nav, certificate recovery, cancelled state) is fully working with zero content from you.
+
+### 4. One-line summary
+
+> We pulled your existing copy + built 10 new features today. Build is green. You owe us palette colours (DevTools snippet in `handoff/LIVE_SITE_BRAND_ASSETS.md`), confirmation of the +34 689 446 781 WhatsApp number, plus the 10 items already listed in §8 of the morning packet.

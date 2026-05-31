@@ -835,5 +835,9 @@
     "emailLabel": "__UNTRANSLATED__",
     "submit": "__UNTRANSLATED__",
     "successMessage": "__UNTRANSLATED__"
+  },
+  "floatingWhatsapp": {
+    "defaultMessage": "__UNTRANSLATED__",
+    "aria": "__UNTRANSLATED__"
   }
 }

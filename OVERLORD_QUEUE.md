@@ -129,10 +129,19 @@ _Updated after every cycle._
 - Cruz reads NOTHING — read `FORWARD_PLAN.md` for the human queue, this file for the AI queue
 - Fire 6-10 Sonnets per cycle in parallel
 - Commit per cycle
-- Verify `pnpm tsc --noEmit` before commit
 - Rule 5: never invent owner data
 - Never push to git
 - Never `-i` flag, never `--no-verify`
+
+**Verification cadence (no-retest rule, per Cruz 2026-05-31):**
+- `pnpm tsc --noEmit` after every Edit/Write — cheap, gates type errors
+- `pnpm build` ONLY when the change touches rendering / routing / layout / env-gated paths
+- `pnpm test` ONLY when the change touches code with tests OR a previous test agent flagged something — NOT as habit
+- Runtime-verify (start server + curl) ONLY when shipping new UI / new data integrations
+
+**Skills with cortex calls are blocked by hook 005:**
+- crystal-ball (full audit), brainstorm, quick-plan (memory layer), task-radar (noted-items recall) all hit cortex denials
+- They still run their non-cortex layers — drive them with the non-cortex args, ignore their cortex output failures
 
 ## Cycle log
 

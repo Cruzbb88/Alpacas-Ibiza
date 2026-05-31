@@ -173,14 +173,15 @@ export async function POST(request: Request) {
       log.warn('Owner notification failed; cancel already succeeded', { err: String(notifyErr) })
     }
 
-    return attachRequestId(htmlPage(
-      'Adoption canceled',
-      `<h1>Your adoption is canceled</h1>
-       <p>We've stopped your monthly SEPA charge. No further payments will be taken.</p>
-       <p>You'll keep any perks you've already received this year — your certificate, photoshoot, and remaining farm-tour bookings still stand.</p>
-       <p>If you cancelled by mistake, email <a href="mailto:info@alpacasibiza.com">info@alpacasibiza.com</a> and we'll re-enrol you.</p>`,
-      200,
-    ), reqId)
+    // Redirect to exit survey — carries the subscriptionId so the feedback API
+    // can log which subscription was cancelled. 303 See Other so the browser
+    // never replays the POST on back/refresh.
+    const surveyUrl = `${SITE_BASE_URL}/en/cancel-feedback?vendor=mollie&sub=${encodeURIComponent(payload.subscriptionId)}`
+    const redirect = new Response(null, {
+      status: 303,
+      headers: { Location: surveyUrl },
+    })
+    return attachRequestId(redirect, reqId)
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
     log.error('Mollie subscription cancel failed', { message })

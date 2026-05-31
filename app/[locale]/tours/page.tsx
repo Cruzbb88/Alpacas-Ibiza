@@ -22,6 +22,8 @@ import { getOgImage } from '@/lib/og-images'
 import { TourComparison } from '@/components/tour-comparison'
 import type { TourSpec } from '@/components/tour-comparison'
 import { WhatToBringChecklist } from '@/components/tours/what-to-bring-checklist'
+import { AdoptCrossSell } from '@/components/tours/adopt-cross-sell'
+import { RecentBookingsTicker } from '@/components/tours/recent-bookings-ticker'
 
 export async function generateMetadata({
   params,
@@ -349,6 +351,10 @@ export default async function ToursPage({ params }: { params: Promise<{ locale: 
               <GoogleReviewsBadge />
             </div>
             <AvailabilityUrgency className="mb-4 max-w-md mx-auto" />
+            {/* Recent-bookings ticker — renders null until owner populates lib/data/social-proof.ts */}
+            <div className="mb-4 max-w-md mx-auto">
+              <RecentBookingsTicker />
+            </div>
             <FareHarborCalendar />
             <div className="mt-6 text-center">
               <a
@@ -464,6 +470,9 @@ export default async function ToursPage({ params }: { params: Promise<{ locale: 
           </div>
         </div>
       </section>
+
+      {/* Adopt cross-sell */}
+      <AdoptCrossSell locale={locale} />
     </>
   )
 }

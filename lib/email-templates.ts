@@ -662,6 +662,68 @@ ${shareBlock}
     return { subject, html }
 }
 
+// ── Dunning recovery confirmation email ─────────────────────────────────────
+
+export interface DunningRecoveredInput {
+    /** HTML-escaped donor display name (caller responsibility). undefined → "Hi there" fallback. */
+    escapedName?: string
+    /** Subscription tier. */
+    tier: AdoptTier
+    /** HTML-escaped display name of the adopted alpaca, or undefined for generic copy. */
+    alpacaName?: string
+    /** Two-letter locale slug (en/de/it/es/nl/fr). Defaults to English. */
+    locale?: string
+}
+
+/**
+ * Subject line for the dunning-recovery email.
+ * Locale-switched across the 5 non-English locales, matching the same
+ * fall-through pattern used by welcoeAdoptionSubject / donorPaymentFailedSubject.
+ */
+export function buildDunningRecoveredSubject(locale?: string): string {
+    switch (locale) {
+        case 'de': return 'Deine Alpaka-Patenschaft ist wieder aktiv 🦙'
+        case 'it': return 'La tua adozione di alpaca è di nuovo attiva 🦙'
+        case 'es': return 'Tu adopción de alpaca está de nuevo en marcha 🦙'
+        case 'nl': return 'Je alpaca-adoptie is weer actief 🦙'
+        case 'fr': return 'Votre adoption d\'alpaga est de nouveau active 🦙'
+        default:   return 'Your alpaca adoption is back on track 🦙'
+    }
+}
+
+/**
+ * Builds the donor-facing "we saved your adoption" confirmation sent after a
+ * previously-failed payment finally succeeds (dunning recovery).
+ *
+ * Called from the Stripe invoice.payment_succeeded and Mollie payment.paid
+ * (recurring) success paths via resetFailures(vendor, customerId, { onReset }).
+ * Only fires when there WAS a prior failure state — no-ops on clean renewals.
+ */
+export function buildDunningRecoveredEmail(
+    input: DunningRecoveredInput,
+): { subject: string; html: string } {
+    const { tier, alpacaName, locale } = input
+    const greeting = input.escapedName ? `Hi ${input.escapedName},` : 'Hi there,'
+    const subject = buildDunningRecoveredSubject(locale)
+
+    const tierLine = tier === 'yearly'
+        ? 'Your yearly €900 adoption is fully reinstated.'
+        : 'Your monthly €75/month adoption is fully reinstated.'
+
+    const alpacaLine = alpacaName
+        ? `<p>Great news — <strong>${alpacaName}</strong> is still yours. Your support continues without interruption.</p>`
+        : `<p>Great news — your adoption is still active. Your support continues without interruption.</p>`
+
+    const html = emailLayout(`
+<p>${greeting}</p>
+<p>Your payment went through — everything is back on track. ${tierLine}</p>
+${alpacaLine}
+<p>Thank you for sticking with us. If you'd like to review or update your payment details for the future, you can do so any time from your adoption portal.</p>
+<p style="color:#888;font-size:12px;margin-top:24px">If you have any questions, reply to this email — we read every message.</p>
+`)
+    return { subject, html }
+}
+
 export function buildBillingPortalEmail(portalUrl: string): { subject: string; html: string } {
     // portalUrl is server-constructed (Stripe session URL) but may contain
     // query-string characters that need HTML-entity escaping in href + text nodes.

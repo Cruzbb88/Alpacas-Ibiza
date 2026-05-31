@@ -6,6 +6,9 @@ import { t } from '@/lib/translations'
 import { buildLocaleAlternates } from '@/lib/i18n-metadata'
 import { getOgImage } from '@/lib/og-images'
 import { getProductBookingUrl } from '@/lib/fareharbor-products'
+import { FAREHARBOR_ITEM_ROMANTIC_SUNSET } from '@/lib/config'
+import { SpotsLeftBanner } from '@/components/tours/spots-left-banner'
+import { AdoptCrossSell } from '@/components/tours/adopt-cross-sell'
 
 export async function generateMetadata({
     params,
@@ -49,6 +52,11 @@ export default async function RomanticPage({ params }: { params: Promise<{ local
                     href: getProductBookingUrl('romantic-sunset'),
                 }}
             />
+
+            {/* Spots-left urgency widget */}
+            <div className="w-full px-4 pt-6 max-w-4xl mx-auto">
+                <SpotsLeftBanner itemId={FAREHARBOR_ITEM_ROMANTIC_SUNSET} tourLabel="Romantic Sunset Walk" />
+            </div>
 
             <section className="w-full py-16 md:py-24 px-4 bg-background">
                 <div className="max-w-3xl mx-auto text-center">
@@ -96,6 +104,9 @@ export default async function RomanticPage({ params }: { params: Promise<{ local
                     </div>
                 </div>
             </section>
+
+            {/* Adopt cross-sell */}
+            <AdoptCrossSell locale={locale} />
         </main>
     )
 }

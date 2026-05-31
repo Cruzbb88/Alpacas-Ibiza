@@ -5,11 +5,10 @@ import { AlpacaPeerGrid } from '@/components/alpacas/alpaca-peer-grid'
 import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
 import { PageSection } from '@/components/layout'
 import { t } from '@/lib/translations'
-import { toJsonLd } from '@/lib/structured-data'
+import { toJsonLd, animalSchema } from '@/lib/structured-data'
 import { tenantMetadata } from '@/lib/tenants/metadata'
 import { getTenant } from '@/lib/tenants/server'
 import { getProviders } from '@/lib/integrations'
-import { getOgImage } from '@/lib/og-images'
 import { SITE_BASE_URL } from '@/lib/config'
 import type { Locale } from '@/i18n.config'
 import { i18nConfig } from '@/i18n.config'
@@ -71,18 +70,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       .replaceAll('{personality}', animal.personality ?? '')
   const title = interpolate(titleTemplate)
   const description = interpolate(descTemplate)
-  const ogImage = getOgImage('alpacas', title)
-  const base = tenantMetadata(tenant, {
+  // opengraph-image.tsx in this directory auto-generates a per-alpaca OG image
+  // using the CDN portrait. Do NOT set openGraph.images here — Next merges
+  // both sources and the file-based image is always preferred for social cards.
+  return tenantMetadata(tenant, {
     locale,
     route: `/alpacas/${slug}`,
     titleOverride: title,
     descriptionOverride: description,
   })
-  return {
-    ...base,
-    openGraph: { ...base.openGraph, images: [ogImage] },
-    twitter: { ...base.twitter, images: [ogImage.url] },
-  }
 }
 
 export default async function AlpacaDetailPage({ params }: PageProps) {
@@ -97,9 +93,18 @@ export default async function AlpacaDetailPage({ params }: PageProps) {
 
   const hasImage = animal.image != null
 
-  // Schema.org — AboutPage with a Thing main entity (Animal is non-standard;
-  // Thing is the safest concrete type Google's Rich Results validator accepts).
-  const schema = {
+  // Resolve the best description for structured-data: prefer localised bio (EN),
+  // then plain bio, then personality. Null = nothing to emit (Rule 5).
+  const animalDescription: string | null =
+    animal.localizedBio?.en ??
+    (typeof animal.bio === 'string' ? animal.bio : null) ??
+    animal.personality ??
+    null
+
+  // Schema.org — AboutPage + Animal.
+  // AboutPage preserves the breadcrumb chain; Animal adds entity-level signals.
+  // Animal schema is only emitted when image is present (constraint from spec).
+  const aboutPageSchema = {
     '@context': 'https://schema.org',
     '@type': 'AboutPage',
     name: `${animal.name} — Alpacas Ibiza`,
@@ -112,12 +117,28 @@ export default async function AlpacaDetailPage({ params }: PageProps) {
     },
   }
 
+  const emitAnimalSchema = hasImage
+  const animalJsonLd = emitAnimalSchema
+    ? animalSchema({
+        name: animal.name,
+        description: animalDescription,
+        image: animal.image,
+        breed: animal.breed ?? null,
+      })
+    : null
+
   return (
     <main>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: toJsonLd(schema) }}
+        dangerouslySetInnerHTML={{ __html: toJsonLd(aboutPageSchema) }}
       />
+      {animalJsonLd != null && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: toJsonLd(animalJsonLd) }}
+        />
+      )}
 
       <PageBreadcrumbs
         locale={locale}

@@ -117,10 +117,32 @@ export function recordFailure(
 }
 
 /**
+ * The prior failure state passed to the onReset callback.
+ * Lets callers send a "we saved your adoption" email only when a real
+ * recovery occurred (prevCount > 0), not on clean renewals.
+ */
+export interface PriorFailureState {
+  vendor: 'stripe' | 'mollie'
+  customerId: string
+  prevCount: number
+  lastFailureAt: number
+}
+
+/**
  * Reset the failure counter on a successful payment. Call from the success
  * handler so a donor who recovers after a fail doesn't carry stale state.
+ *
+ * @param onReset  Optional callback fired ONLY when there was a prior failure
+ *                 (prevCount > 0). Use this to send a dunning-recovery
+ *                 confirmation email. The callback is fire-and-forget — its
+ *                 promise is awaited but errors are swallowed so the caller's
+ *                 webhook 200 contract is never broken.
  */
-export function resetFailures(vendor: 'stripe' | 'mollie', customerId: string): void {
+export async function resetFailures(
+  vendor: 'stripe' | 'mollie',
+  customerId: string,
+  opts?: { onReset?: (state: PriorFailureState) => Promise<void> | void },
+): Promise<void> {
   const key = `${vendor}:${customerId}`
   const prev = _store.get(key)
   _store.set(key, {
@@ -128,10 +150,25 @@ export function resetFailures(vendor: 'stripe' | 'mollie', customerId: string): 
     lastFailureAt: prev?.lastFailureAt ?? 0,
     lastSuccessAt: Date.now(),
   })
-  if ((prev?.count ?? 0) > 0) {
+  const prevCount = prev?.count ?? 0
+  if (prevCount > 0) {
     console.info('[payment-failure-tracker] reset', {
-      vendor, customerId, prevCount: prev?.count,
+      vendor, customerId, prevCount,
     })
+    if (opts?.onReset) {
+      try {
+        await opts.onReset({
+          vendor,
+          customerId,
+          prevCount,
+          lastFailureAt: prev!.lastFailureAt,
+        })
+      } catch (err) {
+        console.warn('[payment-failure-tracker] onReset callback threw', {
+          vendor, customerId, error: err instanceof Error ? err.message : String(err),
+        })
+      }
+    }
   }
 }
 

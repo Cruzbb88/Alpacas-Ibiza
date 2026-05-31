@@ -164,6 +164,18 @@ export interface RenewalReminderOpts {
     billingPortalUrl: string
     /** Two-letter locale slug, e.g. "en". */
     locale: string
+    /**
+     * Total amount the donor has paid since adoption start, in EUR.
+     * Computed from the full invoice/payment history. null → fall back
+     * to the placeholder impact block.
+     */
+    totalPaidEur?: number | null
+    /**
+     * Number of full months since the subscription's createdAt.
+     * Computed as Math.floor(daysSinceCreatedAt / 30). null → fall back
+     * to the placeholder impact block.
+     */
+    monthsSupported?: number | null
 }
 
 /**
@@ -199,16 +211,27 @@ export function buildRenewalReminderEmail(
         ? `<p>Your adoption of <strong>${safeAlpacaName}</strong> is coming up for renewal on <strong>${safeRenewalDate}</strong>.</p>`
         : `<p>Your alpaca adoption is coming up for renewal on <strong>${safeRenewalDate}</strong>.</p>`
 
-    // --- Impact block (tier-branched copy) ---
-    const tierLabel = tier === 'yearly' ? 'year' : 'month'
-    const impactBlock = `
+    // --- Impact block ---
+    // When both totalPaidEur and monthsSupported are present, render an inline
+    // data-driven sentence. Otherwise fall back to the owner-action placeholder
+    // so the email is never silently broken.
+    const { totalPaidEur, monthsSupported } = opts
+    const hasImpactData =
+        typeof totalPaidEur === 'number' && totalPaidEur > 0 &&
+        typeof monthsSupported === 'number' && monthsSupported > 0
+    const impactBlock = hasImpactData
+        ? `
+<h3 style="margin-top:24px;color:${BRAND.primary}">Your impact so far</h3>
+<p>Over <strong>${monthsSupported} month${monthsSupported === 1 ? '' : 's'}</strong> you've contributed <strong>€${totalPaidEur!.toFixed(2)}</strong> — thank you.</p>
+`
+        : `
 <h3 style="margin-top:24px;color:${BRAND.primary}">Here's what your support has done</h3>
-<p>It's been another ${tierLabel} of your support — and it means a great deal to the whole herd.</p>
+<p>It's been another ${tier === 'yearly' ? 'year' : 'month'} of your support — and it means a great deal to the whole herd.</p>
 <!-- TODO / UNMAPPED: owner-supplied impact stats block.
      Inject real numbers (hay bales funded, vet visits covered, etc.) from
      a per-donor stats endpoint or env-var template before sending. -->
 <p style="background:${BRAND.secondary};border-left:4px solid ${BRAND.primary};padding:12px 16px;border-radius:4px;color:#555;font-style:italic">
-  [Owner action: supply a short impact paragraph — e.g. "Your €X in support this ${tierLabel} paid for
+  [Owner action: supply a short impact paragraph — e.g. "Your €X in support this ${tier === 'yearly' ? 'year' : 'month'} paid for
   N bags of hay, Y vet check-ups, and Z …" — before the send goes live.]
 </p>
 `

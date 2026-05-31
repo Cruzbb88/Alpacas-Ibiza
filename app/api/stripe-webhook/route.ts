@@ -4,6 +4,7 @@ import { sendEmail } from '@/lib/mailer'
 import {
   handleStripeCheckoutCompleted,
   handleStripeInvoicePaymentFailed,
+  handleStripeInvoicePaid,
   handleStripeSubscriptionDeleted,
 } from '@/lib/payment-handlers'
 import { handleStripeCheckoutExpired } from '@/lib/payment-handlers-recovery'
@@ -169,7 +170,8 @@ export async function POST(request: Request) {
       }
 
       case 'invoice.paid': {
-        // Monthly subscription renewal
+        // Monthly subscription renewal — resets failure counter and sends
+        // dunning-recovery email when a prior failure existed.
         const invoice = event.data.object
         // Stripe deprecated invoice.subscription in newer API versions; read via
         // a loose record cast to keep the log line working across versions.
@@ -181,6 +183,15 @@ export async function POST(request: Request) {
           amountPaid:   invoice.amount_paid,
           currency:     invoice.currency,
         })
+        const paidResult = await handleStripeInvoicePaid(
+          invoice as unknown as Parameters<typeof handleStripeInvoicePaid>[0],
+          { sendEmail },
+        )
+        if (paidResult.recoveryEmailSent === true) {
+          log.info('[dunning-recovery] invoice.paid — recovery email sent', paidResult.meta)
+        } else if (paidResult.recoveryEmailSent === false) {
+          log.warn('[dunning-recovery] invoice.paid — recovery email send failed (fail-quiet)', paidResult.meta)
+        }
         // TODO: update subscription status in DB on renewal.
         break
       }

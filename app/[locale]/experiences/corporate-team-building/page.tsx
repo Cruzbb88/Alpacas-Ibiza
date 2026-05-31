@@ -14,6 +14,8 @@ import { CorporateEnquiryForm } from '@/components/corporate-enquiry-form'
 
 import { SITE_BASE_URL as BASE_URL, FAREHARBOR_ITEM_BUSINESS_INCENTIVES } from '@/lib/config'
 import { getOgImage } from '@/lib/og-images'
+import { SpotsLeftBanner } from '@/components/tours/spots-left-banner'
+import { AdoptCrossSell } from '@/components/tours/adopt-cross-sell'
 
 export async function generateMetadata({
     params,
@@ -94,6 +96,11 @@ export default async function CorporatePage({ params }: { params: Promise<{ loca
                 }}
                 backgroundImage="/images/corporate-hero.webp"
             />
+
+            {/* Spots-left urgency widget */}
+            <div className="w-full px-4 pt-6 max-w-4xl mx-auto">
+                <SpotsLeftBanner itemId={FAREHARBOR_ITEM_BUSINESS_INCENTIVES} tourLabel="Corporate Team Building" />
+            </div>
 
             {/* FairHarbor Booking Calendar - Above the Fold */}
             <section className="w-full py-12 md:py-16 px-4 bg-[#F9F9F9]">
@@ -237,6 +244,9 @@ export default async function CorporatePage({ params }: { params: Promise<{ loca
             <section className="w-full bg-[#F9F9F9]">
                 <FAQ items={faqItems} />
             </section>
+
+            {/* Adopt cross-sell */}
+            <AdoptCrossSell locale={locale} />
         </main>
     )
 }

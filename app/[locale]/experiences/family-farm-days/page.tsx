@@ -10,6 +10,8 @@ import type { Locale } from '@/i18n.config'
 
 import { SITE_BASE_URL as BASE_URL, FAREHARBOR_ITEM_FAMILY_FARM_DAYS } from '@/lib/config'
 import { getProductBookingUrl } from '@/lib/fareharbor-products'
+import { SpotsLeftBanner } from '@/components/tours/spots-left-banner'
+import { AdoptCrossSell } from '@/components/tours/adopt-cross-sell'
 
 export async function generateMetadata({
     params,
@@ -84,6 +86,11 @@ export default async function FamilyPage({ params }: { params: Promise<{ locale:
                 }}
                 backgroundImage="/images/family-hero.webp"
             />
+
+            {/* Spots-left urgency widget */}
+            <div className="w-full px-4 pt-6 max-w-4xl mx-auto">
+                <SpotsLeftBanner itemId={FAREHARBOR_ITEM_FAMILY_FARM_DAYS} tourLabel="Family Farm Days" />
+            </div>
 
             {/* FairHarbor Booking Calendar - Above the Fold */}
             <section className="w-full py-12 md:py-16 px-4 bg-[#F9F9F9]">
@@ -209,6 +216,9 @@ export default async function FamilyPage({ params }: { params: Promise<{ locale:
             <section className="w-full bg-[#F9F9F9]">
                 <FAQ items={faqItems} />
             </section>
+
+            {/* Adopt cross-sell */}
+            <AdoptCrossSell locale={locale} />
         </main>
     )
 }

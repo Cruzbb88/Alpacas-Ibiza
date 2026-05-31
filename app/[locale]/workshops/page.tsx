@@ -5,10 +5,12 @@ import { FAQ } from '@/components/faq'
 import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
 import { t } from '@/lib/translations'
 import { localBusinessSchema, workshopHowToSchema, toJsonLd } from '@/lib/structured-data'
-import { SITE_BASE_URL as BASE_URL } from '@/lib/config'
+import { SITE_BASE_URL as BASE_URL, FAREHARBOR_ITEM_TOUR_WEAVING_WORKSHOP } from '@/lib/config'
 import type { Locale } from '@/i18n.config'
 import { getTenant } from '@/lib/tenants/server'
 import { tenantMetadata } from '@/lib/tenants/metadata'
+import { SpotsLeftBanner } from '@/components/tours/spots-left-banner'
+import { AdoptCrossSell } from '@/components/tours/adopt-cross-sell'
 
 /**
  * Verified live-site data (REALITY_CHECK.md Tier 2, line 62-65;
@@ -196,6 +198,11 @@ export default async function WorkshopsPage({
                 ]}
             />
 
+            {/* Spots-left urgency widget (weaving workshop item — renders null if unconfigured) */}
+            <div className="w-full px-4 pt-6 max-w-4xl mx-auto">
+                <SpotsLeftBanner itemId={FAREHARBOR_ITEM_TOUR_WEAVING_WORKSHOP} tourLabel="Weaving Workshop" />
+            </div>
+
             {/* Hero — title and subtitle use verified facts only */}
             <Hero
                 title={translate(
@@ -332,6 +339,9 @@ export default async function WorkshopsPage({
             <section className="w-full bg-muted">
                 <FAQ items={faqItems} />
             </section>
+
+            {/* Adopt cross-sell */}
+            <AdoptCrossSell locale={locale} />
         </main>
     )
 }
