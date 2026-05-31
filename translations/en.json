@@ -125,7 +125,8 @@
     "title": "Es Currals Alpacas Ibiza",
     "subtitle": "The very first alpaca farm in Ibiza, located in the rural north on an authentic finca. Home to Wishfulfilling Weaving, where exclusive scarves are hand-woven on a traditional wooden loom using alpaca wool.",
     "ctaPrimary": "Plan Your Visit",
-    "ctaSecondary": "Shop Now"
+    "ctaSecondary": "Shop Now",
+    "eyebrow": "San Carlos, Ibiza"
   },
   "paths": {
     "bookNow": "Book Now",
@@ -147,7 +148,8 @@
     "alcaca": {
       "title": "Buy Alcaca",
       "description": "Premium alpaca manure for organic gardening and sustainable farming. Order in bulk or sample packs."
-    }
+    },
+    "explore": "Explore"
   },
   "features": {
     "sectionTitle": "Why Choose Es Currals Alpacas Ibiza",
@@ -196,7 +198,9 @@
     "indexTitle": "Experiences at Alpacas Ibiza",
     "indexSubtitle": "Seven ways to spend time with the herd at Es Currals. Pick the one that fits your trip.",
     "compareHeading": "Compare every experience",
-    "compareSubheading": "Duration, group size, and what's included — side by side."
+    "compareSubheading": "Duration, group size, and what's included — side by side.",
+    "bookCta": "Book this experience",
+    "learnMore": "Learn more"
   },
   "cta": {
     "title": "Ready to Experience Alpacas Ibiza?",
@@ -209,7 +213,8 @@
     "subtitle": "Get updates on new products, workshops, and farm stories",
     "placeholder": "Enter your email",
     "subscribe": "Subscribe",
-    "success": "Thanks for subscribing!"
+    "success": "Thanks for subscribing!",
+    "emailLabel": "Email address"
   },
   "tours": {
     "title": "Book Your Alpaca Experience",
@@ -470,6 +475,23 @@
     "manure": {
       "title": "Alpaca Manure",
       "description": "Premium organic fertilizer"
+    },
+    "cta": {
+      "addToCart": "Add to cart",
+      "notifyMe": "Notify me",
+      "commission": "Commission this",
+      "wishlist": "Add to wishlist",
+      "viewPiece": "View piece"
+    },
+    "imageComingSoon": "Photo coming soon",
+    "outOf5": "out of 5 stars",
+    "status": {
+      "madeToOrder": "Made to order",
+      "soldOut": "Sold out",
+      "lowStock": "Only a few left"
+    },
+    "weaving": {
+      "carouselLabel": "Weaving pieces carousel"
     }
   },
   "wovenPage": {
@@ -483,7 +505,8 @@
     "throw": "Natural Dye Throw",
     "cushion": "Artisan Cushion Cover",
     "wallHanging": "Premium Wall Hanging",
-    "poncho": "Eco-Friendly Poncho"
+    "poncho": "Eco-Friendly Poncho",
+    "enquire": "Enquire"
   },
   "commissionPage": {
     "title": "Custom Commission",
@@ -1131,7 +1154,12 @@
       "ariaPopulated": "{adopted} of {total} alpacas have a sponsor ({pct} percent)."
     },
     "share": {
-      "message": "I just adopted {name} at Alpacas Ibiza!"
+      "message": "I just adopted {name} at Alpacas Ibiza!",
+      "heading": "Tell the world",
+      "sub": "A quick share helps the farm — and lets your friends meet the herd.",
+      "copyLink": "Copy link",
+      "copied": "Copied!",
+      "nativeButton": "Share"
     },
     "comparisonTitle": "Compare plans",
     "monthly": "Monthly",
@@ -1148,7 +1176,62 @@
       "photoshoot": "Professional alpaca photoshoot"
     },
     "embeddedHeading": "Pay securely without leaving the page",
-    "embeddedSubtext": "Card or SEPA — your payment never leaves alpacasibiza.com."
+    "embeddedSubtext": "Card or SEPA — your payment never leaves alpacasibiza.com.",
+    "match": {
+      "heading": "Find your alpaca match",
+      "intro": "Three quick questions and we'll suggest one for you.",
+      "progressAria": "Quiz progress",
+      "questionLabel": "Question",
+      "resultLabel": "Your match",
+      "learnMore": "Read full bio",
+      "retake": "Try again",
+      "noMatch": "We couldn't find a match right now — try Pick for me on the adopt page."
+    },
+    "sticky": {
+      "monthlyShort": "€75/mo",
+      "yearlyShort": "€900/yr",
+      "cta": "Adopt",
+      "region": "Adopt-a-Paca quick actions"
+    },
+    "tier": {
+      "monthly": "Monthly",
+      "yearly": "Yearly — prepaid",
+      "monthlySub": "Cancel any time.",
+      "yearlySub": "Same total as monthly, paid upfront.",
+      "ctaMonthly": "Adopt monthly",
+      "ctaYearly": "Adopt yearly",
+      "popularBadge": "Most popular"
+    },
+    "timeline": {
+      "heading": "What you'll receive",
+      "subheading": "Your first year with the herd, step by step.",
+      "certificate": {
+        "title": "Adoption certificate",
+        "when": "Posted within 7-10 days",
+        "desc": "Personalised certificate with your chosen alpaca's name."
+      },
+      "tours": {
+        "title": "Farm tours",
+        "when": "Bookable any time",
+        "desc": "6 tours per year, up to 4 guests each. Just mention your adoption when booking."
+      },
+      "gifts": {
+        "title": "Welcome gift bundle",
+        "when": "Ships in 2-3 weeks",
+        "desc": "Branded calendar, planner, keychain, and framed photo of your alpaca."
+      },
+      "photoshoot": {
+        "title": "Professional photoshoot",
+        "when": "Scheduled with you",
+        "desc": "An hour with your alpaca and our photographer. Digital downloads included."
+      },
+      "fibre": {
+        "title": "Alcaca fibre shipping",
+        "when": "Spring + autumn",
+        "desc": "5 kg of premium alpaca-derived garden amendment per year, in two seasonal batches."
+      }
+    },
+    "comparisonSubtitle": ""
   },
   "journal": {
     "title": "Journal",
@@ -1252,7 +1335,15 @@
         "huacaya": "Huacaya",
         "suri": "Suri"
       }
-    }
+    },
+    "photoComingSoon": "Photo coming soon",
+    "yearsOld": "years old",
+    "backToHerd": "Back to the herd",
+    "restOfHerd": "Meet the rest of the herd",
+    "bioComingSoon": "Bio coming soon",
+    "detailTitle": "Meet {name} | Alpacas Ibiza",
+    "detailDescription": "Meet {name}, part of the Es Currals herd. Adopt {name} or visit the farm in Ibiza.",
+    "detailDescriptionWithPersonality": "{name} — {personality}. Adopt {name} or visit the herd at Es Currals, Ibiza."
   },
   "yoga": {
     "title": "Alpaca Yoga",
@@ -1542,7 +1633,9 @@
     "marketingConsent": "I agree to receive Alpacas Ibiza updates and accept the [Privacy Policy].",
     "marketingConsentRequired": "Please tick this box to subscribe.",
     "adoptAction": "adopting",
-    "giftAction": "completing your gift"
+    "giftAction": "completing your gift",
+    "lastUpdated": "Last updated",
+    "version": "Version"
   },
   "portal": {
     "title": "Your adoption",
@@ -1651,7 +1744,9 @@
     "aria": "Chat with us on WhatsApp"
   },
   "alpacaOfDay": {
-    "cta": "Meet {name}"
+    "cta": "Meet {name}",
+    "eyebrow": "Alpaca of the day",
+    "funFact": "Fun fact"
   },
   "cancelFeedback": {
     "title": "Before you go",
@@ -1724,5 +1819,9 @@
   },
   "cancellation": {
     "freeUp24h": "Free cancellation up to 24h before your visit"
-  }
+  },
+  "adopters": {
+    "badge": "Join {count} alpaca adopters"
+  },
+  "sending": "Sending…"
 }
