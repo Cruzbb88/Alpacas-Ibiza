@@ -55,10 +55,32 @@ export default async function AdminIndex() {
 
   return (
     <main className="mx-auto max-w-4xl px-6 py-12">
+      {/* Install banner — visible on mobile only, hidden on md+ */}
+      <div className="md:hidden mb-6 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+        On your phone? Tap browser menu → <strong>Add to Home Screen</strong> to install Alpacas Admin.
+      </div>
+
       <h1 className="text-3xl font-bold mb-2">Admin</h1>
       <p className="text-sm text-foreground/60 mb-8">
         Signed in as <span className="font-medium">{session.user?.name ?? 'admin'}</span> — 8-hour session.
       </p>
+
+      {/* Today card — primary entry point for daily ops on mobile */}
+      <section className="mb-10">
+        <h2 className="text-xs font-semibold uppercase tracking-wider text-foreground/50 mb-4">
+          Daily
+        </h2>
+        <Link
+          href="/admin/today"
+          className="block rounded-xl border-2 border-primary bg-primary/5 p-5 hover:bg-primary/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 min-h-[56px]"
+        >
+          <div className="font-bold text-lg text-primary">Today&apos;s ops digest</div>
+          <div className="text-sm text-foreground/60 mt-1">
+            Tours, adopters, at-risk donors, quick actions — tap here first every morning.
+          </div>
+        </Link>
+      </section>
+
       <nav className="space-y-10">
         {grouped.map((group) => (
           <section key={group.category}>

@@ -46,6 +46,31 @@ function mergeWithEnBase(base: Messages, override: Messages): Messages {
   return out
 }
 
+/**
+ * Strip any remaining `__UNTRANSLATED__*` sentinel values from the final
+ * message tree (including EN itself, which carries 3 OWNER_INPUT_NEEDED
+ * placeholder strings in the legal-disclosure namespace). Sentinels are
+ * replaced with empty string so next-intl renders nothing instead of the
+ * literal placeholder text.
+ *
+ * This is a separate pass from mergeWithEnBase so it can be applied to both
+ * EN and all other locales after the merge is complete.
+ */
+function stripSentinels(messages: Messages): Messages {
+  const out: Messages = Array.isArray(messages)
+    ? ([...messages] as unknown as Messages)
+    : { ...messages }
+  for (const k of Object.keys(out)) {
+    const v = out[k]
+    if (typeof v === 'string' && v.startsWith('__UNTRANSLATED__')) {
+      out[k] = ''
+    } else if (v !== null && typeof v === 'object' && !Array.isArray(v)) {
+      out[k] = stripSentinels(v as Messages)
+    }
+  }
+  return out
+}
+
 export default getRequestConfig(async ({ requestLocale }) => {
   const requested = await requestLocale
   const locale =
@@ -56,10 +81,10 @@ export default getRequestConfig(async ({ requestLocale }) => {
   const en = enMessages as Messages
   let messages: Messages
   if (locale === 'en') {
-    messages = en
+    messages = stripSentinels(en)
   } else {
     const localeMessages = (await import(`./translations/${locale}.json`)).default as Messages
-    messages = mergeWithEnBase(en, localeMessages)
+    messages = stripSentinels(mergeWithEnBase(en, localeMessages))
   }
 
   return {

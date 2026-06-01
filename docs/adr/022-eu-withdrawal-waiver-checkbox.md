@@ -1,7 +1,9 @@
 # ADR 022 — Withdrawal waiver checkbox required at adopt checkout (EU Directive 2011/83 Art 16(m))
 
-**Status:** Proposed — pending owner copy approval
+**Status:** Accepted · 2026-06-01
 **Date:** 2026-05-30
+
+**Status updated 2026-06-01:** wired and enforced (client gate + server 400). Legal copy still pending owner review.
 **Related:** [ADR 021 — FareHarbor replaced by Stripe/Mollie](021-fareharbor-replaced-by-stripe-mollie.md)
 
 ## Context

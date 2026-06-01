@@ -24,6 +24,10 @@
     {
       "path": "/api/adopt-milestone-emails",
       "schedule": "0 11 * * *"
+    },
+    {
+      "path": "/api/alpaca-birthday-cards",
+      "schedule": "0 9 * * *"
     }
   ]
 }

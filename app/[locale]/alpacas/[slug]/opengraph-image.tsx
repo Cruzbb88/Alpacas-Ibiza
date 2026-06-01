@@ -46,6 +46,8 @@ export default async function Image({ params }: Params) {
           <img
             src={animal!.image!}
             alt=""
+            width={1200}
+            height={630}
             style={{
               position: 'absolute',
               inset: 0,

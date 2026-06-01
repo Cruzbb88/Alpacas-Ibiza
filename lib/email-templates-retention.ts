@@ -347,6 +347,105 @@ ${bodyBlock}
     return { subject, html }
 }
 
+// ── Alpaca birthday card ──────────────────────────────────────────────────────
+
+export interface AlpacaBirthdayOpts {
+    /** Donor's display name — user-controlled, will be HTML-escaped. */
+    donorName: string | null
+    /** Name of the alpaca whose birthday it is — user-controlled, will be HTML-escaped. */
+    alpacaName: string
+    /**
+     * Year the alpaca was born — used to compute age ("Dusty is 7 today!").
+     * null if owner has not yet supplied the birth year; falls back gracefully.
+     */
+    alpacaBirthYear: number | null
+    /** Two-letter locale slug, e.g. "en". */
+    locale: string
+    /** Tenant-aware billing portal URL. */
+    billingPortalUrl: string
+}
+
+/**
+ * Build the per-alpaca birthday card email.
+ *
+ * Subject: "Today is {alpacaName}'s birthday 🎂"
+ * Content:
+ *   (a) Warm personalised greeting (donorName-gated)
+ *   (b) Birthday headline with computed age if birthYear known
+ *   (c) "A day on the farm" copy — placeholder for owner-supplied seasonal note
+ *   (d) Billing portal manage link
+ *   (e) Standard footer (retentionEmailLayout)
+ *
+ * All user-controlled fields (donorName, alpacaName) go through escapeHtml.
+ * billingPortalUrl is server-constructed — still escaped for defence-in-depth.
+ */
+export function buildAlpacaBirthdayEmail(
+    opts: AlpacaBirthdayOpts,
+): { subject: string; html: string } {
+    const { donorName, alpacaName, alpacaBirthYear, locale: _locale, billingPortalUrl } = opts
+
+    const safeDonorName  = donorName  ? escapeHtml(donorName)  : null
+    const safeAlpacaName = escapeHtml(alpacaName)
+    const safePortalUrl  = escapeHtml(billingPortalUrl)
+
+    // Age string: "Dusty is 7 today!" — only when birthYear is known.
+    const currentYear = new Date().getFullYear()
+    const ageStr =
+        alpacaBirthYear && alpacaBirthYear > 0 && alpacaBirthYear <= currentYear
+            ? `${safeAlpacaName} is ${currentYear - alpacaBirthYear} today!`
+            : `${safeAlpacaName} has a birthday today!`
+
+    // Subject — plain text, use raw alpacaName (not HTML-escaped).
+    const subject = `Today is ${alpacaName}'s birthday 🎂`
+
+    // --- Greeting ---
+    const greeting = safeDonorName
+        ? `<h2 style="color:${BRAND.primary}">Hi ${safeDonorName} 🦙</h2>`
+        : `<h2 style="color:${BRAND.primary}">A special day on the farm 🦙</h2>`
+
+    // --- Birthday headline ---
+    const birthdayHeadline = `
+<div style="background:${BRAND.secondary};border-left:4px solid ${BRAND.primary};padding:16px 20px;border-radius:6px;margin:20px 0;text-align:center">
+  <p style="font-size:22px;font-weight:700;color:${BRAND.primary};margin:0 0 8px">🎂 ${ageStr} 🎂</p>
+  <p style="font-size:15px;color:#555;margin:0">Today the whole herd at Es Currals is celebrating.</p>
+</div>
+`
+
+    // --- Alpaca personalisation ---
+    const alpacaLine = `
+<p>As one of <strong>${safeAlpacaName}</strong>'s adopters, you're part of what makes days like this special. Thank you for your ongoing support.</p>
+`
+
+    // --- Day on the farm block ---
+    // TODO / OWNER_INPUT_NEEDED: replace placeholder with a per-alpaca,
+    // per-birthday seasonal note. Populate via env var or a per-alpaca
+    // content file when the owner supplies birthday copy.
+    const farmBlock = `
+<h3 style="margin-top:24px;color:${BRAND.primary}">A day on the farm</h3>
+<p style="background:${BRAND.secondary};border-left:4px solid ${BRAND.primary};padding:12px 16px;border-radius:4px;color:#555;font-style:italic">
+  [Owner action: supply a short birthday note about ${safeAlpacaName} — what she/he gets up to on a birthday, a favourite spot, a quirky habit — for this section before sending.]
+</p>
+`
+
+    // --- Manage block ---
+    const manageBlock = `
+<h3 style="margin-top:24px;color:${BRAND.primary}">Manage your adoption</h3>
+<p>Need to update payment details or make any changes?
+  <a href="${safePortalUrl}" style="color:${BRAND.primary}">Manage your adoption here</a>.
+</p>
+`
+
+    const html = retentionEmailLayout(`
+${greeting}
+${birthdayHeadline}
+${alpacaLine}
+${farmBlock}
+${manageBlock}
+`)
+
+    return { subject, html }
+}
+
 // ── Certificate recovery ──────────────────────────────────────────────────────
 
 export interface CertificateRecoveryEmailOpts {

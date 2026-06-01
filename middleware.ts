@@ -12,6 +12,6 @@ export const config = {
   // Preserve exclusions from our existing middleware.
   // Skips: API routes, Next internals, static files, og/healthz/manifest/robots/sitemap/pagefind.
   matcher: [
-    '/((?!api|_next|og|healthz|favicon\\.ico|apple-icon|icon|manifest\\.webmanifest|robots\\.txt|sitemap.*\\.xml|_pagefind).*)',
+    '/((?!api|_next|admin|og|healthz|favicon\\.ico|apple-icon|icon|.*\\.webmanifest|robots\\.txt|sitemap.*\\.xml|_pagefind).*)',
   ],
 }

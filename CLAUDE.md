@@ -148,6 +148,15 @@ This file holds two catalogs that PRACTICES doesn't: the in-code failsafe map (w
 | `app/manifest.ts` `short_name` word-boundary truncation | [app/manifest.ts](app/manifest.ts) `toShortName()` | W3C App Manifest ≤ 12-char limit; `toShortName()` clips at last space (never mid-word); fallback to hard slice only if first word itself exceeds 12 chars |
 | Recover-certificate route always-200 anti-enumeration | [app/api/recover-certificate/route.ts](app/api/recover-certificate/route.ts) | mirrors billing-portal email-oracle closure pattern — never reveals whether a given email is on file |
 
+| Birthday-card cron auth: `verifyCronSecret` gate (fail-CLOSED) | [app/api/alpaca-birthday-cards/route.ts](app/api/alpaca-birthday-cards/route.ts) | 401 on missing/wrong CRON_SECRET |
+| Birthday-card per-recipient `Promise.allSettled` (fail-quiet) | [app/api/alpaca-birthday-cards/route.ts](app/api/alpaca-birthday-cards/route.ts) | one bad email never drops rest of batch; returns 200 always so Vercel cron does not retry |
+| Birthday-card idempotency: stamps `last_bday_email_year` on sub after send | [app/api/alpaca-birthday-cards/route.ts](app/api/alpaca-birthday-cards/route.ts) | prevents double-send if cron cold-starts twice same day; stamp failure is warn-only (non-fatal) |
+| Skein-checkout 503 if `STRIPE_SECRET_KEY` unset (fail-CLOSED) | [app/api/skein-checkout/route.ts](app/api/skein-checkout/route.ts) | mirrors checkout 503 pattern |
+| Skein-checkout 503 if Stripe SDK absent (dynamic import catch) | [app/api/skein-checkout/route.ts](app/api/skein-checkout/route.ts) | `STRIPE_SDK_MISSING` code; safe build without SDK |
+| Skein-checkout IP rate limit: 3 req / 5 min per IP | [app/api/skein-checkout/route.ts](app/api/skein-checkout/route.ts) | mirrors checkout + billing-portal rate-limit |
+| Skein-checkout success/cancel URLs use `SITE_BASE_URL` (NOT `Origin` header) | [app/api/skein-checkout/route.ts](app/api/skein-checkout/route.ts) | same open-redirect prevention as checkout + mollie-checkout (ADR 017) |
+| Skein alpaca slug validated via `findAlpacaName` before Stripe metadata | [app/api/skein-checkout/route.ts](app/api/skein-checkout/route.ts) | unknown/forged slugs silently treated as pick-for-me; no arbitrary text in Stripe metadata |
+
 **Adding a new failsafe?** PRACTICES.md "Append protocol" applies. After landing the code, add the row above with file:line.
 
 ---
@@ -192,6 +201,8 @@ mishandling) that 603 tests + `next build` + `tsc --noEmit` all missed because
 - `MOLLIE_API_KEY` → Mollie checkout 503 (adopt CTA falls back to mailto)
 - `MOLLIE_WEBHOOK_SECRET` → Mollie webhook 503 (fail-CLOSED; no event processing)
 - `PAYMENT_VENDOR=mollie` → required to activate Mollie path. Mollie SEPA Direct Debit ~€0.25/charge vs Stripe ~€1.75 at €75/mo (see [handoff](handoff/) for full maths)
+
+- `SKEIN_PRICE_EUR` → skein sponsorship price defaults €200; override for staging tests. Used by [app/api/skein-checkout/route.ts](app/api/skein-checkout/route.ts) via `SKEIN_SPONSORSHIP_PRICE_EUR` in lib/config.ts
 
 **Hardcoded in code (no env needed):** GA4 pixel `G-Y946QDVVQV`, GTM `GTM-KR3CGLS6` (FareHarbor's container — single, per [app/layout.tsx:84](app/layout.tsx#L84)), FareHarbor FLOW=1257173 shortname=alpacasibiza. **RESOLVED (2026-05-26):** `GTM-NJRGZPGS` does not appear anywhere in the codebase — verified via VERIFICATION_RESULTS search. Only `GTM-KR3CGLS6` is wired. The "primary GTM" open question in OWNER_INPUT_NEEDED is moot until the owner explicitly supplies a separate container ID to add.
 

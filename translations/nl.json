@@ -8,30 +8,36 @@
     "bookTour": "Tour Boeken",
     "language": "Taal",
     "weaving": "Weven",
-    "recoverCertificate": "Certificaat opnieuw versturen"
+    "recoverCertificate": "Certificaat opnieuw versturen",
+    "home": "Home",
+    "alpacas": "Onze alpaca's",
+    "gifts": "Cadeaubonnen",
+    "yoga": {
+      "title": "Alpaca Yoga"
+    }
   },
   "visit": {
-    "metaTitle": "Plan Je Bezoek | Alpacas Ibiza – Es Currals Boerderij Ibiza",
-    "metaDescription": "Alles wat je nodig hebt voor je aankomst op de Es Currals alpacaboerderij in het noorden van Ibiza — routebeschrijving, parkeren, toegankelijkheid, wat mee te nemen en annuleringsbeleid.",
+    "metaTitle": "Plan Je Bezoek | Alpacas Ibiza â€“ Es Currals Boerderij Ibiza",
+    "metaDescription": "Alles wat je nodig hebt voor je aankomst op de Es Currals alpacaboerderij in het noorden van Ibiza â€” routebeschrijving, parkeren, toegankelijkheid, wat mee te nemen en annuleringsbeleid.",
     "title": "Je bezoek plannen",
     "subhead": "Alles wat je nodig hebt voordat je aankomt bij Es Currals, de boerderij in het noorden van Ibiza.",
     "gettingHere": {
       "heading": "Hoe kom je hier",
       "byCar": {
         "title": "Met de auto",
-        "body": "Vanuit Ibiza Town: ca. [UNMAPPED] minuten via PM-810. Vanuit Santa Eulàlia: ca. [UNMAPPED] minuten. Gratis parkeren ter plaatse."
+        "body": "Vanuit Ibiza Town: ca. [UNMAPPED] minuten via PM-810. Vanuit Santa EulÃ lia: ca. [UNMAPPED] minuten. Gratis parkeren ter plaatse."
       },
       "fromAirport": {
         "title": "Vanaf het vliegveld",
-        "body": "Ibiza Airport (IBZ) is ca. [UNMAPPED] km — ongeveer [UNMAPPED] minuten per auto of taxi. Taxis beschikbaar bij de standplaats; geen reservering nodig."
+        "body": "Ibiza Airport (IBZ) is ca. [UNMAPPED] km â€” ongeveer [UNMAPPED] minuten per auto of taxi. Taxis beschikbaar bij de standplaats; geen reservering nodig."
       },
       "byBus": {
         "title": "Met de bus",
-        "body": "Dichtstbijzijnde bushalte: [UNMAPPED] — ca. [UNMAPPED] minuten lopen naar de boerderij. Zie ibizabus.com voor routes. Een auto of taxi is aanbevolen voor het laatste stuk."
+        "body": "Dichtstbijzijnde bushalte: [UNMAPPED] â€” ca. [UNMAPPED] minuten lopen naar de boerderij. Zie ibizabus.com voor routes. Een auto of taxi is aanbevolen voor het laatste stuk."
       },
       "gps": {
         "title": "GPS & kaarten",
-        "body": "GPS: 38.9861° N, 1.5228° E. Zoek op «Alpacas Ibiza, San Carlos» als de links niet openen.",
+        "body": "GPS: 38.9861Â° N, 1.5228Â° E. Zoek op Â«Alpacas Ibiza, San CarlosÂ» als de links niet openen.",
         "googleMaps": "Openen in Google Maps",
         "appleMaps": "Openen in Apple Maps"
       }
@@ -49,14 +55,14 @@
       "duration": {
         "title": "Tourduur",
         "body": "De duur hangt af van het type tour.",
-        "link": "Zie alle tours →"
+        "link": "Zie alle tours â†’"
       },
       "bring": {
         "title": "Wat meenemen",
         "shoes": "Comfortabele, gesloten schoenen",
         "hat": "Zonnehoed (de boerderij is buiten)",
         "water": "Waterfles",
-        "noPerfume": "Geen sterk parfum — alpaca's zijn gevoelig voor geur"
+        "noPerfume": "Geen sterk parfum â€” alpaca's zijn gevoelig voor geur"
       }
     },
     "accessibility": {
@@ -84,7 +90,7 @@
       "heading": "Annuleringsbeleid",
       "free": {
         "title": "Gratis annulering",
-        "body": "Annuleer tot 24 uur voor je bezoek voor volledige terugbetaling. Terugbetalingen worden binnen 5–10 werkdagen verwerkt."
+        "body": "Annuleer tot 24 uur voor je bezoek voor volledige terugbetaling. Terugbetalingen worden binnen 5â€“10 werkdagen verwerkt."
       },
       "weather": {
         "title": "Slecht weer",
@@ -99,11 +105,11 @@
       "heading": "Foto's & film",
       "personal": {
         "title": "Persoonlijke fotografie",
-        "body": "Ja — fotografeer en film overal op de boerderij voor persoonlijk gebruik. De alpaca's zijn beroemd fotogeniek."
+        "body": "Ja â€” fotografeer en film overal op de boerderij voor persoonlijk gebruik. De alpaca's zijn beroemd fotogeniek."
       },
       "commercial": {
         "title": "Commercieel gebruik",
-        "bodyPrefix": "Voor commerciële shoots, branded content of media, bekijk onze",
+        "bodyPrefix": "Voor commerciÃ«le shoots, branded content of media, bekijk onze",
         "pressKitLink": "perskit",
         "bodySuffix": "en neem contact met ons op voor je bezoek."
       }
@@ -119,7 +125,8 @@
     "title": "Es Currals Alpacas Ibiza",
     "subtitle": "De allereerste alpacaboerderij van Ibiza, gelegen in het landelijke noorden op een authentieke finca. Thuisbasis van Wishfulfilling Weaving, waar exclusieve sjaals met de hand worden geweven op een traditioneel houten weefgetouw met alpacawol.",
     "ctaPrimary": "Plan Je Bezoek",
-    "ctaSecondary": "Nu Winkelen"
+    "ctaSecondary": "Nu Winkelen",
+    "eyebrow": "San Carlos, Ibiza"
   },
   "paths": {
     "bookNow": "Nu Boeken",
@@ -141,7 +148,8 @@
     "alcaca": {
       "title": "Koop Alcaca",
       "description": "Premium alpacamest voor biologisch tuinieren en duurzame landbouw. Bestel bulk of proefpakketten."
-    }
+    },
+    "explore": "Ontdekken"
   },
   "features": {
     "sectionTitle": "Waarom Kiezen voor Es Currals Alpacas Ibiza",
@@ -156,11 +164,11 @@
     },
     "sustainable": {
       "title": "Made in Ibiza",
-      "description": "Wishfulfilling Weaving – Made in Ibiza, de wereld omarmend. Duurzame praktijken met onze eigen alpacawol. Zorg voor dieren en planeet."
+      "description": "Wishfulfilling Weaving â€“ Made in Ibiza, de wereld omarmend. Duurzame praktijken met onze eigen alpacawol. Zorg voor dieren en planeet."
     },
     "appointment": {
       "title": "Alleen op Afspraak",
-      "description": "Alleen intieme bezoeken. We houden onze boerderij rustig en vredig voor de alpaca's — en voor jou."
+      "description": "Alleen intieme bezoeken. We houden onze boerderij rustig en vredig voor de alpaca's â€” en voor jou."
     },
     "quality": {
       "title": "Premium Kwaliteit",
@@ -173,9 +181,9 @@
   },
   "experiences": {
     "sectionTitle": "Bijzondere Ervaringen",
-    "sectionSubtitle": "Meer dan tours — maak persoonlijke herinneringen op onze boerderij",
+    "sectionSubtitle": "Meer dan tours â€” maak persoonlijke herinneringen op onze boerderij",
     "privateFarm": {
-      "title": "Privéboerderij",
+      "title": "PrivÃ©boerderij",
       "description": "Bezoeken alleen op afspraak. Intieme, rustige ervaringen op een echte werkende boerderij."
     },
     "workshops": {
@@ -184,12 +192,19 @@
     },
     "events": {
       "title": "Evenementen",
-      "description": "Bruiloften, fotoshoots, bedrijfsretreats, alpaca yoga — op maat gemaakte ervaringen."
-    }
+      "description": "Bruiloften, fotoshoots, bedrijfsretreats, alpaca yoga â€” op maat gemaakte ervaringen."
+    },
+    "compareCta": "Meer weten",
+    "indexTitle": "Ervaringen bij Alpacas Ibiza",
+    "indexSubtitle": "Zeven manieren om tijd door te brengen met de kudde op Es Currals. Kies wat past bij jouw trip.",
+    "compareHeading": "Vergelijk elke ervaring",
+    "compareSubheading": "Duur, groepsgrootte en wat inbegrepen is — naast elkaar.",
+    "bookCta": "Boek deze ervaring",
+    "learnMore": "Meer weten"
   },
   "cta": {
     "title": "Klaar om Alpacas Ibiza te Beleven?",
-    "subtitle": "Of je nu de kudde wilt ontmoeten, onze collectie wilt bekijken of iets speciaals wilt bestellen — we zijn er om een onvergetelijke ervaring te creëren.",
+    "subtitle": "Of je nu de kudde wilt ontmoeten, onze collectie wilt bekijken of iets speciaals wilt bestellen â€” we zijn er om een onvergetelijke ervaring te creÃ«ren.",
     "bookTour": "Boek Je Tour",
     "exploreShop": "Bekijk de Winkel"
   },
@@ -198,7 +213,8 @@
     "subtitle": "Ontvang updates over nieuwe producten, workshops en boerderijverhalen",
     "placeholder": "Vul je e-mailadres in",
     "subscribe": "Abonneren",
-    "success": "Bedankt voor je inschrijving!"
+    "success": "Bedankt voor je inschrijving!",
+    "emailLabel": "E-mailadres"
   },
   "tours": {
     "title": "Boek Je Alpaca-Ervaring",
@@ -234,7 +250,7 @@
     "timeline": {
       "arrival": {
         "time": "Aankomst",
-        "title": "Welkom & Oriëntatie",
+        "title": "Welkom & OriÃ«ntatie",
         "description": "Ontmoet je gids, krijg een overzicht van de dag en leer de regels van de boerderij. Kom aan en laat de rust over je komen."
       },
       "morning": {
@@ -269,16 +285,16 @@
       "location": {
         "title": "Locatie",
         "description": "San Carlos, Ibiza, Spanje",
-        "details": "Privéboerderij. Routebeschrijving en parkeerinformatie worden bij de boeking verstrekt."
+        "details": "PrivÃ©boerderij. Routebeschrijving en parkeerinformatie worden bij de boeking verstrekt."
       },
       "pricing": {
         "title": "Prijzen",
-        "starting": "Vanaf €30 per persoon",
+        "starting": "Vanaf â‚¬30 per persoon",
         "custom": "Op maat gemaakte ervaringen en groepstarieven beschikbaar"
       },
       "specialEvents": {
-        "title": "Speciale Evenementen & Privé Boekingen",
-        "description": "Bruiloften, fotoshoots, alpaca yoga, workshops, bedrijfsretreats — we creëren op maat gemaakte ervaringen volgens jouw visie.",
+        "title": "Speciale Evenementen & PrivÃ© Boekingen",
+        "description": "Bruiloften, fotoshoots, alpaca yoga, workshops, bedrijfsretreats â€” we creÃ«ren op maat gemaakte ervaringen volgens jouw visie.",
         "cta": "Vraag een Op Maat Ervaring Aan"
       }
     },
@@ -294,7 +310,7 @@
       "questionsText": "Neem contact op via info@alpacasibiza.com of WhatsApp voor persoonlijke begeleiding.",
       "nextDates": "Eerstvolgende beschikbare data",
       "spotsLeft": "plekken vrij",
-      "updatedNote": "Elke 2 uur bijgewerkt · Klik op \"Nu boeken\" om alle tijden te zien",
+      "updatedNote": "Elke 2 uur bijgewerkt Â· Klik op \"Nu boeken\" om alle tijden te zien",
       "loading": "Beschikbaarheid laden...",
       "apiNote": "Real-time beschikbaarheid vereist API-configuratie"
     },
@@ -342,8 +358,24 @@
     "backHome": "Terug naar Home",
     "adoptCrossSell": {
       "heading": "Vaak terugkomen?",
-      "body": "Adopteer een alpaca — je rondleidingen voor het jaar zijn inbegrepen.",
-      "cta": "Word sponsor →"
+      "body": "Adopteer een alpaca â€” je rondleidingen voor het jaar zijn inbegrepen.",
+      "cta": "Word sponsor â†’"
+    },
+    "checklist": {
+      "title": "Wat meenemen",
+      "items": {
+        "closedShoes": "Gesloten schoenen — weilanden kunnen stoffig of modderig zijn",
+        "sunHat": "Zonnehoed",
+        "sunscreen": "Zonnebrandcrème",
+        "water": "Waterfles",
+        "camera": "Camera — tag ons @alpacasibiza op Instagram",
+        "layeredClothing": "Gelaagde kleding voor koudere ochtenden",
+        "allergyNotes": "Eventuele allergie-informatie voor de gastheer",
+        "validId": "Geldig legitimatiebewijs (vereist bij boekingscheck-in)"
+      },
+      "shareButton": "Opslaan / lijst delen",
+      "shareTitle": "Alpacas Ibiza — Wat meenemen",
+      "shareText": "Mijn paklijst voor de alpaca-ervaring bij Alpacas Ibiza"
     }
   },
   "guestStories": {
@@ -357,12 +389,12 @@
     "readMore": "Lees meer beoordelingen op Facebook",
     "facebookBadge": "Facebook-beoordeling",
     "reviews": {
-      "sue": "Ik bezocht eind augustus en had een fantastische tijd! Ibiza heeft naast de muziek zoveel te bieden en ik zou een bezoek aan de prachtige alpaca's ten zeerste aanbevelen. Je kunt ze voeren en zoveel leren over deze geweldige dieren ❤️. Ik werd warm ontvangen en had een waardevolle ervaring. Ga ze bekijken - je zult van ze houden!",
-      "verena": "We bezochten de lieve, pluizige alpaca's. Een super aardig stel leidt je door de verblijven van de alpaca's met geweldige informatie over deze dieren. Je hebt de mogelijkheid om de dieren te voeren, aaien en zelfs een alpacakus te geven. De dieren zijn erg tam en zijn dolblij met je nabijheid en voer. Het was een geweldige ervaring en ik kan het iedereen aanbevelen die op Ibiza is. 🤗🥳",
+      "sue": "Ik bezocht eind augustus en had een fantastische tijd! Ibiza heeft naast de muziek zoveel te bieden en ik zou een bezoek aan de prachtige alpaca's ten zeerste aanbevelen. Je kunt ze voeren en zoveel leren over deze geweldige dieren â¤ï¸. Ik werd warm ontvangen en had een waardevolle ervaring. Ga ze bekijken - je zult van ze houden!",
+      "verena": "We bezochten de lieve, pluizige alpaca's. Een super aardig stel leidt je door de verblijven van de alpaca's met geweldige informatie over deze dieren. Je hebt de mogelijkheid om de dieren te voeren, aaien en zelfs een alpacakus te geven. De dieren zijn erg tam en zijn dolblij met je nabijheid en voer. Het was een geweldige ervaring en ik kan het iedereen aanbevelen die op Ibiza is. ðŸ¤—ðŸ¥³",
       "gemma": "Ik maakte een groepsboeking voor 6 personen voor vrijdag 9 mei. Bart nam contact op om te laten weten dat ze die dag gesloten waren omdat ze de alpaca's aan het scheren waren. Hij bood toen vriendelijk aan om ons de dag ervoor te ontvangen, ook al was de boerderij gesloten. De ervaring zelf was geweldig. Bart was heel kundig en vriendelijk en de alpaca's waren zo lief. Alle alpaca's worden heel goed verzorgd en zijn dol op Bart, wat laat zien hoeveel hij van ze houdt.",
       "renate": "Heel leuk om te doen met onze 2 jongens van 12 jaar oud maar eigenlijk leuk voor alle leeftijden. Wij wisten eigenlijk niets van Alpaca's, was heel interessant! precies een uur bezig geweest.",
-      "sven": "Sterk aanbevolen! Bart & San runnen een fantastische operatie. De ultieme Chill Out ervaring 🦙❤️🦙",
-      "paul": "Geweest op 23 september, geweldige tour, Bart is ontzettend kundig en vriendelijk. Als je een auto hebt is het een must 😀🦙"
+      "sven": "Sterk aanbevolen! Bart & San runnen een fantastische operatie. De ultieme Chill Out ervaring ðŸ¦™â¤ï¸ðŸ¦™",
+      "paul": "Geweest op 23 september, geweldige tour, Bart is ontzettend kundig en vriendelijk. Als je een auto hebt is het een must ðŸ˜€ðŸ¦™"
     }
   },
   "faq": {
@@ -390,7 +422,7 @@
     },
     "food": {
       "q": "Mogen we eten en drinken meebrengen?",
-      "a": "Eigen eten is niet toegestaan, maar we bieden biologische versnaperingen aan. We houden rekening met dieetbeperkingen — vermeld deze bij het boeken."
+      "a": "Eigen eten is niet toegestaan, maar we bieden biologische versnaperingen aan. We houden rekening met dieetbeperkingen â€” vermeld deze bij het boeken."
     },
     "booking": {
       "q": "Hoe boek ik een tour?",
@@ -401,12 +433,12 @@
       "a": "Annuleringen tot 48 uur voor de tour krijgen volledige terugbetaling of verplaatsing. Bij kortere termijn geldt een toeslag van 50%."
     },
     "private": {
-      "q": "Bieden jullie privé tours of groepsevenementen aan?",
-      "a": "Ja! We bieden privé boerderijervaringen, bruiloften, bedrijfsretreats en alpaca yoga sessies aan. Neem contact op voor op maat gemaakte pakketten."
+      "q": "Bieden jullie privÃ© tours of groepsevenementen aan?",
+      "a": "Ja! We bieden privÃ© boerderijervaringen, bruiloften, bedrijfsretreats en alpaca yoga sessies aan. Neem contact op voor op maat gemaakte pakketten."
     },
     "parking": {
       "q": "Is er parkeerruimte?",
-      "a": "Ja, gratis parkeren op het terrein. Plaatsen zijn beperkt — kom 15 minuten eerder om rustig te parkeren."
+      "a": "Ja, gratis parkeren op het terrein. Plaatsen zijn beperkt â€” kom 15 minuten eerder om rustig te parkeren."
     }
   },
   "backHome": "Terug naar Home",
@@ -424,7 +456,7 @@
         "description": "Maak je eigen unieke stuk met eigen kleuren en patronen"
       },
       "alcaca": {
-        "title": "Alcaca – Alpacamest",
+        "title": "Alcaca â€“ Alpacamest",
         "description": "Premium biologische meststof van onze alpaca's"
       }
     },
@@ -440,6 +472,26 @@
     "manure": {
       "title": "Alpacamest",
       "description": "Premium biologische meststof"
+    },
+    "metaTitle": "Winkel | Wishfulfilling Weaving & Alcaca — Alpacas Ibiza",
+    "metaDescription": "Handgeweven sjaals op traditionele houten weefgetouwen, op maat gemaakte bestellingen en Alcaca biologische meststof — allemaal van Es Currals, Ibiza's eerste alpacaboerderij.",
+    "priceOnRequest": "Prijs op aanvraag",
+    "cta": {
+      "addToCart": "In winkelwagen",
+      "notifyMe": "Houd mij op de hoogte",
+      "commission": "Bestellen op maat",
+      "wishlist": "Toevoegen aan verlanglijst",
+      "viewPiece": "Stuk bekijken"
+    },
+    "imageComingSoon": "Foto binnenkort beschikbaar",
+    "outOf5": "van 5 sterren",
+    "status": {
+      "madeToOrder": "Op bestelling gemaakt",
+      "soldOut": "Uitverkocht",
+      "lowStock": "Nog maar een paar beschikbaar"
+    },
+    "weaving": {
+      "carouselLabel": "Carrousel met weefstukken"
     }
   },
   "wovenPage": {
@@ -451,7 +503,10 @@
     "throw": "Natuurlijk Geverfd Plaid",
     "cushion": "Handgemaakte Kussenhoestje",
     "wallHanging": "Premium Wandtapijt",
-    "poncho": "Ecologische Poncho"
+    "poncho": "Ecologische Poncho",
+    "metaTitle": "Geweven Collectie | Wishfulfilling Weaving — Alpacas Ibiza",
+    "metaDescription": "Handgeweven alpacawollen sjaals, dekens en textiel op een traditioneel houten weefgetouw bij Es Currals, Ibiza. Elk stuk is uniek — informeer naar beschikbaarheid.",
+    "enquire": "Informeren"
   },
   "commissionPage": {
     "title": "Op Maat Bestelling",
@@ -461,42 +516,44 @@
     "email": "E-mailadres",
     "description": "Projectbeschrijving",
     "submit": "Aanvraag Indienen",
-    "sending": "Verzenden…",
-    "successMessage": "Bedankt! We bekijken je aanvraag en nemen snel contact op. 🦙",
-    "errorMessage": "Er ging iets mis. Probeer het opnieuw of e-mail ons rechtstreeks."
+    "sending": "Verzendenâ€¦",
+    "successMessage": "Bedankt! We bekijken je aanvraag en nemen snel contact op. ðŸ¦™",
+    "errorMessage": "Er ging iets mis. Probeer het opnieuw of e-mail ons rechtstreeks.",
+    "metaTitle": "Op Maat Bestelling | Wishfulfilling Weaving — Alpacas Ibiza",
+    "metaDescription": "Bestel een exclusief handgeweven stuk van San bij Es Currals, Ibiza. Kies je kleuren, patroon en afmetingen — op bestelling gemaakt op een traditioneel houten weefgetouw."
   },
   "alcacaPage": {
     "title": "Alcaca Oro Negro",
-    "metaTitle": "Alcaca Oro Negro | Alpacamest – Alpacas Ibiza",
-    "metaDescription": "Alcaca Oro Negro is natuurlijke alpacamest van Es Currals, Ibiza. In de Andes 'zwart goud' genoemd — geurloos, gebruiksklaar, verkrijgbaar van 125 g minizakjes tot bulkbestellingen.",
-    "subtitle": "Zwart goud uit de Andes — de zuiverste, vruchtbaarste natuurlijke meststof, gemaakt op Es Currals van onze eigen kudde.",
+    "metaTitle": "Alcaca Oro Negro | Alpacamest â€“ Alpacas Ibiza",
+    "metaDescription": "Alcaca Oro Negro is natuurlijke alpacamest van Es Currals, Ibiza. In de Andes 'zwart goud' genoemd â€” geurloos, gebruiksklaar, verkrijgbaar van 125 g minizakjes tot bulkbestellingen.",
+    "subtitle": "Zwart goud uit de Andes â€” de zuiverste, vruchtbaarste natuurlijke meststof, gemaakt op Es Currals van onze eigen kudde.",
     "orderNow": "Informeren",
     "storyTitle": "Zwart Goud",
-    "storyBody": "In Peru wordt alpacamest al eeuwenlang geprezen onder de naam 'Oro Negro' — zwart goud. Alpaca's zijn pseudo-herkauwers met drie maagsegmenten; hun vertering van 65 uur produceert de zuiverste en vruchtbaarste mest van alle diersoorten, in de vorm van kleine, geurloze zwarte bolletjes. Alcaca Oro Negro wordt gemaakt op Es Currals uit de mest van onze eigen kudde. Bart ontwierp en bouwde zelf een manueel filtersysteem om stenen, onkruid en zand te verwijderen. Het resultaat: gebruiksklare meststof die geen compostering nodig heeft, geen vliegen of insecten aantrekt en zelfs binnenshuis gebruikt kan worden. Werkt optimaal gedurende maanden tot jaren en is verkrijgbaar van 125 g minizakjes tot honderden kilogram.",
-    "photo1Alt": "Alcaca Oro Negro — zakjes alpacamest",
-    "photo2Alt": "Alcaca Oro Negro — close-up van het product",
-    "miniTier": "Minizakje — 125 g",
-    "bagTier": "Standaardzakjes — diverse maten",
-    "bulkTier": "Bulkbestelling — honderden kg",
+    "storyBody": "In Peru wordt alpacamest al eeuwenlang geprezen onder de naam 'Oro Negro' â€” zwart goud. Alpaca's zijn pseudo-herkauwers met drie maagsegmenten; hun vertering van 65 uur produceert de zuiverste en vruchtbaarste mest van alle diersoorten, in de vorm van kleine, geurloze zwarte bolletjes. Alcaca Oro Negro wordt gemaakt op Es Currals uit de mest van onze eigen kudde. Bart ontwierp en bouwde zelf een manueel filtersysteem om stenen, onkruid en zand te verwijderen. Het resultaat: gebruiksklare meststof die geen compostering nodig heeft, geen vliegen of insecten aantrekt en zelfs binnenshuis gebruikt kan worden. Werkt optimaal gedurende maanden tot jaren en is verkrijgbaar van 125 g minizakjes tot honderden kilogram.",
+    "photo1Alt": "Alcaca Oro Negro â€” zakjes alpacamest",
+    "photo2Alt": "Alcaca Oro Negro â€” close-up van het product",
+    "miniTier": "Minizakje â€” 125 g",
+    "bagTier": "Standaardzakjes â€” diverse maten",
+    "bulkTier": "Bulkbestelling â€” honderden kg",
     "enquire": "Informeren",
     "whyTitle": "Waarom Alcaca Oro Negro?",
-    "benefit1": "De zuiverste, vruchtbaarste mest van alle diersoorten — kleine, geurloze zwarte bolletjes",
+    "benefit1": "De zuiverste, vruchtbaarste mest van alle diersoorten â€” kleine, geurloze zwarte bolletjes",
     "benefit2": "Gebruiksklaar uit het zakje: geen compostering, geen vliegen, geen onaangename geur",
     "benefit3": "Werkt optimaal gedurende maanden tot jaren op groenten, bloemen, kruiden en bomen",
-    "benefit4": "Manueel gefilterd op Es Currals — stenen, onkruid en zand met de hand verwijderd"
+    "benefit4": "Manueel gefilterd op Es Currals â€” stenen, onkruid en zand met de hand verwijderd"
   },
   "about": {
     "title": "Over Alpacas Ibiza",
     "storyTitle": "Ons Verhaal",
-    "storyText": "Es Currals Alpacas Ibiza is het geesteskind van het Belgisch echtpaar San & Bart. Toen ze jaren geleden door de weefpassie van San voor het eerst in contact kwamen met alpaca's en hun wonderlijke wol, begonnen ze te dromen van een eigen alpacaboerderij. Daar kwam al snel een tweede droom bij: verhuizen naar het paradijselijke eiland Ibiza. Dromen werden wensen en plannen en op 10 augustus 2019 eindelijk ook bewaarheid: na jaren research en maanden hard labeur om de finca 'alpacaklaar' te maken arriveerden in de vroege ochtenduren vanuit België 5 prachtige alpaca's in Ibiza. Mojo, Lewis, Marrón, Dusty en Barbarella kregen in een feeëriek decor op en rond een traditionele Ibicenco-finca temidden van de wilde natuur in Noord-Ibiza een nieuwe thuis: Es Currals Alpacas Ibiza. De boerderij werd van meet af aan enthousiast verwelkomd door Maria, een 81-jarige plaatselijke Ibicenka wier familie al generaties lang vee hield op het land. De naam 'Es Currals' is afkomstig van het Catalaanse woord voor de stenen dierenstallen op historische Ibicenco-boerderijen — een eerbetoon aan Maria en de gemeenschap van Noord-Ibiza. Intussen is de kudde aanzienlijk uitgegroeid: dekhengst Lewis zorgde voor drie cria's (Chet, Toots en Bardot) en in de lente van 2021 kwamen er nog zes nieuwe alpaca's van onze Belgische kweker Alpaca Flanders bij, zodat er momenteel veertien alpaca's genieten van het Ibiza-zonnetje.",
+    "storyText": "Es Currals Alpacas Ibiza is het geesteskind van het Belgisch echtpaar San & Bart. Toen ze jaren geleden door de weefpassie van San voor het eerst in contact kwamen met alpaca's en hun wonderlijke wol, begonnen ze te dromen van een eigen alpacaboerderij. Daar kwam al snel een tweede droom bij: verhuizen naar het paradijselijke eiland Ibiza. Dromen werden wensen en plannen en op 10 augustus 2019 eindelijk ook bewaarheid: na jaren research en maanden hard labeur om de finca 'alpacaklaar' te maken arriveerden in de vroege ochtenduren vanuit BelgiÃ« 5 prachtige alpaca's in Ibiza. Mojo, Lewis, MarrÃ³n, Dusty en Barbarella kregen in een feeÃ«riek decor op en rond een traditionele Ibicenco-finca temidden van de wilde natuur in Noord-Ibiza een nieuwe thuis: Es Currals Alpacas Ibiza. De boerderij werd van meet af aan enthousiast verwelkomd door Maria, een 81-jarige plaatselijke Ibicenka wier familie al generaties lang vee hield op het land. De naam 'Es Currals' is afkomstig van het Catalaanse woord voor de stenen dierenstallen op historische Ibicenco-boerderijen â€” een eerbetoon aan Maria en de gemeenschap van Noord-Ibiza. Intussen is de kudde aanzienlijk uitgegroeid: dekhengst Lewis zorgde voor drie cria's (Chet, Toots en Bardot) en in de lente van 2021 kwamen er nog zes nieuwe alpaca's van onze Belgische kweker Alpaca Flanders bij, zodat er momenteel veertien alpaca's genieten van het Ibiza-zonnetje.",
     "valuesTitle": "Onze Waarden",
     "weavingTitle": "Wishfulfilling Weaving",
     "weavingSubtitle": "Made in Ibiza, embracing the world",
-    "weavingDescription": "San raakte in 2013 in de ban van het weven. Ze begon met kleine tafelweefgetouwen en investeerde vervolgens in een traditioneel Zweeds houten weefgetouw van een 92-jarige meester-wever die haar privélessen gaf — ze behield de originele naam van het getouw: Big Ben. Elke stap van scheren tot afgewerkt doek wordt met de hand gedaan op Es Currals. San wast en kaard de vacht met de hand, spint het garen en verft het met natuurlijke plantenextracten — hibiscus, avocado en andere bloemen. Ze weeft op Big Ben met eeuwenoude patronen uit historische manuscripten, gecombineerd met hedendaagse mode. Elke Wishfulfilling Weaving-creatie is een uniek, niet te dupliceren kunstwerk, op bestelling gemaakt.",
+    "weavingDescription": "San raakte in 2013 in de ban van het weven. Ze begon met kleine tafelweefgetouwen en investeerde vervolgens in een traditioneel Zweeds houten weefgetouw van een 92-jarige meester-wever die haar privÃ©lessen gaf â€” ze behield de originele naam van het getouw: Big Ben. Elke stap van scheren tot afgewerkt doek wordt met de hand gedaan op Es Currals. San wast en kaard de vacht met de hand, spint het garen en verft het met natuurlijke plantenextracten â€” hibiscus, avocado en andere bloemen. Ze weeft op Big Ben met eeuwenoude patronen uit historische manuscripten, gecombineerd met hedendaagse mode. Elke Wishfulfilling Weaving-creatie is een uniek, niet te dupliceren kunstwerk, op bestelling gemaakt.",
     "handcraftedBadge": "Handgemaakt op Ibiza",
     "welfare": {
       "title": "Dierenwelzijn",
-      "description": "De gezondheid en levenskwaliteit van onze alpaca's is voor ons het allerbelangrijkste — altijd."
+      "description": "De gezondheid en levenskwaliteit van onze alpaca's is voor ons het allerbelangrijkste â€” altijd."
     },
     "sustainability": {
       "title": "Duurzaamheid",
@@ -508,25 +565,25 @@
     },
     "community": {
       "title": "Gemeenschap",
-      "description": "Geworteld in Noord-Ibiza — vernoemd naar Maria, de plaatselijke vrouw wier land de boerderij haar thuis gaf."
+      "description": "Geworteld in Noord-Ibiza â€” vernoemd naar Maria, de plaatselijke vrouw wier land de boerderij haar thuis gaf."
     },
     "metaTitle": "Over Alpacas Ibiza - Es Currals Boerderij"
   },
   "sustainability": {
     "title": "Duurzaamheid",
-    "subtitle": "Hoe we leven en werken op Es Currals — dierenwelzijn, traditioneel ambacht en landbouw met minimale impact.",
+    "subtitle": "Hoe we leven en werken op Es Currals â€” dierenwelzijn, traditioneel ambacht en landbouw met minimale impact.",
     "welfareTitle": "Dierenwelzijn",
     "welfareBody": "De gezondheid en levenskwaliteit van onze alpaca's is voor ons het allerbelangrijkste. Alpaca's zijn populair en onweerstaanbaar schattige dieren, maar als duurzaam ecobedrijf maken we er een punt van om de impact op zowel onze dieren als hun natuurlijke omgeving zo minimaal mogelijk te houden. Onze alpacaboerderij is geen zoo of circus en onze alpaca's zijn geen circusdieren: Es Currals Alpacas Ibiza is een privaat familiebedrijf. Bezoeken zijn uitsluitend op afspraak, precies om de stress voor de kudde tot een minimum te beperken.",
     "craftTitle": "Traditioneel Weven",
-    "craftBody": "Alpaca's worden slechts eenmaal per jaar geschoren, dus elk plukje vacht is bijna letterlijk goud waard. San verwerkt alles met de hand in het Wishfulfilling Weaving-atelier: de rauwe vacht handmatig wassen en kaarden, het garen spinnen en weven op Big Ben — een traditioneel Zweeds houten weefgetouw. Ze werkt met eeuwenoude patronen uit historische manuscripten, gecombineerd met hedendaags design. Elk stuk is uniek, niet te dupliceren, op bestelling gemaakt, 100% duurzaam.",
+    "craftBody": "Alpaca's worden slechts eenmaal per jaar geschoren, dus elk plukje vacht is bijna letterlijk goud waard. San verwerkt alles met de hand in het Wishfulfilling Weaving-atelier: de rauwe vacht handmatig wassen en kaarden, het garen spinnen en weven op Big Ben â€” een traditioneel Zweeds houten weefgetouw. Ze werkt met eeuwenoude patronen uit historische manuscripten, gecombineerd met hedendaags design. Elk stuk is uniek, niet te dupliceren, op bestelling gemaakt, 100% duurzaam.",
     "dyesTitle": "Natuurlijke Verfstoffen",
-    "dyesBody": "Het weefatelier gebruikt lokale flora om de wol te verven via traditionele methoden. Hibiscus, avocado en andere planten- en bloemenextracten geven het palet zijn warmte. Geen synthetische chemische verfstoffen en geen machinale verwerking — elke kleur komt rechtstreeks uit de natuur. Het doel is de historische textieltradities van Ibiza nieuw leven in te blazen via praktijkworkshops over wolverwerking en natuurlijk verven.",
+    "dyesBody": "Het weefatelier gebruikt lokale flora om de wol te verven via traditionele methoden. Hibiscus, avocado en andere planten- en bloemenextracten geven het palet zijn warmte. Geen synthetische chemische verfstoffen en geen machinale verwerking â€” elke kleur komt rechtstreeks uit de natuur. Het doel is de historische textieltradities van Ibiza nieuw leven in te blazen via praktijkworkshops over wolverwerking en natuurlijk verven.",
     "wasteTitle": "Zero-Waste Aanpak",
-    "wasteBody": "Niets van de alpaca's gaat verloren. Vacht die niet in het weefwerk gaat, keert terug naar de aarde via Alcaca Oro Negro — onze eigen alpacamestmeststof. Alpacamest is de zuiverste en vruchtbaarste mest van alle diersoorten: kleine, geurloze zwarte pellets die in Peru 'Oro Negro' (Zwart Goud) worden genoemd. Bart filtert elk batch handmatig om stenen, onkruid en zand te verwijderen. Direct bruikbaar — geen compostering nodig — en effectief gedurende maanden tot jaren.",
+    "wasteBody": "Niets van de alpaca's gaat verloren. Vacht die niet in het weefwerk gaat, keert terug naar de aarde via Alcaca Oro Negro â€” onze eigen alpacamestmeststof. Alpacamest is de zuiverste en vruchtbaarste mest van alle diersoorten: kleine, geurloze zwarte pellets die in Peru 'Oro Negro' (Zwart Goud) worden genoemd. Bart filtert elk batch handmatig om stenen, onkruid en zand te verwijderen. Direct bruikbaar â€” geen compostering nodig â€” en effectief gedurende maanden tot jaren.",
     "landTitle": "Het Land",
     "landBody": "[UNMAPPED: bevestig de oppervlakte van de finca in hectare voor publicatie] Es Currals is een authentieke Ibicenco-finca in het landelijke noorden van het eiland, omgeven door wilde natuur. De alpaca's grazen er vrij; hun mest voedt de bodem zonder kunstmest of pesticiden.",
     "sourcingTitle": "Verantwoorde Inkoop",
-    "sourcingBody": "Wanneer San materialen nodig heeft buiten onze eigen vacht — linnen, mohair, zijde voor bepaalde opdrachten — betrekt ze die bij leveranciers die de waarden van de boerderij delen. Elke creatie is 100% natuurlijke materialen, ontworpen voor blijvende duurzaamheid. Nooit snel, nooit goedkoop.",
+    "sourcingBody": "Wanneer San materialen nodig heeft buiten onze eigen vacht â€” linnen, mohair, zijde voor bepaalde opdrachten â€” betrekt ze die bij leveranciers die de waarden van de boerderij delen. Elke creatie is 100% natuurlijke materialen, ontworpen voor blijvende duurzaamheid. Nooit snel, nooit goedkoop.",
     "trustSectionTitle": "Meer weten over Es Currals",
     "trustAbout": "Ons Verhaal",
     "trustPress": "Persaandacht",
@@ -543,15 +600,38 @@
     "subject": "Onderwerp",
     "message": "Bericht",
     "send": "Bericht Verzenden",
-    "sending": "Verzenden…",
-    "successMessage": "Bedankt! We nemen snel contact met je op. 🦙",
+    "sending": "Verzendenâ€¦",
+    "successMessage": "Bedankt! We nemen snel contact met je op. ðŸ¦™",
     "errorMessage": "Er ging iets mis. Probeer het opnieuw of e-mail ons rechtstreeks.",
     "infoTitle": "Contactinformatie",
     "location": "Locatie",
     "phone": "Telefoon",
     "emailLabel": "E-mail",
     "hours": "Openingstijden",
-    "byAppointment": "Alleen op afspraak"
+    "byAppointment": "Alleen op afspraak",
+    "metaTitle": "Contact Alpacas Ibiza | San Carlos Boerderij — Neem Contact Op",
+    "mapHeading": "Hoe ons te vinden",
+    "mapIframeTitle": "Kaart met locatie van Alpacas Ibiza",
+    "mapLargerLabel": "Grotere kaart bekijken →",
+    "gettingHere": {
+      "heading": "Hoe kom je hier",
+      "byCar": {
+        "title": "Met de auto",
+        "body": "Gelegen in San Carlos, op korte rijafstand van Ibiza Town en Santa Eulàlia. Gratis parkeren ter plaatse. Neem contact op voor actuele reistijden."
+      },
+      "fromAirport": {
+        "title": "Vanaf het vliegveld",
+        "body": "Ibiza Airport (IBZ) is op korte rijafstand. Taxis beschikbaar bij de standplaats; geen reservering nodig. Neem contact op voor actuele reistijden."
+      },
+      "transit": {
+        "title": "Openbaar vervoer",
+        "body": "Bekijk ibizabus.com voor actuele routes en dienstregelingen. Een huurauto of taxi is aanbevolen voor het laatste stuk naar de boerderij."
+      },
+      "coordinates": {
+        "title": "Coördinaten & navigatie",
+        "body": "GPS: 38.9861° N, 1.5228° O. Zoek «Alpacas Ibiza, San Carlos» in Google Maps of Apple Maps."
+      }
+    }
   },
   "footer": {
     "tagline": "Ibiza's eerste alpacaboerderij en ambachtelijk weefstudio",
@@ -565,14 +645,19 @@
     "privacy": "Privacybeleid",
     "terms": "Servicevoorwaarden",
     "cookies": "Cookiebeleid",
-    "copyright": "Alle rechten voorbehouden."
+    "copyright": "Alle rechten voorbehouden.",
+    "impressum": "Juridische kennisgeving",
+    "googleReview": "Beoordeel ons op Google",
+    "adopt": "Adopteer een Alpaca",
+    "sustainability": "Duurzaamheid",
+    "journal": "Dagboek"
   },
   "corporate": {
     "title": "Bedrijfsretreats & Teambuilding",
     "subtitle": "Ontkoppel om te verbinden. Breng je team naar het rustige platteland van Ibiza voor een unieke bondingervaring met onze alpacakudde.",
     "cta": "Informatie voor Teams",
     "whyTitle": "Waarom Alpaca's voor Teambuilding?",
-    "whyText": "Alpaca's zijn gevoelige, kalmerende dieren die menselijke energie weerspiegelen. Interactie met hen vereist geduld, observatie en non-verbale communicatie — perfecte vaardigheden voor effectief teamwerk.",
+    "whyText": "Alpaca's zijn gevoelige, kalmerende dieren die menselijke energie weerspiegelen. Interactie met hen vereist geduld, observatie en non-verbale communicatie â€” perfecte vaardigheden voor effectief teamwerk.",
     "features": {
       "stress": {
         "title": "Stressvermindering",
@@ -622,8 +707,8 @@
   },
   "romantic": {
     "title": "Romantische Zonsondergangswandelingen",
-    "subtitle": "Het gouden uur met de alpaca's. Een privé, intieme ervaring voor koppels in het hart van Ibiza.",
-    "cta": "Boek Privé Zonsondergangstour",
+    "subtitle": "Het gouden uur met de alpaca's. Een privÃ©, intieme ervaring voor koppels in het hart van Ibiza.",
+    "cta": "Boek PrivÃ© Zonsondergangstour",
     "quote": "\"De meest magische date die we ooit hebben gehad.\"",
     "description": "Ontvlucht de drukte. Alleen jij, je partner en onze zachte alpaca's die door de sinaasappelboomgaarden wandelen terwijl de zon achter de heuvels zakt.",
     "champagne": {
@@ -636,18 +721,19 @@
     },
     "privacy": {
       "title": "Privacy",
-      "desc": "Strikt privé tours beschikbaar op aanvraag."
+      "desc": "Strikt privÃ© tours beschikbaar op aanvraag."
     },
     "proposalTitle": "Perfect voor Huwelijksaanzoeken",
     "proposalText": "Denk je erover om de vraag te stellen? We kunnen helpen het perfecte moment te orkestreren met de alpaca's als je getuigen.",
-    "proposalCta": "Neem Contact Op om te Plannen"
+    "proposalCta": "Neem Contact Op om te Plannen",
+    "metaTitle": "Romantische Zonsondergangswandeling met Alpacas | Koppels — Alpacas Ibiza"
   },
   "family": {
     "title": "Familie Boerderijdagen",
     "subtitle": "Laat je kinderen de vreugde van dieren ontdekken. Veilig, educatief en leuk voor alle leeftijden.",
     "cta": "Boek Familiebezoek",
     "educationTitle": "Educatie Ontmoet Schattigheid",
-    "educationText": "Onze boerderij is niet zomaar een kinderboerderij — het is een educatieve ervaring. Kinderen leren:",
+    "educationText": "Onze boerderij is niet zomaar een kinderboerderij â€” het is een educatieve ervaring. Kinderen leren:",
     "points": {
       "respect": "Respect: Hoe je dieren voorzichtig benadert.",
       "biology": "Biologie: Waarom alpaca's zachte vacht en kussentjes hebben in plaats van hoeven.",
@@ -664,7 +750,7 @@
         "desc": "Paden zijn toegankelijk voor stevige buggy's."
       },
       "hygiene": {
-        "title": "Hygiëne",
+        "title": "HygiÃ«ne",
         "desc": "Handwasstations beschikbaar."
       },
       "refreshments": {
@@ -716,7 +802,7 @@
       "Wettelijke vereisten (wanneer wettelijk verplicht)"
     ],
     "section4Title": "4. Cookies & Tracking",
-    "section4Text": "We gebruiken cookies om je ervaring te verbeteren. Essentiële cookies zijn noodzakelijk voor de functionaliteit. Je kunt cookievoorkeuren beheren in je browser of ons cookiebanner.",
+    "section4Text": "We gebruiken cookies om je ervaring te verbeteren. EssentiÃ«le cookies zijn noodzakelijk voor de functionaliteit. Je kunt cookievoorkeuren beheren in je browser of ons cookiebanner.",
     "section5Title": "5. Je Rechten",
     "section5Intro": "Je hebt het recht om:",
     "section5Items": [
@@ -811,7 +897,7 @@
     "whatTitle": "Wat Zijn Cookies?",
     "whatText": "Cookies zijn kleine tekstbestanden die in je browser worden opgeslagen. Ze helpen websites je voorkeuren te onthouden en bij te houden hoe je de site gebruikt.",
     "typesTitle": "Soorten Cookies die We Gebruiken",
-    "essentialTitle": "Essentiële Cookies",
+    "essentialTitle": "EssentiÃ«le Cookies",
     "essentialText": "Vereist voor het functioneren van de website. Deze omvatten:",
     "essentialItems": [
       "Sessiecookies (voor je boeking)",
@@ -830,7 +916,7 @@
     "marketingText": "Worden gebruikt voor retargeting-advertenties en remarketingcampagnes. Je kunt je op elk moment afmelden.",
     "choicesTitle": "Je Cookiekeuzes",
     "choicesItems": [
-      "Essentiële cookies: Kunnen niet worden uitgeschakeld (vereist voor sitefunctie)",
+      "EssentiÃ«le cookies: Kunnen niet worden uitgeschakeld (vereist voor sitefunctie)",
       "Analyse & Marketing: Uitschakelen via ons cookiebanner",
       "Browserinstellingen: De meeste browsers staan cookiebeheer toe",
       "Afmelden: Gebruik de \"Niet volgen\"-instelling van je browser"
@@ -854,7 +940,7 @@
     "gdprTitle": "AVG-Naleving",
     "gdprText": "We voldoen aan de AVG en ePrivacy-regelgeving. We:",
     "gdprItems": [
-      "Plaatsen niet-essentiële cookies alleen met je toestemming",
+      "Plaatsen niet-essentiÃ«le cookies alleen met je toestemming",
       "Verstrekken duidelijke cookie-informatie",
       "Staan eenvoudige afmelding toe",
       "Respecteren je privacykeuzes"
@@ -891,18 +977,29 @@
   "journal": {
     "title": "Dagboek",
     "backToJournal": "Terug naar het dagboek",
-    "relatedTitle": "Meer van"
+    "relatedTitle": "Meer van",
+    "subtitle": "Verhalen van de boerderij — leven met de kudde, weefritmes, seizoensnotities.",
+    "emptyTitle": "Verhalen binnenkort beschikbaar",
+    "emptyBody": "Volg ons op Instagram voor updates terwijl we het dagboek voorbereiden.",
+    "emptyCtaHref": "/contact",
+    "emptyCtaLabel": "Neem contact op →",
+    "ownerConfirmHeader": "Eigenaar: voeg berichten toe om te activeren",
+    "ownerConfirmBody": "Voeg vermeldingen toe aan lib/data/journal.ts met status: 'live'. Plaats hero-afbeeldingen op public/images/journal/<slug>.webp. Lege status wordt openbaar weergegeven tot die tijd.",
+    "latestTitle": "Laatste uit het dagboek",
+    "latestSubtitle": "Veldnotities van de kudde, het atelier en de finca.",
+    "readAll": "Alle verhalen lezen",
+    "minRead": "min lezen"
   },
   "share": {
     "label": "Delen",
-    "copyLink": "Link kopiëren",
+    "copyLink": "Link kopiÃ«ren",
     "copied": "Gekopieerd!",
     "whatsapp": "Delen via WhatsApp",
     "twitter": "Delen op X",
     "facebook": "Delen op Facebook"
   },
   "weaving": {
-    "title": "Wishfulfilling Weaving — Atelier op Es Currals",
+    "title": "Wishfulfilling Weaving â€” Atelier op Es Currals",
     "subhead": "Handgeweven sjaals van de wol van onze kudde. Traditioneel houten weefgetouw. Langzaam ambacht, voornamelijk alpaca, gemaakt op de boerderij.",
     "collectionCta": "Onze collectie",
     "commissionCta": "Commissie aanvragen",
@@ -910,20 +1007,20 @@
     "processStep1Title": "Scheren",
     "processStep1Body": "Elk voorjaar worden de alpacas met de hand geschoren op Es Currals. De zachte vliesjes worden per dier zorgvuldig bewaard.",
     "processStep2Title": "Wassen & Kaarden",
-    "processStep2Body": "San wast en kaard het vlies met de hand. Geen industrieel proces — pure ambachtelijkheid.",
+    "processStep2Body": "San wast en kaard het vlies met de hand. Geen industrieel proces â€” pure ambachtelijkheid.",
     "processStep3Title": "Spinnen & Verven",
-    "processStep3Body": "Het garen wordt gesponnen en geverd met natuurlijke plantenextracten — hibiscus, avocado en andere bloemen.",
+    "processStep3Body": "Het garen wordt gesponnen en geverd met natuurlijke plantenextracten â€” hibiscus, avocado en andere bloemen.",
     "processStep4Title": "Weven op Big Ben",
     "processStep4Body": "San weeft op een traditioneel Zweeds houten weefgetouw genaamd Big Ben, met eeuwenoude patronen uit historische manuscripten, gecombineerd met hedendaagse mode.",
     "studioHistoryTitle": "Het Atelier",
-    "studioHistoryBody": "San raakte in 2013 in de ban van het weven. Ze begon met kleine tafelweefgetouwen en investeerde vervolgens in een traditioneel Zweeds houten weefgetouw van een 92-jarige meester-wever die haar priveles gaf en de naam Big Ben gaf aan het getouw. Elke stap van scheren tot afgewerkt doek wordt met de hand gedaan op Es Currals. Zachter dan zijde, zeldzamer dan cashmere, warmer dan schapenwol — en hypoallergeen.",
-    "photoStudio": "[UNMAPPED – foto atelier interieur]",
-    "photoLoom": "[UNMAPPED – foto weefgetouw in actie]",
-    "photoScarves": "[UNMAPPED – foto afgewerkte sjaals]",
+    "studioHistoryBody": "San raakte in 2013 in de ban van het weven. Ze begon met kleine tafelweefgetouwen en investeerde vervolgens in een traditioneel Zweeds houten weefgetouw van een 92-jarige meester-wever die haar priveles gaf en de naam Big Ben gaf aan het getouw. Elke stap van scheren tot afgewerkt doek wordt met de hand gedaan op Es Currals. Zachter dan zijde, zeldzamer dan cashmere, warmer dan schapenwol â€” en hypoallergeen.",
+    "photoStudio": "[UNMAPPED â€“ foto atelier interieur]",
+    "photoLoom": "[UNMAPPED â€“ foto weefgetouw in actie]",
+    "photoScarves": "[UNMAPPED â€“ foto afgewerkte sjaals]",
     "ownerConfirmHeader": "Eigenaar bevestiging vereist",
     "ownerConfirmBody": "De volgende items zijn nog niet bevestigd door de eigenaar en moeten worden aangevuld voor de lancering:",
     "collectionTitle": "One With Nature",
-    "collectionSubhead": "Made in Ibiza, embracing the world — Ontdek onze eigen collectie",
+    "collectionSubhead": "Made in Ibiza, embracing the world â€” Ontdek onze eigen collectie",
     "enquireCta": "Aanvraag doen",
     "priceOnRequest": "Prijs op aanvraag",
     "crossSellYogaTitle": "Yoga bij de Alpacas",
@@ -933,7 +1030,7 @@
   },
   "error": {
     "title": "Er is iets misgegaan",
-    "subtitle": "Het lijkt erop dat een van onze alpaca's met de pagina is weggelopen. Ons team is op de hoogte gesteld — probeer het opnieuw of ga terug naar huis.",
+    "subtitle": "Het lijkt erop dat een van onze alpaca's met de pagina is weggelopen. Ons team is op de hoogte gesteld â€” probeer het opnieuw of ga terug naar huis.",
     "tryAgain": "Opnieuw proberen",
     "goHome": "Terug naar huis",
     "goTours": "Tours bekijken",
@@ -941,21 +1038,43 @@
     "errorRef": "Foutreferentie"
   },
   "adopt": {
-    "canceledBody": "Geen zorgen — je adoptie is niet verwerkt. Je kunt het op elk moment opnieuw proberen.",
-    "cancelledHeading": "Geen kosten — je adoptie is niet voltooid",
-    "cancelledFullBody": "Je hebt het afrekenvenster gesloten voordat je betaalde. Er is geen betaling afgeschreven. Je alpaca is nog beschikbaar — kom terug wanneer je er klaar voor bent.",
+    "canceledBody": "Geen zorgen â€” je adoptie is niet verwerkt. Je kunt het op elk moment opnieuw proberen.",
+    "cancelledHeading": "Geen kosten â€” je adoptie is niet voltooid",
+    "cancelledFullBody": "Je hebt het afrekenvenster gesloten voordat je betaalde. Er is geen betaling afgeschreven. Je alpaca is nog beschikbaar â€” kom terug wanneer je er klaar voor bent.",
     "cancelledTryAgain": "Opnieuw proberen",
     "cancelledTellUs": "Vertel ons wat er is gebeurd",
     "thankYou": {
       "calendarDownload": "Voeg verlenging toe aan je agenda",
-      "calendarHint": "Krijg een herinnering 7 dagen ervoor — geen onverwachte afschrijvingen"
+      "calendarHint": "Krijg een herinnering 7 dagen ervoor â€” geen onverwachte afschrijvingen",
+      "welcome": "Welkom bij de kudde",
+      "welcomeNamed": "Welkom bij de kudde, {name}!",
+      "tierMonthly": "Jouw €75/maand adoptie is nu actief.",
+      "tierYearly": "Jouw €900 jaarlijkse adoptie (12 maanden dekking) is nu actief.",
+      "whatsNext": "Wat er daarna gebeurt",
+      "stepNow": "Nu: een welkomstmail is in jouw inbox geland met jouw adoptiegegevens (controleer spam als je het niet binnen 2 minuten ziet).",
+      "step24h": "Binnen 24 uur: een vervolgmail met jouw ondersteunerscortingcodes (10% Wishfulfilling Weaving, 15% Boerderijwinkel).",
+      "stepThisWeek": "Deze week: we kennen je persoonlijk een kuddelid toe en sturen hun naam + foto.",
+      "stepEachMonth": "Elke maand: foto + update van jouw geadopteerde alpaca, plus een open uitnodiging om Es Currals te bezoeken.",
+      "downloadCert": "Jouw certificaat downloaden (PDF)",
+      "backToFarm": "Terug naar de boerderij →",
+      "pendingCopy": "Jouw betaling wordt verwerkt. SEPA-bankoverschrijvingen duren 1–5 werkdagen — jouw welkomstmail arriveert zodra het bedrag is bijgeschreven.",
+      "pendingBadge": "Betaling wordt verwerkt",
+      "pendingDetail": "Jouw bank bevestigt de overboeking. We sturen je een e-mail zodra het is verwerkt (meestal 1–2 werkdagen voor SEPA).",
+      "alpacaLine": "Je hebt {name} geadopteerd",
+      "needHelpPrefix": "Hulp nodig? Bereik het team via",
+      "orWhatsApp": "of"
     },
     "legal": {
       "withdrawalWaiver": "Ik ga er uitdrukkelijk mee akkoord dat mijn adoptie onmiddellijk begint en erken dat ik mijn 14-daagse herroepingsrecht verlies zodra de prestatie begint. (Vereist door EU-richtlijn 2011/83 art. 16(m).)",
       "waiverRequired": "Accepteer de bovenstaande herroepingsverklaring om door te gaan naar betaling."
     },
     "share": {
-      "message": "Ik heb zojuist {name} geadopteerd bij Alpacas Ibiza!"
+      "message": "Ik heb zojuist {name} geadopteerd bij Alpacas Ibiza!",
+      "heading": "Vertel het aan de wereld",
+      "sub": "Een snelle share helpt de boerderij — en laat jouw vrienden de kudde ontmoeten.",
+      "copyLink": "Link kopiëren",
+      "copied": "Gekopieerd!",
+      "nativeButton": "Delen"
     },
     "campaign": {
       "daysLeft": "{count, plural, =0 {Laatste uren} one {Nog # dag} other {Nog # dagen}}",
@@ -970,36 +1089,257 @@
       "plenty": "{remaining, plural, one {# van {total} beschikbaar.} other {# van {total} beschikbaar.}}",
       "ariaEmpty": "Adoptantenenteller",
       "ariaPopulated": "{adopted} van {total} alpacas hebben een sponsor ({pct} procent)."
-    }
+    },
+    "title": "Adopteer een Alpaca",
+    "subtitle": "Steun Ibiza's eerste alpacaboerderij en word deel van de Es Currals kudde. Kies maandelijks of jaarlijks — jouw steun houdt de boerderij bloeiend.",
+    "tierLabel": "Kies je adoptieplan",
+    "monthlyTierTagline": "Op elk moment opzegbaar",
+    "yearlyTierTagline": "Zelfde totaal als maandelijks, vooraf betaald — geen terugkerende kosten",
+    "yearlyTierBadge": "Meest betrokken",
+    "monthlyPrice": "€75 / maand",
+    "yearlyPrice": "€900 / jaar",
+    "benefitsTitle": "Wat is inbegrepen",
+    "benefitsIntro": "Elke adoptie steunt de kudde en geeft je een jaar voordelen — van gratis boerderijbezoeken tot handgemaakte producten van onze wevers.",
+    "benefit1": "Officieel adoptiecertificaat met de naam van je geadopteerde alpaca",
+    "benefit2": "Zes gratis boerderijbezoeken per jaar (tot 4 gasten per bezoek)",
+    "benefit3": "5 kg Alcaca biologische alpacamestmeststof per seizoen verzonden",
+    "benefit4": "Welkomstpakket: kalender, agenda, sleutelhanger, ingelijste foto",
+    "benefit5": "Professionele fotosessie met jouw alpaca",
+    "benefit6": "10% korting op Wishfulfilling Weaving textiel",
+    "benefit7": "15% korting op de Alpacas Ibiza Boerderijwinkel",
+    "alpacaGridTitle": "Kies je alpaca",
+    "alpacaGridSubtitle": "",
+    "alpacaUnmappedBio": "",
+    "pickerHeading": "Kies jouw alpaca",
+    "pickerSubheading": "Kies een specifieke alpaca om te steunen, of laat ons jou koppelen aan een van de kudde.",
+    "pickerRandomLabel": "Kies voor mij",
+    "ctaLabel": "Adopteer nu",
+    "ctaSubtext": "Veilig afrekenen via Mollie. Je ontvangt een welkomstmail en adoptiecertificaat binnen enkele dagen.",
+    "faqTitle": "Vragen over adoptie",
+    "faqSubtitle": "Snelle antwoorden op de vragen die adopters het meest stellen.",
+    "faqQ1": "Hoe lang duurt de adoptie?",
+    "faqA1": "Eén volledig jaar vanaf de dag van betaling. Je voordelen (gratis bezoeken, fotosessie, mestleveringen) zijn geldig gedurende dat hele jaar.",
+    "faqQ2": "Kan ik een maandelijkse adoptie annuleren?",
+    "faqA2": "Ja, op elk moment. Gebruik het abonnementsportaal onderaan deze pagina om te annuleren — je behoudt toegang tot de voordelen die je al hebt gebruikt. Jaarlijkse adopties worden vooraf betaald en zijn niet restitueerbaar, maar je behoudt alle voordelen.",
+    "faqQ3": "Kan ik mijn geadopteerde alpaca bezoeken?",
+    "faqA3": "Absoluut — dat is het punt. Jouw adoptie omvat 6 gratis boerderijbezoeken per jaar (tot 4 gasten per bezoek). Je ontmoet jouw alpaca en de rest van de kudde.",
+    "faqQ4": "Wat als ik een specifieke alpaca kies?",
+    "faqA4": "Jouw certificaat vermeldt die alpaca en je welkomstmail noemt ze. Als je \"Kies voor mij\" kiest, koppelen we je aan een van de kudde en laten we je dat binnen enkele dagen weten.",
+    "faqQ5": "Verzenden jullie de meststof internationaal?",
+    "faqA5": "Binnen Spanje, ja — inbegrepen in de prijs. Voor andere EU-landen dekken we de verzending tot een redelijk bedrag; buiten de EU vragen we om hulp met de porto. Neem contact op voor het adopteren als verzending een punt van zorg is.",
+    "faqQ6": "Is dit een cadeau?",
+    "faqA6": "Je kunt adoptieren namens iemand anders — vul bij het afrekenen hun naam en e-mailadres in. Zij ontvangen de welkomstmail en het certificaat. Neem eerst contact op als je de ontvangst wilt afstemmen op een verjaardag of feestdag.",
+    "faqQ7": "Welke betaalmethoden accepteren jullie?",
+    "faqA7": "Alle grote kaarten (Visa, Mastercard, Amex), Apple Pay, Google Pay, iDEAL, Bancontact en SEPA-incasso. Allemaal verwerkt via Mollie — wij zien nooit jouw kaart- of rekeninggegevens.",
+    "certPreviewTitle": "Jouw adoptiecertificaat",
+    "certPreviewSubtitle": "Een gepersonaliseerd certificaat wordt verzonden binnen 7–10 dagen na adoptie. Zo ziet het eruit.",
+    "certPreviewLabel": "Adoptiecertificaat",
+    "certPreviewPresentedTo": "Aangeboden aan",
+    "certPreviewSponsorOf": "is de trotse sponsor van",
+    "certPreviewFooter": "Es Currals · Alpacas Ibiza · Santa Eulària",
+    "certPreviewAlpacaPlaceholder": "Jouw alpaca",
+    "certPreviewDonorPlaceholder": "Jouw naam",
+    "trustHeading": "Een veilige, eenvoudige adoptie",
+    "trustSecurePayments": "Veilige betalingen verwerkt door Mollie — wij zien nooit jouw kaart- of rekeninggegevens.",
+    "trustCancelAnyTime": "Maandelijkse adopties op elk moment opzegbaar, zonder vragen.",
+    "trustResponsiveSupport": "E-mailsupport binnen 24 uur via info@alpacasibiza.com.",
+    "trustReceiptIncluded": "Btw-conforme bon direct na betaling per e-mail ontvangen.",
+    "trustAcceptedLabel": "Wij accepteren",
+    "repeatHeading": "Klaar om deel te worden van de kudde?",
+    "repeatBody": "Adopteer vandaag en je ontvangt de welkomstmail binnen minuten. Jouw certificaat en cadeaupakket worden volgende week verzonden.",
+    "repeatAlpacaNote": "Je koos {name} — ze verschijnen op jouw certificaat.",
+    "repeatMonthlyCta": "Maandelijks adopteren — €75",
+    "repeatYearlyCta": "Jaarlijks adopteren — €900",
+    "successHeading": "Welkom bij de kudde!",
+    "successBody": "Jouw {tier} adoptie is bevestigd. Je ontvangt binnenkort een welkomstmail.",
+    "successTierMonthly": "maandelijkse",
+    "successTierYearly": "jaarlijkse",
+    "ownerConfirmHeader": "Actie van de eigenaar vereist voor livegang",
+    "ownerConfirmBody": "De onderstaande items zijn geblokkeerd door de eigenaar. Vervang de lege tijdelijke aanduidingen door bevestigde inhoud.",
+    "gift": {
+      "heading": "Adopteren voor iemand anders?",
+      "sub": "Maak er een cadeau van — we personaliseren het certificaat en stemmen de ontvangst af op de datum die jij kiest.",
+      "nameLabel": "Naam ontvanger",
+      "emailLabel": "E-mailadres ontvanger (optioneel)",
+      "deliverLabel": "Welkomst bezorgen op",
+      "namePlaceholder": "bijv. Marta",
+      "emailPlaceholder": "marta@voorbeeld.com",
+      "deliverHint": "Laat leeg om de welkomst direct na het afrekenen te versturen.",
+      "activeBadge": "Cadeaumodus actief — voor {name}",
+      "expandHint": "Klik om te personaliseren als cadeau",
+      "confirmation": "Jouw tierknappen hierboven rekenen af als cadeau.",
+      "reset": "Cadeaugegevens verwijderen"
+    },
+    "referral": {
+      "welcomeFromFriend": "🎁 Welkom van een vriend — jouw eerste maand is €5 korting.",
+      "codeApplied": "Korting automatisch toegepast bij het afrekenen met code"
+    },
+    "comparison": {
+      "whatYouGet": "Wat je krijgt"
+    },
+    "comparisonTitle": "Vergelijk plannen",
+    "monthly": "Maandelijks",
+    "yearly": "Jaarlijks",
+    "monthlyCtaLabel": "Maandelijks adopteren",
+    "yearlyCtaLabel": "Jaarlijks adopteren",
+    "feature": {
+      "certificate": "Digitaal adoptiecertificaat",
+      "updates": "Maandelijkse alpacafoto & updates",
+      "farmTour": "Uitnodiging voor boerderijbezoek",
+      "weavingDiscount": "10% Wishfulfilling Weaving korting",
+      "shopDiscount": "15% Boerderijwinkel korting",
+      "fertilizer": "Alpacamestzak",
+      "photoshoot": "Professionele alpacafotosessie"
+    },
+    "embeddedHeading": "Veilig betalen zonder de pagina te verlaten",
+    "embeddedSubtext": "Kaart of SEPA — jouw betaling verlaat alpacasibiza.com nooit.",
+    "match": {
+      "heading": "Vind jouw alpacamatch",
+      "intro": "Drie korte vragen en we stellen er een voor je voor.",
+      "progressAria": "Quizvoortgang",
+      "questionLabel": "Vraag",
+      "resultLabel": "Jouw match",
+      "learnMore": "Lees volledige bio",
+      "retake": "Opnieuw proberen",
+      "noMatch": "We konden nu geen match vinden — probeer Kies voor mij op de adoptiepagina."
+    },
+    "sticky": {
+      "monthlyShort": "€75/md",
+      "yearlyShort": "€900/jr",
+      "cta": "Adopteer",
+      "region": "Adopteer-een-Alpaca snelle acties"
+    },
+    "tier": {
+      "monthly": "Maandelijks",
+      "yearly": "Jaarlijks — vooraf betaald",
+      "monthlySub": "Op elk moment opzegbaar.",
+      "yearlySub": "Zelfde totaal als maandelijks, vooraf betaald.",
+      "ctaMonthly": "Maandelijks adopteren",
+      "ctaYearly": "Jaarlijks adopteren",
+      "popularBadge": "Meest populair"
+    },
+    "timeline": {
+      "heading": "Wat je ontvangt",
+      "subheading": "Jouw eerste jaar met de kudde, stap voor stap.",
+      "certificate": {
+        "title": "Adoptiecertificaat",
+        "when": "Verzonden binnen 7–10 dagen",
+        "desc": "Gepersonaliseerd certificaat met de naam van jouw gekozen alpaca."
+      },
+      "tours": {
+        "title": "Boerderijbezoeken",
+        "when": "Op elk moment te boeken",
+        "desc": "6 bezoeken per jaar, tot 4 gasten elk. Vermeld jouw adoptie bij het boeken."
+      },
+      "gifts": {
+        "title": "Welkomstpakket",
+        "when": "Verstuurd in 2–3 weken",
+        "desc": "Kalender, agenda, sleutelhanger en ingelijste foto van jouw alpaca."
+      },
+      "photoshoot": {
+        "title": "Professionele fotosessie",
+        "when": "In overleg gepland",
+        "desc": "Een uur met jouw alpaca en onze fotograaf. Digitale downloads inbegrepen."
+      },
+      "fibre": {
+        "title": "Alcaca mestverzending",
+        "when": "Lente + herfst",
+        "desc": "5 kg premium alpaca-afgeleid tuinverbeteraar per jaar, in twee seizoensbatches."
+      }
+    },
+    "comparisonSubtitle": ""
   },
   "recoverCertificate": {
     "title": "Je certificaat opvragen",
     "subhead": "Welkomstmail kwijt? Geef het e-mailadres op waarmee je hebt geadopteerd en we sturen je certificaat opnieuw.",
     "emailLabel": "E-mail",
     "submit": "Certificaat versturen",
-    "successMessage": "Controleer je inbox — als we een account vinden dat overeenkomt met dat e-mailadres, is je certificaat onderweg."
+    "successMessage": "Controleer je inbox â€” als we een account vinden dat overeenkomt met dat e-mailadres, is je certificaat onderweg."
   },
   "floatingWhatsapp": {
     "defaultMessage": "Hallo! Ik heb een vraag over Alpacas Ibiza.",
     "aria": "Chat met ons via WhatsApp"
   },
   "alpacaOfDay": {
-    "cta": "Maak kennis met {name}"
+    "cta": "Maak kennis met {name}",
+    "eyebrow": "Alpaca van de dag",
+    "funFact": "Weetje"
   },
   "alpacas": {
     "filter": {
-      "showing": "Weergave van {match, number} van {total, number}"
-    }
+      "showing": "Weergave van {match, number} van {total, number}",
+      "personality": "Persoonlijkheid",
+      "color": "Kleur",
+      "breed": "Ras",
+      "clearAll": "Alle filters wissen",
+      "noMatches": "Geen alpacas voldoen aan deze filters. Probeer er een te wissen.",
+      "personalityOption": {
+        "calm": "Rustig",
+        "playful": "Speels",
+        "bold": "Brutaal",
+        "shy": "Verlegen",
+        "sociable": "Sociaal",
+        "independent": "Onafhankelijk"
+      },
+      "colorOption": {
+        "white": "Wit",
+        "grey": "Grijs",
+        "brown": "Bruin",
+        "mixed": "Gemengd"
+      },
+      "breedOption": {
+        "huacaya": "Huacaya",
+        "suri": "Suri"
+      }
+    },
+    "title": "Maak kennis met onze alpaca's",
+    "subtitle": "Maak kennis met de kudde op Es Currals — 14 individuen, elk met hun eigen persoonlijkheid.",
+    "adoptCta": "Adopteer mij",
+    "funFacts": {
+      "heading": "Wist je dat?",
+      "prev": "Vorige weetje",
+      "next": "Volgende weetje"
+    },
+    "photoComingSoon": "Foto binnenkort beschikbaar",
+    "yearsOld": "jaar oud",
+    "backToHerd": "Terug naar de kudde",
+    "restOfHerd": "Maak kennis met de rest van de kudde",
+    "bioComingSoon": "Bio binnenkort beschikbaar",
+    "detailTitle": "Maak kennis met {name} | Alpacas Ibiza",
+    "detailDescription": "Maak kennis met {name}, onderdeel van de Es Currals kudde. Adopteer {name} of bezoek de boerderij op Ibiza.",
+    "detailDescriptionWithPersonality": "{name} — {personality}. Adopteer {name} of bezoek de kudde op Es Currals, Ibiza."
   },
   "whatsapp": {
     "panel": {
-      "footer": "Of stuur ons direct een bericht op {phone}"
+      "footer": "Of stuur ons direct een bericht op {phone}",
+      "greeting": "Hallo! Hoe kunnen we helpen? Kies een onderwerp om de chat te starten:",
+      "online": "Reageert doorgaans binnen 1 uur",
+      "close": "WhatsApp-chatstarter sluiten"
+    },
+    "prefilledMessage": "Hallo! Ik wil graag meer weten over het bezoeken van Alpacas Ibiza.",
+    "aria": "Chat met ons op WhatsApp",
+    "fab": {
+      "label": "WhatsApp-chat openen"
+    },
+    "quickReplies": {
+      "bookTour": "Tour boeken",
+      "commission": "Op maat bestellen",
+      "adopt": "Adopteer een alpaca",
+      "directions": "Bezoek & routebeschrijving",
+      "other": "Iets anders"
+    },
+    "prefill": {
+      "bookTour": "Hallo! Ik wil graag een tour boeken bij Alpacas Ibiza. Kunt u me de beschikbaarheid vertellen voor...",
+      "commission": "Hallo! Ik ben geïnteresseerd in een op maat gemaakt handgeweven stuk. Kunnen we de details bespreken?",
+      "adopt": "Hallo! Ik wil graag meer weten over het adopteren van een alpaca.",
+      "directions": "Hallo! Kunt u me vertellen hoe ik de boerderij kan vinden en uw openingstijden?",
+      "other": ""
     }
   },
   "weddings": {
     "eyebrow": "Bruiloften & Fotoshoots",
     "title": "Alpacas op Jouw Bruiloft",
-    "subtitle": "Alpaca-verlovingen, alpaca weddings en alpaca trouwfotos zijn in de VS al jaren de trend — nu ook in Europa. Als eerste en enige alpacaboerderij op Ibiza bieden wij unieke bruiloftservaringen temidden van onze 14 alpacas.",
+    "subtitle": "Alpaca-verlovingen, alpaca weddings en alpaca trouwfotos zijn in de VS al jaren de trend â€” nu ook in Europa. Als eerste en enige alpacaboerderij op Ibiza bieden wij unieke bruiloftservaringen temidden van onze 14 alpacas.",
     "includedTitle": "Wat is Inbegrepen",
     "includedSubtitle": "Pakketdetails worden op maat gemaakt voor jouw evenement. Neem contact op voor een volledige offerte.",
     "contactForDetails": "Neem contact op voor details",
@@ -1025,7 +1365,7 @@
       "supervised": "Altijd begeleid",
       "supervisedDesc": "Een ervaren handler begeleidt elk optreden.",
       "allergy": "Hypoallergeen vlies",
-      "allergyDesc": "Alpacavezel is laag-allergeen — vriendelijk voor gevoelige gasten."
+      "allergyDesc": "Alpacavezel is laag-allergeen â€” vriendelijk voor gevoelige gasten."
     },
     "bookingTitle": "Plan Jouw Bruiloft met Alpacas",
     "bookingText": "Of je nu op onze finca trouwt of wil dat wij de alpacas naar jouw locatie brengen: we werken samen om de perfecte ervaring te creeren. Neem contact op om te beginnen met plannen.",
@@ -1034,7 +1374,7 @@
     "faq": {
       "notice": {
         "q": "Hoe ver van tevoren moet ik boeken?",
-        "a": "We raden aan zo vroeg mogelijk te boeken — minimaal 4-6 weken van tevoren voor fotoshoots en zo vroeg mogelijk voor bruiloften. Populaire data zijn snel volgeboekt in het hoogseizoen (mei-oktober)."
+        "a": "We raden aan zo vroeg mogelijk te boeken â€” minimaal 4-6 weken van tevoren voor fotoshoots en zo vroeg mogelijk voor bruiloften. Populaire data zijn snel volgeboekt in het hoogseizoen (mei-oktober)."
       },
       "location": {
         "q": "Kunnen jullie alpacas naar onze locatie brengen?",
@@ -1048,6 +1388,471 @@
         "q": "Wat is jullie annuleringsbeleid voor bruiloften?",
         "a": "Annuleringsvoorwaarden zijn afhankelijk van het pakket. Neem contact op voor het specifieke beleid voor jouw boeking. We streven ernaar zo flexibel mogelijk te zijn."
       }
+    },
+    "subtitleLive": "Alpaca-verlovingen, alpaca weddings en alpaca trouwfoto's zijn in de VS al jaren de trend — nu ook in Europa. Als eerste en enige alpacaboerderij op Ibiza bieden wij unieke bruiloftservaringen temidden van onze 14 alpaca's."
+  },
+  "skein": {
+    "step2Title": "Lentemis",
+    "faq1Question": "Wanneer wordt de wol verstuurd?",
+    "heroTitle": "Geef je skein een naam",
+    "howItWorksTitle": "Hoe het werkt",
+    "onlyBody": "Elke lentemis levert één sponsorplek per alpaca op. Zodra de 14 plekken vol zijn, sluit het seizoen.",
+    "heroSubtitle": "Sponsor de lentemis van een alpaca — ontvang hun gesponnen wol in de herfst.",
+    "tierSub": "Eenmalige betaling. Wol verstuurd in oktober.",
+    "faq3Question": "Is de wol geverfd?",
+    "faq4Question": "Kan ik dit cadeau geven?",
+    "faqTitle": "Vragen",
+    "faq1Answer": "Na de lentemis (doorgaans april–mei) en het spinnen arriveert je skein in oktober.",
+    "metaDescription": "Sponsor de lentemis van een alpaca voor €200 en ontvang hun gesponnen wol in de herfst. 14 plekken per jaar — één per alpaca.",
+    "metaTitle": "Geef je skein een naam | Lentescheer-sponsoring – Alpacas Ibiza",
+    "ctaSponsor": "Sponsor de mis van {name}",
+    "step1Title": "Kies je alpaca",
+    "tierPrice": "€200 eenmalig",
+    "faq2Question": "Hoeveel wol ontvang ik?",
+    "faq2Answer": "Elke alpaca levert per mis ruwweg 1–2 kg ruwe vacht. Na het spinnen en eventueel voorspoelen ontvang je een afgewerkte skein van circa 100–200 g.",
+    "step3Title": "Ontvang je skein",
+    "ctaPickForMe": "Kies voor mij",
+    "tierTitle": "Skein-sponsoring",
+    "step2Body": "Elke lente wordt de kudde met de hand geschoren. De vacht van jouw alpaca wordt apart gehouden en naar ons spinatelier gestuurd.",
+    "onlyTitle": "Slechts 14 plekken — één per alpaca",
+    "step1Body": "Kies een van onze 14 alpaca's om te sponsoren, of laat ons voor je kiezen.",
+    "faq3Answer": "Skeins worden verstuurd in de natuurlijke kleur van de alpaca — onbehandeld. Laat ons weten bij de checkout als je geïnteresseerd bent in verfopties.",
+    "faq4Answer": "Ja. Voeg een cadeaunotitie toe bij de checkout en we voegen een kaartje bij de skein.",
+    "trustLine": "EU-verzending inbegrepen. Wol verstuurd in oktober na de lentemis en het spinnen.",
+    "step3Body": "In de herfst arriveer de handgesponnen skein per post — voorzien van de naam van jouw alpaca."
+  },
+  "homepage": {
+    "experiences": {
+      "title": "Kies Je Ervaring",
+      "subtitle": "Curated ervaringen voor elke gelegenheid",
+      "corporate": {
+        "title": "Bedrijf & Teambuilding",
+        "description": "Ontkoppel om te verbinden. Leiderschapsretreats en teambonding met onze rustige kudde.",
+        "cta": "Plan een Evenement"
+      },
+      "romantic": {
+        "title": "Romantische Zonsondergangswandelingen",
+        "description": "Gouduur-magie. Privé, intieme wandelingen voor koppels (ook voor huwelijksaanzoeken!).",
+        "cta": "Boek Privé Tour"
+      },
+      "family": {
+        "title": "Familie Boerderijdagen",
+        "description": "Veilig, educatief en leuk voor alle leeftijden. Breng je kleintjes dichter bij de natuur.",
+        "cta": "Familiebezoek"
+      }
     }
-  }
+  },
+  "impressum": {
+    "title": "Juridische kennisgeving — Alpacas Ibiza",
+    "intro": "In overeenstemming met de Spaanse Wet 34/2002 inzake diensten van de informatiemaatschappij en elektronische handel (LSSI-CE) artikel 10 en gelijkwaardige Europese openbaarmakingsverplichtingen worden de volgende identificatiegegevens verstrekt over de exploitant van deze website.",
+    "companyName": "Bedrijfsnaam",
+    "companyNameValue": "__NIET VERTAALD__: Geregistreerde juridische naam (bijv. \"Alpacas Ibiza S.L.\"). Moet overeenkomen met de inschrijving bij het Registro Mercantil.",
+    "registeredAddress": "Geregistreerd adres",
+    "registeredAddressValue": "C/3 Bungalow Park 22, 07850 San Carlos, Baleares, España",
+    "taxId": "Btw-nummer (CIF)",
+    "taxIdValue": "ESY6917111J",
+    "contactEmail": "Contact",
+    "hostingProvider": "Hostingprovider",
+    "hostingProviderValue": "Vercel Inc., USA",
+    "disputeResolutionHeading": "Geschillenbeslechting",
+    "disputeResolutionBody": "Op grond van Verordening (EU) 524/2013 biedt de Europese Commissie een platform voor online geschillenbeslechting (ODR) waar consumenten die in de EU wonen klachten kunnen indienen over online aankopen. Het platform is beschikbaar via de onderstaande link. Wij zijn bereid maar niet verplicht deel te nemen aan geschillenbeslechtingsprocedures voor een consumentenarbitragecommissie.",
+    "lastUpdated": "Laatst bijgewerkt: Februari 2024. Neem contact op via info@alpacasibiza.com voor vragen over de juridische kennisgeving."
+  },
+  "pressKit": {
+    "meta": {
+      "title": "Perskit | Alpacas Ibiza",
+      "description": "Download de officiële Alpacas Ibiza perskit — logopakket, hi-res foto's, factsheet en oprichtersbio voor journalisten en mediapartners."
+    },
+    "title": "Perskit",
+    "subtitle": "Voor journalisten, fotografen en partners — materialen, factsheet en oprichtersbio.",
+    "assetsHeading": "Downloadbare materialen",
+    "assetsSubheading": "Bestanden zijn beschikbaar voor download zodra ze door het boerderijteam zijn geüpload.",
+    "logoPackTitle": "Logopakket",
+    "logoPackBody": "SVG- en PNG-versies van het Alpacas Ibiza woordmerk, icoon en combinatiemerk. Kleur- en monochrome varianten inbegrepen.",
+    "logoPackCta": "Logopakket downloaden",
+    "photosTitle": "Hi-res Foto's",
+    "photosBody": "Hoge-resolutiefoto's van de boerderij en alpaca's. Vrijgesteld voor redactioneel en commercieel gebruik met naamsvermelding.",
+    "photosCta": "Fotoarchief downloaden",
+    "factSheetTitle": "Factsheet",
+    "factSheetBody": "Eénpagina PDF met kernfeiten: oprichtingsdatum, kuddegrootte, boerderijlocatie, activiteitencategorieën en contactgegevens.",
+    "factSheetCta": "Factsheet downloaden",
+    "founderBioTitle": "Oprichtersbio",
+    "founderBioBody": "Korte en lange biografie van de boerderijoprichters, geschikt voor artikelintroducties en sprekersprofielen.",
+    "founderBioCta": "Oprichtersbio downloaden",
+    "inquiriesTitle": "Persvragen",
+    "inquiriesBody": "Journalisten en mediaprofessionals zijn welkom contact op te nemen voor interviews, toegang tot fotografie of redactionele informatie.",
+    "inquiriesCta": "Stuur het persteam een e-mail",
+    "inquiriesContactLink": "Gebruik het contactformulier",
+    "featuredTitle": "Verschenen in",
+    "ownerConfirmHeader": "Actie van de eigenaar vereist voor livegang",
+    "ownerConfirmBody": "Upload de volgende bestanden naar public/press/, zet dan enabled: true in app/[locale]/press-kit/page.tsx PRESS_ASSETS.",
+    "comingSoonBadge": "Binnenkort beschikbaar"
+  },
+  "sitemap": {
+    "metaTitle": "Sitemap | Alpacas Ibiza",
+    "metaDescription": "Elke pagina op alpacasibiza.com — tours, winkel, ervaringen en meer.",
+    "title": "Sitemap",
+    "subtitle": "Elke pagina op alpacasibiza.com",
+    "breadcrumb": "Sitemap",
+    "navAriaLabel": "Sitemap navigatie",
+    "categoryVisit": "Bezoek & Ervaringen",
+    "categoryShop": "Winkel",
+    "categoryAdopt": "Adopteer",
+    "categoryAbout": "Over Ons",
+    "categoryMedia": "Media & Verhalen",
+    "categoryContact": "Contact",
+    "categoryLegal": "Juridisch",
+    "linkTours": "Tours & Boerderijbezoeken",
+    "linkYoga": "Alpaca Yoga",
+    "linkFamily": "Familie Boerderijdagen",
+    "linkRomantic": "Romantische Zonsondergangswandelingen",
+    "linkCorporate": "Bedrijf & Teambuilding",
+    "linkWeddings": "Bruiloften",
+    "linkWorkshops": "Workshops",
+    "linkShop": "Winkeloverzicht",
+    "linkWoven": "Geweven Collectie",
+    "linkCommission": "Op Maat Bestelling",
+    "linkAlcaca": "Alcaca — Alpacamest",
+    "linkGifts": "Cadeaubonnen",
+    "linkAdopt": "Adopteer een Alpaca",
+    "linkAbout": "Over Ons",
+    "linkAlpacas": "Onze alpaca's",
+    "linkSustainability": "Duurzaamheid",
+    "linkJournal": "Dagboek",
+    "linkMedia": "Media",
+    "linkPress": "Pers",
+    "linkContact": "Contact",
+    "linkPrivacy": "Privacybeleid",
+    "linkTerms": "Servicevoorwaarden",
+    "linkCookies": "Cookiebeleid",
+    "linkSitemap": "Sitemap"
+  },
+  "awards": {
+    "recognizedBy": "Erkend door",
+    "certified": "Gecertificeerd",
+    "awardsAndRecognition": "Prijzen & Erkenning"
+  },
+  "yoga": {
+    "title": "Alpaca Yoga",
+    "subtitle": "Hatha yoga tussen de alpaca's — 1 uur 15 minuten, max 6 gasten. Elke woensdag en zaterdag.",
+    "cta": "Boek Je Yogasessie",
+    "ctaSecondary": "Informeer over privégroepen",
+    "whatTitle": "Wat is Alpaca Yoga?",
+    "whatBody": "Een buitensessie Hatha Yoga van 75 minuten in het alpacakot op de Es Currals-finca in het landelijke noorden van Ibiza. Beoefen yoga omringd door de rustige aanwezigheid van onze kudde — ze grazen vrij om je heen terwijl je gids de sessie leidt.",
+    "whyTitle": "Waarom Yoga met Alpaca's?",
+    "whyBody": "Alpaca's zijn van nature kalmerende dieren. Hun rustige tempo, zachte geluiden en nieuwsgierige aard creëren een omgeving die ontspanning en focus verdiept. Gasten bevestigen regelmatig dat de aanwezigheid van de kudde het makkelijker maakt om aanwezig te blijven op de mat.",
+    "whenTitle": "Wanneer & Waar",
+    "whenBody": "Sessies vinden elke woensdag en zaterdag plaats. Het yogagebied bevindt zich op de finca in San Carlos, landelijk noorden van Ibiza. Neem contact op om de starttijd voor jouw gewenste datum te bevestigen en voor beschikbaarheid buiten het seizoen.",
+    "priceTitle": "Prijs & Capaciteit",
+    "priceBody": "€30 per persoon. Maximum 6 deelnemers per sessie om de ervaring intiem te houden en de ruimte van de alpaca's te respecteren.",
+    "scheduleNote": "Woensdag- en zaterdagsessies. Neem contact op voor de huidige starttijd en seizoensbeschikbaarheid.",
+    "details": {
+      "price": {
+        "title": "€30 per persoon",
+        "desc": "Geverifieerd op de live site"
+      },
+      "duration": {
+        "title": "1 uur 15 minuten",
+        "desc": "Hatha-sessie"
+      },
+      "groupSize": {
+        "title": "Max 6 gasten",
+        "desc": "Intiem by design"
+      }
+    },
+    "faq": {
+      "audience": {
+        "q": "Heb ik yoga-ervaring nodig?",
+        "a": "Geen ervaring nodig. De sessie is geschikt voor alle niveaus, inclusief absolute beginners. De instructeur past zich aan de groep aan."
+      },
+      "bring": {
+        "q": "Wat moet ik meenemen?",
+        "a": "Comfortabele kleding waarin je kunt bewegen, en zonnebrandcrème voor buitensessies. Neem contact op om te bevestigen of matten worden verstrekt of dat je er zelf een mee moet brengen."
+      },
+      "weather": {
+        "q": "Wat gebeurt er als het regent?",
+        "a": "Sessies kunnen worden verzet of verplaatst naar een beschutte omgeving bij slecht weer. We nemen van tevoren contact met je op als de omstandigheden een wijziging vereisen."
+      },
+      "refund": {
+        "q": "Wat is het annuleringsbeleid?",
+        "a": "Annuleringen die minimaal 48 uur van tevoren worden gemaakt, ontvangen een volledige terugbetaling of herplanning. Latere annuleringen kunnen een toeslag van 50% met zich meebrengen."
+      }
+    },
+    "ownerConfirmHeader": "Actie van de eigenaar vereist voor livegang",
+    "ownerConfirmBody": "De onderstaande items hebben bevestiging van de eigenaar nodig voordat de yogapagina live gaat."
+  },
+  "workshops": {
+    "breadcrumb": "Workshops",
+    "title": "Workshops Weven en Spinnen met San",
+    "subtitle": "Een 2-daagse diepduik in het volledige traject van alpacafluit naar afgewerkte sjaal. Gegeven door San van Wishfulfilling Weaving, buiten het seizoen en op aanvraag.",
+    "cta": "Verzoek een Workshopdatum",
+    "curriculum": {
+      "title": "Wat Je Leert",
+      "subtitle": "Elke stap van het ambacht, van rauwe vacht tot afgewerkt doek",
+      "wash": "Alpacavlies van onze eigen kudde wassen en kaarden",
+      "spin": "Garen spinnen op een spinnewiel",
+      "weave": "Weven op een traditioneel houten weefgetouw",
+      "scarf": "De sjaal die je zelf hebt geweven mee naar huis nemen"
+    },
+    "facts": {
+      "title": "Workshop in een Oogopslag",
+      "subtitle": "Alles wat je moet weten voordat je een datum aanvraagt",
+      "duration": {
+        "title": "Duur",
+        "desc": "2 dagen"
+      },
+      "instructor": {
+        "title": "Instructeur",
+        "desc": "San"
+      },
+      "groupSize": {
+        "title": "Groepsgrootte",
+        "desc": "Kleine groep — neem contact op voor details"
+      },
+      "schedule": {
+        "title": "Rooster",
+        "desc": "Alleen buiten het seizoen — op aanvraag"
+      },
+      "price": {
+        "title": "Prijs",
+        "desc": "Neem contact op voor prijsinformatie"
+      },
+      "takeaway": {
+        "title": "Meenemen",
+        "desc": "Jouw eigen handgeweven sjaal"
+      }
+    },
+    "san": {
+      "title": "Over San",
+      "body": "San is de wever achter Wishfulfilling Weaving — het ambachtsatelier in het hart van de Es Currals alpacaboerderij. Ze werkt op een traditioneel houten weefgetouw en verwerkt vlies van onze eigen kudde tot exclusief handgemaakt textiel. De workshop is haar uitnodiging om dat ambacht te delen met gasten die verder willen gaan dan kijken en echt iets willen maken."
+    },
+    "booking": {
+      "title": "Hoe te Boeken",
+      "body": "De workshop loopt buiten het seizoen, wanneer de boerderij rustiger is en San tijd heeft om je haar volledige aandacht te geven. Er is geen vaste agenda — stuur ons een bericht met jouw gewenste data en we bevestigen de beschikbaarheid.",
+      "cta": "Verzoek een Workshopdatum"
+    },
+    "faq": {
+      "experience": {
+        "q": "Heb ik weef-ervaring nodig?",
+        "a": "Helemaal niet. De workshop is ontworpen voor absolute beginners. San begeleidt je door elke stap, van het wassen van de rauwe vacht tot het afwerken van je sjaal."
+      },
+      "bring": {
+        "q": "Wat moet ik meenemen?",
+        "a": "Alleen jezelf en comfortabele kleding die een beetje stoffig mag worden. Alle materialen, gereedschappen en apparatuur worden verstrekt. Luncharrangementen worden bevestigd bij het boeken."
+      },
+      "cancellation": {
+        "q": "Wat is het annuleringsbeleid?",
+        "a": "Als je moet annuleren of verzetten, neem dan zo vroeg mogelijk contact op. Omdat workshops op aanvraag worden gepland en San twee volledige dagen reserveert, vragen we om redelijke opzegtermijn."
+      },
+      "wool": {
+        "q": "Is de wol van jullie eigen alpaca's?",
+        "a": "Ja. Je werkt met vlies van onze eigen kudde op Es Currals — dezelfde dieren die je kunt ontmoeten tijdens een boerderijbezoek. De verbinding tussen het dier en het afgewerkte doek is echt."
+      }
+    }
+  },
+  "media": {
+    "title": "Media & Galerij",
+    "subtitle": "Een glimp van het leven op de boerderij — door ons, door gasten, door de pers.",
+    "categoryFarm": "Boerderijleven",
+    "categoryAlpacas": "De kudde",
+    "categoryWeaving": "Wishfulfilling Weaving",
+    "categoryEvents": "Evenementen & bruiloften",
+    "categoryPress": "Persaandacht",
+    "emptyTitle": "Foto's binnenkort beschikbaar",
+    "emptyBody": "We bouwen de galerij op. Volg ons op Instagram voor updates.",
+    "ownerConfirmHeader": "Eigenaar: voeg foto's toe om te activeren",
+    "ownerConfirmBody": "Voeg bestanden toe aan public/images/gallery/ en vermeldingen aan lib/data/media.ts met status: 'live'. Lege status wordt openbaar weergegeven tot die tijd.",
+    "emptyCta": "Galerij bekijken"
+  },
+  "press": {
+    "title": "Pers & Media",
+    "subtitle": "Alpacas Ibiza verscheen in Belgische nationale pers, regionale Vlaamse media, Spaanse regionale kranten en internationale reismedia.",
+    "featuredIn": "Verschenen in",
+    "readArticle": "Artikel lezen",
+    "logosComingSoon": "Perslogo's en artikellinks komen binnenkort — kom later terug.",
+    "inquiriesTitle": "Persvragen",
+    "inquiriesBody": "Journalisten en mediaprofessionals zijn welkom contact op te nemen voor interviews, toegang tot fotografie of redactionele informatie.",
+    "inquiriesCta": "Contact voor Pers"
+  },
+  "gifts": {
+    "meta": {
+      "title": "Cadeaubon — Alpacas Ibiza | Geef een Alpaca-Ervaring",
+      "description": "Geef iemand een onvergetelijke dag met onze alpacakudde. Cadeaubonnen geldig voor alle tours."
+    },
+    "hero": {
+      "title": "Geef het cadeau van alpaca's",
+      "subtitle": "Een unieke Ibiza-ervaring — geldig voor elke tour, elke datum",
+      "cta": "Koop een cadeaubon"
+    },
+    "why": {
+      "title": "Waarom een Alpacas Ibiza-bezoek cadeau doen?",
+      "reason1": "Een ervaring, niet nog een ding dat ze opbergen",
+      "reason2": "Inwisselbaar op elke datum — flexibel voor hun planning",
+      "reason3": "Geschikt voor elke leeftijd — gezinnen, koppels, groepen",
+      "reason4": "Digitale bon per e-mail bezorgd — geen verzendwachttijd"
+    },
+    "booking": {
+      "title": "Koop een cadeaubon",
+      "subtitle": "Selecteer een tour en koop een bon. We sturen hem direct naar de ontvanger op de door jou gekozen datum per e-mail.",
+      "poweredBy": "Veilig afrekenproces voor cadeaubonnen via FareHarbor"
+    },
+    "faq": {
+      "howItWorksTitle": "Hoe het werkt",
+      "howItWorksText": "Kies een tour, betaal veilig en we sturen een gebrandmerkte bon per e-mail naar de ontvanger. Die kiest een datum die hen uitkomt en boekt via hetzelfde systeem."
+    },
+    "flow": {
+      "heading": "Stuur het cadeau van alpacas",
+      "subheading": "Vier korte stappen. We sturen een gebrandmerkte bon naar jouw ontvanger op de dag die jij kiest.",
+      "stepGift": "Cadeautype",
+      "stepRecipient": "Ontvanger",
+      "stepMessage": "Bericht",
+      "stepReview": "Beoordeling",
+      "tourTitle": "Tourbon",
+      "tourPrice": "Vanaf €45 / gast",
+      "tourDescription": "90 min. boerderijrondleiding, geldig 12 maanden. Kies bij het boeken elk tourtype.",
+      "adoptMonthlyTitle": "Maandelijkse adoptie",
+      "adoptMonthlyPrice": "€75 / maand",
+      "adoptMonthlyDescription": "Jaarlijkse adoptie met boerderijbezoeken, certificaat, fotosessie en seizoensgeschenken.",
+      "adoptYearlyTitle": "Jaarlijkse adoptie",
+      "adoptYearlyPrice": "€900 / jaar vooraf",
+      "adoptYearlyDescription": "Dezelfde voordelen als maandelijks, vooraf betaald. Het betrokken cadeau.",
+      "shopCreditTitle": "Boerderijwinkelkrediet",
+      "shopCreditPrice": "Aangepast bedrag",
+      "shopCreditDescription": "Inwisselbaar voor geweven textiel, alpacavezel en boerderijwinkelartikelen.",
+      "continue": "Doorgaan",
+      "back": "Terug",
+      "checkout": "Veilig afrekenen openen",
+      "recipientName": "Naam ontvanger",
+      "recipientEmail": "E-mailadres ontvanger",
+      "senderName": "Jouw naam",
+      "message": "Persoonlijk bericht",
+      "messagePlaceholder": "Een korte notitie die op de bon verschijnt.",
+      "sendDate": "Wanneer versturen",
+      "sendToday": "Vandaag versturen",
+      "sendFuture": "Inplannen voor een toekomstige datum",
+      "reviewTitle": "Je geeft",
+      "reviewGiftFor": "Cadeau voor",
+      "reviewFrom": "Van",
+      "reviewSendDate": "Verzenddatum"
+    }
+  },
+  "legal": {
+    "consentBy": "Door {action} ga je akkoord met onze",
+    "consentTerms": "Voorwaarden",
+    "consentPrivacy": "Privacybeleid",
+    "marketingConsent": "Ik ga akkoord met het ontvangen van Alpacas Ibiza-updates en accepteer het [Privacybeleid].",
+    "marketingConsentRequired": "Vink dit vakje aan om je in te schrijven.",
+    "adoptAction": "adopteren",
+    "giftAction": "je cadeau voltooien",
+    "lastUpdated": "Laatst bijgewerkt",
+    "version": "Versie"
+  },
+  "portal": {
+    "title": "Jouw adoptie",
+    "matchedAlpacaFallback": "Jouw gekoppelde alpaca",
+    "subscriptionHeader": "Abonnement",
+    "amount": "Bedrag",
+    "nextCharge": "Volgende afschrijving",
+    "started": "Gestart",
+    "canceled": "Geannuleerd",
+    "updatePayment": "Betaalmethode bijwerken",
+    "cancel": "Adoptie annuleren",
+    "adoptAgain": "Opnieuw adopteren",
+    "failureWarningPrefix": "Let op — {count} recente betalingsfouten.",
+    "failureWarningSuffix": "Jouw adoptie wordt gepauzeerd als we binnenkort niet kunnen innen. Gebruik de knop \"Betaalmethode bijwerken\" hieronder om het op te lossen.",
+    "photoComingSoon": "Foto binnenkort beschikbaar. De eigenaar verzamelt portretten — jouw welkomstpakket heeft er ook een.",
+    "farmNewsHeader": "{label} van de boerderij",
+    "sneakPeek": "Voorproefje",
+    "weWillPick": "Je liet ons kiezen — we koppelen je binnen enkele dagen aan een van de kudde en werken deze pagina bij.",
+    "bioComingSoon": "Bio binnenkort beschikbaar — de eigenaar verzamelt persoonlijkheidsnotes van de kudde.",
+    "personalityLabel": "Persoonlijkheid:",
+    "footerHelpPrefix": "Hulp nodig? Beantwoord je welkomstmail of schrijf naar",
+    "requestFreshLink": "Vraag een nieuwe poraallink aan",
+    "emailUs": "Stuur ons een e-mail",
+    "errorTitle": {
+      "noToken": "Portaallink ontbreekt",
+      "expired": "Portaallink verlopen",
+      "sdkMissing": "Service wordt opgestart",
+      "fetchFailed": "Kon jouw adoptie niet laden"
+    }
+  },
+  "cancelFeedback": {
+    "title": "Voordat je vertrekt",
+    "subhead": "Het spijt ons dat je vertrekt. Wil je ons vertellen waarom je hebt geannuleerd? Het helpt ons verbeteren.",
+    "reason": {
+      "price": "Het was te duur",
+      "forgot": "Ik vergat dat ik geabonneerd was",
+      "unused": "Ik heb het niet meer nodig",
+      "other": "Een andere reden"
+    },
+    "notesLabel": "Nog iets? (optioneel)",
+    "submit": "Feedback versturen",
+    "skip": "Overslaan — ga naar de adoptiepagina",
+    "thankYou": "Bedankt voor je feedback — het helpt ons echt verbeteren.",
+    "reAdoptLink": "Opnieuw een alpaca adopteren"
+  },
+  "commission": {
+    "form": {
+      "errors": {
+        "name": "Vul je naam in (min. 2 tekens).",
+        "email": "Vul een geldig e-mailadres in.",
+        "projectType": "Kies een projecttype.",
+        "timeline": "Kies een tijdlijn.",
+        "specificDate": "Kies een datum.",
+        "references": "Referentielinks moeten beginnen met http:// of https://.",
+        "consent": "Ga akkoord met het privacybeleid om door te gaan.",
+        "notesMax": "Houd notities onder {max} tekens.",
+        "messageMin": "Vertel ons minstens {min} tekens over je project.",
+        "messageMax": "Houd je bericht onder {max} tekens."
+      },
+      "success": {
+        "heading": "Bedankt!",
+        "again": "Nog een aanvraag indienen"
+      },
+      "aria": {
+        "formLabel": "Aanvraag voor op maat bestelling"
+      },
+      "phone": "Telefoon",
+      "optional": "optioneel",
+      "projectTypeLegend": "Projecttype",
+      "projectTypeHelper": "Kies de beste overeenkomst — we kunnen dit verfijnen in het gesprek.",
+      "size": "Geschatte afmeting",
+      "sizePlaceholder": "bijv. 80×120 cm",
+      "notes": "Kleur- en materiaalnotities",
+      "budget": {
+        "label": "Budget"
+      },
+      "timeline": {
+        "legend": "Tijdlijn",
+        "specificDateLabel": "Streefdatum"
+      },
+      "references": {
+        "label": "Referentieafbeeldingen",
+        "itemAria": "Referentielink",
+        "remove": "Referentie verwijderen",
+        "add": "Nog een referentie toevoegen"
+      },
+      "message": {
+        "label": "Vertel ons over het stuk"
+      },
+      "consent": "Ik ga akkoord met het privacybeleid"
+    }
+  },
+  "cookieConsent": {
+    "ariaLabel": "Cookietoestemming",
+    "message": "We gebruiken cookies voor analyses en om het boekingsproces soepeler te maken. Je kunt alle cookies accepteren of niet-essentiële cookies weigeren. Bekijk onze ",
+    "policyLink": "cookiebeleid",
+    "reject": "Niet-essentieel weigeren",
+    "accept": "Alles accepteren"
+  },
+  "a11y": {
+    "skipToMain": "Naar hoofdinhoud"
+  },
+  "cancellation": {
+    "freeUp24h": "Gratis annulering tot 24 uur voor je bezoek"
+  },
+  "adopters": {
+    "badge": "Doe mee met {count} alpaca-adoptanten"
+  },
+  "sending": "Bezig met verzenden…"
 }

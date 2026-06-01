@@ -2,6 +2,7 @@
 
 **Status:** Accepted · 2026-05-27
 **Supersedes:** none
+**Superseded by:** ADR-019.
 **Related:** ADR 013 (PaymentProvider defaults), CLAUDE.md failsafe map
 
 ## Context

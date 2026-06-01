@@ -193,12 +193,12 @@ export function CommissionForm({ labels, locale = 'en', defaultProductInterest }
             e.specificDate = text('commission.form.errors.specificDate', 'Please pick a date.')
         }
         if (d.notes && d.notes.length > MAX_NOTES) {
-            e.notes = text('commission.form.errors.notesMax', `Keep notes under ${MAX_NOTES} characters.`)
+            e.notes = tr('commission.form.errors.notesMax', { max: MAX_NOTES })
         }
         if (!d.message || d.message.trim().length < MIN_MESSAGE) {
-            e.message = text('commission.form.errors.messageMin', `Please share at least ${MIN_MESSAGE} characters about your project.`)
+            e.message = tr('commission.form.errors.messageMin', { min: MIN_MESSAGE })
         } else if (d.message.length > MAX_MESSAGE) {
-            e.message = text('commission.form.errors.messageMax', `Please keep your message under ${MAX_MESSAGE} characters.`)
+            e.message = tr('commission.form.errors.messageMax', { max: MAX_MESSAGE })
         }
         const badRefs = d.references.filter((r) => r.trim() !== '' && !URL_RE.test(r.trim()))
         if (badRefs.length > 0) {

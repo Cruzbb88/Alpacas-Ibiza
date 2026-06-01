@@ -52,6 +52,13 @@ export default async function ShopPage({ params }: { params: Promise<{ locale: L
       icon: '🌿',
       href: `/${locale}/shop/alcaca`,
     },
+    {
+      // Skein sponsorship — niche craft product; card in shop but no main nav entry.
+      title: 'Name your skein',
+      description: 'Sponsor an alpaca\'s spring shearing — receive their spun wool in autumn. €200 · 14 slots/year.',
+      icon: '🧶',
+      href: `/${locale}/skein`,
+    },
   ]
 
   return (

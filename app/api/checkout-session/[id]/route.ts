@@ -6,7 +6,10 @@ import { importStripe } from '@/lib/integrations/stripe-sdk'
 import { rateLimit, getClientIp } from '@/lib/rate-limit'
 import { sanitiseDisplayName } from '@/lib/html'
 
-const SESSION_ID_RE = /^cs_(test_|live_)?[A-Za-z0-9]+$/
+// Real Stripe Checkout Session IDs: cs_test_<50+ chars> or cs_live_<50+ chars>.
+// Minimum 20 chars after the prefix prevents trivially-invalid IDs (e.g.
+// "cs_test_invalid") from reaching the Stripe SDK / 503 unconfigured gate.
+const SESSION_ID_RE = /^cs_(test_|live_)[A-Za-z0-9]{20,}$/
 
 export async function GET(
   request: Request,

@@ -1,0 +1,23 @@
+
+> my-project@1.0.1 dev C:\Users\cruzb\Projects\alpaca-farm-redesign
+> next dev
+
+⚠ Port 3000 is in use by process 33832, using available port 3001 instead.
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3001
+- Network:       http://192.168.1.137:3001
+- Environments: .env.local
+
+✓ Starting...
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+[validateEnv] Tier 2 unset (graceful, but feature dark): TURNSTILE_SECRET_KEY / NEXT_PUBLIC_TURNSTILE_SITE_KEY — forms unprotected
+[validateEnv] Tier 2 unset (graceful, but feature dark): FAREHARBOR_APP_KEY / FAREHARBOR_USER_KEY — live spots-left widget hidden
+[validateEnv] Tier 2 unset (graceful, but feature dark): FAREHARBOR_ITEM_TOUR_MEET_HERD, FAREHARBOR_ITEM_TOUR_WEAVING_WORKSHOP, FAREHARBOR_ITEM_TOUR_FARM_EXPERIENCE, FAREHARBOR_ITEM_TOUR_PHOTO_SESSION, FAREHARBOR_ITEM_YOGA — per-tour Book buttons fall back to main calendar
+[validateEnv] Tier 2 unset (graceful, but feature dark): FAREHARBOR_ITEM_WEDDINGS, FAREHARBOR_ITEM_BUSINESS_INCENTIVES, FAREHARBOR_ITEM_ROMANTIC_SUNSET, FAREHARBOR_ITEM_FAMILY_FARM_DAYS — experience-page Book buttons fall back to main calendar. OWNER_INPUT_NEEDED: create items in FareHarbor admin → Items, then set these vars.
+[validateEnv] Tier 2 unset (graceful, but feature dark): FAREHARBOR_ITEM_GIFT_CARD — /gifts CTA falls back to main FareHarbor calendar. OWNER_INPUT_NEEDED: create a Gift Card item in FareHarbor admin → Items → Gift Cards, then set this var.
+[validateEnv] Tier 2 unset (graceful): PAYMENT_VENDOR — adopt CTA falls back to mailto:. Set to stripe|fareharbor|mollie to activate checkout.
+[validateEnv] Tier 2 unset (graceful, but feature dark): ADOPT_DISCOUNT_CODE_WEAVING_10, ADOPT_DISCOUNT_CODE_FARMSHOP_15 — adopt discount-codes email will show placeholder text instead of real codes. OWNER_INPUT_NEEDED: create codes in Stripe / shop platform, then set these vars.
+[validateEnv] Tier 2 unset (graceful, but feature dark): GA4_PROPERTY_ID, GA4_CLIENT_EMAIL, GA4_PRIVATE_KEY — admin analytics dashboard dark
+[validateEnv] Tier 2 unset (graceful, but feature dark): GOOGLE_PLACES_API_KEY, GOOGLE_PLACES_PLACE_ID — review badge hidden
+[validateEnv] Tier 2 unset (graceful): NEWSLETTER_SIGNING_KEY — newsletter confirmation tokens will be signed with NEXTAUTH_SECRET as fallback. Set a dedicated key to allow independent rotation.
+✓ Ready in 1586ms

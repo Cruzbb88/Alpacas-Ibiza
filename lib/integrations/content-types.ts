@@ -85,6 +85,12 @@ export interface AnimalEntity extends ContentEntityBase {
    * `string[]` lets the owner caption seasonal shots without losing a11y.
    */
   readonly gallery?: ReadonlyArray<{ readonly src: string; readonly alt: string }> | null
+  /**
+   * Birth date in YYYY-MM-DD format.
+   * null = owner has not yet supplied — see OWNER_INPUT_NEEDED.md.
+   * Do NOT invent dates. Used by the birthday-card cron (api/alpaca-birthday-cards).
+   */
+  readonly birthDate?: string | null
 }
 
 /**

@@ -30,6 +30,13 @@ export const YOGA_PRICE_EUR: number =
   process.env.YOGA_PRICE_EUR ? Number(process.env.YOGA_PRICE_EUR) : 30
 
 /**
+ * Skein sponsorship price.
+ * Single-payment product: sponsor an alpaca's spring shearing → receive spun wool.
+ * Tier 2 env var: SKEIN_PRICE_EUR defaults €200; override for staging tests.
+ */
+export const SKEIN_SPONSORSHIP_PRICE_EUR = parseInt(process.env.SKEIN_PRICE_EUR ?? '200', 10)
+
+/**
  * Adopt-a-Paca tiers. Verified vs live Adopt landing — €75/mo or €900/yr prepaid.
  * Mollie + Stripe webhooks read these for subscription creation.
  */

@@ -80,7 +80,15 @@ export default async function AdminQuarterlyUpdatePage() {
                   href={`/api/admin/quarterly-update/preview?quarter=${encodeURIComponent(q.quarter)}`}
                   target="_blank"
                   rel="noopener"
-                  style={{ fontSize: 13, color: '#6366f1' }}
+                  style={{
+                    fontSize: 13,
+                    color: '#6366f1',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    minHeight: 44,
+                    minWidth: 44,
+                    paddingTop: 8,
+                  }}
                 >
                   Preview rendered email →
                 </a>

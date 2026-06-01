@@ -61,9 +61,13 @@ export default async function MigrationPage() {
             textDecoration: 'none',
             border: '1px solid #c7d2fe',
             borderRadius: 6,
-            padding: '6px 14px',
+            padding: '12px 18px',
             whiteSpace: 'nowrap',
             marginTop: 4,
+            display: 'inline-flex',
+            alignItems: 'center',
+            minHeight: 44,
+            minWidth: 44,
           }}
         >
           ↻ Reset

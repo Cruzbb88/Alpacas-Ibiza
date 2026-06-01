@@ -4,6 +4,8 @@
 **Supersedes:** none
 **Related:** ADR 013 (PaymentProvider defaults), ADR 015 (Stripe primary, Mollie deferred)
 
+**Amended 2026-06-01:** both `stripe` and `@mollie/api-client` are now declared dependencies in package.json. The dynamic-import wrapper is retained for edge-runtime isolation + fail-closed behaviour, but the "optional/absent dependency" premise no longer holds.
+
 ## Context
 
 The site ships without `stripe` or `@mollie/api-client` in `package.json` dependencies. They are added on the deploy that activates each processor. This avoids:

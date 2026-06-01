@@ -3,6 +3,8 @@
 **Date**: 2026-05-26
 **Status**: Accepted
 
+**Amended 2026-06-01:** the 🇬🇧 flag was replaced with a plain "EN" text label in the locale switcher (see i18n.config.ts comment "Spec 005: dropped 🇬🇧").
+
 ## Context
 
 Alpacas Ibiza is in Ibiza, Spain. Its visitor base is documented as British, German, Dutch, Italian, Spanish, and French. The site needs multi-language support. Decisions required: which locales, which default, and how to represent English (no native English-speaking country is the business location).

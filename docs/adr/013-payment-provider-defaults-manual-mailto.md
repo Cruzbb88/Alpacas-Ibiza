@@ -2,6 +2,7 @@
 
 **Status:** Accepted · 2026-05-27
 **Supersedes:** none
+**Superseded by:** ADR-019 (Mollie is now the default vendor).
 **Related:** ADR 004 (email-only shop), ADR 011 (in-memory defer-KV)
 
 ## Context

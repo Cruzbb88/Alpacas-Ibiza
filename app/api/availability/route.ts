@@ -146,5 +146,7 @@ export async function GET(request: Request) {
     }
 }
 
-// Cache for 2 hours (as recommended by FareHarbor for current day)
-export const revalidate = 7200
+// Cache for 30 minutes — ADR-008: 1800s is the accepted sweet spot between
+// FareHarbor API rate limits and slot-freshness risk. 7200s (2h) was explicitly
+// rejected: "High risk — 2h of stale sold-out slots shown".
+export const revalidate = 1800

@@ -18,6 +18,12 @@ export interface Alpaca {
   name: string
   bio: string | null // null = UNMAPPED (owner input needed)
   image: string | null
+  /**
+   * Birth date in YYYY-MM-DD format.
+   * null = owner has not yet supplied the date — see OWNER_INPUT_NEEDED.md.
+   * Do NOT invent dates.
+   */
+  birthDate?: string | null
 }
 
 /**
@@ -39,18 +45,18 @@ export function findAlpacaName(slug: string | null | undefined): string | null {
 }
 
 export const ALPACAS: Alpaca[] = [
-  { id: 'barbarella', name: 'Barbarella', bio: null, image: null },
-  { id: 'avalon',     name: 'Avalon',     bio: null, image: null },
-  { id: 'bardot',     name: 'Bardot',     bio: null, image: null },
-  { id: 'chet',       name: 'Chet',       bio: null, image: null },
-  { id: 'dusty',      name: 'Dusty',      bio: null, image: null },
-  { id: 'fela',       name: 'Fela',       bio: null, image: null },
-  { id: 'fonda',      name: 'Fonda',      bio: null, image: null },
-  { id: 'lewis',      name: 'Lewis',      bio: null, image: null },
-  { id: 'marron',     name: 'Marron',     bio: null, image: null },
-  { id: 'mojo',       name: 'Mojo',       bio: null, image: null },
-  { id: 'moloko',     name: 'Moloko',     bio: null, image: null },
-  { id: 'nelson',     name: 'Nelson',     bio: null, image: null },
-  { id: 'suki',       name: 'Suki',       bio: null, image: null },
-  { id: 'toots',      name: 'Toots',      bio: null, image: null },
+  { id: 'barbarella', name: 'Barbarella', bio: null, image: null, birthDate: null }, // OWNER_INPUT_NEEDED
+  { id: 'avalon',     name: 'Avalon',     bio: null, image: null, birthDate: null }, // OWNER_INPUT_NEEDED
+  { id: 'bardot',     name: 'Bardot',     bio: null, image: null, birthDate: null }, // OWNER_INPUT_NEEDED — born 19 Jan 2022 per bio; owner to confirm YYYY-MM-DD
+  { id: 'chet',       name: 'Chet',       bio: null, image: null, birthDate: null }, // OWNER_INPUT_NEEDED — born 20 Nov 2020 per bio; owner to confirm
+  { id: 'dusty',      name: 'Dusty',      bio: null, image: null, birthDate: null }, // OWNER_INPUT_NEEDED
+  { id: 'fela',       name: 'Fela',       bio: null, image: null, birthDate: null }, // OWNER_INPUT_NEEDED
+  { id: 'fonda',      name: 'Fonda',      bio: null, image: null, birthDate: null }, // OWNER_INPUT_NEEDED
+  { id: 'lewis',      name: 'Lewis',      bio: null, image: null, birthDate: null }, // OWNER_INPUT_NEEDED
+  { id: 'marron',     name: 'Marron',     bio: null, image: null, birthDate: null }, // OWNER_INPUT_NEEDED
+  { id: 'mojo',       name: 'Mojo',       bio: null, image: null, birthDate: null }, // OWNER_INPUT_NEEDED
+  { id: 'moloko',     name: 'Moloko',     bio: null, image: null, birthDate: null }, // OWNER_INPUT_NEEDED
+  { id: 'nelson',     name: 'Nelson',     bio: null, image: null, birthDate: null }, // OWNER_INPUT_NEEDED
+  { id: 'suki',       name: 'Suki',       bio: null, image: null, birthDate: null }, // OWNER_INPUT_NEEDED
+  { id: 'toots',      name: 'Toots',      bio: null, image: null, birthDate: null }, // OWNER_INPUT_NEEDED — born 3 Feb 2021 per bio; owner to confirm
 ]

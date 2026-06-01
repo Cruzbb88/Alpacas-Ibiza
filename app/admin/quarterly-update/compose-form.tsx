@@ -141,12 +141,13 @@ export function QuarterlyComposeForm({ quarter, initialHtml, lastUpdated, sentAt
             background: '#556B2F',
             color: '#fff',
             border: 0,
-            padding: '10px 24px',
+            padding: '12px 24px',
             borderRadius: 8,
             fontSize: 14,
             fontWeight: 600,
             cursor: status === 'saving' ? 'not-allowed' : 'pointer',
             opacity: status === 'saving' || html.trim().length === 0 ? 0.6 : 1,
+            minHeight: 44,
           }}
         >
           {status === 'saving' ? 'Saving…' : 'Save draft'}
@@ -159,12 +160,13 @@ export function QuarterlyComposeForm({ quarter, initialHtml, lastUpdated, sentAt
             background: '#fff',
             color: '#556B2F',
             border: '1px solid #556B2F',
-            padding: '10px 20px',
+            padding: '12px 20px',
             borderRadius: 8,
             fontSize: 14,
             fontWeight: 600,
             cursor: suggesting ? 'not-allowed' : 'pointer',
             opacity: suggesting ? 0.6 : 1,
+            minHeight: 44,
           }}
         >
           {suggesting ? 'Suggesting…' : 'Auto-suggest starter draft'}
@@ -173,7 +175,14 @@ export function QuarterlyComposeForm({ quarter, initialHtml, lastUpdated, sentAt
           href={previewUrl}
           target="_blank"
           rel="noopener"
-          style={{ fontSize: 14, color: '#6366f1', textDecoration: 'none' }}
+          style={{
+            fontSize: 14,
+            color: '#6366f1',
+            textDecoration: 'none',
+            display: 'inline-flex',
+            alignItems: 'center',
+            minHeight: 44,
+          }}
         >
           Preview rendered email →
         </a>

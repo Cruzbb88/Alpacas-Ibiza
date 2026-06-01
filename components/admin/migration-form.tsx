@@ -184,10 +184,11 @@ export function MigrationForm() {
             color: '#fff',
             border: 'none',
             borderRadius: 6,
-            padding: '10px 24px',
+            padding: '12px 24px',
             fontWeight: 600,
             fontSize: 14,
             cursor: loading ? 'not-allowed' : 'pointer',
+            minHeight: 44,
           }}
         >
           {loading ? 'Generating links…' : 'Generate migration links'}
@@ -309,11 +310,13 @@ export function MigrationForm() {
                                 color: '#fff',
                                 border: 'none',
                                 borderRadius: 5,
-                                padding: '5px 12px',
+                                padding: '11px 14px',
                                 fontSize: 12,
                                 cursor: 'pointer',
                                 marginRight: 8,
                                 fontWeight: 600,
+                                minHeight: 44,
+                                minWidth: 44,
                               }}
                             >
                               {copied === copyKey ? 'Copied!' : 'Copy link'}
@@ -321,15 +324,18 @@ export function MigrationForm() {
                             <a
                               href={mailto}
                               style={{
-                                display: 'inline-block',
+                                display: 'inline-flex',
+                                alignItems: 'center',
                                 background: '#f3f4f6',
                                 color: '#374151',
                                 border: '1px solid #d1d5db',
                                 borderRadius: 5,
-                                padding: '5px 12px',
+                                padding: '11px 14px',
                                 fontSize: 12,
                                 textDecoration: 'none',
                                 fontWeight: 600,
+                                minHeight: 44,
+                                minWidth: 44,
                               }}
                             >
                               Email customer
