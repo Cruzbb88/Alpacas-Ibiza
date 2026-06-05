@@ -24,3 +24,7 @@ tsconfig.tsbuildinfo
 .DS_Storedev_output.txt
 
 dev_output.txt
+
+# Stray dev-server log from a mangled redirect path (philosophy 021)
+CUserscruzb*.txt
+devlog*.txt

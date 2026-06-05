@@ -136,6 +136,24 @@ Each rule: **Trigger** (when it fires) / **Rule** (what to do) / **Verify** (how
 
 ---
 
+### Rule 13 — Verification must reach the defect's surface (tsc is never enough)
+
+- **Trigger:** about to commit / call "done" a change touching a route, page, data file (JSON/YAML), config, env, or rendered output — and the only check run was `tsc --noEmit`.
+- **Rule:** Run the verification that can actually OBSERVE the defect class: `pnpm build` for routes/config/edge-runtime/framework-conventions; a live-server `curl` for content/i18n/HTTP-method/empty-state; a spec/ADR diff for value-correctness (ISR seconds, constants, prices). `tsc` validates types — it is blind to missing JSON keys, UTF-8 BOM, wrong constants, GET-vs-POST, stale ISR values, and edge-runtime conflicts.
+- **Verify:** Each "done" claim names which surface was driven (build log exit 0 / curl output / ADR line) — not "tsc green."
+- **Why:** Session 2026-06-01 (philosophy 020) — shipped the next-intl migration, 33 blank-label pages, a UTF-8 BOM build-breaker, `revalidate=7200` (ADR says 1800), and GET-only cron routes (405 on POST) all on tsc-green. Every one was invisible to the type checker and visible only at build/runtime/spec. The `feedback_runtime_verify_beats_static` memory said this already; it recurred ~6× in one session, which is why it's now a hard rule with `scripts/classify-suspect.sh` discipline behind it.
+
+---
+
+### Rule 14 — Determine WHY code exists before judging it (Chesterton's Fence)
+
+- **Trigger:** about to call any artifact "dead / useless / a mistake / leave-it-alone / in-progress junk," or about to remove/revert it.
+- **Rule:** First run the classification — `bash scripts/classify-suspect.sh <symbol-or-path>` — and read the evidence: static callers, dynamic/string-keyed refs, `vercel.json` crons + webhook routes, Next framework conventions (file-routing, metadata, generateStaticParams), intentional empty-state/failsafe markers, and spec/ADR mentions. Genuinely-useless bar: removing it changes observable behavior in NONE of {build, test, runtime, a spec/ADR} AND every evidence section is empty. If ANY section has hits, it exists for a reason → wire / keep / document, do NOT remove.
+- **Verify:** Every "remove / revert / it's dead / leave it" disposition cites the classifier evidence it's based on — never appearance alone.
+- **Why:** Session 2026-06-01 (philosophy 021) — mislabeled the cancel-feedback migration a "linter mistake" (it was intentional; reverting re-broke it), trusted agents that called a BOM build-break "missing exports" (the exports existed), and nearly treated `alpaca-birthday-cards` as half-built WIP when a `vercel.json` cron drives it. The classifier proved `CUserscruzbdevlog.txt` was the ONLY genuinely-dead artifact (0 refs, untracked, stray dev log) — everything else was load-bearing.
+
+---
+
 ## Append protocol — how to add a new rule
 
 When a session reveals a new failure mode:
