@@ -38,9 +38,11 @@ if (process.env.NODE_ENV !== 'production') {
 
 /** Extract the best-effort client IP from a Next.js Request. */
 export function getClientIp(request: Request): string {
+  // Vercel appends the real client IP as the RIGHTMOST value; [0] is client-forgeable, .at(-1) is infra-appended.
+  // cf-connecting-ip still takes precedence (set by Cloudflare, not spoofable from origin).
   return (
     request.headers.get('cf-connecting-ip') ||
-    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    request.headers.get('x-forwarded-for')?.split(',').at(-1)?.trim() ||
     'unknown'
   )
 }

@@ -399,7 +399,8 @@ export default async function MyAdoptionPage({
                 .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
                 .replace(/\son\w+\s*=\s*"[^"]*"/gi, '')
                 .replace(/\son\w+\s*=\s*'[^']*'/gi, '')
-                .replace(/\son\w+\s*=\s*[^\s>]+/gi, ''),
+                .replace(/\son\w+\s*=\s*[^\s>]+/gi, '')
+                .replace(/\s(?:href|src|action)\s*=\s*["']?\s*javascript:[^"'>]*/gi, ''),
             }}
           />
         </section>

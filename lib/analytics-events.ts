@@ -97,16 +97,22 @@ export interface EventParamsMap {
   // us a denominator for share-link impressions). Distinct from the existing
   // `adopt_referral_link_copied` (which fires only on copy/share action);
   // this fires on every portal view so the conversion ratio is visible.
+  // Privacy (data-minimisation): we send a boolean flag, NOT the code itself.
+  // The referral code is a stable pseudonymous identifier derived from the
+  // Mollie customerId — sending it to GA4 would link session data back to a
+  // specific donor. has_code: true is sufficient to count impressions.
   referral_link_displayed: {
-    code: string
+    has_code: boolean
   }
   // Fired in the checkout adapter when the donor lands on /adopt with a
   // valid `?ref=XXXXXX` and proceeds to checkout. Pairs with
   // adopt_checkout_started so the funnel report can split referred vs cold
   // checkout-starts without us touching the existing event.
+  // Privacy (data-minimisation): has_ref_code replaces ref_code for the
+  // same reason as referral_link_displayed above.
   adopt_checkout_started_via_referral: {
     tier: 'monthly' | 'yearly'
-    ref_code: string
+    has_ref_code: boolean
   }
   // gd-018 — corporate enquiry form. Privacy: send only boolean flags, never
   // the actual company name or headcount.

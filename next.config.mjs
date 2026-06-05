@@ -75,7 +75,7 @@ const nextConfig = {
     // ──────────────────────────────────────────────────────────────────────────
     const csp = [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://fareharbor.com https://*.fareharbor.com https://challenges.cloudflare.com https://js.stripe.com https://js.mollie.com https://va.vercel-scripts.com",
+      "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://fareharbor.com https://*.fareharbor.com https://challenges.cloudflare.com https://js.stripe.com https://js.mollie.com https://va.vercel-scripts.com",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "img-src 'self' data: https:",
       "font-src 'self' data: https://fonts.gstatic.com",
@@ -96,10 +96,14 @@ const nextConfig = {
           // SAMEORIGIN — FareHarbor + admin pages iframe within same origin.
           { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-          // Deny sensor APIs; opt out of FLoC/Topics.
-          { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()' },
+          // Deny sensor APIs; opt out of FLoC/Topics; block payment/USB APIs.
+          { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), interest-cohort=(), payment=(), usb=()' },
           // Report-Only — logs violations to console without breaking the site.
           { key: 'Content-Security-Policy-Report-Only', value: csp },
+          // Enforcing mini-CSP — touches NO script/style/connect directives so it
+          // cannot break GTM/GA/Stripe/FareHarbor. Enforces clickjacking + injection
+          // protections that are otherwise only present in the Report-Only header.
+          { key: 'Content-Security-Policy', value: "object-src 'none'; base-uri 'self'; frame-ancestors 'self'; form-action 'self' https://checkout.stripe.com" },
         ],
       },
     ]

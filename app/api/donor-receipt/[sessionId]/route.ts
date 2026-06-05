@@ -7,6 +7,7 @@ import React from 'react'
 import { PaymentReceipt } from '@/components/donor-portal/receipt-pdf'
 import type { ReceiptProps, ReceiptLineItem } from '@/components/donor-portal/receipt-pdf'
 import { rateLimit, getClientIp } from '@/lib/rate-limit'
+import { sanitiseDisplayName } from '@/lib/html'
 import { alpacasibiza } from '@/lib/tenants/alpacasibiza'
 
 // ── ID format guards ─────────────────────────────────────────────────────────
@@ -127,6 +128,7 @@ export async function GET(
         'Content-Type': 'application/pdf',
         'Content-Disposition': `inline; filename="${filename}"`,
         'Cache-Control': 'no-store',
+        'X-Robots-Tag': 'noindex, nofollow',
       },
     })
   } catch (err) {
@@ -154,12 +156,17 @@ async function buildStripeReceipt(sessionId: string): Promise<ReceiptProps> {
     expand: ['customer', 'subscription', 'line_items'],
   })
 
-  const donorName =
+  if (session.payment_status !== 'paid') throw new Error('SESSION_NOT_PAID')
+
+  const rawDonorName =
     session.customer_details?.name ??
     (session.customer && typeof session.customer === 'object' && 'name' in session.customer
       ? (session.customer as { name?: string | null }).name
       : null) ??
     'Donor'
+  // Cap at 80 chars and strip HTML/control chars — attacker can craft a Stripe
+  // session with 5000-char metadata that would render a giant text block in react-pdf.
+  const donorName = sanitiseDisplayName(rawDonorName) ?? 'Donor'
 
   const donorEmail =
     session.customer_details?.email ??
@@ -169,7 +176,9 @@ async function buildStripeReceipt(sessionId: string): Promise<ReceiptProps> {
     ''
 
   const tier = (session.metadata?.tier === 'yearly' ? 'yearly' : 'monthly') as 'monthly' | 'yearly'
-  const alpacaSlug = session.metadata?.alpaca ?? null
+  const rawAlpacaSlug = session.metadata?.alpaca ?? null
+  // Cap alpaca name — also comes from attacker-controlled Stripe session metadata.
+  const alpacaSlug = rawAlpacaSlug ? (sanitiseDisplayName(rawAlpacaSlug) ?? null) : null
   const currency = (session.currency ?? 'eur').toUpperCase()
   const amountFormatted = `${formatStripeAmount(session.amount_total, session.currency)} ${currency}`
 
@@ -211,14 +220,18 @@ async function buildMollieReceipt(paymentId: string): Promise<ReceiptProps> {
 
   const payment = await mollie.payments.get(paymentId)
 
+  if (payment.status !== 'paid') throw new Error('PAYMENT_NOT_PAID')
+
   // payment.details is a discriminated union across payment methods — not all
   // variants have consumerName. Cast through unknown at the deliberate subset
   // boundary to read the field when present without muting a real type error.
   const detailsAny = payment.details as unknown as Record<string, string | undefined> | undefined
-  const donorName =
+  const rawDonorNameMollie =
     (payment.billingAddress as { organizationName?: string } | undefined)?.organizationName
     ?? detailsAny?.['consumerName']
     ?? 'Donor'
+  // Cap at 80 chars and strip HTML/control chars — same attack surface as Stripe path.
+  const donorName = sanitiseDisplayName(rawDonorNameMollie) ?? 'Donor'
 
   // payment.metadata is typed as `{}` by the Mollie SDK — the actual runtime
   // shape is whatever was stored at checkout. Cast to a known minimal shape.
@@ -231,7 +244,11 @@ async function buildMollieReceipt(paymentId: string): Promise<ReceiptProps> {
   const donorEmail: string = meta?.donorEmail ?? ''
 
   const tier: 'monthly' | 'yearly' = meta?.tier === 'yearly' ? 'yearly' : 'monthly'
-  const alpacaSlug: string | null = meta?.alpaca ?? null
+  const rawAlpacaSlugMollie: string | null = meta?.alpaca ?? null
+  // Cap alpaca name — comes from attacker-controlled Mollie payment metadata.
+  const alpacaSlug: string | null = rawAlpacaSlugMollie
+    ? (sanitiseDisplayName(rawAlpacaSlugMollie) ?? null)
+    : null
   const currency = (payment.amount?.currency ?? 'EUR').toUpperCase()
   const amountStr = payment.amount?.value ?? '0.00'
   const amountFormatted = `${amountStr} ${currency}`

@@ -77,7 +77,7 @@ export async function POST(request: Request) {
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
     log.warn('Signature verification failed', { message })
-    return attachRequestId(NextResponse.json({ error: 'Invalid signature' }, { status: 401 }), reqId)
+    return attachRequestId(NextResponse.json({ error: 'Invalid signature' }, { status: 400 }), reqId)
   }
 
   // ── 5. Idempotency guard — Stripe retries for up to 3 days ──────────────

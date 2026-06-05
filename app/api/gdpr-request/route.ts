@@ -5,7 +5,7 @@ import { rateLimit } from '@/lib/rate-limit'
 import { isValidEmail } from '@/lib/validate-email'
 import { detectHoneypot } from '@/lib/honeypot'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
-import { escapeHtml } from '@/lib/html'
+import { escapeHtml, sanitizeHeader } from '@/lib/html'
 import { getMollieClient } from '@/lib/integrations/payment-mollie'
 import { maskCustomerId } from '@/lib/log-pii'
 
@@ -83,6 +83,7 @@ export async function POST(request: Request) {
   }
 
   const details = typeof body.details === 'string' ? body.details.slice(0, 2000) : ''
+  const headerEmail = sanitizeHeader(email)
   const escapedEmail = escapeHtml(email)
   const escapedDetails = escapeHtml(details)
   const escapedType = type.toUpperCase()
@@ -120,8 +121,8 @@ export async function POST(request: Request) {
   try {
     await sendEmail({
       to: TO_EMAIL,
-      replyTo: email,
-      subject: `[GDPR ${escapedType}] Request from ${escapedEmail}`,
+      replyTo: headerEmail,
+      subject: `[GDPR ${escapedType}] Request from ${headerEmail}`,
       html: `
         <div style="font-family:sans-serif;max-width:600px;margin:0 auto">
           <h2 style="color:#556B2F">GDPR ${escapedType} request</h2>

@@ -28,8 +28,12 @@ function writeConsent(value: 'accepted' | 'rejected') {
         event: 'cookie_consent_update',
         cookie_consent: value,
     })
-    // If rejected, disable GA/GTM cookie use via Consent Mode v2
+    // If rejected, disable GA/GTM cookie use via Consent Mode v2 and
+    // immediately expire any _ga/_gid cookies that may already be set
+    // (handles users who consented previously and then changed their mind).
     if (value === 'rejected') {
+        document.cookie = '_ga=; Max-Age=0; path=/; domain=.' + location.hostname
+        document.cookie = '_gid=; Max-Age=0; path=/; domain=.' + location.hostname
         w.dataLayer.push(['consent', 'update', {
             ad_storage: 'denied',
             analytics_storage: 'denied',

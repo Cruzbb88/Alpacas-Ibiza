@@ -36,7 +36,7 @@ export function ReferralCodeBadge({ code, shareUrl }: ReferralCodeBadgeProps) {
   useEffect(() => {
     if (fired.current) return
     fired.current = true
-    trackEvent('referral_link_displayed', { code })
+    trackEvent('referral_link_displayed', { has_code: true })
   }, [code])
 
   return (
