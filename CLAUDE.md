@@ -20,8 +20,11 @@ This file holds two catalogs that PRACTICES doesn't: the in-code failsafe map (w
 | Failsafe | Where | Fail mode |
 |---|---|---|
 | Turnstile widget no-op if site key unset | [components/turnstile-widget.tsx:82](components/turnstile-widget.tsx#L82) | renders `null` |
-| Turnstile server fail-open if secret unset | [lib/turnstile.ts:27-34](lib/turnstile.ts#L27-L34) | `{ok:true}` + prod `console.warn` |
-| Turnstile prod fail-closed on network error | [lib/turnstile.ts:51-54](lib/turnstile.ts#L51-L54) | asymmetric prod vs dev |
+| Turnstile server fail-open if secret unset | [lib/turnstile.ts](lib/turnstile.ts) `verifyViaTurnstile()` | `{ok:true}` + prod `console.warn` |
+| Turnstile prod fail-closed on network error | [lib/turnstile.ts](lib/turnstile.ts) `verifyViaTurnstile()` | asymmetric prod vs dev |
+| reCAPTCHA v3 fail-open if secret unset | [lib/turnstile.ts](lib/turnstile.ts) `verifyViaRecaptcha()` | `{ok:true}` + prod `console.warn`; mirrors Turnstile contract |
+| reCAPTCHA v3 prod fail-closed on network error | [lib/turnstile.ts](lib/turnstile.ts) `verifyViaRecaptcha()` | asymmetric prod vs dev; score<minScore → `{ok:false,reason:'score_too_low:N'}` |
+| `verifyTurnstile` routes through active captcha provider | [lib/turnstile.ts](lib/turnstile.ts) `verifyHumanToken()` | back-compat alias; CAPTCHA_PROVIDER=recaptcha → all 6 routes use reCAPTCHA with zero route edits |
 | Availability 503 if keys unset | [app/api/availability/route.ts:11-19](app/api/availability/route.ts#L11-L19) | UI hides date grid, keeps static CTA |
 | Google Reviews `{configured:false}` if keys unset | [app/api/google-reviews/route.ts:41-46](app/api/google-reviews/route.ts#L41-L46) | `GoogleReviewsBadge` renders `null` |
 | Webhook 503 if secret unset (fail-CLOSED) | [app/api/fareharbor-webhook/route.ts:66-72](app/api/fareharbor-webhook/route.ts#L66-L72) | security-critical, opposite of Turnstile |
@@ -156,6 +159,7 @@ This file holds two catalogs that PRACTICES doesn't: the in-code failsafe map (w
 | Skein-checkout IP rate limit: 3 req / 5 min per IP | [app/api/skein-checkout/route.ts](app/api/skein-checkout/route.ts) | mirrors checkout + billing-portal rate-limit |
 | Skein-checkout success/cancel URLs use `SITE_BASE_URL` (NOT `Origin` header) | [app/api/skein-checkout/route.ts](app/api/skein-checkout/route.ts) | same open-redirect prevention as checkout + mollie-checkout (ADR 017) |
 | Skein alpaca slug validated via `findAlpacaName` before Stripe metadata | [app/api/skein-checkout/route.ts](app/api/skein-checkout/route.ts) | unknown/forged slugs silently treated as pick-for-me; no arbitrary text in Stripe metadata |
+| Skein homepage callout hidden unless `SKEIN_CALLOUT_LIVE=true` | [app/[locale]/page.tsx](app/%5Blocale%5D/page.tsx) | env var defaults OFF — callout is deployed but reversible; owner flips for shearing season |
 
 **Adding a new failsafe?** PRACTICES.md "Append protocol" applies. After landing the code, add the row above with file:line.
 
@@ -185,7 +189,10 @@ mishandling) that 603 tests + `next build` + `tsc --noEmit` all missed because
   a mismatch you don't understand.
 
 **Tier 2 — fail-open / graceful** (site works, feature dark until set):
-- `TURNSTILE_SECRET_KEY` + `NEXT_PUBLIC_TURNSTILE_SITE_KEY` → forms unprotected (visible prod warn)
+- `CAPTCHA_PROVIDER` → selects captcha adapter: `turnstile` (default) | `recaptcha` | `none`. Swap by config, not code.
+- `TURNSTILE_SECRET_KEY` + `NEXT_PUBLIC_TURNSTILE_SITE_KEY` → forms unprotected if unset (visible prod warn); required when `CAPTCHA_PROVIDER=turnstile`
+- `RECAPTCHA_SECRET_KEY` + `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` → required when `CAPTCHA_PROVIDER=recaptcha`; unset → fail-open + prod warn
+- `RECAPTCHA_MIN_SCORE` → reCAPTCHA v3 score threshold (default `0.5`); raise to `0.7` for stricter protection
 - `FAREHARBOR_APP_KEY` + `FAREHARBOR_USER_KEY` → live spots-left widget hidden
 - `FAREHARBOR_ITEM_*` IDs → per-tour Book buttons inert; main calendar still works
 - `GA4_PROPERTY_ID` + `GA4_CLIENT_EMAIL` + `GA4_PRIVATE_KEY` → admin analytics page dark

@@ -33,6 +33,7 @@ import { manualInquiryBookingProvider } from './booking-manual-inquiry'
 import { resendEmailProvider } from './email-resend'
 import { consoleOnlyEmailProvider } from './email-console-only'
 import { turnstileCaptchaProvider } from './captcha-turnstile'
+import { recaptchaCaptchaProvider } from './captcha-recaptcha'
 import { noCaptchaProvider } from './captcha-none'
 import { ga4GtmAnalyticsProvider } from './analytics-ga4-gtm'
 import { makeMapProvider } from './map'
@@ -73,9 +74,25 @@ export function getProviders(tenant: Tenant): TenantProviders {
     ? resendEmailProvider(tenant)
     : consoleOnlyEmailProvider()
 
-  const captcha: CaptchaProvider = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
-    ? turnstileCaptchaProvider()
-    : noCaptchaProvider()
+  // Captcha adapter selection.
+  // Priority order:
+  //   1. CAPTCHA_PROVIDER env var (explicit override: 'turnstile' | 'recaptcha' | 'none')
+  //   2. Legacy auto-detect: turnstile if NEXT_PUBLIC_TURNSTILE_SITE_KEY is set
+  //   3. Default: turnstile (back-compat — matching existing behaviour)
+  const captchaProvider = process.env.CAPTCHA_PROVIDER ?? (
+    process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ? 'turnstile' : 'turnstile'
+  )
+  const captcha: CaptchaProvider = (() => {
+    switch (captchaProvider) {
+      case 'recaptcha':
+        return recaptchaCaptchaProvider()
+      case 'none':
+        return noCaptchaProvider()
+      case 'turnstile':
+      default:
+        return turnstileCaptchaProvider()
+    }
+  })()
 
   const analytics: AnalyticsProvider = ga4GtmAnalyticsProvider(tenant)
 

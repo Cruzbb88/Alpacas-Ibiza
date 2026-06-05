@@ -12,6 +12,21 @@ interface TriggerResult {
 }
 
 /**
+ * Production guard: if NEXT_PUBLIC_VERCEL_ENV is 'production' (or NODE_ENV is
+ * 'production' on a non-Vercel public deploy), we NEVER read
+ * NEXT_PUBLIC_CRON_SECRET_PREVIEW — even if it was accidentally set on the
+ * production deployment. The check is evaluated at module load time (constant
+ * after bundle inlining) so the secret cannot leak via any runtime path.
+ *
+ * NEXT_PUBLIC_VERCEL_ENV is set automatically by Vercel per deployment target
+ * ('production' | 'preview' | 'development'). For non-Vercel environments we
+ * fall back to NODE_ENV.
+ */
+const IS_PRODUCTION =
+  process.env.NEXT_PUBLIC_VERCEL_ENV === 'production' ||
+  process.env.NODE_ENV === 'production'
+
+/**
  * Client-side form that fires POST /api/alpaca-birthday-cards.
  * CRON_SECRET is read from the NEXT_PUBLIC_CRON_SECRET_PREVIEW env var
  * (set on admin-only preview environments only — never on production public deploys).
@@ -23,6 +38,31 @@ export function BirthdayTriggerForm() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
   const [result, setResult] = useState<TriggerResult | null>(null)
   const [errorMessage, setErrorMessage] = useState<string>('')
+
+  // On production public deploys, render a static note instead of the trigger
+  // button. This makes NEXT_PUBLIC_CRON_SECRET_PREVIEW leak impossible from
+  // code even if the env var was accidentally set on the production deployment.
+  if (IS_PRODUCTION) {
+    return (
+      <div
+        style={{
+          padding: '14px 18px',
+          background: '#fefce8',
+          border: '1px solid #fde68a',
+          borderRadius: 8,
+          fontSize: 14,
+          color: '#92400e',
+        }}
+      >
+        <strong>Manual trigger disabled in production.</strong>
+        <p style={{ margin: '6px 0 0' }}>
+          Birthday emails are sent automatically by the cron schedule. To trigger
+          manually, use <code>curl</code> with the <code>CRON_SECRET</code> Bearer
+          token from a secure server-side context.
+        </p>
+      </div>
+    )
+  }
 
   async function handleTrigger() {
     setStatus('loading')

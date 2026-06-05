@@ -38,6 +38,7 @@ import {
   type NewPaymentEvent,
 } from './schema.ts'
 import { makeRequestLogger } from '../request-id.ts'
+import { scrubWebhookPayload } from './scrub-payload.ts'
 
 // ── Module-scope logger ──────────────────────────────────────────────────────
 //
@@ -475,8 +476,13 @@ export async function recordPaymentEvent(
   if (!db) return null
 
   const id = synthesizeEventId(args.vendor, args.idempotencyKey)
-  const payloadJson =
-    typeof args.payload === 'string' ? args.payload : JSON.stringify(args.payload)
+  // Scrub PII (email, address, phone, name, ip, card, billing fields) before
+  // persisting. The authoritative PII lives in Stripe/Mollie; we only need
+  // ids + amounts + event types for reconciliation.
+  const scrubbedPayload = scrubWebhookPayload(
+    typeof args.payload === 'string' ? JSON.parse(args.payload) : args.payload,
+  )
+  const payloadJson = JSON.stringify(scrubbedPayload)
 
   const row: NewPaymentEvent = {
     id,

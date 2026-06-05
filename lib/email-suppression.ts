@@ -44,6 +44,15 @@ interface SuppressionEntry {
   addedAt: string
 }
 
+// 90 days — long enough to honour hard-bounce + complaint suppression through
+// any realistic restart cycle, while bounding in-memory PII retention.
+// Mirrors the purge-on-access pattern from lib/webhook-idempotency.ts.
+const TTL_MS = 90 * 24 * 60 * 60 * 1000
+
+// Maximum entries before the oldest is evicted. Hard bounces / complaints are
+// rare events — 10 000 is an extremely conservative ceiling for this workload.
+const MAX_SIZE = 10_000
+
 const globalForSuppression = globalThis as unknown as {
   __emailSuppressionStore?: Map<string, SuppressionEntry>
 }
@@ -55,6 +64,36 @@ if (process.env.NODE_ENV !== 'production') {
   globalForSuppression.__emailSuppressionStore = _store
 }
 
+/**
+ * Evict entries whose addedAt timestamp is older than TTL_MS.
+ * Called on every read/write so callers never observe stale PII.
+ */
+function purge(now: number): void {
+  for (const [k, entry] of _store) {
+    if (now - new Date(entry.addedAt).getTime() > TTL_MS) {
+      _store.delete(k)
+    }
+  }
+}
+
+/**
+ * When the store is at MAX_SIZE, evict the single oldest entry to make room.
+ * Oldest is the entry with the smallest addedAt value.
+ */
+function evictOldestIfFull(): void {
+  if (_store.size < MAX_SIZE) return
+  let oldestKey: string | undefined
+  let oldestTime = Infinity
+  for (const [k, entry] of _store) {
+    const t = new Date(entry.addedAt).getTime()
+    if (t < oldestTime) {
+      oldestTime = t
+      oldestKey = k
+    }
+  }
+  if (oldestKey !== undefined) _store.delete(oldestKey)
+}
+
 /** Normalize an email for store key: lowercase + trim. */
 function normalize(email: string): string {
   return email.trim().toLowerCase()
@@ -64,10 +103,15 @@ function normalize(email: string): string {
  * Add an address to the suppression list. Idempotent — re-adding the same
  * email with a stronger reason (complaint > hard-bounce) wins; equal-or-
  * weaker reasons keep the existing entry.
+ *
+ * Triggers a TTL purge on every call so stale entries are evicted promptly.
+ * If the store is at MAX_SIZE after purging, the oldest entry is evicted
+ * before the new one is inserted.
  */
 export function suppressEmail(email: string, reason: SuppressionReason): void {
   const key = normalize(email)
   if (key.length === 0) return
+  purge(Date.now())
   const existing = _store.get(key)
   // Reason precedence: complaint > hard-bounce > manual. Once an address is
   // suppressed for spam-complaint, it stays at that reason regardless of
@@ -76,16 +120,19 @@ export function suppressEmail(email: string, reason: SuppressionReason): void {
     const order: Record<SuppressionReason, number> = { manual: 0, 'hard-bounce': 1, complaint: 2 }
     if (order[existing.reason] >= order[reason]) return
   }
+  evictOldestIfFull()
   _store.set(key, { email: key, reason, addedAt: new Date().toISOString() })
 }
 
 /** Returns true when the given address is suppressed. Case-insensitive. */
 export function isSuppressed(email: string): boolean {
+  purge(Date.now())
   return _store.has(normalize(email))
 }
 
 /** Returns the suppression entry, or null when the address is not suppressed. */
 export function getSuppression(email: string): SuppressionEntry | null {
+  purge(Date.now())
   return _store.get(normalize(email)) ?? null
 }
 
