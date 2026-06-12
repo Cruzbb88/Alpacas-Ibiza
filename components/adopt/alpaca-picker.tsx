@@ -1,6 +1,6 @@
 'use client'
 
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams, usePathname } from 'next/navigation'
 import { useTransition } from 'react'
 import { ALPACAS } from '@/lib/data/alpacas'
 import { trackEvent } from '@/lib/client-track'
@@ -41,6 +41,7 @@ export function AlpacaPicker({
 }: AlpacaPickerProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const pathname = usePathname()
   const [isPending, startTransition] = useTransition()
 
   function setAlpaca(nextSlug: string | null, position: number) {
@@ -51,7 +52,10 @@ export function AlpacaPicker({
       params.delete('alpaca')
     }
     const qs = params.toString()
-    const url = `/${locale}/adopt${qs ? `?${qs}` : ''}${nextSlug ? '#cta' : ''}`
+    // Re-render the CURRENT page (already locale-prefixed), not a hardcoded
+    // /adopt. This component is reused on /skein (and any future picker page);
+    // hardcoding /adopt navigated skein users off the sponsorship flow.
+    const url = `${pathname}${qs ? `?${qs}` : ''}${nextSlug ? '#cta' : ''}`
     // Fire BEFORE the transition — tracking is sync, navigation isn't time-critical
     // here. position=-1 indicates the "Pick for me" / clear selection tile.
     try {
@@ -109,7 +113,19 @@ export function AlpacaPicker({
                   : 'bg-card border-border hover:border-primary/40 text-foreground')
               }
             >
-              <span aria-hidden="true" className="text-xl">🦙</span>
+              {a.image
+                ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={a.image}
+                    alt={a.name}
+                    aria-hidden="true"
+                    className="w-10 h-10 rounded-full object-cover object-top"
+                    loading="lazy"
+                  />
+                )
+                : <span aria-hidden="true" className="text-xl">🦙</span>
+              }
               <span className="font-medium leading-tight">{a.name}</span>
             </button>
           )

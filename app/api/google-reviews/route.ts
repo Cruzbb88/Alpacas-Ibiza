@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
 import { rateLimit, getClientIp } from '@/lib/rate-limit'
+import { fetchWithTimeout } from '@/lib/fetch'
 
 /**
  * GET /api/google-reviews
@@ -15,15 +16,6 @@ import { rateLimit, getClientIp } from '@/lib/rate-limit'
  *
  * Docs: https://developers.google.com/maps/documentation/places/web-service/place-details
  */
-async function fetchWithTimeout(url: string, init: RequestInit, ms = 5000) {
-    const ctrl = new AbortController()
-    const t = setTimeout(() => ctrl.abort(), ms)
-    try {
-        return await fetch(url, { ...init, signal: ctrl.signal })
-    } finally {
-        clearTimeout(t)
-    }
-}
 
 interface ReviewSummary {
     rating: number
@@ -33,6 +25,7 @@ interface ReviewSummary {
         rating: number
         text: string
         relativeTime: string
+        language?: string
     }>
 }
 
@@ -75,7 +68,7 @@ export async function GET(request: Request) {
             {
                 headers: {
                     'X-Goog-Api-Key': apiKey,
-                    'X-Goog-FieldMask': 'rating,userRatingCount,reviews',
+                    'X-Goog-FieldMask': 'rating,userRatingCount,reviews.authorAttribution,reviews.rating,reviews.text,reviews.originalText,reviews.relativePublishTimeDescription',
                 },
             },
             6000
@@ -89,7 +82,8 @@ export async function GET(request: Request) {
         interface PlacesReview {
             authorAttribution?: { displayName?: string }
             rating?: number
-            text?: { text?: string }
+            text?: { text?: string; languageCode?: string }
+            originalText?: { languageCode?: string }
             relativePublishTimeDescription?: string
         }
         interface PlacesResponse {
@@ -108,6 +102,11 @@ export async function GET(request: Request) {
                     rating: r.rating || 0,
                     text: r.text?.text || '',
                     relativeTime: r.relativePublishTimeDescription || '',
+                    // originalText.languageCode is the language of the original review text
+                    // (before any translation applied by the Places API itself).
+                    // Used by ReviewTranslateButton to suppress the translate prompt on
+                    // same-locale reviews (e.g. English review shown to English visitor).
+                    language: r.originalText?.languageCode ?? r.text?.languageCode,
                 })),
         }
 

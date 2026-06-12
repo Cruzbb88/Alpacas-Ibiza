@@ -13,3 +13,20 @@ export async function fetchWithTimeout(
         clearTimeout(t)
     }
 }
+
+/**
+ * Race a promise against a millisecond timeout.
+ * Resolves to `null` on timeout or rejection; always clears the timer.
+ * Each call gets its own independent timer so parallel races don't share state.
+ *
+ * Used by: api/social-proof/route.ts, components/social-proof-strip.tsx
+ */
+export function raceWithTimeout<T>(p: Promise<T>, ms: number): Promise<T | null> {
+    return new Promise(resolve => {
+        const timer = setTimeout(() => resolve(null), ms)
+        p.then(
+            v => { clearTimeout(timer); resolve(v) },
+            () => { clearTimeout(timer); resolve(null) },
+        )
+    })
+}

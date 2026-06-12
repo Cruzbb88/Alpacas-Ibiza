@@ -67,31 +67,32 @@ export default async function WeavingPage({
         crumbs={[{ name: tr('nav.weaving') || 'Weaving', path: 'weaving' }]}
       />
 
-      {/* Hero */}
+      {/* Hero — weaving photo self-hosted from the live site (heroes/weaving.jpg). */}
       <GradientPageHero
         title={tr('weaving.title')}
         subtitle={tr('weaving.subhead')}
+        backgroundImage="/images/heroes/weaving.jpg"
       />
 
-      {/* Photo placeholders */}
+      {/* Weaving photos — self-hosted from the live site (gallery/*). */}
       <PageSection width="wide">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[
-            { label: tr('weaving.photoStudio') || '[UNMAPPED — studio interior photo]' },
-            { label: tr('weaving.photoLoom') || '[UNMAPPED — loom in action photo]' },
-            { label: tr('weaving.photoScarves') || '[UNMAPPED — finished scarves photo]' },
+            { src: '/images/gallery/weaving-15.jpg', label: tr('weaving.photoStudio') || 'Handwoven alpaca textiles' },
+            { src: '/images/gallery/nelson-fibre.jpg', label: tr('weaving.photoLoom') || 'Alpaca fibre from our own herd' },
+            { src: '/images/gallery/farm-wide.jpg', label: tr('weaving.photoScarves') || 'Es Currals weaving studio' },
           ].map((photo, i) => (
             <div
               key={i}
-              className="aspect-[4/3] rounded-lg bg-muted border border-border flex items-center justify-center"
+              className="aspect-[4/3] rounded-lg overflow-hidden border border-border bg-muted"
             >
-              {process.env.NODE_ENV !== 'production' ? (
-                <p className="text-xs font-mono text-amber-700 bg-amber-50 border border-amber-200 rounded px-2 py-1 text-center mx-4">
-                  {photo.label}
-                </p>
-              ) : (
-                <span className="sr-only">{photo.label}</span>
-              )}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={photo.src}
+                alt={photo.label}
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
             </div>
           ))}
         </div>
@@ -142,7 +143,7 @@ export default async function WeavingPage({
       <PageSection width="narrow" borderTop className="py-14" innerClassName="text-center">
         <div className="flex flex-col sm:flex-row justify-center gap-4">
           <Link
-            href={`/${locale}/weaving/collection`}
+            href={`/${locale}/shop/woven`}
             className="inline-block rounded-lg bg-primary text-primary-foreground px-8 py-3 text-sm font-medium hover:bg-primary/90 transition-colors"
           >
             {tr('weaving.collectionCta')}

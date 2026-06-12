@@ -82,11 +82,12 @@ export default async function AlpacasPage({
                 crumbs={[{ name: translate('nav.alpacas') || 'Our Alpacas', path: 'alpacas' }]}
             />
 
-            {/* backgroundImage pending owner photo supply — Hero falls back to gradient */}
-            {/* Hero */}
+            {/* Hero — herd group shot self-hosted from the live site
+                (public/images/heroes/herd-field.jpg). Falls back to gradient if removed. */}
             <Hero
                 title={translate('alpacas.title')}
                 subtitle={translate('alpacas.subtitle')}
+                backgroundImage="/images/heroes/herd-field.jpg"
             />
 
             {/* Fun-fact carousel — pulls non-null fun_fact from the full herd

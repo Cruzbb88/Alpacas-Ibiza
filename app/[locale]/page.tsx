@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import { Hero } from '@/components/hero'
 import { ChoicePaths } from '@/components/choice-paths'
 import { Features } from '@/components/features'
@@ -7,7 +8,8 @@ import { ExperienceCards } from '@/components/experience-cards'
 import { ReviewCard } from '@/components/review-card'
 import type { Review } from '@/components/review-card'
 import { getTranslations } from 'next-intl/server'
-import { FAREHARBOR_BOOKING_URL, SITE_BASE_URL } from '@/lib/config'
+import { FAREHARBOR_BOOKING_URL, MEMBERSHIP_LIVE, MEMBERSHIP_PRICE_EUR, SITE_BASE_URL, ADOPT_PRICE_MONTHLY_EUR, HERD_FAMILY_LIVE } from '@/lib/config'
+import { REFERRAL_CODE_RE } from '@/lib/referral-codes'
 import type { Locale } from '@/i18n.config'
 import { NewsletterForm } from '@/components/newsletter-form'
 import { AwardsBadges } from '@/components/awards-badges'
@@ -17,6 +19,10 @@ import { GoogleReviewsBadge } from '@/components/google-reviews-badge'
 import { localBusinessSchema, toJsonLd } from '@/lib/structured-data'
 import { AlpacaOfTheDay } from '@/components/alpaca-of-the-day'
 import { AdoptersCounterBadge } from '@/components/adopters-counter-badge'
+import { SocialProofStrip } from '@/components/social-proof-strip'
+import { AlpacaCamEmbed } from '@/components/alpaca-cam-embed'
+import { CampaignBannerGeneric } from '@/components/campaign-banner-generic'
+import { PressLogos } from '@/components/press-logos'
 
 export async function generateMetadata({
   params,
@@ -57,7 +63,9 @@ export default async function Home({
   const translate = await getTranslations()
 
   /* ─── UTM / referral passthrough ─── */
-  const validRef = ref && /^ALPACA-[A-Z0-9]{6}$/.test(ref) ? ref : undefined
+  // Validate referral code against the canonical REFERRAL_CODE_RE pattern.
+  // Use the shared constant so any format change propagates here automatically.
+  const validRef = ref && REFERRAL_CODE_RE.test(ref.toUpperCase()) ? ref.toUpperCase() : undefined
   function bookingHref(): string {
     if (!validRef) return FAREHARBOR_BOOKING_URL
     try {
@@ -149,28 +157,42 @@ export default async function Home({
     },
   ]
 
-  /* ─── Experience Cards ─── */
+  /* ─── Activity Cards (live-site landmark: 5 cards) ─── */
   const experienceCards = [
     {
+      icon: '💍',
+      title: translate('homepage.activityCards.weddings.title'),
+      description: translate('homepage.activityCards.weddings.description'),
+      cta: translate('homepage.activityCards.weddings.cta'),
+      href: `/${locale}/weddings`,
+    },
+    {
+      icon: '🦙',
+      title: translate('homepage.activityCards.adopt.title'),
+      description: translate('homepage.activityCards.adopt.description'),
+      cta: translate('homepage.activityCards.adopt.cta'),
+      href: `/${locale}/adopt`,
+    },
+    {
+      icon: '🧘',
+      title: translate('homepage.activityCards.yoga.title'),
+      description: translate('homepage.activityCards.yoga.description'),
+      cta: translate('homepage.activityCards.yoga.cta'),
+      href: `/${locale}/yoga`,
+    },
+    {
+      icon: '🧶',
+      title: translate('homepage.activityCards.workshops.title'),
+      description: translate('homepage.activityCards.workshops.description'),
+      cta: translate('homepage.activityCards.workshops.cta'),
+      href: `/${locale}/workshops`,
+    },
+    {
       icon: '🏢',
-      title: translate('homepage.experiences.corporate.title'),
-      description: translate('homepage.experiences.corporate.description'),
-      cta: translate('homepage.experiences.corporate.cta'),
+      title: translate('homepage.activityCards.business.title'),
+      description: translate('homepage.activityCards.business.description'),
+      cta: translate('homepage.activityCards.business.cta'),
       href: `/${locale}/experiences/corporate-team-building`,
-    },
-    {
-      icon: '🌅',
-      title: translate('homepage.experiences.romantic.title'),
-      description: translate('homepage.experiences.romantic.description'),
-      cta: translate('homepage.experiences.romantic.cta'),
-      href: `/${locale}/experiences/romantic-sunset`,
-    },
-    {
-      icon: '👨‍👩‍👧‍👦',
-      title: translate('homepage.experiences.family.title'),
-      description: translate('homepage.experiences.family.description'),
-      cta: translate('homepage.experiences.family.cta'),
-      href: `/${locale}/experiences/family-farm-days`,
     },
   ]
 
@@ -216,6 +238,7 @@ export default async function Home({
         title={translate('hero.title')}
         subtitle={translate('hero.subtitle')}
         eyebrow={translate('hero.eyebrow')}
+        backgroundImage="/images/heroes/home.jpg"
         trustSignals={["Ibiza's first alpaca farm", "By appointment in San Carlos"]}
         cta={{
           label: translate('hero.ctaPrimary'),
@@ -232,6 +255,22 @@ export default async function Home({
       <div className="w-full flex justify-center py-3 bg-background border-b border-border/50">
         <AdoptersCounterBadge locale={locale} />
       </div>
+
+      {/* ── 1c. Live alpaca cam — env-gated; renders null until owner sets ALPACA_CAM_EMBED_URL.
+               Failsafe: see CLAUDE.md failsafe map. No layout shift when unset. ── */}
+      <AlpacaCamEmbed />
+
+      {/* ── 1d. Campaign banner (home slot) — env-gated; renders null unless CAMPAIGN_HOME_LIVE=true.
+               Failsafe: fail-open — no layout shift when unset. ── */}
+      <section className="w-full px-4 py-4 bg-background">
+        <div className="max-w-4xl mx-auto">
+          <CampaignBannerGeneric slot="home" />
+        </div>
+      </section>
+
+      {/* ── 1e. Press logos strip — fail-quiet; renders null until owner provides logos.
+               Failsafe: see CLAUDE.md failsafe map. No layout shift when unset. ── */}
+      <PressLogos title="As featured in" />
 
       {/* ── 2. Choose Your Path ── */}
       <ChoicePaths
@@ -271,6 +310,84 @@ export default async function Home({
           <Features items={features} />
         </div>
       </section>
+
+      {/* ── 4b. Social proof strip — placed BEFORE any Level-5 commitment asks.
+               NN/g Hierarchy of Trust: social proof (Level 1-2) must precede
+               recurring-subscription callouts (Level 4-5). ── */}
+      <section className="w-full py-6 px-4 bg-background">
+        <div className="max-w-4xl mx-auto">
+          <Suspense fallback={null}>
+            <SocialProofStrip variant="full" />
+          </Suspense>
+        </div>
+      </section>
+
+      {/* ── 4c. Skein seasonal callout — hidden unless SKEIN_CALLOUT_LIVE=true.
+               Failsafe: env var OFF by default; owner flips it on for shearing season.
+               See CLAUDE.md failsafe map: "Skein homepage callout hidden unless SKEIN_CALLOUT_LIVE=true" ── */}
+      {process.env.SKEIN_CALLOUT_LIVE === 'true' && (
+        <section className="w-full py-10 px-4 bg-accent/10 border-y border-accent/20">
+          <div className="max-w-2xl mx-auto text-center">
+            <h2 className="text-xl font-bold text-foreground mb-2">
+              {translate('homepage.skeinCallout.headline')}
+            </h2>
+            <p className="text-sm text-foreground/70 mb-4">
+              {translate('homepage.skeinCallout.body')}
+            </p>
+            <a
+              href={`/${locale}/skein`}
+              className="inline-flex items-center justify-center px-5 py-2.5 bg-accent hover:bg-accent/90 text-accent-foreground rounded-lg text-sm font-medium transition-colors"
+            >
+              {translate('homepage.skeinCallout.cta')}
+            </a>
+          </div>
+        </section>
+      )}
+
+      {/* ── 4d. Membership callout — hidden unless MEMBERSHIP_LIVE=true.
+               Failsafe: env var OFF by default; renders null when unset.
+               See CLAUDE.md failsafe map: "Membership callout hidden unless MEMBERSHIP_LIVE=true"
+               Placed AFTER social-proof strip (NN/g trust-level ordering). ── */}
+      {MEMBERSHIP_LIVE && MEMBERSHIP_PRICE_EUR > 0 && (
+        <section className="w-full py-10 px-4 bg-primary/5 border-y border-primary/10">
+          <div className="max-w-2xl mx-auto text-center">
+            <h2 className="text-xl font-bold text-foreground mb-2">
+              Annual Farm Pass — Unlimited Visits
+            </h2>
+            <p className="text-sm text-foreground/70 mb-4">
+              {`Visit as often as you like for a full year. One pass, every visit — €${MEMBERSHIP_PRICE_EUR}.`}
+            </p>
+            <a
+              href={`/${locale}/membership`}
+              className="inline-flex items-center justify-center px-5 py-2.5 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg text-sm font-medium transition-colors"
+            >
+              Learn more
+            </a>
+          </div>
+        </section>
+      )}
+
+      {/* ── 4e. Herd Family callout — hidden unless HERD_FAMILY_LIVE=true.
+               Failsafe: env var OFF by default; renders null when unset.
+               Placed AFTER social-proof strip (NN/g trust-level ordering). ── */}
+      {HERD_FAMILY_LIVE && (
+        <section className="w-full py-10 px-4 bg-accent/10 border-y border-accent/20">
+          <div className="max-w-2xl mx-auto text-center">
+            <h2 className="text-xl font-bold text-foreground mb-2">
+              Become a Herd Family Member
+            </h2>
+            <p className="text-sm text-foreground/70 mb-4">
+              {`Monthly alpaca adoption — €${ADOPT_PRICE_MONTHLY_EUR}/month, cancel any time.`}
+            </p>
+            <a
+              href={`/${locale}/herd-family`}
+              className="inline-flex items-center justify-center px-5 py-2.5 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg text-sm font-medium transition-colors"
+            >
+              Learn more
+            </a>
+          </div>
+        </section>
+      )}
 
       {/* ── 5. Special Experiences ── */}
       <ExperienceCards

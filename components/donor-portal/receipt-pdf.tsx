@@ -2,8 +2,8 @@ import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer'
 
 const styles = StyleSheet.create({
   page: { padding: 50, fontFamily: 'Helvetica', fontSize: 11, color: '#2E2E2E' },
-  header: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 30, borderBottomWidth: 2, borderBottomColor: '#AD561A', paddingBottom: 10 },
-  brandName: { fontSize: 18, fontFamily: 'Helvetica-Bold', color: '#AD561A' },
+  header: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 30, borderBottomWidth: 2, borderBottomColor: '#556B2F', paddingBottom: 10 },
+  brandName: { fontSize: 18, fontFamily: 'Helvetica-Bold', color: '#556B2F' },
   receiptLabel: { fontSize: 14, fontFamily: 'Helvetica-Bold' },
   section: { marginBottom: 20 },
   row: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 },
@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
   tableRow: { flexDirection: 'row', paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: '#EEE' },
   cellDesc: { flex: 3 },
   cellAmount: { flex: 1, textAlign: 'right' },
-  total: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 12, paddingTop: 8, borderTopWidth: 2, borderTopColor: '#AD561A' },
+  total: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 12, paddingTop: 8, borderTopWidth: 2, borderTopColor: '#556B2F' },
   footer: { position: 'absolute', bottom: 30, left: 50, right: 50, fontSize: 8, color: '#999', textAlign: 'center', borderTopWidth: 1, borderTopColor: '#EEE', paddingTop: 8 },
   note: { fontSize: 9, color: '#888', marginTop: 16, fontStyle: 'italic' },
 })

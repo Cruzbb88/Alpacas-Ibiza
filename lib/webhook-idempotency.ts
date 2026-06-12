@@ -13,25 +13,15 @@
  * Vercel KV.
  */
 
+import { createTtlStore } from './in-process-ttl-store.ts'
+
 // 4 days — comfortably longer than Stripe's 3-day retry window (1d buffer for
 // queue/clock drift) and well above Mollie's 18h. Halves in-memory footprint
 // vs the previous 7-day default. Resonance-finder 2026-05-29 finding.
-const TTL_MS = 4 * 24 * 60 * 60 * 1000
-
-const globalForStore = globalThis as unknown as {
-  __webhookIdempotencyStore?: Map<string, number>
-}
-const _store: Map<string, number> =
-  globalForStore.__webhookIdempotencyStore ?? new Map()
-if (process.env.NODE_ENV !== 'production') {
-  globalForStore.__webhookIdempotencyStore = _store
-}
-
-function purge(now: number): void {
-  for (const [k, ts] of _store) {
-    if (now - ts > TTL_MS) _store.delete(k)
-  }
-}
+const _store = createTtlStore({
+  ttlMs: 4 * 24 * 60 * 60 * 1000,
+  globalKey: '__webhookIdempotencyStore',
+})
 
 /**
  * Returns true if `eventId` has been seen before within TTL.
@@ -42,8 +32,6 @@ function purge(now: number): void {
  * retry would then be skipped as "idempotent", defeating the retry mechanism.
  */
 export function isAlreadyProcessed(eventId: string): boolean {
-  const now = Date.now()
-  purge(now)
   return _store.has(eventId)
 }
 
@@ -53,7 +41,12 @@ export function isAlreadyProcessed(eventId: string): boolean {
  * retry to be allowed through.
  */
 export function markProcessed(eventId: string): void {
-  _store.set(eventId, Date.now())
+  _store.set(eventId)
+}
+
+/** Returns the current number of tracked event IDs (post-purge). For monitoring only. */
+export function getSize(): number {
+  return _store.size()
 }
 
 /** @internal — for tests */

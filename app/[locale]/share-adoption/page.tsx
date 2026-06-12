@@ -22,12 +22,11 @@ import Link from 'next/link'
 import type { Locale } from '@/i18n.config'
 import { SITE_BASE_URL } from '@/lib/config'
 import { findAlpacaName } from '@/lib/data/alpacas'
+import { REFERRAL_CODE_RE } from '@/lib/referral-codes'
 
 type SearchParams = Promise<{ alpaca?: string; ref?: string }>
 type Params = Promise<{ locale: Locale }>
 
-/** Regex for a valid donor referral code. */
-const REFERRAL_CODE_RE = /^ALPACA-[A-Z0-9]{6}$/
 
 function resolveAlpacaName(raw: string | undefined): string | null {
   if (!raw) return null
@@ -134,7 +133,7 @@ export default async function ShareAdoptionPage({
             fontSize: 13,
             letterSpacing: 4,
             textTransform: 'uppercase',
-            color: '#556B2F',
+            color: 'hsl(var(--primary))',
             fontWeight: 600,
             margin: '0 0 16px',
           }}
@@ -146,7 +145,7 @@ export default async function ShareAdoptionPage({
           style={{
             fontSize: 32,
             fontWeight: 700,
-            color: '#556B2F',
+            color: 'hsl(var(--primary))',
             lineHeight: 1.2,
             margin: '0 0 12px',
           }}
@@ -162,7 +161,7 @@ export default async function ShareAdoptionPage({
           href={adoptHref}
           style={{
             display: 'inline-block',
-            background: '#556B2F',
+            background: 'hsl(var(--primary))',
             color: '#fff',
             padding: '16px 40px',
             borderRadius: 10,

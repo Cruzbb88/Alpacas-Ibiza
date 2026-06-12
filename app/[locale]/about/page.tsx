@@ -65,9 +65,13 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         homeLabel={translate('nav.home') || 'Home'}
         crumbs={[{ name: translate('nav.about') || 'About', path: 'about' }]}
       />
-      <section className="w-full py-20 px-4 bg-gradient-to-br from-primary/10 to-accent/10">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
+      {/* Hero — farm photo self-hosted from the live site (heroes/about.jpg). */}
+      <section className="relative w-full py-20 px-4 overflow-hidden min-h-[300px] flex items-center">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/images/heroes/about.jpg" alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-black/45" aria-hidden="true" />
+        <div className="relative max-w-4xl mx-auto text-center">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
             {translate('about.title')}
           </h1>
         </div>

@@ -379,13 +379,21 @@ export function ContactForm({ labels, defaultSubject }: ContactFormProps) {
                     </div>
                 </dl>
 
-                <button
-                    type="button"
-                    onClick={resetToIdle}
-                    className="mt-6 inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-background px-5 py-2.5 text-sm font-semibold text-foreground hover:bg-muted/40 transition-colors"
-                >
-                    {labels.sendAnother || 'Send another message'}
-                </button>
+                <div className="mt-6 flex flex-col sm:flex-row gap-2 justify-center">
+                    <button
+                        type="button"
+                        onClick={resetToIdle}
+                        className="inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-background px-5 py-2.5 text-sm font-semibold text-foreground hover:bg-muted/40 transition-colors"
+                    >
+                        {labels.sendAnother || 'Send another message'}
+                    </button>
+                    <a
+                        href={`/${localePrefix}/tours`}
+                        className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-colors"
+                    >
+                        Explore tours →
+                    </a>
+                </div>
             </div>
         )
     }

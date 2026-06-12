@@ -9,9 +9,7 @@
 
 import { useState } from 'react'
 import { Link2, MessageCircle, Twitter, Facebook } from 'lucide-react'
-
-/** Regex for a valid donor referral code. */
-const REFERRAL_CODE_RE = /^ALPACA-[A-Z0-9]{6}$/
+import { REFERRAL_CODE_RE } from '@/lib/referral-codes'
 
 /**
  * Append `?ref=<code>` (or `&ref=<code>`) to a URL, skipping if the URL
@@ -34,7 +32,7 @@ export interface ShareButtonsProps {
   readonly url: string      // absolute URL
   readonly title: string    // article title
   readonly excerpt?: string // article excerpt (unused in current share targets but kept for future use)
-  /** Donor referral code. Must match /^ALPACA-[A-Z0-9]{6}$/. When valid, appended as ?ref= to every share target. */
+  /** Donor referral code. Must match REFERRAL_CODE_RE (/^[A-Z0-9]{6}$/). When valid, appended as ?ref= to every share target. */
   readonly referralCode?: string
   readonly labels?: {
     share?: string

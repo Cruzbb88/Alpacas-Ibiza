@@ -4,6 +4,7 @@ import { getTranslations } from 'next-intl/server'
 import type { Locale } from '@/i18n.config'
 import { buildLocaleAlternates } from '@/lib/i18n-metadata'
 import { LegalContentPendingNotice, isLegalContentLive } from '@/components/legal-content-pending-notice'
+import { alpacasibiza } from '@/lib/tenants/alpacasibiza'
 
 export async function generateMetadata({
     params,
@@ -58,14 +59,24 @@ export default async function TermsPage({ params }: { params: Promise<{ locale: 
                         ))}
                     </ul>
 
-                    {/* Article 2 — Entrepreneur identity (list) */}
+                    {/* Article 2 — Entrepreneur identity (sourced from tenant config, NOT i18n strings)
+                        Single source of truth: lib/tenants/alpacasibiza.ts
+                        Never hardcode legal identifiers in translation files (consumer-contract risk). */}
                     <h2 className="text-2xl font-bold text-foreground mt-8 mb-4">
                         {translate('terms.art2Title')}
                     </h2>
                     <ul className="list-disc list-inside space-y-2 mb-6">
-                        {(translate.raw('terms.art2Items') as string[]).map((item, i) => (
-                            <li key={i}>{item}</li>
-                        ))}
+                        <li>{translate('terms.art2Name')}: {alpacasibiza.legalName}</li>
+                        <li>
+                            {translate('terms.art2Address')}: {alpacasibiza.address.streetAddress},{' '}
+                            {alpacasibiza.address.postalCode} {alpacasibiza.address.addressLocality},{' '}
+                            {alpacasibiza.address.addressRegion}, {alpacasibiza.address.addressCountry}
+                        </li>
+                        <li>{translate('terms.art2Phone')}: {alpacasibiza.whatsappE164}</li>
+                        <li>{translate('terms.art2Email')}: {alpacasibiza.contactEmail}</li>
+                        {alpacasibiza.vatNumber != null && (
+                            <li>{translate('terms.art2Vat')}: {alpacasibiza.vatNumber}</li>
+                        )}
                     </ul>
 
                     {/* Articles 3–5 — single text paragraphs */}

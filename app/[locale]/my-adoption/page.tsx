@@ -13,6 +13,8 @@ import { PaymentHistoryTable } from '@/components/donor-portal/payment-history-t
 import { ShareCTA } from '@/components/donor-portal/share-cta'
 import { generateReferralCode } from '@/lib/referral-codes'
 import { ReferralCodeBadge } from './referral-code-badge'
+import { countReferredSubscriptions } from '@/lib/referral-count-reader'
+import { resolveAnimalBio } from '@/lib/alpacas/resolve-bio'
 
 export const metadata = {
   title: 'Your adoption — Alpacas Ibiza',
@@ -107,6 +109,13 @@ export default async function MyAdoptionPage({
     console.warn('[my-adoption] generateReferralCode failed:', err instanceof Error ? err.message : String(err))
   }
 
+  // ── Referral count — how many friends this donor has brought to the farm ──
+  // Expensive (iterates Mollie customers) so we cache for 5 min in-process.
+  // Fail-quiet: any error returns 0. The portal must not crash for this display.
+  const referralCount: number = referralCode
+    ? await countReferredSubscriptions(referralCode, mollie)
+    : 0
+
   // Build the share URL with `?ref=<code>` appended NON-DESTRUCTIVELY so any
   // existing `?alpaca=<slug>` stays intact (URLSearchParams merges cleanly).
   // We deliberately mirror the URL the ShareCTA builds — same path, same
@@ -137,7 +146,7 @@ export default async function MyAdoptionPage({
   return (
     <main style={{ fontFamily: 'system-ui, sans-serif', maxWidth: 720, margin: '0 auto', padding: '32px 16px', color: '#27272a' }}>
       <header style={{ marginBottom: 24 }}>
-        <h1 style={{ fontSize: 32, fontWeight: 700, margin: 0, color: '#556B2F' }}>
+        <h1 style={{ fontSize: 32, fontWeight: 700, margin: 0, color: 'hsl(var(--primary))' }}>
           {translate('portal.title')}
         </h1>
         <p style={{ color: '#71717a', margin: '4px 0 0' }}>
@@ -175,7 +184,7 @@ export default async function MyAdoptionPage({
           </div>
         )}
         <div style={{ padding: 20 }}>
-          <h2 style={{ fontSize: 22, fontWeight: 600, margin: 0, color: '#556B2F' }}>
+          <h2 style={{ fontSize: 22, fontWeight: 600, margin: 0, color: 'hsl(var(--primary))' }}>
             {result.alpacaDisplayName ?? animal?.name ?? translate('portal.matchedAlpacaFallback')}
           </h2>
           {!result.alpacaDisplayName && (
@@ -183,14 +192,12 @@ export default async function MyAdoptionPage({
               {translate('portal.weWillPick')}
             </p>
           )}
-          {animal?.bio && (
+          {/* Bio via the shared resolver: reads localizedBio[locale] → .en → .bio →
+              i18n "coming soon" fallback. Was previously reading the always-null
+              `animal.bio` field directly, so real bios (stored in localizedBio) never showed. */}
+          {animal && (
             <p style={{ color: '#3f3f46', fontSize: 14, lineHeight: 1.6, marginTop: 12 }}>
-              {animal.bio}
-            </p>
-          )}
-          {animal && !animal.bio && (
-            <p style={{ color: '#71717a', fontSize: 13, marginTop: 12, fontStyle: 'italic' }}>
-              {translate('portal.bioComingSoon')}
+              {resolveAnimalBio(animal, locale, translate)}
             </p>
           )}
           {animal?.personality && (
@@ -198,6 +205,25 @@ export default async function MyAdoptionPage({
               <strong>{translate('portal.personalityLabel')}</strong> {animal.personality}
             </p>
           )}
+          {/* Herd Diary CTA — direct link to the alpaca's diary section when
+              the donor's alpaca slug is known; falls back to the full feed. */}
+          <div style={{ marginTop: 16 }}>
+            <a
+              href={
+                result.subscription.alpacaSlug
+                  ? `/${locale}/alpacas/${result.subscription.alpacaSlug}#diary`
+                  : `/${locale}/herd-diary`
+              }
+              style={{ fontSize: 14, fontWeight: 600, color: 'hsl(var(--primary))', textDecoration: 'underline' }}
+            >
+              {translate('herdDiary.donorPortalCta')
+                ? translate('herdDiary.donorPortalCta').replace(
+                    '{name}',
+                    result.alpacaDisplayName ?? animal?.name ?? 'your alpaca',
+                  )
+                : `Read ${result.alpacaDisplayName ?? animal?.name ?? 'your alpaca'}'s diary`}
+            </a>
+          </div>
         </div>
       </section>
 
@@ -323,7 +349,7 @@ export default async function MyAdoptionPage({
         {isLive && result.updateToken && (
           <a
             href={`${SITE_BASE_URL}/api/mollie-manage/update-payment?token=${result.updateToken}`}
-            style={{ background: '#556B2F', color: '#fff', padding: '12px 24px', borderRadius: 8, textDecoration: 'none', fontWeight: 600, fontSize: 14 }}
+            style={{ background: 'hsl(var(--primary))', color: '#fff', padding: '12px 24px', borderRadius: 8, textDecoration: 'none', fontWeight: 600, fontSize: 14 }}
           >
             {translate('portal.updatePayment')}
           </a>
@@ -339,7 +365,7 @@ export default async function MyAdoptionPage({
         {!isLive && (
           <a
             href={`${SITE_BASE_URL}/${locale}/adopt`}
-            style={{ background: '#556B2F', color: '#fff', padding: '12px 24px', borderRadius: 8, textDecoration: 'none', fontWeight: 600, fontSize: 14 }}
+            style={{ background: 'hsl(var(--primary))', color: '#fff', padding: '12px 24px', borderRadius: 8, textDecoration: 'none', fontWeight: 600, fontSize: 14 }}
           >
             {translate('portal.adoptAgain')}
           </a>
@@ -362,6 +388,30 @@ export default async function MyAdoptionPage({
         <ReferralCodeBadge code={referralCode} shareUrl={referralShareUrl} />
       )}
 
+      {/* Referral count — shows the donor how many friends they have brought to
+          the farm. "Friends you've brought: N" is the Patreon / Memberful parity
+          feature. Renders null when referral feature is not yet configured (no
+          signing key), or when donor has no referrals yet (encouraging copy). */}
+      {isLive && referralCode && (
+        <section style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 12, padding: 20, marginBottom: 24 }}>
+          <h2 style={{ fontSize: 13, fontWeight: 600, margin: '0 0 8px', color: '#3f3f46', textTransform: 'uppercase', letterSpacing: 0.5 }}>
+            Friends you&apos;ve brought to the farm
+          </h2>
+          {referralCount > 0 ? (
+            <p style={{ margin: 0, fontSize: 22, fontWeight: 700, color: '#15803d' }}>
+              {referralCount}{' '}
+              <span style={{ fontSize: 14, fontWeight: 400, color: '#3f3f46' }}>
+                {referralCount === 1 ? 'friend is now an adopter' : 'friends are now adopters'} thanks to you
+              </span>
+            </p>
+          ) : (
+            <p style={{ margin: 0, fontSize: 14, color: '#52525b' }}>
+              Share your link above to bring friends — you&apos;ll see them here when they join.
+            </p>
+          )}
+        </section>
+      )}
+
       {/* Photo gallery — always-rendered surface so donors see what's coming
           even before the owner uploads shots. Empty array → soft empty state.
           NEVER invent photo paths (Failsafe Rule 5). */}
@@ -378,7 +428,7 @@ export default async function MyAdoptionPage({
       {result.latestQuarter && (
         <section style={{ background: '#fff', border: '1px solid #e4e4e7', borderRadius: 12, padding: 24, marginBottom: 24 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 12 }}>
-            <h2 style={{ fontSize: 18, fontWeight: 600, margin: 0, color: '#556B2F' }}>
+            <h2 style={{ fontSize: 18, fontWeight: 600, margin: 0, color: 'hsl(var(--primary))' }}>
               {translate('portal.farmNewsHeader').replace('{label}', result.latestQuarter.label)}
             </h2>
             {!result.latestQuarter.sentAt && (
@@ -408,7 +458,7 @@ export default async function MyAdoptionPage({
 
       <footer style={{ marginTop: 32, padding: 16, borderTop: '1px solid #e4e4e7', fontSize: 12, color: '#a1a1aa' }}>
         {translate('portal.footerHelpPrefix')}{' '}
-        <a href="mailto:info@alpacasibiza.com" style={{ color: '#556B2F' }}>info@alpacasibiza.com</a>.
+        <a href="mailto:info@alpacasibiza.com" style={{ color: 'hsl(var(--primary))' }}>info@alpacasibiza.com</a>.
       </footer>
     </main>
   )

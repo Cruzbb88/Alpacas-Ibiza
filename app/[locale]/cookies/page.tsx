@@ -3,7 +3,10 @@ import { Hero } from '@/components/hero'
 import { getTranslations } from 'next-intl/server'
 import type { Locale } from '@/i18n.config'
 import { buildLocaleAlternates } from '@/lib/i18n-metadata'
-import { LegalContentPendingNotice, isLegalContentLive } from '@/components/legal-content-pending-notice'
+import { isLegalContentLive } from '@/components/legal-content-pending-notice'
+import { buildCookiePolicy, buildTenantAddress, DRAFT_NOTICE_TEXT } from '@/lib/legal/auto-policy'
+import { DraftPolicyRenderer } from '@/components/legal/draft-policy-renderer'
+import { getTenant } from '@/lib/tenant'
 
 export async function generateMetadata({
     params,
@@ -22,10 +25,28 @@ export default async function CookiesPage({ params }: { params: Promise<{ locale
     const { locale } = await params
     const translate = await getTranslations()
     if (!isLegalContentLive()) {
+        const tenant = await getTenant()
+        const address = buildTenantAddress(tenant.address)
+        const draftMd = buildCookiePolicy({
+            tenantName: tenant.legalName,
+            contactEmail: tenant.contactEmail,
+            address,
+            locale,
+        })
         return (
             <>
                 <Hero title={translate('cookies.title')} subtitle={translate('cookies.subtitle')} />
-                <LegalContentPendingNotice pageKind="cookies" />
+                <section className="w-full py-8 px-4 bg-background">
+                    <div className="max-w-4xl mx-auto">
+                        <div
+                            role="alert"
+                            className="rounded-lg border-2 border-amber-500 bg-amber-50 dark:bg-amber-950/30 px-5 py-4 mb-8 text-sm font-semibold text-amber-900 dark:text-amber-200"
+                        >
+                            {DRAFT_NOTICE_TEXT}
+                        </div>
+                        <DraftPolicyRenderer markdown={draftMd} className="max-w-none" />
+                    </div>
+                </section>
             </>
         )
     }

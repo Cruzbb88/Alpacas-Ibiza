@@ -64,14 +64,23 @@ export function RecoverCertificateForm({
     }
 
     if (status === 'sent') {
+        // Read locale from URL path so we can build a forward link without
+        // threading a prop through the server component.
+        const pathLocale =
+            typeof window !== 'undefined'
+                ? window.location.pathname.split('/')[1] ?? 'en'
+                : 'en'
+
         return (
-            <p
-                role="status"
-                aria-live="polite"
-                className="text-sm text-muted-foreground mt-4"
-            >
-                {successMessage}
-            </p>
+            <div role="status" aria-live="polite" className="mt-4 space-y-3">
+                <p className="text-sm text-muted-foreground">{successMessage}</p>
+                <a
+                    href={`/${pathLocale}`}
+                    className="inline-flex items-center text-sm font-medium text-primary underline hover:text-primary/80 transition-colors"
+                >
+                    Back to the farm →
+                </a>
+            </div>
         )
     }
 

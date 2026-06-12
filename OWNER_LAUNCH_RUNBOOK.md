@@ -98,7 +98,7 @@ The code has fail-CLOSED guards: if any of these are missing, the feature return
 
 ```
 RESEND_API_KEY=re_...           # Resend dashboard → API Keys
-NEXTAUTH_SECRET=<32+ random>    # generate: openssl rand -base64 32
+NEXTAUTH_SECRET=<64-char hex>   # generate: openssl rand -hex 32
 ADMIN_USERNAME=<not "admin">    # admin dashboard login
 ADMIN_PASSWORD=<16+ chars>      # admin dashboard password
 NEXTAUTH_URL=https://alpacasibiza.com
@@ -115,10 +115,14 @@ CRON_SECRET=<random>                 # generate: openssl rand -hex 32
 Every donor email sends from `noreply@alpacasibiza.com`. Without DNS authentication, Gmail and Outlook will spam-folder adoption welcome emails — donors think payment failed.
 
 - [ ] Resend dashboard → Domains → Add Domain → `alpacasibiza.com`
-- [ ] Resend provides 3 DNS records (SPF, DKIM, DMARC) — paste each into your domain registrar (Namecheap, GoDaddy, Cloudflare DNS, etc.)
-- [ ] Resend dashboard → Domains → alpacasibiza.com → wait for all 3 checks to turn green (usually 5-30 minutes)
+- [ ] Resend shows you 3 DNS records. The values follow a stable public pattern — copy from the dashboard to be exact:
+  - **SPF TXT** on `@`: `v=spf1 include:_spf.resend.com -all` (if you already have an SPF record, MERGE — do not add a second one)
+  - **DKIM CNAME** on `resend._domainkey`: target is `resend._domainkey.resend.com` (Resend's dashboard shows the exact value — use that)
+  - **DMARC TXT** on `_dmarc`: `v=DMARC1; p=quarantine; rua=mailto:info@alpacasibiza.com`
+- [ ] Paste those into your DNS host (One.com, Squarespace DNS, GoDaddy, Cloudflare). Full step-by-step for One.com is in `DNS_CUTOVER.md` "Complete DNS records reference" section.
+- [ ] Resend dashboard → Domains → alpacasibiza.com → wait for all 3 checks to turn green (usually 5–30 minutes)
 
-**Verify:** `dig TXT alpacasibiza.com` returns `v=spf1 include:_spf.resend.com ~all`. Resend dashboard shows all 3 green.
+**Verify:** `dig TXT alpacasibiza.com` output contains `v=spf1 include:_spf.resend.com`. Resend dashboard shows all 3 green.
 
 ---
 
@@ -140,7 +144,7 @@ Prevents sender-reputation damage. Without this, a typo'd email address gets ret
 
 Without these, every "Book Now" button falls back to the main FareHarbor calendar (fail-open — not inert). Set them to send each button to the specific tour.
 
-- [ ] Log into FareHarbor admin → Items → click each item → copy the numeric ID from the URL (`/items/<ID>/`)
+- [ ] Run DevTools script #3 from `handoff/SQUARESPACE_DEVTOOLS_SCRIPTS.md` — visits each tour page on the live site and aggregates all FareHarbor item IDs to the clipboard. ~5 minutes. No FareHarbor admin login required.
 
 **Vercel env vars to set:**
 ```
@@ -231,21 +235,27 @@ OWNER_TELEGRAM_CHAT_ID=<chat_id>                                # optional: pair
 OWNER_GENERIC_WEBHOOK_URL=https://...                           # optional: any POST webhook
 ```
 
-### 2g. Cron dead-man's switch (Healthchecks.io)
+### 2g. Vercel plan check (7 crons require Pro) + Cron dead-man's switch
 
-Three Vercel Cron jobs run weekly/quarterly. If Vercel stops firing them silently, nothing alerts. Healthchecks.io free tier (20 checks) is sufficient.
+The repo ships **7 Vercel Cron jobs**. Vercel Hobby plan supports only 2 — the remaining 5 silently never fire. **You must be on Vercel Pro** for all automated emails (quarterly updates, renewal reminders, gifts, milestones, birthday cards) to work.
+
+- [ ] Confirm Vercel account is on the **Pro plan** (or upgrade: vercel.com/account → Plans)
+
+For silent-failure alerting, use Healthchecks.io (free tier: 20 checks):
 
 - [ ] Sign up at https://healthchecks.io
-- [ ] Create 3 checks:
-  - "owner-mrr-digest" — cron `0 6 * * 1`, grace 1h
-  - "owner-digest" — cron `0 9 * * 1`, grace 1h
-  - "adopt-quarterly-update" — cron `0 9 1 1,4,7,10 *`, grace 24h
+- [ ] Create 4 checks:
+  - "owner-mrr-digest" — schedule `0 6 * * 1`, grace 1h
+  - "owner-digest" — schedule `0 9 * * 1`, grace 1h
+  - "adopt-quarterly-update" — schedule `0 9 1 1,4,7,10 *`, grace 24h
+  - "adopt-milestone-emails" — schedule `0 11 * * *`, grace 2h
 
 **Vercel env vars:**
 ```
 HEARTBEAT_OWNER_MRR_DIGEST_URL=https://hc-ping.com/<uuid>
 HEARTBEAT_OWNER_DIGEST_URL=https://hc-ping.com/<uuid>
 HEARTBEAT_ADOPT_QUARTERLY_UPDATE_URL=https://hc-ping.com/<uuid>
+HEARTBEAT_ADOPT_MILESTONE_EMAILS_URL=https://hc-ping.com/<uuid>
 ```
 
 ### 2h. Adopt discount codes (weaving + farm shop)
@@ -275,13 +285,18 @@ ADOPT_CAMPAIGN_SUBLINE=<optional subline copy>
 ADOPT_CAMPAIGN_END_DATE=2026-06-30   # ISO date — banner hides automatically after this
 ```
 
-### 2k. Vercel deployment and domain
+### 2k. Vercel deployment and domain cutover
+
+**This is the step that makes the site live.** Do it after all Section 1 items are complete and after at least Section 2a–2c are set.
 
 - [ ] Create Vercel account at https://vercel.com and connect it to the GitHub repository
 - [ ] Paste all env vars from sections 1 and 2 into Vercel → Project → Settings → Environment Variables (Production scope)
+- [ ] Confirm Vercel plan is **Pro** (7 crons are configured — see section 2g)
+- [ ] Deploy (Vercel auto-deploys on push — or click Deploy manually)
+- [ ] Verify the `*.vercel.app` preview URL works end-to-end before touching DNS
 - [ ] Add custom domain `alpacasibiza.com` in Vercel → Project → Settings → Domains
-- [ ] Update DNS at your domain registrar: add the A and CNAME records Vercel provides
-- [ ] Verify `alpacasibiza.com` resolves to the Vercel deployment
+- [ ] Update DNS at your domain registrar: full step-by-step including Resend records is in [`DNS_CUTOVER.md`](DNS_CUTOVER.md)
+- [ ] Verify `https://alpacasibiza.com` resolves to the Vercel deployment and `/healthz` returns `{ ok: true, env_tier1_ready: true }`
 
 ### 2l. Uptime monitoring
 
@@ -557,7 +572,7 @@ GA4_CLIENT_EMAIL
 GA4_PRIVATE_KEY
 
 # Email deliverability
-RESEND_WEBHOOK_SECRET                 # Resend bounce+complaint webhook
+RESEND_WEBHOOK_SECRET                 # Resend bounce+complaint webhook (fail-CLOSED if unset)
 SENDGRID_API_KEY                      # optional list management
 SENDGRID_FROM_EMAIL
 SENDGRID_LIST_ID
@@ -569,12 +584,21 @@ LEGAL_CONTENT_LIVE                    # set "true" once legal text is live
 OWNER_SLACK_WEBHOOK_URL
 OWNER_TELEGRAM_BOT_TOKEN
 OWNER_TELEGRAM_CHAT_ID
+OWNER_NOTIFY_DISCORD_URL              # Discord incoming webhook URL
 OWNER_GENERIC_WEBHOOK_URL
 
 # Cron monitoring
 HEARTBEAT_OWNER_MRR_DIGEST_URL
 HEARTBEAT_OWNER_DIGEST_URL
 HEARTBEAT_ADOPT_QUARTERLY_UPDATE_URL
+HEARTBEAT_ADOPT_MILESTONE_EMAILS_URL  # added 4th heartbeat (milestone-emails cron)
+
+# Per-route FareHarbor webhook secrets (fail-OPEN if unset)
+REMINDER_WEBHOOK_SECRET               # x-webhook-secret on /api/reminder POSTs
+REVIEW_REQUEST_WEBHOOK_SECRET         # x-webhook-secret on /api/review-request POSTs
+
+# Skein sponsorship (seasonal)
+SKEIN_CALLOUT_LIVE                    # set "true" during shearing season to show homepage callout
 
 # Adopt features
 ADOPT_DISCOUNT_CODE_WEAVING_10

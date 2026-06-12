@@ -34,6 +34,7 @@ type CapturedSend = {
   subject: string
   html: string
   scheduledAt?: string
+  replyTo?: string
 }
 
 function makeSendEmailSpy(overrides?: { throwOn?: 'welcome' | 'codes' | 'all' }): {
@@ -48,6 +49,7 @@ function makeSendEmailSpy(overrides?: { throwOn?: 'welcome' | 'codes' | 'all' })
       subject: opts.subject,
       html: opts.html,
       scheduledAt: opts.scheduledAt,
+      replyTo: opts.replyTo,
     })
     callIndex++
     if (overrides?.throwOn === 'all') throw new Error('test: send failed')
@@ -502,12 +504,16 @@ describe('handleMolliePaymentPaid — monthly first-of-mandate', () => {
     assert.equal(result.flow, 'monthly-first')
     assert.equal(result.subscriptionCreated, true)
     assert.equal(result.welcomeSent, true)
+    assert.equal(result.codesScheduled, true)
     assert.equal(result.reason, 'ok')
     assert.equal(subCreated, true)
     assert.equal(customerFetched, true)
-    assert.equal(calls.length, 1, 'only one email send — the welcome')
+    assert.equal(calls.length, 2, 'two email sends — welcome + discount-codes')
     assert.match(calls[0].html, /Mollie/, 'processor must be Mollie')
     assert.match(calls[0].html, /tr_test_abc/, 'paymentRef must appear')
+    assert.match(calls[1].subject, /discount codes/i, 'second call must be discount-codes email')
+    assert.ok(calls[1].scheduledAt, 'codes email must carry scheduledAt')
+    assert.ok(calls[1].replyTo, 'codes email must have replyTo set')
   })
 
   it('missing email from customer fetch → flow=monthly-first reason=missing-email', async () => {
@@ -520,6 +526,7 @@ describe('handleMolliePaymentPaid — monthly first-of-mandate', () => {
     assert.equal(result.reason, 'missing-email')
     assert.equal(result.subscriptionCreated, true, 'sub still created even without email')
     assert.equal(result.welcomeSent, false)
+    assert.equal(result.codesScheduled, false)
     assert.equal(calls.length, 0)
   })
 
@@ -555,7 +562,41 @@ describe('handleMolliePaymentPaid — monthly first-of-mandate', () => {
     assert.ok(result)
     assert.equal(result.subscriptionCreated, true)
     assert.equal(result.welcomeSent, false)
+    assert.equal(result.codesScheduled, false)
     assert.equal(result.reason, 'welcome-send-failed')
+  })
+
+  it('welcome email carries replyTo (ADR-016 parity with Stripe path)', async () => {
+    const capturedOpts: Parameters<SendEmailFn>[0][] = []
+    const sendEmail: SendEmailFn = async (opts) => {
+      capturedOpts.push(opts)
+      return { id: 'x' }
+    }
+    await handleMolliePaymentPaid(makeMolliePayment(), {
+      sendEmail,
+      fetchCustomer: async () => ({ email: 'donor@example.com', name: 'Test' }),
+      createSubscription: async () => {},
+    })
+    const welcome = capturedOpts[0]
+    assert.ok(welcome, 'welcome email must be sent')
+    assert.ok(welcome.replyTo, 'welcome email must carry replyTo for Gmail/Yahoo 2026 bulk-sender compliance')
+  })
+
+  it('discount-codes email scheduled +5 min and fail-quiet (parity with Stripe path)', async () => {
+    const fakeNow = 1_700_000_000_000
+    const { sendEmail, calls } = makeSendEmailSpy()
+    const result = await handleMolliePaymentPaid(makeMolliePayment(), {
+      sendEmail,
+      fetchCustomer: async () => ({ email: 'donor@example.com', name: 'Test' }),
+      createSubscription: async () => {},
+      now: () => fakeNow,
+      discountCodesDelayMs: 5 * 60 * 1000,
+    })
+    assert.equal(result.codesScheduled, true)
+    const codesCall = calls.find(c => /discount codes/i.test(c.subject))
+    assert.ok(codesCall, 'discount-codes email must be sent')
+    const expectedAt = new Date(fakeNow + 5 * 60 * 1000).toISOString()
+    assert.equal(codesCall!.scheduledAt, expectedAt, 'codes must be scheduled at now+5min')
   })
 })
 
@@ -582,9 +623,12 @@ describe('handleMolliePaymentPaid — yearly one-off', () => {
     assert.equal(result.subscriptionCreated, false)
     assert.equal(subCalled, false, 'no sub for yearly one-off')
     assert.equal(result.welcomeSent, true)
+    assert.equal(result.codesScheduled, true)
     assert.equal(result.reason, 'ok')
     assert.equal(calls[0].to, 'yearly-donor@example.com')
     assert.match(calls[0].html, /€900 yearly/, 'yearly copy must appear')
+    assert.equal(calls.length, 2, 'welcome + discount-codes for yearly one-off')
+    assert.match(calls[1].subject, /discount codes/i, 'second email is discount-codes')
   })
 
   it('missing billingEmail → reason=missing-email; no welcome sent', async () => {
@@ -891,5 +935,158 @@ describe('handleStripeSubscriptionDeleted — skipped + fail-quiet paths', () =>
     )
     assert.doesNotMatch(calls[0].html, /<script>alert/)
     assert.match(calls[0].html, /&lt;script&gt;/)
+  })
+})
+
+// ── sendReferrerRewardQuiet tests ─────────────────────────────────────────────
+
+import { sendReferrerRewardQuiet } from './payment-handlers.ts'
+
+// Env-state guards for reward tests
+let savedRewardLive: string | undefined
+let savedRewardCode: string | undefined
+let savedRewardDesc: string | undefined
+
+function setRewardEnv(live: string, code: string, desc: string) {
+  process.env.REFERRER_REWARD_LIVE = live
+  process.env.REFERRER_REWARD_DISCOUNT_CODE = code
+  process.env.REFERRER_REWARD_DESCRIPTION = desc
+}
+function clearRewardEnv() {
+  delete process.env.REFERRER_REWARD_LIVE
+  delete process.env.REFERRER_REWARD_DISCOUNT_CODE
+  delete process.env.REFERRER_REWARD_DESCRIPTION
+}
+
+// Save and restore env across the reward-test suite
+before(() => {
+  savedRewardLive = process.env.REFERRER_REWARD_LIVE
+  savedRewardCode = process.env.REFERRER_REWARD_DISCOUNT_CODE
+  savedRewardDesc = process.env.REFERRER_REWARD_DESCRIPTION
+  clearRewardEnv()
+})
+
+after(() => {
+  if (savedRewardLive !== undefined) process.env.REFERRER_REWARD_LIVE = savedRewardLive
+  else delete process.env.REFERRER_REWARD_LIVE
+  if (savedRewardCode !== undefined) process.env.REFERRER_REWARD_DISCOUNT_CODE = savedRewardCode
+  else delete process.env.REFERRER_REWARD_DISCOUNT_CODE
+  if (savedRewardDesc !== undefined) process.env.REFERRER_REWARD_DESCRIPTION = savedRewardDesc
+  else delete process.env.REFERRER_REWARD_DESCRIPTION
+})
+
+describe('sendReferrerRewardQuiet — unconfigured gate (REFERRER_REWARD_LIVE not set)', () => {
+  it('returns sent=false reason=unconfigured when REFERRER_REWARD_LIVE is not "true"', async () => {
+    clearRewardEnv()
+    const { sendEmail, calls } = makeSendEmailSpy()
+    const result = await sendReferrerRewardQuiet(
+      { referredBySlug: 'ABCDEF' },
+      {
+        sendEmail,
+        lookupReferrer: async () => ({ email: 'referrer@example.com', name: 'Alice' }),
+      },
+    )
+    assert.equal(result.sent, false)
+    assert.equal(result.reason, 'unconfigured')
+    assert.equal(calls.length, 0, 'no email sent when gate is off')
+  })
+
+  it('unconfigured gate: welcome still sends when called from handleStripeCheckoutCompleted', async () => {
+    clearRewardEnv()
+    // Verify that referrerRewardDeps being present does NOT affect welcome
+    const { sendEmail, calls } = makeSendEmailSpy()
+    const result = await handleStripeCheckoutCompleted(
+      makeSession({ metadata: { tier: 'monthly', referredBy: 'ABCDEF' } }),
+      {
+        sendEmail,
+        referrerRewardDeps: {
+          lookupReferrer: async () => ({ email: 'referrer@example.com', name: 'Alice' }),
+        },
+      },
+    )
+    assert.equal(result.welcomeSent, true, 'welcome unaffected by reward gate being off')
+    assert.equal(result.referrerRewardSent, false, 'reward not sent when unconfigured')
+    assert.equal(calls.length, 2, 'only welcome + codes — no reward email')
+  })
+})
+
+describe('sendReferrerRewardQuiet — referrer not found', () => {
+  it('returns sent=false reason=referrer-not-found when lookupReferrer returns null', async () => {
+    setRewardEnv('true', 'REWARD20', '20% off your next adoption')
+    const { sendEmail, calls } = makeSendEmailSpy()
+    const result = await sendReferrerRewardQuiet(
+      { referredBySlug: 'ABCDEF' },
+      {
+        sendEmail,
+        lookupReferrer: async () => null,
+      },
+    )
+    assert.equal(result.sent, false)
+    assert.equal(result.reason, 'referrer-not-found')
+    assert.equal(calls.length, 0, 'no email when referrer not found')
+  })
+
+  it('null/empty referredBySlug → reason=referrer-not-found; no lookup called', async () => {
+    setRewardEnv('true', 'REWARD20', '20% off your next adoption')
+    const { sendEmail, calls } = makeSendEmailSpy()
+    let lookupCalled = false
+    const result = await sendReferrerRewardQuiet(
+      { referredBySlug: null },
+      {
+        sendEmail,
+        lookupReferrer: async () => { lookupCalled = true; return null },
+      },
+    )
+    assert.equal(result.sent, false)
+    assert.equal(result.reason, 'referrer-not-found')
+    assert.equal(calls.length, 0)
+    assert.equal(lookupCalled, false, 'lookup not called for null slug')
+  })
+})
+
+describe('sendReferrerRewardQuiet — live config + valid referrer → sends reward email', () => {
+  it('sends reward email to referrer with discount code in body', async () => {
+    setRewardEnv('true', 'REWARD20', '1 month free adoption')
+    const { sendEmail, calls } = makeSendEmailSpy()
+    const result = await sendReferrerRewardQuiet(
+      { referredBySlug: 'ABCDEF' },
+      {
+        sendEmail,
+        lookupReferrer: async () => ({ email: 'referrer@example.com', name: 'Alice Referrer' }),
+      },
+    )
+    assert.equal(result.sent, true)
+    assert.equal(result.reason, 'ok')
+    assert.equal(calls.length, 1, 'exactly one reward email sent')
+    assert.equal(calls[0].to, 'referrer@example.com')
+    assert.match(calls[0].subject, /Thank you for sharing/)
+    assert.match(calls[0].html, /REWARD20/, 'discount code must appear in body')
+    assert.match(calls[0].html, /1 month free adoption/, 'description must appear in body')
+    assert.match(calls[0].html, /Alice Referrer/, 'referrer name must appear')
+    assert.ok(calls[0].replyTo, 'replyTo must be set')
+  })
+})
+
+describe('sendReferrerRewardQuiet — recurring renewal → not sent', () => {
+  it('recurring-renewal handleMolliePaymentPaid does NOT fire reward', async () => {
+    setRewardEnv('true', 'REWARD20', '1 month free')
+    const { sendEmail, calls } = makeSendEmailSpy()
+    const result = await handleMolliePaymentPaid(
+      makeMolliePayment({
+        sequenceType: 'recurring',
+        metadata: { product: 'adopt-a-paca', tier: 'monthly', referredBy: 'ABCDEF' },
+      }),
+      {
+        sendEmail,
+        fetchCustomer: async () => ({ email: 'donor@example.com', name: 'X' }),
+        createSubscription: async () => {},
+        referrerRewardDeps: {
+          lookupReferrer: async () => ({ email: 'referrer@example.com', name: 'Alice' }),
+        },
+      },
+    )
+    assert.equal(result.flow, 'recurring-renewal')
+    assert.equal(result.referrerRewardSent, null, 'recurring-renewal never fires reward')
+    assert.equal(calls.length, 0, 'no emails for recurring renewal')
   })
 })

@@ -22,8 +22,21 @@ import { rateLimit, rateLimitByEmail, getClientIp } from '@/lib/rate-limit'
 import { SITE_BASE_URL } from '@/lib/config'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
 
-// Landing page after successful unsubscribe (locale-prefixed via middleware; en fallback)
-const UNSUBSCRIBED_PAGE = `${SITE_BASE_URL}/en/newsletter/unsubscribed`
+/**
+ * The supported locale slugs — mirrors i18n.config.ts locales array.
+ * Kept inline to avoid importing the full i18n config into this edge-safe route.
+ */
+const SUPPORTED_LOCALES = new Set(['en', 'de', 'es', 'fr', 'it', 'nl'])
+
+/**
+ * Build the unsubscribed landing-page URL using the locale carried in the
+ * `?locale=` query param (added by /api/newsletter when the sign-up occurred).
+ * Falls back to 'en' for unknown / missing values.
+ */
+function unsubscribedPageUrl(locale: string | null): string {
+  const safe = locale && SUPPORTED_LOCALES.has(locale) ? locale : 'en'
+  return `${SITE_BASE_URL}/${safe}/newsletter/unsubscribed`
+}
 
 // ── Shared handler logic ──────────────────────────────────────────────────────
 
@@ -37,6 +50,14 @@ async function handleUnsubscribe(
   // Rate-limit by IP
   const ip = getClientIp(request)
   const ipResult = rateLimit({ key: `unsub:${ip}`, limit: 5, windowMs: 5 * 60 * 1000 })
+
+  // Extract locale + token from query string. Both GET and POST may use query params per RFC 8058.
+  // `?locale=` is appended by /api/newsletter at sign-up time so the redirect lands in the
+  // subscriber's language. Falls back to 'en' if absent or unrecognised.
+  const url = new URL(request.url)
+  const locale = url.searchParams.get('locale')
+  const token = url.searchParams.get('token') ?? ''
+
   if (!ipResult.allowed) {
     log.warn('IP rate limit hit', { ip })
     // Return 200 for GET (no info leak) / 429 for POST (RFC 8058 caller handles it)
@@ -50,12 +71,8 @@ async function handleUnsubscribe(
       )
     }
     // GET: silently redirect to unsubscribed page (no-op)
-    return attachRequestId(NextResponse.redirect(UNSUBSCRIBED_PAGE, { status: 303 }), reqId)
+    return attachRequestId(NextResponse.redirect(unsubscribedPageUrl(locale), { status: 303 }), reqId)
   }
-
-  // Extract token from query string (both GET and POST may use query param per RFC 8058)
-  const url = new URL(request.url)
-  const token = url.searchParams.get('token') ?? ''
 
   // Verify HMAC + scope + expiry
   const payload = verifyUnsubscribeToken(token)
@@ -68,7 +85,7 @@ async function handleUnsubscribe(
     if (method === 'POST') {
       return attachRequestId(NextResponse.json({ ok: true, noop: true }), reqId)
     }
-    return attachRequestId(NextResponse.redirect(UNSUBSCRIBED_PAGE, { status: 303 }), reqId)
+    return attachRequestId(NextResponse.redirect(unsubscribedPageUrl(locale), { status: 303 }), reqId)
   }
 
   // Rate-limit by email (hashed) to prevent abuse of valid tokens
@@ -77,7 +94,7 @@ async function handleUnsubscribe(
     log.warn('email rate limit hit on unsubscribe', { email_first4: payload.email.slice(0, 4) + '…' })
     // Still treat as success — the unsubscribe intent was already processed on first call
     if (method === 'POST') return attachRequestId(NextResponse.json({ ok: true }), reqId)
-    return attachRequestId(NextResponse.redirect(UNSUBSCRIBED_PAGE, { status: 303 }), reqId)
+    return attachRequestId(NextResponse.redirect(unsubscribedPageUrl(locale), { status: 303 }), reqId)
   }
 
   // Valid token — process unsubscribe (fail-quiet on provider error)
@@ -93,8 +110,8 @@ async function handleUnsubscribe(
     return attachRequestId(NextResponse.json({ ok: true }), reqId)
   }
 
-  // GET: redirect to confirmation landing page
-  return attachRequestId(NextResponse.redirect(UNSUBSCRIBED_PAGE, { status: 303 }), reqId)
+  // GET: redirect to locale-aware confirmation landing page
+  return attachRequestId(NextResponse.redirect(unsubscribedPageUrl(locale), { status: 303 }), reqId)
 }
 
 // ── Route handlers ────────────────────────────────────────────────────────────

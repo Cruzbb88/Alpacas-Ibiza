@@ -129,22 +129,22 @@ async function fetchAllSubscriptions(): Promise<SnapshotPayload> {
       })
     }
     if (truncated) {
-      // Surface the cap-hit through fetchError so the existing banner renders.
-      // MRR + churn KPIs are based on the partial dataset; the banner makes
-      // that explicit instead of silently understating.
-      const payload: SnapshotPayload = {
+      // Truncated state: surface the cap-hit through fetchError so the banner
+      // renders, but do NOT cache — truncated data may be stale/partial and
+      // the next admin load should re-fetch (peer review 2026-05-29 item 6;
+      // fixed 2026-06-05). Full success path below is the only cached path.
+      return {
         rows,
         fetchError: `Iteration capped at ${ITERATION_CAP} subscriptions — KPIs are based on the first ${ITERATION_CAP} only. Bump cap or implement DB snapshot when this trips.`,
         hasMollie: true,
       }
-      globalForSnapshot.__subsSnapshot = { value: payload, at: Date.now() }
-      return payload
     }
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
-    const payload: SnapshotPayload = { rows, fetchError: message, hasMollie: true }
-    globalForSnapshot.__subsSnapshot = { value: payload, at: Date.now() }
-    return payload
+    // Error payloads are NOT cached — the next admin load should retry fresh
+    // so a transient Mollie blip doesn't poison every refresh for 60s
+    // (peer review 2026-05-29 item 6; fixed 2026-06-05).
+    return { rows, fetchError: message, hasMollie: true }
   }
 
   const payload: SnapshotPayload = { rows, fetchError: null, hasMollie: true }

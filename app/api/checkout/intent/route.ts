@@ -202,7 +202,7 @@ export async function POST(request: Request) {
     log.error('Stripe PaymentIntent creation failed', { message })
     return attachRequestId(
       NextResponse.json(
-        { error: 'Failed to create PaymentIntent', detail: message },
+        { error: 'Failed to create PaymentIntent', code: 'STRIPE_ERROR' },
         { status: 502 },
       ),
       reqId,

@@ -48,6 +48,8 @@ export interface JournalPost {
   readonly readingMinutes: number
   /** Locale this post was originally written in. */
   readonly locale: 'en' | 'nl' | 'de' | 'es' | 'fr' | 'it'
+  /** Publication status — only 'live' posts are included in RSS/sitemap/search. */
+  readonly status: 'draft' | 'live'
 }
 
 // ── Authors ───────────────────────────────────────────────────────────────────
@@ -89,6 +91,7 @@ export const JOURNAL_POSTS: ReadonlyArray<JournalPost> = [
     tags: ['story', 'about'],
     readingMinutes: 3,
     locale: 'en',
+    status: 'draft',
     body: `When we moved from Belgium to Ibiza, we never planned to open a farm. Es Currals is a working finca in the rural north of the island — quiet, sheltered, almost forgotten — and the more time we spent here, the more it felt like the right place to bring the herd we'd been dreaming about.
 
 Today, fourteen alpacas live at Es Currals. Each one has a name, a personality, and a place in the daily routine. They are the reason we open our gates by appointment only — small visits, calm animals, real time with each guest.
@@ -110,6 +113,7 @@ This journal is where we share the slower parts of that work — what we're shea
     tags: ['welfare', 'sustainability'],
     readingMinutes: 4,
     locale: 'en',
+    status: 'draft',
     body: `People ask us — politely, but often — why we don't take more bookings. The honest answer is that the herd sets the limit.
 
 Alpacas are herd animals. They cope with new humans better when they have the cushion of their group, their routine, and time to choose whether to approach you. If you push that limit, the animals start to flinch, then they stop coming forward, and then the visit stops being a visit. We've watched larger operations make that mistake and we've decided not to.
@@ -131,6 +135,7 @@ So when you book, you're booking the herd's bandwidth as much as ours. That's wh
     tags: ['weaving', 'workshop', 'craft'],
     readingMinutes: 3,
     locale: 'en',
+    status: 'draft',
     body: `The two-day weaving and spinning workshop runs in our off-season — when the tours quiet down and the studio has room. Everyone takes home a scarf they made. That's the headline. The middle of the workshop, though, is messier.
 
 Day one is the fleece. We wash, card, and start spinning. Nobody's yarn is even. Nobody's first wheel rhythm is steady. The fleece keeps surprising you — alpaca is finer than wool, less elastic, and it punishes a heavy hand. The students who get furthest are the ones who give up on being good before lunch.
@@ -141,16 +146,18 @@ The point is two days at the farm, hands in fibre, the alpacas watching from the
   },
 ]
 
-/** Helper: posts sorted newest-first for index page. */
+/** Helper: live posts sorted newest-first for index page / RSS / sitemap. */
 export function listJournalPostsNewest(): ReadonlyArray<JournalPost> {
-  return [...JOURNAL_POSTS].sort(
-    (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
-  )
+  return [...JOURNAL_POSTS]
+    .filter((p) => p.status === 'live')
+    .sort(
+      (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
+    )
 }
 
-/** Helper: find one post by slug — returns null if not found. */
+/** Helper: find one live post by slug — returns null if not found or draft. */
 export function findJournalPostBySlug(slug: string): JournalPost | null {
-  return JOURNAL_POSTS.find((p) => p.slug === slug) ?? null
+  return JOURNAL_POSTS.find((p) => p.slug === slug && p.status === 'live') ?? null
 }
 
 /** Helper: list distinct tags across all posts. */

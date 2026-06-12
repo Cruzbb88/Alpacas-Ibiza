@@ -50,7 +50,7 @@ import { Elements, PaymentElement, useElements, useStripe } from '@stripe/react-
 import { trackEvent } from '@/lib/client-track'
 import { fetchWithRetry } from '@/lib/client-retry'
 import type { ParsedGiftFields } from '@/lib/gift-fields'
-import { ADOPT_PRICE_MONTHLY_EUR, ADOPT_PRICE_YEARLY_EUR } from '@/lib/config'
+import { ADOPT_PRICE_MONTHLY_EUR, ADOPT_PRICE_YEARLY_EUR, SITE_BASE_URL } from '@/lib/config'
 import { formatPriceForLocale } from '@/lib/format-price'
 
 export interface EmbeddedCheckoutProps {
@@ -241,7 +241,9 @@ function PaymentForm({ tier, locale, paymentIntentId }: PaymentFormProps) {
     }
 
     // Stripe redirects to return_url on success. Webhook handles the rest.
-    const returnUrl = `${window.location.origin}/${locale}/adopt?checkout=success&tier=${tier}`
+    // SITE_BASE_URL (not window.location.origin) per ADR 017 — keeps the Stripe
+    // return_url on the canonical origin even on preview deploys.
+    const returnUrl = `${SITE_BASE_URL}/${locale}/adopt?checkout=success&tier=${tier}`
     const result = await stripe.confirmPayment({
       elements,
       confirmParams: { return_url: returnUrl },

@@ -22,10 +22,9 @@
  * even if customer IDs reuse prefixes.
  */
 
+import { createTtlStore } from './in-process-ttl-store.ts'
+
 const TTL_MS = 30 * 24 * 60 * 60 * 1000 // 30 days — aligns with realistic SEPA dunning cycles
-// Attempt-dedup TTL: shorter than the counter TTL. Just needs to outlast the
-// webhook retry window (Stripe ~3d, Mollie ~18h). 4 days is safe.
-const ATTEMPT_TTL_MS = 4 * 24 * 60 * 60 * 1000
 
 interface CounterEntry {
   count: number
@@ -35,27 +34,37 @@ interface CounterEntry {
 
 const globalForStore = globalThis as unknown as {
   __paymentFailureStore?: Map<string, CounterEntry>
-  __paymentFailureAttempts?: Map<string, number>
 }
 const _store: Map<string, CounterEntry> =
   globalForStore.__paymentFailureStore ?? new Map()
-const _attempts: Map<string, number> =
-  globalForStore.__paymentFailureAttempts ?? new Map()
 if (process.env.NODE_ENV !== 'production') {
   globalForStore.__paymentFailureStore = _store
-  globalForStore.__paymentFailureAttempts = _attempts
 }
+
+// Attempt-dedup TTL: shorter than the counter TTL. Just needs to outlast the
+// webhook retry window (Stripe ~3d, Mollie ~18h). 4 days is safe.
+const _attempts = createTtlStore({
+  ttlMs: 4 * 24 * 60 * 60 * 1000,
+  globalKey: '__paymentFailureAttempts',
+})
 
 function purge(now: number): void {
   for (const [k, entry] of _store) {
     if (now - entry.lastFailureAt > TTL_MS) _store.delete(k)
   }
-  for (const [k, ts] of _attempts) {
-    if (now - ts > ATTEMPT_TTL_MS) _attempts.delete(k)
-  }
+  _attempts.purge(now)
 }
 
-export type FailureSeverity = 'first' | 'at-risk' | 'action-required'
+/**
+ * Severity levels for payment failure escalation.
+ *
+ * 'none' is a special sentinel returned by recordFailure when a dedup-hit
+ * occurs on a counter that was already reset to 0 (donor recovered). Callers
+ * should treat 'none' as a no-op — no email, no escalation. Added 2026-06-05
+ * to prevent late Mollie re-deliveries from falsely re-sending "payment failed"
+ * emails to donors who already recovered (peer review item 4).
+ */
+export type FailureSeverity = 'none' | 'first' | 'at-risk' | 'action-required'
 
 function severityFor(count: number): FailureSeverity {
   return count === 1 ? 'first' : count === 2 ? 'at-risk' : 'action-required'
@@ -94,9 +103,22 @@ export function recordFailure(
   // retries inflating severity. Without it, a single Resend outage during a
   // payment.failed delivery turns into an "at-risk" → "action-required"
   // ladder on the very next Mollie retry.
+  //
+  // Edge case (peer review 2026-05-29 item 4; fixed 2026-06-05): if the donor
+  // recovered (resetFailures set count=0) but the attempt-dedup key is still
+  // alive within its 4-day TTL, a late Mollie re-delivery would hit this
+  // branch and return severity='first' using Math.max(1, 0)=1 — falsely
+  // triggering a "payment failed" email after the donor already recovered.
+  // Return severity='none' when count=0 so callers can distinguish the
+  // already-recovered case from a genuine first-time failure.
   if (attemptId && _attempts.has(`${key}:${attemptId}`)) {
     const count = prev?.count ?? 0
-    return { count, severity: severityFor(Math.max(1, count)), isFirstRecord: false }
+    if (count === 0) {
+      // Counter was reset (donor recovered). Return 'none' so callers skip
+      // emitting payment-failed emails and notifications.
+      return { count: 0, severity: 'none' as FailureSeverity, isFirstRecord: false }
+    }
+    return { count, severity: severityFor(count), isFirstRecord: false }
   }
 
   const count = (prev?.count ?? 0) + 1
@@ -198,7 +220,7 @@ export function _internalGetStoreSnapshot(): ReadonlyArray<{
   count: number
   lastFailureAt: number
   lastSuccessAt: number | null
-  severity: 'first' | 'at-risk' | 'action-required'
+  severity: FailureSeverity
 }> {
   const now = Date.now()
   purge(now)
@@ -208,9 +230,13 @@ export function _internalGetStoreSnapshot(): ReadonlyArray<{
     count: number
     lastFailureAt: number
     lastSuccessAt: number | null
-    severity: 'first' | 'at-risk' | 'action-required'
+    severity: FailureSeverity
   }> = []
   for (const [key, entry] of _store) {
+    // Skip recovered entries (count === 0). They've been reset by resetFailures()
+    // and should not appear in dunning views — severityFor(0) falls through to
+    // 'action-required' which is incorrect for a recovered donor.
+    if (entry.count === 0) continue
     const colonIdx = key.indexOf(':')
     const vendor = key.slice(0, colonIdx) as 'stripe' | 'mollie'
     const customerId = key.slice(colonIdx + 1)

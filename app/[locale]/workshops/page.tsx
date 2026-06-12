@@ -183,6 +183,7 @@ export default async function WorkshopsPage({
             <Hero
                 title={translate('workshops.title')}
                 subtitle={translate('workshops.subtitle')}
+                backgroundImage="/images/gallery/weaving-15.jpg"
                 cta={{
                     label: translate('workshops.cta'),
                     href: `/contact?subject=${encodeURIComponent('Workshop inquiry')}`,

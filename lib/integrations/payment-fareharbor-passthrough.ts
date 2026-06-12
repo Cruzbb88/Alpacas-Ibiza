@@ -13,7 +13,7 @@
  * own webhook route (app/api/fareharbor-webhook) for event processing.
  */
 
-import type { PaymentProvider, CheckoutResult, WebhookResult, CreateCheckoutOpts } from './payment'
+import type { PaymentProvider, CheckoutResult, WebhookResult, CreateCheckoutOpts, BuildCheckoutUrlOpts } from './payment'
 import type { BookingProvider } from './_types'
 
 export function fareHarborPassthroughPaymentProvider(
@@ -29,6 +29,13 @@ export function fareHarborPassthroughPaymentProvider(
         : booking.embedUrl()
 
       return { url }
+    },
+
+    buildCheckoutUrl(_opts: BuildCheckoutUrlOpts): string | null {
+      // FareHarbor checkout requires a session via createCheckoutSession (booking URL
+      // comes from the BookingProvider, not a static path). Return null so callers
+      // fall back to mailto: or use createCheckoutSession instead.
+      return null
     },
 
     async verifyWebhook(_rawBody: string, _signature: string | null): Promise<WebhookResult> {

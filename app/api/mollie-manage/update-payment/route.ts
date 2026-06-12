@@ -40,10 +40,6 @@ function htmlPage(title: string, body: string, status: number) {
  * and accumulating orphan payment objects).
  */
 
-function escapeAttr(s: string): string {
-  return s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c] ?? c))
-}
-
 /**
  * GET — confirmation form only. Safe for link-scanners (Outlook Safe-Links,
  * Mimecast, Proofpoint, antivirus prefetch). No Mollie API calls.
@@ -73,7 +69,7 @@ export async function GET(request: Request) {
      <p>We'll redirect you to Mollie's secure checkout so you can confirm a new SEPA mandate (or pay by card / iDEAL / Bancontact).</p>
      <p>You'll see a charge for the next month's adoption amount — this is the standard mandate-confirmation. Your existing subscription will continue charging automatically from this new payment method going forward.</p>
      <form method="POST" action="${action}">
-       <input type="hidden" name="token" value="${escapeAttr(token)}" />
+       <input type="hidden" name="token" value="${escapeHtml(token)}" />
        <button type="submit" class="primary">Continue to secure checkout</button>
        <a class="cancel" href="${SITE_BASE_URL}/en/adopt">Not now</a>
      </form>`,

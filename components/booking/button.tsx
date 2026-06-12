@@ -11,7 +11,7 @@
  * Named in CLAUDE.md failsafe map: "BookingButton / getProductBookingUrl fail-open"
  *
  * Usage:
- *   <BookingButton product="meet-herd" />
+ *   <BookingButton product="weaving-workshop" />
  *   <BookingButton product="gift-card" label="Buy a gift card" size="lg" />
  *   <BookingButton product="general" label="Book Tour" variant="outline" />
  */

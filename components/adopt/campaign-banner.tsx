@@ -5,8 +5,9 @@ import type { Locale } from '@/i18n.config'
 export async function CampaignBanner({ locale: _locale, className }: { locale: Locale; className?: string }) {
   if (!CAMPAIGN_HEADLINE || !CAMPAIGN_END_DATE) return null
   const endMs = Date.parse(CAMPAIGN_END_DATE)
-  if (!Number.isFinite(endMs) || endMs < Date.now()) return null
-  const daysLeft = Math.max(0, Math.ceil((endMs - Date.now()) / (1000 * 60 * 60 * 24)))
+  const now = Date.now()
+  if (!Number.isFinite(endMs) || endMs < now) return null
+  const daysLeft = Math.max(0, Math.ceil((endMs - now) / (1000 * 60 * 60 * 24)))
 
   const tr = await getTranslations()
 

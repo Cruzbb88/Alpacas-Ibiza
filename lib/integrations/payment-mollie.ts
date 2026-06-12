@@ -51,6 +51,7 @@ import type {
   CheckoutResult,
   WebhookResult,
   CreateCheckoutOpts,
+  BuildCheckoutUrlOpts,
 } from './payment'
 import {
   ADOPT_PRICE_MONTHLY_EUR,
@@ -281,6 +282,36 @@ export function molliePaymentProvider(opts?: {
         log.error('[mollie] Payment creation failed:', { message })
         return { unconfigured: true, fallbackUrl }
       }
+    },
+
+    buildCheckoutUrl(opts: BuildCheckoutUrlOpts): string | null {
+      // Mirror the URL logic from lib/payment-vendor.ts mollieAdapter().buildAdoptCheckoutUrl.
+      // Supports adopt-monthly / adopt-yearly — other modes return null (no Mollie URL).
+      const tier =
+        opts.mode === 'adopt-monthly' ? 'monthly'
+        : opts.mode === 'adopt-yearly' ? 'yearly'
+        : null
+
+      if (!tier) return null
+
+      const apiKey = process.env.MOLLIE_API_KEY
+      const webhookSecret = process.env.MOLLIE_WEBHOOK_SECRET
+
+      if (!apiKey || !webhookSecret) {
+        if (typeof window === 'undefined') {
+          log.warn(
+            '[mollie] buildCheckoutUrl: MOLLIE_API_KEY or MOLLIE_WEBHOOK_SECRET unset — returning null.',
+          )
+        }
+        return null
+      }
+
+      let base = `/api/mollie-checkout?tier=${tier}`
+      if (opts.alpaca) base += `&alpaca=${encodeURIComponent(opts.alpaca)}`
+      if (opts.giftName) base += `&gift_name=${encodeURIComponent(opts.giftName)}`
+      if (opts.giftEmail) base += `&gift_email=${encodeURIComponent(opts.giftEmail)}`
+      if (opts.giftDeliver) base += `&gift_deliver=${encodeURIComponent(opts.giftDeliver)}`
+      return base
     },
 
     /**

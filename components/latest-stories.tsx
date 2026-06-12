@@ -20,11 +20,11 @@ interface Props {
 
 export function LatestStories({ locale, max = 3 }: Props) {
   const posts = listJournalPostsNewest().slice(0, max)
+  // Rules of Hooks: call unconditionally before the early return below.
+  const translate = useTranslations()
 
   // Fail-quiet — section disappears when no posts; no empty space rendered
   if (posts.length === 0) return null
-
-  const translate = useTranslations()
 
   const sectionTitle =
     translate('journal.latestTitle') || 'Latest from the journal'

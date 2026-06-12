@@ -77,6 +77,18 @@ export function buildIcs(input: IcsEventInput): string {
 }
 
 /**
+ * Shared defaults for tour booking ICS events — used by /api/tour-ics and
+ * /[locale]/tour-confirmation to avoid drift between the API and the page.
+ */
+export const TOUR_ICS_DEFAULTS = {
+  summary: 'Alpaca tour at Es Currals',
+  durationMin: 60,
+  location: 'Es Currals, San Carlos, Ibiza, Spain',
+  organizerEmail: 'info@alpacasibiza.com',
+  organizerName: 'Alpacas Ibiza',
+} as const
+
+/**
  * Google Calendar "Add to Calendar" deep link — works in every browser as a fallback.
  * Use when an attachment can't be sent (e.g. plain-text email).
  */

@@ -23,6 +23,7 @@ import {
   upsertSubscriptionFromMollie,
   recordPaymentEvent,
 } from '@/lib/db/upsert-from-webhook'
+import { lookupReferrer } from '@/lib/referral-codes'
 
 /**
  * POST /api/mollie-webhook?secret=<MOLLIE_WEBHOOK_SECRET>
@@ -112,10 +113,13 @@ export async function POST(request: Request) {
     const msg = `payment.failed handler reason=${failedResult.reason}`
     if (failedResult.reason === 'ok' || failedResult.reason === 'not-adoption') {
       log.info(msg, failedResult.meta)
+    } else if (failedResult.reason === 'recovered-no-notify' || failedResult.reason === 'missing-donor-email') {
+      // recovered-no-notify: late re-delivery after donor recovered — expected, not an error.
+      // missing-donor-email: unreachable donor — log warn so it is visible without triggering error alerts.
+      log.warn(msg, failedResult.meta)
     } else {
-      // Resend / mailer transient failure, or missing donor email — surface
-      // loudly via log.error so a Vercel log alert can catch a sustained
-      // outage. Do NOT 500: would re-deliver donor/owner notification on retry.
+      // Resend / mailer transient failure — surface loudly via log.error so a Vercel log alert can
+      // catch a sustained outage. Do NOT 500: would re-deliver donor/owner notification on retry.
       log.error(`${msg} (notification incomplete — accepting event to prevent retry-duplicate)`, failedResult.meta)
     }
     markProcessed(dedupKey)
@@ -234,6 +238,50 @@ export async function POST(request: Request) {
     recurringDonorName  = c.name
   }
 
+  // Build referrerRewardDeps: wires the referral-reward email for
+  // monthly-first and yearly-oneoff flows. Fail-quiet throughout.
+  // stampMetadata: updates the new donor's Mollie subscription metadata with
+  // referrer_reward_sent_at (idempotency stamp). We defer to post-payment
+  // subscription lookup since the subscription ID is unavailable on the
+  // payment shape for monthly-first at this point — stamp is best-effort.
+  const mollieReferrerRewardDeps = {
+    lookupReferrer: async (code: string) => {
+      if (!mollie) return null
+      try {
+        return await lookupReferrer(code, mollie)
+      } catch {
+        return null
+      }
+    },
+    alreadySent: !!payment.metadata?.referrer_reward_sent_at,
+    stampMetadata: payment.customerId
+      ? async () => {
+          if (!mollie) return
+          try {
+            // Stamp the most recent active subscription for this customer.
+            const subsPage = await mollie.customerSubscriptions.page({
+              customerId: payment.customerId!,
+              limit: 10,
+            })
+            for (const sub of subsPage) {
+              if (sub.status === 'active' || sub.status === 'pending') {
+                await mollie.customerSubscriptions.update(sub.id, {
+                  customerId: payment.customerId!,
+                  metadata: {
+                    ...(sub.metadata ?? {}),
+                    referrer_reward_sent_at: new Date().toISOString(),
+                  },
+                } as unknown as Parameters<typeof mollie.customerSubscriptions.update>[1])
+                break
+              }
+            }
+          } catch {
+            // Fail-quiet — stamp failure is non-fatal
+          }
+        }
+      : undefined,
+  }
+
   try {
     const result = await handleMolliePaymentPaid(payment, {
       sendEmail,
@@ -242,6 +290,7 @@ export async function POST(request: Request) {
       ownerEmail: process.env.CONTACT_EMAIL,
       recurringDonorEmail,
       recurringDonorName,
+      referrerRewardDeps: mollieReferrerRewardDeps,
     })
 
     const level = result.reason === 'ok' ? 'log' : result.reason === 'missing-email' || result.reason === 'unmatched' ? 'warn' : 'error'

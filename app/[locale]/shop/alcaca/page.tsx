@@ -4,15 +4,14 @@ import Link from 'next/link'
 import type { Locale } from '@/i18n.config'
 import { getTranslations } from 'next-intl/server'
 import { buildLocaleAlternates } from '@/lib/i18n-metadata'
-import { shopCategoryItemListSchema, toJsonLd } from '@/lib/structured-data'
+import { shopCategoryItemListSchema, productSchema, toJsonLd } from '@/lib/structured-data'
 import { getOgImage } from '@/lib/og-images'
 
 // Alcaca Oro Negro product photos — sourced from live-site scrape (2026-05-31).
-// Owner can re-host these on the redesign CDN later; Squarespace URLs are publicly accessible for now.
-const ALCACA_PHOTO_1 =
-  'https://images.squarespace-cdn.com/content/v1/63f5dee81e8cfc3a0d2638e3/a2939e9d-3939-49d2-be00-c67bc1251d7f/alcaca2-scaled.jpg'
-const ALCACA_PHOTO_2 =
-  'https://images.squarespace-cdn.com/content/v1/63f5dee81e8cfc3a0d2638e3/8c00eff7-8898-43b4-bc8b-aa95073ccc79/alcaca-scaled-e1657007564818.jpg'
+// Self-hosted from the live site (2026-06-06) so they survive the old
+// Squarespace site being taken down.
+const ALCACA_PHOTO_1 = '/images/shop/alcaca-1.jpg'
+const ALCACA_PHOTO_2 = '/images/shop/alcaca-2.jpg'
 
 export async function generateMetadata({
   params,
@@ -74,20 +73,40 @@ export default async function AlcacaPage({ params }: { params: Promise<{ locale:
     items: products.map((p) => ({ name: p.name, url: baseUrl })),
   })
 
+  // Build #5 — single-product Product schema for Alcaca Oro Negro.
+  // Price UNMAPPED (price-on-request); 0 used as placeholder per Rule 5 until owner
+  // supplies confirmed price. Schema omits url when price is 0 to avoid misleading signals.
+  const alcacaProductSchema = productSchema({
+    name: 'Alcaca Oro Negro — Alpaca Manure Compost',
+    description: translate('alcacaPage.storyBody') || 'Premium slow-release organic fertiliser from Es Currals alpaca herd. Available in mini, bag and bulk tiers.',
+    image: ALCACA_PHOTO_1,
+    priceEur: 0,     // OWNER_INPUT_NEEDED: replace 0 with confirmed price per unit
+    url: baseUrl,
+    availability: 'InStock',
+  })
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: toJsonLd(itemListSchema) }}
       />
+      {/* Build #5 — single-product JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: toJsonLd(alcacaProductSchema) }}
+      />
 
       {/* Hero */}
-      <section className="w-full py-20 px-4 bg-gradient-to-br from-primary/10 to-accent/10">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
+      <section className="relative w-full overflow-hidden min-h-[300px] flex items-center py-20 px-4">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/images/gallery/farm-02.jpg" alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-black/45" aria-hidden="true" />
+        <div className="relative max-w-4xl mx-auto text-center">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
             {translate('alcacaPage.title')}
           </h1>
-          <p className="text-lg text-foreground/70">
+          <p className="text-lg text-white/85">
             {translate('alcacaPage.subtitle')}
           </p>
         </div>

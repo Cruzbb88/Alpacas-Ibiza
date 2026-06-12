@@ -16,7 +16,7 @@
  * Schema — each entry:
  *   firstName  string   — guest first name, e.g. "Anna"
  *   city       string   — guest home city, e.g. "Amsterdam"
- *   tour       one of:  'meet-herd' | 'weaving-workshop' | 'farm-experience' | 'photo-session'
+ *   tour       one of:  'alpaca-tour' | 'weaving-workshop' | 'yoga'
  *   daysAgo    number   — how many days ago the booking was made (1 = yesterday)
  *
  * Example entry (copy this block, remove "// " prefix, fill in real data):
@@ -33,7 +33,10 @@
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
-export type TourSlug = 'meet-herd' | 'weaving-workshop' | 'farm-experience' | 'photo-session'
+// Real bookable experiences (FareHarbor: Alpaca Tour, Yoga, Weaving Workshop).
+// The fabricated 'meet-herd' / 'farm-experience' / 'photo-session' were removed
+// 2026-06-06 — FareHarbor has one "Alpaca Tour", not four tour types.
+export type TourSlug = 'alpaca-tour' | 'weaving-workshop' | 'yoga'
 
 export interface RecentBookingEntry {
   /** Guest first name. First name only — privacy. */
@@ -58,7 +61,7 @@ export const recentBookings: RecentBookingEntry[] = [
   // {
   //   firstName: 'Anna',
   //   city: 'Amsterdam',
-  //   tour: 'meet-herd',
+  //   tour: 'alpaca-tour',
   //   daysAgo: 1,
   // },
 ]

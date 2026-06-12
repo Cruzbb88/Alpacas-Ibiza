@@ -21,9 +21,12 @@
  * even when the package is not yet installed (owner-controlled deploy step).
  */
 
-import type { PaymentProvider, CheckoutResult, WebhookResult, CreateCheckoutOpts } from './payment'
+import type { PaymentProvider, CheckoutResult, WebhookResult, CreateCheckoutOpts, BuildCheckoutUrlOpts } from './payment'
 import { importStripe } from './stripe-sdk.ts'
-import { ADOPT_FALLBACK_MAILTO } from '../payment-vendor.ts'
+// Import from the dependency-free leaf, NOT payment-vendor — importing it from
+// payment-vendor (which imports this file) forms a circular dependency that
+// TDZ-crashes the production build non-deterministically on the edge routes.
+import { ADOPT_FALLBACK_MAILTO } from '../adopt-fallback.ts'
 import { makeRequestLogger } from '../request-id.ts'
 
 const log = makeRequestLogger('payment-stripe-direct', '')
@@ -86,6 +89,39 @@ export function stripeDirectPaymentProvider(opts?: {
       }
 
       return { url: session.url }
+    },
+
+    buildCheckoutUrl(opts: BuildCheckoutUrlOpts): string | null {
+      // Mirror the URL logic from lib/payment-vendor.ts stripeAdapter().buildAdoptCheckoutUrl.
+      // Supports adopt-monthly / adopt-yearly — other modes return null (no Stripe URL).
+      const tier =
+        opts.mode === 'adopt-monthly' ? 'monthly'
+        : opts.mode === 'adopt-yearly' ? 'yearly'
+        : null
+
+      if (!tier) return null
+
+      const priceId =
+        tier === 'monthly'
+          ? process.env.STRIPE_ADOPT_PRICE_ID_MONTHLY
+          : process.env.STRIPE_ADOPT_PRICE_ID_YEARLY
+      const secretKey = process.env.STRIPE_SECRET_KEY
+
+      if (!priceId || !secretKey) {
+        if (typeof window === 'undefined') {
+          log.warn(
+            `[stripe-direct] buildCheckoutUrl: STRIPE_ADOPT_PRICE_ID_${tier.toUpperCase()} or STRIPE_SECRET_KEY unset — returning null.`,
+          )
+        }
+        return null
+      }
+
+      let base = `/api/checkout?tier=${tier}`
+      if (opts.alpaca) base += `&alpaca=${encodeURIComponent(opts.alpaca)}`
+      if (opts.giftName) base += `&gift_name=${encodeURIComponent(opts.giftName)}`
+      if (opts.giftEmail) base += `&gift_email=${encodeURIComponent(opts.giftEmail)}`
+      if (opts.giftDeliver) base += `&gift_deliver=${encodeURIComponent(opts.giftDeliver)}`
+      return base
     },
 
     async verifyWebhook(rawBody: string, signature: string | null): Promise<WebhookResult> {

@@ -136,6 +136,31 @@ export interface WebhookResult {
 
 // ── PaymentProvider interface ──────────────────────────────────────────────────
 
+// ── buildCheckoutUrl opts ──────────────────────────────────────────────────────
+
+/**
+ * Options for `PaymentProvider.buildCheckoutUrl`.
+ *
+ * Mirrors the fields that `buildAdoptCheckoutUrl` in `lib/payment-vendor.ts`
+ * accepts, plus the broader gift/skein surface so providers can build any
+ * first-party checkout URL without creating a session.
+ *
+ * - `mode`       — which checkout flow / product tier to build a URL for.
+ * - `alpaca`     — optional pre-selected alpaca slug (threaded as `?alpaca=` query param).
+ * - `giftName`   — gift recipient name (gifts flow only).
+ * - `giftEmail`  — gift recipient email (gifts flow only).
+ * - `giftDeliver`— ISO date string for scheduled gift delivery (gifts flow only).
+ * - `referral`   — 6-char referral code to pass along (tracked in provider metadata).
+ */
+export interface BuildCheckoutUrlOpts {
+  mode: 'adopt-monthly' | 'adopt-yearly' | 'gift' | 'skein' | string
+  alpaca?: string
+  giftName?: string
+  giftEmail?: string
+  giftDeliver?: string
+  referral?: string
+}
+
 /**
  * Abstract payment-processing operations.
  *
@@ -148,6 +173,13 @@ export interface WebhookResult {
  *   Returns `{ ok: false }` when the webhook secret is unset (fail-CLOSED).
  *   Security-critical: matches app/api/fareharbor-webhook fail-closed pattern.
  *   Callers should return 503 when ok=false.
+ *
+ * **Failsafe contract — buildCheckoutUrl (optional):**
+ *   Returns a URL string when the provider can construct one without creating a
+ *   session (URL-only, no side effects). Returns `null` when the provider is not
+ *   configured or the mode is unsupported. Callers MUST fall back to mailto: on null.
+ *   Marked optional so adapters that don't implement it do not break tsc — call sites
+ *   guard with `provider.buildCheckoutUrl?.(...) ?? fallback`.
  */
 export interface PaymentProvider {
   readonly kind: PaymentProviderKind
@@ -165,4 +197,23 @@ export interface PaymentProvider {
    * Returns `{ ok: true, event }` on a valid signature.
    */
   verifyWebhook(rawBody: string, signature: string | null): Promise<WebhookResult>
+
+  /**
+   * Build a checkout URL without creating a session server-side.
+   *
+   * This is the URL-only variant of `createCheckoutSession`. Use this when
+   * rendering a page at SSR time (e.g. /adopt, /gifts) — `createCheckoutSession`
+   * creates a real session that expires before the user clicks, so it is wrong
+   * for page-time pre-computation.
+   *
+   * Returns a relative or absolute URL string, or `null` when:
+   *   - required env vars (price IDs, API keys) are not set, OR
+   *   - the provider does not support URL-only checkout (e.g. FareHarbor
+   *     passthrough, manual-mailto — they return `null` here).
+   *
+   * Callers MUST fall back to a mailto: URL when `null` is returned.
+   * Optional — adapters that do not implement this method are valid; callers
+   * use `provider.buildCheckoutUrl?.(...) ?? fallback`.
+   */
+  buildCheckoutUrl?: (opts: BuildCheckoutUrlOpts) => string | null
 }

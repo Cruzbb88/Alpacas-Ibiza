@@ -1,6 +1,9 @@
 import { ImageResponse } from 'next/og'
-import { getDefaultTenant } from '@/lib/tenants/server'
-import { getProviders } from '@/lib/integrations'
+// Edge-safe content access: import the content provider and content module
+// directly, bypassing getProviders() which pulls in email-resend → lib/mailer
+// (Node crypto) and other Node-only provider adapters that are unused here.
+import { staticTypescriptContentProvider } from '@/lib/integrations/content-static-typescript'
+import { alpacasibizaContent } from '@/lib/tenants/alpacasibiza-content'
 
 export const runtime = 'edge'
 export const size = { width: 1200, height: 630 }
@@ -16,11 +19,14 @@ interface Params {
 // already maps to exactly one OG image via params, so the single default
 // export is all that's needed.
 
+// Content provider wired directly — no Node-only dependencies in this bundle.
+// Multi-tenant: replace alpacasibizaContent with a per-tenant lookup when
+// the SaaS registry grows beyond one tenant.
+const _contentProvider = staticTypescriptContentProvider(alpacasibizaContent)
+
 export default async function Image({ params }: Params) {
   const { slug } = await params
-  const tenant = getDefaultTenant()
-  const providers = getProviders(tenant)
-  const animals = providers.content.listAnimals()
+  const animals = _contentProvider.listAnimals()
   const animal = animals.find((a) => a.id === slug)
 
   // Guard: if no image, fall back to a branded gradient (never broken)

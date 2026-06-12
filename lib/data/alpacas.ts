@@ -44,19 +44,21 @@ export function findAlpacaName(slug: string | null | undefined): string | null {
   return hit ? hit.name : null
 }
 
+/** CDN base shared by all alpaca portrait thumbnails (from live site inventory). */
+
 export const ALPACAS: Alpaca[] = [
-  { id: 'barbarella', name: 'Barbarella', bio: null, image: null, birthDate: null }, // OWNER_INPUT_NEEDED
-  { id: 'avalon',     name: 'Avalon',     bio: null, image: null, birthDate: null }, // OWNER_INPUT_NEEDED
-  { id: 'bardot',     name: 'Bardot',     bio: null, image: null, birthDate: null }, // OWNER_INPUT_NEEDED — born 19 Jan 2022 per bio; owner to confirm YYYY-MM-DD
-  { id: 'chet',       name: 'Chet',       bio: null, image: null, birthDate: null }, // OWNER_INPUT_NEEDED — born 20 Nov 2020 per bio; owner to confirm
-  { id: 'dusty',      name: 'Dusty',      bio: null, image: null, birthDate: null }, // OWNER_INPUT_NEEDED
-  { id: 'fela',       name: 'Fela',       bio: null, image: null, birthDate: null }, // OWNER_INPUT_NEEDED
-  { id: 'fonda',      name: 'Fonda',      bio: null, image: null, birthDate: null }, // OWNER_INPUT_NEEDED
-  { id: 'lewis',      name: 'Lewis',      bio: null, image: null, birthDate: null }, // OWNER_INPUT_NEEDED
-  { id: 'marron',     name: 'Marron',     bio: null, image: null, birthDate: null }, // OWNER_INPUT_NEEDED
-  { id: 'mojo',       name: 'Mojo',       bio: null, image: null, birthDate: null }, // OWNER_INPUT_NEEDED
-  { id: 'moloko',     name: 'Moloko',     bio: null, image: null, birthDate: null }, // OWNER_INPUT_NEEDED
-  { id: 'nelson',     name: 'Nelson',     bio: null, image: null, birthDate: null }, // OWNER_INPUT_NEEDED
-  { id: 'suki',       name: 'Suki',       bio: null, image: null, birthDate: null }, // OWNER_INPUT_NEEDED
-  { id: 'toots',      name: 'Toots',      bio: null, image: null, birthDate: null }, // OWNER_INPUT_NEEDED — born 3 Feb 2021 per bio; owner to confirm
+  { id: 'barbarella', name: 'Barbarella', bio: null, image: '/images/alpacas/barbarella.jpg', birthDate: null },
+  { id: 'avalon',     name: 'Avalon',     bio: null, image: '/images/alpacas/avalon.jpg', birthDate: null },
+  { id: 'bardot',     name: 'Bardot',     bio: null, image: '/images/alpacas/bardot.jpg', birthDate: '2022-01-19' }, // Extracted from bio prose; owner to confirm exact day
+  { id: 'chet',       name: 'Chet',       bio: null, image: '/images/alpacas/chet.jpg', birthDate: '2020-11-20' }, // Extracted from bio prose; owner to confirm exact day
+  { id: 'dusty',      name: 'Dusty',      bio: null, image: '/images/alpacas/dusty.jpg', birthDate: null },
+  { id: 'fela',       name: 'Fela',       bio: null, image: '/images/alpacas/fela.jpg', birthDate: null },
+  { id: 'fonda',      name: 'Fonda',      bio: null, image: '/images/alpacas/fonda.jpg', birthDate: null },
+  { id: 'lewis',      name: 'Lewis',      bio: null, image: '/images/alpacas/lewis.jpg', birthDate: null },
+  { id: 'marron',     name: 'Marron',     bio: null, image: '/images/alpacas/marron.jpg', birthDate: null },
+  { id: 'mojo',       name: 'Mojo',       bio: null, image: '/images/alpacas/mojo.jpg', birthDate: null },
+  { id: 'moloko',     name: 'Moloko',     bio: null, image: '/images/alpacas/moloko.jpg', birthDate: null },
+  { id: 'nelson',     name: 'Nelson',     bio: null, image: '/images/alpacas/nelson.jpg', birthDate: null },
+  { id: 'suki',       name: 'Suki',       bio: null, image: '/images/alpacas/suki.jpg', birthDate: null },
+  { id: 'toots',      name: 'Toots',      bio: null, image: '/images/alpacas/toots.jpg', birthDate: '2021-02-03' }, // Extracted from bio prose; owner to confirm exact day
 ]

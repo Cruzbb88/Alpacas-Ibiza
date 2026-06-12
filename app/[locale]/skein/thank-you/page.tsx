@@ -33,6 +33,10 @@ export default async function SkeinThankYouPage({
   // alpaca is passed as the display name from success_url
   const alpacaName = typeof sp.alpaca === 'string' ? sp.alpaca : null
 
+  // Gift mode: set by success_url when gift_name was present at checkout.
+  const isGift = sp.gift === 'true'
+  const giftRecipientName = typeof sp.gift_name === 'string' ? sp.gift_name : null
+
   return (
     <main
       style={{
@@ -55,16 +59,21 @@ export default async function SkeinThankYouPage({
           lineHeight: 1.2,
         }}
       >
-        {alpacaName
-          ? `You're down for ${alpacaName}'s spring shearing`
-          : 'Sponsorship confirmed'}
+        {isGift && giftRecipientName
+          ? `Gift confirmed for ${giftRecipientName}`
+          : alpacaName
+            ? `You're down for ${alpacaName}'s spring shearing`
+            : 'Sponsorship confirmed'}
       </h1>
 
       <p style={{ fontSize: 16, color: '#4b5563', marginBottom: 8, lineHeight: 1.6 }}>
-        {alpacaName
-          ? `We have you down for ${alpacaName}'s spring shearing.`
-          : `We have you down for one of our alpacas' spring shearing.`}{' '}
-        Wool ships in October. We&rsquo;ll email you 2 weeks before delivery with tracking details.
+        {isGift && giftRecipientName
+          ? `You sponsored ${alpacaName ? `${alpacaName}'s` : "an alpaca's"} spring shearing as a gift for ${giftRecipientName}. We'll add a hand-written card to the package.`
+          : alpacaName
+            ? `We have you down for ${alpacaName}'s spring shearing.`
+            : `We have you down for one of our alpacas' spring shearing.`}{' '}
+        {!isGift && 'Wool ships in October. We’ll email you 2 weeks before delivery with tracking details.'}
+        {isGift && 'Wool ships in October — we’ll reach out closer to delivery.'}
       </p>
 
       <p style={{ fontSize: 14, color: '#6b7280', marginBottom: 40 }}>
@@ -72,7 +81,7 @@ export default async function SkeinThankYouPage({
         minutes, check your spam folder or contact us at{' '}
         <a
           href="mailto:info@alpacasibiza.com"
-          style={{ color: '#556B2F', textDecoration: 'none' }}
+          style={{ color: 'hsl(var(--primary))', textDecoration: 'none' }}
         >
           info@alpacasibiza.com
         </a>
@@ -92,7 +101,7 @@ export default async function SkeinThankYouPage({
           style={{
             display: 'inline-block',
             padding: '12px 28px',
-            background: '#556B2F',
+            background: 'hsl(var(--primary))',
             color: '#fff',
             borderRadius: 8,
             fontWeight: 600,
@@ -101,6 +110,22 @@ export default async function SkeinThankYouPage({
           }}
         >
           Back to skein sponsorships
+        </Link>
+        <Link
+          href={`/${locale}/adopt`}
+          style={{
+            display: 'inline-block',
+            padding: '12px 28px',
+            background: '#fff',
+            color: 'hsl(var(--primary))',
+            border: '1.5px solid hsl(var(--primary))',
+            borderRadius: 8,
+            fontWeight: 600,
+            fontSize: 15,
+            textDecoration: 'none',
+          }}
+        >
+          Adopt an alpaca →
         </Link>
         <Link
           href={`/${locale}`}

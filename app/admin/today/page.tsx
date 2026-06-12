@@ -115,6 +115,11 @@ export default async function AdminTodayPage() {
         padding: '24px 16px 48px',
       }}
     >
+      {/* Install banner — visible on mobile only (md:hidden via Tailwind className) */}
+      <div className="md:hidden mb-6 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+        On your phone? Tap browser menu → <strong>Add to Home Screen</strong> to install Alpacas Admin.
+      </div>
+
       {/* Header */}
       <div style={{ marginBottom: 24 }}>
         <h1 style={{ fontSize: 26, fontWeight: 800, margin: 0, color: '#111827' }}>

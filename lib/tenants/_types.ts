@@ -115,6 +115,12 @@ export interface Tenant {
    * OWNER_INPUT_NEEDED: required by Spanish law for commercial websites.
    */
   readonly cif: string | null
+  /**
+   * EU VAT number (e.g. 'ESY6917111J').
+   * null = UNMAPPED — terms page omits the VAT line when null.
+   * OWNER_INPUT_NEEDED: confirm current EU VAT number before going live.
+   */
+  readonly vatNumber?: string | null
   readonly tagline: string
   readonly siteUrl: string
   /** All hostnames that map to this tenant (used by registry.ts). */
@@ -169,4 +175,27 @@ export interface Tenant {
    * The mapping slug → file lives in lib/integrations/index.ts.
    */
   readonly contentModule?: string
+
+  // ── Trust / compliance fields (Build #4 — WWF UK pattern for Spanish equivalent) ──
+  /**
+   * Spanish Empresa de Turismo Activo registration number.
+   * UNMAPPED until owner supplies. Footer renders iff set.
+   * Example: "Registro Insular de Turismo de Ibiza XX-XXXXX"
+   */
+  readonly touristRegistration?: string | null
+  /**
+   * Spanish food-handling certificate number (carnet de manipulador de alimentos).
+   * UNMAPPED until owner supplies. Footer renders iff set.
+   */
+  readonly foodHandlingCert?: string | null
+  /**
+   * Optional array of trust-badge entries (certifications, memberships, etc.).
+   * logoSrc is optional — label + certifier render as text-only when absent.
+   * Footer renders each entry iff array is non-empty.
+   */
+  readonly trustBadges?: ReadonlyArray<{
+    readonly label: string
+    readonly certifier: string
+    readonly logoSrc?: string
+  }>
 }

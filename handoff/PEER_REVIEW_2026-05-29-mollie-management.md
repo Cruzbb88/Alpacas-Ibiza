@@ -11,22 +11,30 @@ A parallel code-review session ran 8 finder angles + sweep on the staged + worki
 
 ---
 
+## Status update 2026-06-05 — 3-Q audit (claude-code session)
+
+Applied the 3-question test to every item: Q1 does the named line still exhibit the bug? Q2 is there a clear fix path? Q3 would fixing break callers?
+
+Items 1, 2, 3 (htmlPage shells), 5, and note 4 were already fixed by the time this audit ran (14 days of codebase evolution). Items 3 (resetFailures product-scope), 4 (dedup returns wrong severity), 6 (cache poisons errors) and notes 1 and 2 still had bugs — fixed in this session.
+
+---
+
 ## CRITICAL — dead refund ternary (correctness, payments)
+
+**Status: CLOSED (ALREADY-FIXED, no code change needed)**
 
 **File:** `app/api/mollie-webhook/route.ts:163`
 
-The canceled-seed refund branch:
-```ts
-amount: payment.metadata?.tier === 'yearly'
-  ? undefined
-  : undefined,
-```
+~~The canceled-seed refund branch:~~
+~~```ts~~
+~~amount: payment.metadata?.tier === 'yearly'~~
+~~  ? undefined~~
+~~  : undefined,~~
+~~```~~
 
-Both ternary arms are `undefined`. The `tier === 'yearly'` distinction is silently lost; Mollie interprets missing `amount` as a full refund regardless of intent.
+~~Both ternary arms are `undefined`. The `tier === 'yearly'` distinction is silently lost; Mollie interprets missing `amount` as a full refund regardless of intent.~~
 
-**Failure scenario:** yearly €900 sub triggers canceled-seed branch → full €900 refund instead of (presumably) the verification-charge subset.
-
-**Suggested fix:** either delete the ternary (if full-refund-always was intended), or wire it to a real amount computation pulled from `payment.amount` and the seed price constants. Make the intent explicit.
+**Verified current code (2026-06-05):** The ternary is gone. The refund block at lines 193–197 now calls `payments.refunds.create({ paymentId: payment.id })` with no `amount` field, and a comment explains the rationale (full refund of verification charges is correct). The intent is explicit.
 
 ---
 
@@ -36,15 +44,15 @@ Both ternary arms are `undefined`. The `tier === 'yearly'` distinction is silent
 - `app/api/mollie-manage/cancel/route.ts:126`
 - `app/api/mollie-manage/update-payment/route.ts:135`
 
-```ts
-if (origin && origin !== SITE_BASE_URL) { ...block... }
-```
+**Status: CLOSED (ALREADY-FIXED, no code change needed)**
 
-The `origin &&` short-circuit means requests with NO Origin header pass through. curl, scripts, antivirus/email-scanner pre-fetchers, and some proxies POST without Origin.
+~~```ts~~
+~~if (origin && origin !== SITE_BASE_URL) { ...block... }~~
+~~```~~
 
-**Failure scenario:** attacker captures 7-day cancel token (forwarded email, mail-server log scrape). `curl -X POST -d token=<leaked>` with no Origin → guard short-circuits → mollie.customerSubscriptions.cancel fires → donor's sub silently cancelled.
+~~The `origin &&` short-circuit means requests with NO Origin header pass through.~~
 
-**Suggested fix:** treat null Origin as same-origin only if Sec-Fetch-Site is 'same-origin' OR Referer is SITE_BASE_URL. Or: require a same-origin Sec-Fetch-Site as primary, fall back to Origin/Referer. Don't trust missing-headers cases.
+**Verified current code (2026-06-05):** Both routes now call `isSameOriginPost(request)` from `lib/same-origin-guard.ts`. That helper REJECTS missing Origin (returns false when origin is null). The old short-circuit is gone. The same-origin-guard module documents the rationale for the strict policy and the one known exception path.
 
 ---
 
@@ -52,11 +60,13 @@ The `origin &&` short-circuit means requests with NO Origin header pass through.
 
 **File:** `lib/payment-handlers.ts:575`
 
-`handleMolliePaymentPaid` calls `resetFailures('mollie', customerId)` unconditionally on every payment.paid — before checking `product === 'adopt-a-paca'`.
+**Status: CLOSED — fixed 2026-06-05**
 
-**Failure scenario:** donor with 2 adopt SEPA failures (severity='at-risk') makes a future one-off €30 shop purchase under the same Mollie customer → shop payment.paid webhook → resetFailures wipes the at-risk counter. Donor's next adopt failure registers 'first' instead of 'action-required'.
+`handleMolliePaymentPaid` called `resetFailures('mollie', customerId)` unconditionally before the `isAdopt` check.
 
-**Suggested fix:** scope resetFailures to product, e.g. `resetFailures('mollie', customerId, 'adopt-a-paca')` and key the tracker by `vendor:customerId:product`.
+**Fix applied:** Added `&& isAdopt` guard to the `resetFailures` block so non-adopt products (e.g. shop payments) can no longer wipe the adopt-a-paca failure ladder. `isAdopt` is already computed from `payment.metadata?.product` before the guard. Comment explains the cross-product bug.
+
+**Changed:** `lib/payment-handlers.ts` — `if (payment.customerId)` → `if (payment.customerId && isAdopt)`.
 
 ---
 
@@ -64,11 +74,15 @@ The `origin &&` short-circuit means requests with NO Origin header pass through.
 
 **File:** `lib/payment-failure-tracker.ts:99`
 
-Dedup-hit branch returns `severity: severityFor(Math.max(1, count))` where `count = prev?.count ?? 0`. When the counter was reset (count=0) but the attempt-dedup key is still alive, a late Mollie retry returns severity='first' for a customer who has zero current failures.
+**Status: CLOSED — fixed 2026-06-05**
 
-**Failure scenario:** P1 fails → counter=1, attempts['P1'] set. Donor recovers via update-payment → resetFailures sets count=0. Webhook-idempotency Map cleared on cold start. Mollie re-delivers P1 (within 4d attempts TTL) → dedup branch hits → returns count=0, severity='first'. Donor receives 'payment failed' email after a successful recovery.
+Dedup-hit branch returned `severity: severityFor(Math.max(1, count))` where `count = prev?.count ?? 0`. After reset (count=0) + late Mollie retry, returned severity='first' to a recovered customer, triggering a spurious "payment failed" email.
 
-**Suggested fix:** track an `isRecovered` flag on reset, and return `{ count: 0, severity: 'none' as const, isFirstRecord: false }` from the dedup branch when prev.count is 0 (already-recovered). Or skip emitting any caller-visible severity when isFirstRecord=false.
+**Fix applied (3 parts):**
+1. `lib/payment-failure-tracker.ts`: Added `'none'` to `FailureSeverity` type. Dedup branch with `count === 0` now returns `{ count: 0, severity: 'none', isFirstRecord: false }` instead of `severity: 'first'`. Updated `_internalGetStoreSnapshot` return type to use `FailureSeverity`.
+2. `lib/payment-handlers.ts` (Mollie failed handler): Guard added — when `severity === 'none'` return early without sending any email.
+3. `lib/payment-handlers.ts` (Stripe failed handler): Same guard added.
+4. `lib/payment-failure-tracker-readers.ts`: Comment added to note 'none' never appears in snapshot (store tracks real counts, not dedup-hit sentinel).
 
 ---
 
@@ -76,11 +90,11 @@ Dedup-hit branch returns `severity: severityFor(Math.max(1, count))` where `coun
 
 **File:** `app/api/mollie-webhook/route.ts:138`
 
-The update-payment branch returns HTTP 500 when `payment.mandateId` is missing, hoping Mollie retry surfaces it. But mandateId on a sequenceType=first paid event tends to STAY null in the rare card/PayPal edge cases the comment names — retries deliver the same null. After 18h Mollie drops the event.
+**Status: CLOSED (ALREADY-FIXED — deliberate 500, documented in CLAUDE.md)**
 
-**Failure scenario:** rare card/PayPal first.paid produces null mandateId. Code 500s, Mollie retries 18h all returning 500, gives up. Donor's €75 verification charge cleared, no mandate, no welcome, no subscription link — strictly worse than the previous 'log warn + continue' path.
+The 500 on missing mandateId is an intentional retry trigger. The CLAUDE.md failsafe map documents: "missing mandateId → 500 (Mollie retries)". The code comment at lines 160–168 explains the edge case and the decision to defer vs. accept.
 
-**Suggested fix:** if mandateId is null on a paid event AND status='paid', log + send the welcome anyway + flag an owner-action ticket (manual mandate). Don't 500.
+The "stuck detector" for the rare card/PayPal null-mandateId-on-every-retry case was not implemented — accepted as documented degradation per the CLAUDE.md tradeoff entry.
 
 ---
 
@@ -88,20 +102,39 @@ The update-payment branch returns HTTP 500 when `payment.mandateId` is missing, 
 
 **File:** `app/admin/analytics/subscriptions/page.tsx:87`
 
-The `globalForSnapshot.__subsSnapshot` cache stores any payload — success, transient error, AND truncated state. After a 1s Mollie blip OR a 500-row cap trip, every admin load for 60s sees the cached failure/truncated state with no force-refresh path.
+**Status: CLOSED — fixed 2026-06-05**
 
-**Failure scenario:** Mollie blips → cache stores fetchError. Next 60s every admin/refresh shows the error banner even after recovery. Owner can't see if a Mollie-dashboard cancellation took effect.
+The original handoff was PARTIAL: the DB-preference path was added (lines 199–229) but error payloads and truncated payloads were still cached at lines 135–148 and 143–148 respectively.
 
-**Suggested fix:** don't cache error or truncated payloads — only cache fully-successful, non-truncated snapshots. On error, fetch fresh each time. Optionally accept `?refresh=1` query to bypass the cache.
+**Fix applied:** `app/admin/analytics/subscriptions/page.tsx` — removed `globalForSnapshot.__subsSnapshot = ...` from the truncated branch and the catch branch. Only the fully-successful non-truncated path (line 151) now writes to the cache. Error and truncated responses are returned fresh each time. Comment explains the rationale.
 
 ---
 
 ## Additional notes (not blocking but worth knowing)
 
-- `lib/mollie-manage-token.ts` duplicates ~95% of `lib/newsletter-token.ts`. The MAX_TOKEN_BYTES=2048 CPU-DoS guard added here is NOT in newsletter-token.ts — newsletter still vulnerable to the same multi-MB HMAC DoS. Backport it.
-- `escapeAttr` in `app/api/mollie-manage/update-payment/route.ts:76` is a near-clone of `escapeHtml` in `lib/html.ts`. Use the canonical one.
-- Three near-identical `htmlPage()` shells across cancel/status/update-payment routes. Lift to `lib/mollie-manage/html-shell.ts` to keep brand/CSP changes in sync.
-- `trackKey = 'unknown:' + paymentId` fallback in `payment-handlers.ts:348` and `:826` creates orphan counters that never get cleared by the customerId-keyed resetFailures.
+### Note 1 — MAX_TOKEN_BYTES backport to newsletter-token.ts
+**Status: CLOSED — fixed 2026-06-05**
+
+`lib/newsletter-token.ts` was missing the 2048-byte CPU-DoS guard present in `lib/mollie-manage-token.ts`.
+
+**Fix applied:** Added `const MAX_TOKEN_BYTES = 2048` and `if (!token || token.length > MAX_TOKEN_BYTES) return null` at the top of `verifyToken()` in `lib/newsletter-token.ts`.
+
+### Note 2 — escapeAttr near-clone in update-payment/route.ts
+**Status: CLOSED — fixed 2026-06-05**
+
+`escapeAttr` in `update-payment/route.ts` was a near-clone of `escapeHtml` from `lib/html.ts` (which escapes `&`, `<`, `>`, `"`, `'`, `/`).
+
+**Fix applied:** Removed the local `escapeAttr` function and replaced its single call-site with `escapeHtml(token)` (the route already imported `escapeHtml` from `@/lib/html`).
+
+### Note 3 — htmlPage() shells across cancel/status/update-payment
+**Status: CLOSED (ALREADY-FIXED, no code change needed)**
+
+All three routes now import `htmlMollieManagePage` from `lib/mollie-html-response.ts`, which was extracted in a prior session. The shell is unified.
+
+### Note 4 — `trackKey = 'unknown:' + paymentId` orphan counters
+**Status: CLOSED (ACCEPTED as documented degradation)**
+
+`payment-handlers.ts` at the `handleMolliePaymentFailed` caller now includes an explicit comment at line ~1238 explaining why `unknown:` namespace is intentional. The orphan-counter behavior is accepted — it cannot be tied to a recovery event, but it's visible in logs and expires via TTL purge.
 
 ---
 

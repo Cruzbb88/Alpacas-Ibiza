@@ -52,10 +52,18 @@ describe('getFareHarborEmbedUrl', () => {
     assert.ok(url.includes('full-items=yes'), `Expected full-items=yes, got: ${url}`)
   })
 
-  it('does not append a query string when no options provided', () => {
+  it('always carries the flow id (matches the live booking link …?flow=1257173)', () => {
     delete process.env.NEXT_PUBLIC_FAREHARBOR_SHORTNAME
+    delete process.env.NEXT_PUBLIC_FAREHARBOR_FLOW_ID
     const url = getFareHarborEmbedUrl()
-    assert.equal(url.includes('?'), false, `Unexpected query string in base URL: ${url}`)
+    assert.ok(url.includes('flow=1257173'), `Expected flow=1257173 in base URL, got: ${url}`)
+  })
+
+  it('honours NEXT_PUBLIC_FAREHARBOR_FLOW_ID override', () => {
+    process.env.NEXT_PUBLIC_FAREHARBOR_FLOW_ID = '999999'
+    const url = getFareHarborEmbedUrl()
+    assert.ok(url.includes('flow=999999'), `Expected flow override, got: ${url}`)
+    delete process.env.NEXT_PUBLIC_FAREHARBOR_FLOW_ID
   })
 })
 
@@ -137,12 +145,9 @@ describe('getProductBookingUrl contract (via config helpers)', () => {
 
   it('every env-driven product falls back to base calendar when vars unset (test env)', () => {
     // In the test environment all FAREHARBOR_ITEM_* vars are undefined.
-    // Simulate all 11 products — all should resolve to base calendar.
+    // Simulate all products — all should resolve to base calendar.
     const productEnvVars = [
-      process.env.FAREHARBOR_ITEM_TOUR_MEET_HERD,
       process.env.FAREHARBOR_ITEM_TOUR_WEAVING_WORKSHOP,
-      process.env.FAREHARBOR_ITEM_TOUR_FARM_EXPERIENCE,
-      process.env.FAREHARBOR_ITEM_TOUR_PHOTO_SESSION,
       process.env.FAREHARBOR_ITEM_YOGA,
       process.env.FAREHARBOR_ITEM_WEDDINGS,
       process.env.FAREHARBOR_ITEM_PHOTOSHOOTS,

@@ -36,6 +36,8 @@
  * columns. Store API stays the same; only the implementation swaps.
  */
 
+import { createTtlValueStore } from './in-process-ttl-store.ts'
+
 export type SuppressionReason = 'hard-bounce' | 'complaint' | 'manual'
 
 interface SuppressionEntry {
@@ -53,46 +55,15 @@ const TTL_MS = 90 * 24 * 60 * 60 * 1000
 // rare events — 10 000 is an extremely conservative ceiling for this workload.
 const MAX_SIZE = 10_000
 
-const globalForSuppression = globalThis as unknown as {
-  __emailSuppressionStore?: Map<string, SuppressionEntry>
-}
-
-const _store: Map<string, SuppressionEntry> =
-  globalForSuppression.__emailSuppressionStore ?? new Map()
-
-if (process.env.NODE_ENV !== 'production') {
-  globalForSuppression.__emailSuppressionStore = _store
-}
-
-/**
- * Evict entries whose addedAt timestamp is older than TTL_MS.
- * Called on every read/write so callers never observe stale PII.
- */
-function purge(now: number): void {
-  for (const [k, entry] of _store) {
-    if (now - new Date(entry.addedAt).getTime() > TTL_MS) {
-      _store.delete(k)
-    }
-  }
-}
-
-/**
- * When the store is at MAX_SIZE, evict the single oldest entry to make room.
- * Oldest is the entry with the smallest addedAt value.
- */
-function evictOldestIfFull(): void {
-  if (_store.size < MAX_SIZE) return
-  let oldestKey: string | undefined
-  let oldestTime = Infinity
-  for (const [k, entry] of _store) {
-    const t = new Date(entry.addedAt).getTime()
-    if (t < oldestTime) {
-      oldestTime = t
-      oldestKey = k
-    }
-  }
-  if (oldestKey !== undefined) _store.delete(oldestKey)
-}
+// Storage + TTL purge + MAX_SIZE oldest-eviction + globalThis-HMR survival are all
+// handled by the shared value-carrying store (uft-002 unification). The set()/ts the
+// store stamps stays in lock-step with each entry's own `addedAt` field, which is set
+// to the same instant — so the 90-day TTL and the value's addedAt never drift.
+const _store = createTtlValueStore<SuppressionEntry>({
+  ttlMs: TTL_MS,
+  globalKey: '__emailSuppressionStore',
+  maxSize: MAX_SIZE,
+})
 
 /** Normalize an email for store key: lowercase + trim. */
 function normalize(email: string): string {
@@ -111,7 +82,6 @@ function normalize(email: string): string {
 export function suppressEmail(email: string, reason: SuppressionReason): void {
   const key = normalize(email)
   if (key.length === 0) return
-  purge(Date.now())
   const existing = _store.get(key)
   // Reason precedence: complaint > hard-bounce > manual. Once an address is
   // suppressed for spam-complaint, it stays at that reason regardless of
@@ -120,30 +90,34 @@ export function suppressEmail(email: string, reason: SuppressionReason): void {
     const order: Record<SuppressionReason, number> = { manual: 0, 'hard-bounce': 1, complaint: 2 }
     if (order[existing.reason] >= order[reason]) return
   }
-  evictOldestIfFull()
+  // Store handles TTL purge + MAX_SIZE oldest-eviction on set().
   _store.set(key, { email: key, reason, addedAt: new Date().toISOString() })
 }
 
 /** Returns true when the given address is suppressed. Case-insensitive. */
 export function isSuppressed(email: string): boolean {
-  purge(Date.now())
-  return _store.has(normalize(email))
+  return _store.get(normalize(email)) !== undefined
 }
 
 /** Returns the suppression entry, or null when the address is not suppressed. */
 export function getSuppression(email: string): SuppressionEntry | null {
-  purge(Date.now())
   return _store.get(normalize(email)) ?? null
 }
 
 /** Manual override — usually for owner-initiated "remove from suppression list" actions. */
 export function unsuppressEmail(email: string): boolean {
-  return _store.delete(normalize(email))
+  const key = normalize(email)
+  const existed = _store.get(key) !== undefined
+  _store.delete(key)
+  return existed
 }
 
 /** List all suppressed entries, sorted by addedAt descending. Used by future admin page. */
 export function listSuppressions(): SuppressionEntry[] {
-  return Array.from(_store.values()).sort((a, b) => b.addedAt.localeCompare(a.addedAt))
+  return _store
+    .entries()
+    .map(([, v]) => v)
+    .sort((a, b) => b.addedAt.localeCompare(a.addedAt))
 }
 
 /** @internal — for tests. */

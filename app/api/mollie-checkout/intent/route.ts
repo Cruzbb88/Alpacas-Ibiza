@@ -245,7 +245,7 @@ export async function POST(request: Request) {
     log.error('Mollie Payment creation failed', { message })
     return attachRequestId(
       NextResponse.json(
-        { error: 'Failed to create Mollie Payment', detail: message },
+        { error: 'Failed to create Mollie Payment', code: 'MOLLIE_ERROR' },
         { status: 502 },
       ),
       reqId,

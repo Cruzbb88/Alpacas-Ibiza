@@ -116,6 +116,7 @@ export default async function SustainabilityPage({ params }: { params: Promise<{
             <GradientPageHero
                 title={translate('sustainability.title')}
                 subtitle={translate('sustainability.subtitle')}
+                backgroundImage="/images/gallery/farm-05.jpg"
             />
 
             {/* Content cards — 2x3 grid (Cruz's original 4 + 2 new) */}

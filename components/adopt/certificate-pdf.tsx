@@ -1,14 +1,14 @@
 import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer'
 
 const styles = StyleSheet.create({
-  page: { padding: 60, backgroundColor: '#FFFAF0', fontFamily: 'Helvetica' },
-  border: { borderWidth: 2, borderColor: '#AD561A', padding: 40, height: '100%' },
-  innerBorder: { borderWidth: 1, borderColor: '#AD561A', padding: 30, height: '100%' },
-  eyebrow: { fontSize: 10, textAlign: 'center', letterSpacing: 4, color: '#AD561A', textTransform: 'uppercase', marginBottom: 8 },
+  page: { padding: 60, backgroundColor: '#F7F1E1', fontFamily: 'Helvetica' },
+  border: { borderWidth: 2, borderColor: '#556B2F', padding: 40, height: '100%' },
+  innerBorder: { borderWidth: 1, borderColor: '#556B2F', padding: 30, height: '100%' },
+  eyebrow: { fontSize: 10, textAlign: 'center', letterSpacing: 4, color: '#556B2F', textTransform: 'uppercase', marginBottom: 8 },
   title: { fontSize: 32, textAlign: 'center', marginBottom: 6, color: '#2E2E2E', fontFamily: 'Helvetica-Bold' },
   subtitle: { fontSize: 12, textAlign: 'center', color: '#666', marginBottom: 40 },
   presentedTo: { fontSize: 11, textAlign: 'center', letterSpacing: 2, color: '#888', textTransform: 'uppercase', marginBottom: 8 },
-  donorName: { fontSize: 26, textAlign: 'center', marginBottom: 30, color: '#AD561A', fontFamily: 'Helvetica-Bold' },
+  donorName: { fontSize: 26, textAlign: 'center', marginBottom: 30, color: '#556B2F', fontFamily: 'Helvetica-Bold' },
   sponsorOf: { fontSize: 11, textAlign: 'center', letterSpacing: 2, color: '#888', textTransform: 'uppercase', marginBottom: 6 },
   alpacaName: { fontSize: 22, textAlign: 'center', marginBottom: 30, color: '#2E2E2E', fontFamily: 'Helvetica-Bold' },
   body: { fontSize: 11, textAlign: 'center', color: '#444', lineHeight: 1.6, marginBottom: 40, paddingHorizontal: 30 },

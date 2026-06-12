@@ -153,10 +153,7 @@ describe('validateEnv', () => {
     process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY = 'set'
     process.env.FAREHARBOR_APP_KEY = 'set'
     process.env.FAREHARBOR_USER_KEY = 'set'
-    process.env.FAREHARBOR_ITEM_TOUR_MEET_HERD = 'set'
     process.env.FAREHARBOR_ITEM_TOUR_WEAVING_WORKSHOP = 'set'
-    process.env.FAREHARBOR_ITEM_TOUR_FARM_EXPERIENCE = 'set'
-    process.env.FAREHARBOR_ITEM_TOUR_PHOTO_SESSION = 'set'
     process.env.PAYMENT_VENDOR = 'set'
     process.env.GA4_PROPERTY_ID = 'set'
     process.env.GA4_CLIENT_EMAIL = 'set'
@@ -177,8 +174,7 @@ describe('validateEnv', () => {
 
     // Cleanup extra env keys
     for (const k of ['TURNSTILE_SECRET_KEY','NEXT_PUBLIC_TURNSTILE_SITE_KEY','FAREHARBOR_APP_KEY',
-      'FAREHARBOR_USER_KEY','FAREHARBOR_ITEM_TOUR_MEET_HERD','FAREHARBOR_ITEM_TOUR_WEAVING_WORKSHOP',
-      'FAREHARBOR_ITEM_TOUR_FARM_EXPERIENCE','FAREHARBOR_ITEM_TOUR_PHOTO_SESSION','PAYMENT_VENDOR',
+      'FAREHARBOR_USER_KEY','FAREHARBOR_ITEM_TOUR_WEAVING_WORKSHOP','PAYMENT_VENDOR',
       'GA4_PROPERTY_ID','GA4_CLIENT_EMAIL',
       'GA4_PRIVATE_KEY','GOOGLE_PLACES_API_KEY','GOOGLE_PLACES_PLACE_ID']) {
       delete process.env[k]

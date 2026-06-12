@@ -15,7 +15,7 @@ export type DunningEntry = {
   count: number
   lastFailureAt: number
   lastSuccessAt: number | null
-  severity: 'first' | 'at-risk' | 'action-required'
+  severity: 'first' | 'at-risk' | 'action-required' // 'none' never appears in snapshot (store tracks real counts only)
 }
 
 /** Entries with severity 'at-risk' OR 'action-required' (count ≥ 2). */

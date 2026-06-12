@@ -32,7 +32,7 @@ import { useTranslations } from 'next-intl'
 export type ProductSlug = FareHarborProduct
 
 export interface ExperienceCard {
-  /** Stable identifier used for the aria-labelledby hook. e.g. 'meet-herd'. */
+  /** Stable identifier used for the aria-labelledby hook. e.g. 'weaving-workshop'. */
   slug: string
   title: string
   /** Short tagline rendered above the description in accent colour. */
@@ -325,10 +325,12 @@ export function ExperienceCards({
       ? items
       : (cards ?? []).map(adaptLegacy)
 
+  // Rules of Hooks: call unconditionally before the early return below.
+  const translate = useTranslations()
+
   // Edge case: nothing to render.
   if (resolved.length === 0) return null
 
-  const translate = useTranslations()
   const bookCtaLabel = translate('experiences.bookCta')
   const learnMoreLabel = translate('experiences.learnMore')
 

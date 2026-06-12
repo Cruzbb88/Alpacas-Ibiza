@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "node --test --experimental-strip-types lib/*.test.ts lib/integrations/*.test.ts lib/tenants/*.test.ts lib/data/*.test.ts",
+    "test": "node --test --experimental-strip-types lib/*.test.ts lib/integrations/*.test.ts lib/tenants/*.test.ts lib/data/*.test.ts translations/*.test.ts",
     "test:unit": "vitest run",
     "test:unit:watch": "vitest",
     "test:coverage": "vitest run --coverage",
@@ -78,6 +78,7 @@
     "stripe": "^22.1.1",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
+    "vanilla-cookieconsent": "^3.1.0",
     "vaul": "^1.1.2",
     "zod": "^3.24.1"
   },

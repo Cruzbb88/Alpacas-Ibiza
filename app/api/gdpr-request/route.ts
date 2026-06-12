@@ -1,13 +1,12 @@
 import { NextResponse } from 'next/server'
 import { sendEmail } from '@/lib/mailer'
-import { verifyTurnstile } from '@/lib/turnstile'
-import { rateLimit } from '@/lib/rate-limit'
+import { rateLimit, getClientIp } from '@/lib/rate-limit'
 import { isValidEmail } from '@/lib/validate-email'
-import { detectHoneypot } from '@/lib/honeypot'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
 import { escapeHtml, sanitizeHeader } from '@/lib/html'
 import { getMollieClient } from '@/lib/integrations/payment-mollie'
 import { maskCustomerId } from '@/lib/log-pii'
+import { checkPublicFormGuard } from '@/lib/public-form-guard'
 
 /**
  * POST /api/gdpr-request
@@ -34,10 +33,8 @@ export async function POST(request: Request) {
   const reqId = getRequestId(request)
   const log = makeRequestLogger('gdpr-request', reqId)
 
-  const ip = request.headers.get('cf-connecting-ip')
-    ?? request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
-    ?? 'unknown'
-
+  // IP rate-limit first (original order preserved — different from other public forms)
+  const ip = getClientIp(request)
   const rateResult = rateLimit({ key: `gdpr:${ip}`, limit: 3, windowMs: 60 * 60 * 1000 })
   if (!rateResult.allowed) {
     log.warn('rate-limited', { ip: ip.slice(0, 7) + '…' })
@@ -51,10 +48,23 @@ export async function POST(request: Request) {
     return attachRequestId(NextResponse.json({ error: 'Invalid JSON' }, { status: 400 }), reqId)
   }
 
-  // Honeypot
-  if (detectHoneypot(body, 'business_name')) {
-    log.warn('honeypot tripped')
-    return attachRequestId(NextResponse.json({ success: true }, { status: 200 }), reqId)
+  // Guard: honeypot → Turnstile (IP rate-limit already done above, skipIpRateLimit=true)
+  const guard = await checkPublicFormGuard(request, body, {
+    routeName: 'gdpr',
+    honeypotField: 'business_name',
+    skipIpRateLimit: true,
+  })
+
+  if (!guard.allowed) {
+    if (guard.reason === 'honeypot') {
+      log.warn('honeypot tripped')
+      return attachRequestId(NextResponse.json({ success: true }, { status: 200 }), reqId)
+    }
+    // turnstile-failed — preserve original 400 shape
+    return attachRequestId(
+      NextResponse.json({ error: 'Captcha verification failed', reason: guard.captchaReason }, { status: 400 }),
+      reqId,
+    )
   }
 
   const type = body.type
@@ -69,15 +79,6 @@ export async function POST(request: Request) {
   if (!isValidEmail(email)) {
     return attachRequestId(
       NextResponse.json({ error: 'Valid email required' }, { status: 400 }),
-      reqId,
-    )
-  }
-
-  const captchaToken = body['cf-turnstile-response']
-  const captcha = await verifyTurnstile(typeof captchaToken === 'string' ? captchaToken : null, ip)
-  if (!captcha.ok) {
-    return attachRequestId(
-      NextResponse.json({ error: 'Captcha verification failed', reason: captcha.reason }, { status: 400 }),
       reqId,
     )
   }

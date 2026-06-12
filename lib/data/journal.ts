@@ -79,7 +79,7 @@ export const posts: JournalPost[] = [
     category: 'weaving',
     heroImage: null,
     heroAlt: 'A traditional wooden spinning wheel with raw alpaca fleece',
-    status: 'live',
+    status: 'draft',
     body: `The two-day weaving and spinning workshop runs in our off-season — when the tours quiet down and the studio has room. Everyone takes home a scarf they made. That's the headline. The middle of the workshop, though, is messier.
 
 ## Day one — the fleece

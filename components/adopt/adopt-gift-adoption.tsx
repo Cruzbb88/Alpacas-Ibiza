@@ -32,6 +32,7 @@ import { useEffect, useMemo, useRef, useTransition } from 'react'
 import type { Locale } from '@/i18n.config'
 import { useTranslations } from 'next-intl'
 import { trackEvent } from '@/lib/client-track'
+import { GreetingCardPicker } from './greeting-card-picker'
 
 interface AdoptGiftAdoptionProps {
   locale: Locale
@@ -48,6 +49,7 @@ export function AdoptGiftAdoption({ locale, heading }: AdoptGiftAdoptionProps) {
   const giftName = searchParams?.get('gift_name') ?? ''
   const giftEmail = searchParams?.get('gift_email') ?? ''
   const giftDeliver = searchParams?.get('gift_deliver') ?? ''
+  const giftCardDesign = searchParams?.get('gift_card_design') ?? ''
   const isGift = giftName.length > 0 || giftEmail.length > 0 || giftDeliver.length > 0
 
   // ── Analytics ───────────────────────────────────────────────────────────
@@ -97,7 +99,7 @@ export function AdoptGiftAdoption({ locale, heading }: AdoptGiftAdoptionProps) {
 
   const pendingRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  function updateParam(key: 'gift_name' | 'gift_email' | 'gift_deliver', value: string) {
+  function updateParam(key: 'gift_name' | 'gift_email' | 'gift_deliver' | 'gift_card_design', value: string) {
     const params = new URLSearchParams(searchParams?.toString() ?? '')
     if (value === '') {
       params.delete(key)
@@ -120,10 +122,15 @@ export function AdoptGiftAdoption({ locale, heading }: AdoptGiftAdoptionProps) {
     params.delete('gift_name')
     params.delete('gift_email')
     params.delete('gift_deliver')
+    params.delete('gift_card_design')
     const qs = params.toString()
     startTransition(() => {
       router.replace(`/${locale}/adopt${qs ? `?${qs}` : ''}`, { scroll: false })
     })
+  }
+
+  function handleCardSelect(cardId: string | null) {
+    updateParam('gift_card_design', cardId ?? '')
   }
 
   const headingText = heading ?? translate('adopt.gift.heading')
@@ -189,6 +196,18 @@ export function AdoptGiftAdoption({ locale, heading }: AdoptGiftAdoptionProps) {
             />
           </label>
 
+        </div>
+
+        {/* ── Greeting card picker — renders null until owner adds live card designs.
+             Failsafe: see CLAUDE.md failsafe map.
+             TODO (owner/dev): wire gift_card_design URL param through payment-vendor.ts →
+             Stripe/Mollie checkout metadata once card designs are ready. ── */}
+        <GreetingCardPicker
+          name="card_design"
+          onSelect={handleCardSelect}
+        />
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <label className="block sm:col-span-2">
             <span className="block text-xs font-semibold uppercase tracking-wide text-foreground/60 mb-1">
               {translate('adopt.gift.deliverLabel')}

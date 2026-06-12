@@ -4,7 +4,7 @@
  * its inputs are either trusted or pre-escaped.
  */
 
-import { escapeHtml, sanitiseDisplayName } from './html.ts'
+import { escapeHtml, sanitiseDisplayName, sanitizeHeader } from './html.ts'
 
 // Canonical site origin for absolute links inside email HTML. Mirrors
 // SITE_BASE_URL in lib/config.ts (kept inline because email-templates.ts is
@@ -146,8 +146,10 @@ export interface WelcomeAdoptionInput {
     gift?: {
         /** HTML-escaped name of the person who sent the gift. */
         fromName: string
-        /** HTML-escaped personal message from the buyer. */
-        message: string
+        /** HTML-escaped personal message from the buyer. Optional — the
+         * simplified gift form makes the message field non-mandatory, so the
+         * blockquote is gated on its presence. */
+        message?: string
     }
 }
 
@@ -269,9 +271,9 @@ export function welcomeAdoptionEmailHtml(opts: WelcomeAdoptionInput): string {
         return emailLayout(`
             <p>${recipientGreeting}</p>
             <p>You've been gifted ${tierCopy} at Es Currals Alpacas Ibiza by <strong>${opts.gift.fromName}</strong>.</p>
-            <blockquote style="border-left:3px solid #556B2F;margin:16px 0;padding:12px 16px;background:#f9f5ec;color:#444;font-style:italic;">
+            ${opts.gift.message ? `<blockquote style="border-left:3px solid #556B2F;margin:16px 0;padding:12px 16px;background:#f9f5ec;color:#444;font-style:italic;">
               &ldquo;${opts.gift.message}&rdquo;
-            </blockquote>
+            </blockquote>` : ''}
             <p>Your adoption is now active — here's what to expect:</p>
             ${alpacaLine}
             <p>Over your adoption year you'll receive:</p>
@@ -401,22 +403,12 @@ You're receiving this because you subscribed at <a href="${siteUrl}" style="colo
   </a>
 </div>
 <p style="color:#888;font-size:13px">If you didn't sign up for this newsletter, you can ignore this email — no action needed.</p>
-<p style="color:#888;font-size:12px;margin-top:8px">Or copy this link into your browser:<br/>${confirmUrl}</p>
+<p style="color:#888;font-size:12px;margin-top:8px">Or copy this link into your browser:<br/>${escapedConfirmUrl}</p>
 ${unsubscribeFooter}
 `)
     return { subject, html }
 }
 
-/**
- * Email containing a one-time Stripe Customer Portal link.
- *
- * Used by /api/billing-portal as a side-channel for the portal URL so the
- * response payload never differs between "subscriber" and "non-subscriber"
- * — closing the unauthenticated email-oracle enumeration vector.
- *
- * @param portalUrl  The Stripe portal session URL (already same-origin via SITE_BASE_URL).
- *                   Trusted input — generated server-side by stripe.billingPortal.sessions.create().
- */
 /**
  * Email containing one-click cancel links for a donor's Mollie subscription(s).
  *
@@ -739,7 +731,7 @@ export function buildBillingPortalEmail(portalUrl: string): { subject: string; h
   </a>
 </div>
 <p style="color:#888;font-size:13px">If you didn't request this, you can ignore this email — the link does nothing without your Stripe account.</p>
-<p style="color:#888;font-size:12px;margin-top:8px">Or copy this link into your browser:<br/>${portalUrl}</p>
+<p style="color:#888;font-size:12px;margin-top:8px">Or copy this link into your browser:<br/>${escapedPortalUrl}</p>
 `)
     return { subject, html }
 }
@@ -784,6 +776,60 @@ export interface AdopterMilestoneInput {
  * § 5(a). Adopters manage their subscription via the billing portal link
  * in their welcome email footer.
  */
+// ── Donor referral reward email ─────────────────────────────────────────────
+
+export interface ReferrerRewardInput {
+    /** Referrer display name — RAW (will be HTML-escaped here). Empty → "Hi there". */
+    referrerName: string
+    /** Referrer email address — used by the caller as `to:`; included here for type completeness only. */
+    referrerEmail: string
+    /** The discount code the owner has configured (env REFERRER_REWARD_DISCOUNT_CODE). */
+    discountCode: string
+    /** Short description of the reward (env REFERRER_REWARD_DESCRIPTION). */
+    description: string
+    /** Two-letter locale slug — currently only used for future i18n wiring; defaults to 'en'. */
+    locale?: string
+}
+
+/**
+ * Builds the referrer-reward email sent to the donor whose referral code
+ * was used by a new adopter who just completed checkout.
+ *
+ * Subject: "Thank you for sharing — your reward is here"
+ * Body: warm thank-you + discount code + description + link to use it.
+ *
+ * Inputs are HTML-escaped here. Caller must set `replyTo: getContactEmail()`.
+ * List-Unsubscribe header is passed via the `listUnsubscribeUrl` mailer param
+ * (same pattern as buildAdoptDiscountCodesEmail / welcome path).
+ *
+ * Returns `{ subject, html }` so callers can spread into sendEmail().
+ */
+export function buildReferrerRewardEmail(
+    input: ReferrerRewardInput,
+): { subject: string; html: string } {
+    const safeName = input.referrerName ? escapeHtml(input.referrerName) : ''
+    const greeting = safeName ? `Hi ${safeName},` : 'Hi there,'
+    const safeCode = escapeHtml(input.discountCode)
+    const safeDescription = escapeHtml(input.description)
+    const subject = sanitizeHeader('Thank you for sharing — your reward is here')
+    const adoptUrl = `${SITE_BASE_URL_INLINE}/en/adopt`
+    const html = emailLayout(`
+<h2 style="color:${BRAND.primary}">${greeting} 🦙</h2>
+<p>Someone you told about Alpacas Ibiza just joined the herd — and that means <strong>you</strong> have earned a reward. Thank you for spreading the word.</p>
+<p>Here is your exclusive discount code:</p>
+<div style="margin:24px 0;padding:20px 24px;background:${BRAND.secondary};border-radius:8px;text-align:center">
+  <p style="font-size:13px;color:#666;margin:0 0 8px">Your reward: <strong>${safeDescription}</strong></p>
+  <p style="font-size:28px;font-weight:700;letter-spacing:4px;color:${BRAND.primary};margin:0">${safeCode}</p>
+</div>
+<p>Apply this code at checkout on the farm or booking page. It doesn't expire.</p>
+<div style="text-align:center;margin:28px 0">
+  <a href="${adoptUrl}" style="display:inline-block;padding:12px 24px;background:${BRAND.primary};color:#fff;text-decoration:none;border-radius:8px;font-weight:600;font-size:15px">Visit Alpacas Ibiza</a>
+</div>
+<p style="color:#888;font-size:13px;margin-top:24px">Reply to this email if you have any questions — we read every message. And thank you again for being part of the herd.</p>
+`)
+    return { subject, html }
+}
+
 export function buildAdopterMilestoneEmail(
     input: AdopterMilestoneInput,
 ): { subject: string; html: string } {

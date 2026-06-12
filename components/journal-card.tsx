@@ -11,6 +11,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import type { JournalPost } from '@/lib/data/journal'
+import { InitialsAvatar } from '@/components/initials-avatar'
 
 interface JournalCardProps {
   post: JournalPost
@@ -40,9 +41,10 @@ export function JournalCard({ post, locale }: JournalCardProps) {
           />
         </div>
       ) : (
-        <div className="aspect-video bg-muted flex items-center justify-center text-muted-foreground text-xs">
-          Photo coming soon
-        </div>
+        <InitialsAvatar
+          name={post.title}
+          className="aspect-video w-full"
+        />
       )}
 
       {/* Content */}

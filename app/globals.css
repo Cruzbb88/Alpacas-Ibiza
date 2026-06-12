@@ -15,47 +15,54 @@ body {
 
 @layer base {
   :root {
-    /* High-End Organic Palette */
-    /* Paper (#F9F9F9) */
-    --background: 0 0% 98%;
-    /* Slate (#708090) - Darker for text/foreground */
-    --foreground: 210 13% 30%;
-    
-    /* Card: White or very light paper */
-    --card: 0 0% 100%;
-    --card-foreground: 210 13% 30%;
-    
-    --popover: 0 0% 100%;
-    --popover-foreground: 210 13% 30%;
-    
-    /* Primary: Olive (#556B2F) */
+    /* ───────────────────────────────────────────────────────────────────
+       Owner-directed palette (2026-06-09): SANDY BEIGE + NATURE GREEN.
+       Sandy/cream surfaces, deep forest-green brand, olive-leaf accent.
+       All hues live here — tweak in one place. Values picked WCAG-AA-safe.
+       (Supersedes the prior olive/slate + terracotta-accent scheme and the
+        two "pending designer review" rows in CLAUDE.md.)
+       ─────────────────────────────────────────────────────────────────── */
+    /* Sandy beige paper */
+    --background: 40 33% 94%;
+    /* Deep green-charcoal text — dark enough that text-foreground/70 keeps AA */
+    --foreground: 96 18% 16%;
+
+    /* Card: warm cream, lifts off the sandy background */
+    --card: 42 40% 97%;
+    --card-foreground: 96 18% 16%;
+
+    --popover: 42 40% 97%;
+    --popover-foreground: 96 18% 16%;
+
+    /* Primary: nature green — the existing olive brand green (#556B2F), kept so
+       the tokenized UI matches the hardcoded logo / OG / icon / PDF assets. */
     --primary: 82 39% 30%;
-    --primary-foreground: 0 0% 98%;
-    
-    /* Secondary: Sand (#F5F5DC) - darker for visibility */
-    --secondary: 60 30% 90%;
-    --secondary-foreground: 82 39% 30%;
-    
-    /* Muted: Slate-ish */
-    --muted: 210 13% 90%;
-    --muted-foreground: 210 13% 40%;
-    
-    /* Accent: Warm Terra or Gold from original, let's keep it complementary */
-    --accent: 25 70% 55%;
-    --accent-foreground: 0 0% 100%;
-    
+    --primary-foreground: 42 40% 97%;
+
+    /* Secondary: soft sand */
+    --secondary: 40 35% 87%;
+    --secondary-foreground: 82 39% 26%;
+
+    /* Muted: warm sand-grey */
+    --muted: 40 22% 89%;
+    --muted-foreground: 96 10% 35%;
+
+    /* Accent: olive-leaf green for CTAs + highlights (AA on white, distinct from primary) */
+    --accent: 78 42% 33%;
+    --accent-foreground: 42 45% 97%;
+
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    
-    --border: 210 13% 90%;
-    --input: 210 13% 90%;
+
+    --border: 40 20% 85%;
+    --input: 40 20% 85%;
     --ring: 82 39% 30%;
-    
+
     --chart-1: 82 39% 30%;
-    --chart-2: 60 56% 91%;
-    --chart-3: 210 13% 50%;
-    --chart-4: 25 70% 55%;
-    --chart-5: 45 20% 85%;
+    --chart-2: 78 42% 45%;
+    --chart-3: 40 30% 70%;
+    --chart-4: 40 45% 55%;
+    --chart-5: 96 12% 45%;
     
     /* Radius: 16px */
     --radius: 1rem;
@@ -66,48 +73,49 @@ body {
     /* --font-display is an alias for --font-serif used by tailwind font-display utility */
     --font-display: var(--font-serif);
 
-    --sidebar-background: 60 30% 95%;
-    --sidebar-foreground: 210 13% 30%;
+    --sidebar-background: 42 38% 95%;
+    --sidebar-foreground: 96 18% 16%;
     --sidebar-primary: 82 39% 30%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 60 30% 90%;
-    --sidebar-accent-foreground: 82 39% 30%;
-    --sidebar-border: 210 13% 90%;
+    --sidebar-primary-foreground: 42 40% 97%;
+    --sidebar-accent: 40 35% 88%;
+    --sidebar-accent-foreground: 82 39% 26%;
+    --sidebar-border: 40 20% 85%;
     --sidebar-ring: 82 39% 30%;
   }
   .dark {
-    --background: 20 15% 12%;
-    --foreground: 45 25% 90%;
-    --card: 20 15% 18%;
-    --card-foreground: 45 25% 90%;
-    --popover: 20 15% 18%;
-    --popover-foreground: 45 25% 90%;
-    --primary: 110 40% 55%;
-    --primary-foreground: 20 15% 12%;
-    --secondary: 45 30% 30%;
-    --secondary-foreground: 45 25% 90%;
-    --muted: 20 10% 35%;
-    --muted-foreground: 45 15% 65%;
-    --accent: 25 75% 60%;
-    --accent-foreground: 20 15% 12%;
+    /* Dark theme — same sandy-beige + nature-green family, inverted */
+    --background: 100 12% 9%;
+    --foreground: 42 30% 90%;
+    --card: 100 10% 13%;
+    --card-foreground: 42 30% 90%;
+    --popover: 100 10% 13%;
+    --popover-foreground: 42 30% 90%;
+    --primary: 120 35% 55%;
+    --primary-foreground: 100 15% 10%;
+    --secondary: 95 12% 22%;
+    --secondary-foreground: 42 30% 90%;
+    --muted: 100 8% 26%;
+    --muted-foreground: 42 18% 68%;
+    --accent: 80 40% 50%;
+    --accent-foreground: 100 15% 10%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 20 10% 28%;
-    --input: 20 10% 28%;
-    --ring: 110 40% 55%;
-    --chart-1: 110 40% 55%;
-    --chart-2: 25 75% 60%;
-    --chart-3: 45 30% 50%;
-    --chart-4: 200 45% 60%;
-    --chart-5: 30 60% 65%;
-    --sidebar-background: 20 15% 12%;
-    --sidebar-foreground: 45 25% 90%;
-    --sidebar-primary: 110 40% 55%;
-    --sidebar-primary-foreground: 20 15% 12%;
-    --sidebar-accent: 25 75% 60%;
-    --sidebar-accent-foreground: 20 15% 12%;
-    --sidebar-border: 20 10% 28%;
-    --sidebar-ring: 110 40% 55%;
+    --border: 100 8% 24%;
+    --input: 100 8% 24%;
+    --ring: 120 35% 55%;
+    --chart-1: 120 35% 55%;
+    --chart-2: 80 40% 50%;
+    --chart-3: 42 30% 60%;
+    --chart-4: 40 45% 55%;
+    --chart-5: 96 15% 55%;
+    --sidebar-background: 100 12% 9%;
+    --sidebar-foreground: 42 30% 90%;
+    --sidebar-primary: 120 35% 55%;
+    --sidebar-primary-foreground: 100 15% 10%;
+    --sidebar-accent: 80 40% 50%;
+    --sidebar-accent-foreground: 100 15% 10%;
+    --sidebar-border: 100 8% 24%;
+    --sidebar-ring: 120 35% 55%;
   }
 }
 
@@ -117,6 +125,16 @@ body {
   }
   body {
     @apply bg-background text-foreground;
+  }
+
+  /* Smooth scroll for in-page anchor links (#cta, skip-to-content, /#newsletter…) */
+  html {
+    scroll-behavior: smooth;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
   }
 
   @view-transition {

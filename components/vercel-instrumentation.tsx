@@ -19,7 +19,21 @@ export function VercelInstrumentation() {
   const [consented, setConsented] = useState(false)
 
   useEffect(() => {
+    // Read consent on mount (handles users who already accepted).
     setConsented(hasAnalyticsConsent())
+
+    // Re-check when the user interacts with the cookie banner in THIS tab.
+    // CookieConsentBanner writes 'ai_cookie_consent_v1' to localStorage on
+    // every consent event — listening to the 'storage' event on `window` would
+    // only fire for CROSS-tab writes. For same-tab writes we use a custom
+    // 'cookieConsentUpdated' event dispatched by the banner instead.
+    function handleConsentUpdate() {
+      setConsented(hasAnalyticsConsent())
+    }
+    window.addEventListener('cookieConsentUpdated', handleConsentUpdate)
+    return () => {
+      window.removeEventListener('cookieConsentUpdated', handleConsentUpdate)
+    }
   }, [])
 
   return (

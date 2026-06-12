@@ -32,9 +32,11 @@ export function xmlEsc(s: string): string {
 }
 
 export async function GET() {
-  const posts = [...JOURNAL_POSTS].sort(
-    (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
-  )
+  const posts = [...JOURNAL_POSTS]
+    .filter((p) => p.status === 'live')
+    .sort(
+      (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
+    )
 
   const items = posts
     .flatMap((post) => {

@@ -35,9 +35,16 @@
 
 ## 🔐 Env var pastes — no code change at all
 
-Edit `.env.local` (template at `.env.local.example`, 36 vars total).
+Edit `.env.local` (template at `.env.local.example` — see that file for the full current list).
 
-### Unlocks "Adopt-a-Paca live" (4 vars)
+### Unlocks "Adopt-a-Paca live" — Mollie (recommended, ADR 019)
+```
+PAYMENT_VENDOR=mollie
+MOLLIE_API_KEY=live_...                     # Mollie dashboard → Developers → API keys
+MOLLIE_WEBHOOK_SECRET=<openssl rand -hex 32>  # generate locally; matched constant-time as URL secret
+```
+
+### Unlocks "Adopt-a-Paca live" — Stripe (alternative)
 ```
 PAYMENT_VENDOR=stripe
 STRIPE_SECRET_KEY=sk_live_...

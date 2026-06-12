@@ -13,7 +13,7 @@
  *   - Whether schedule differs in off-season
  *   - Yoga mat provision (bring your own or provided)
  *   - Instructor name + bio
- *   - Hero photo (public/images/heroes/yoga.webp)
+ *   - Hero photo (public/images/heroes/yoga.jpg)
  *   - FareHarbor yoga item ID (FAREHARBOR_ITEM_YOGA env var)
  */
 
@@ -35,6 +35,7 @@ import { getTenant } from '@/lib/tenants/server'
 import { tenantMetadata } from '@/lib/tenants/metadata'
 import { SpotsLeftBanner } from '@/components/tours/spots-left-banner'
 import { AdoptCrossSell } from '@/components/tours/adopt-cross-sell'
+import { BundleCta } from '@/components/tours/bundle-cta'
 
 // ─── Yoga activity schema (SportsActivityLocation + Offer) ───────────────────
 // Price €30 verified live 2026-05-27. Duration / style / schedule verified same source.
@@ -46,7 +47,7 @@ function yogaActivitySchema() {
         description:
             'Hatha yoga sessions held outdoors alongside alpacas on an authentic Ibiza finca. 1 hour 15 minutes, max 6 guests. Every Wednesday and Saturday.',
         url: `${BASE_URL}/en/yoga`,
-        // backgroundImage intentionally omitted — /images/heroes/yoga.webp not yet supplied.
+        // backgroundImage intentionally omitted — /images/heroes/yoga.jpg not yet supplied.
         // Add `image` field once owner provides the file. Emitting a broken URL harms SEO crawlers.
         address: {
             '@type': 'PostalAddress',
@@ -54,7 +55,7 @@ function yogaActivitySchema() {
             addressLocality: 'Santa Eulària des Riu',
             addressRegion: 'Islas Baleares',
             addressCountry: 'ES',
-            postalCode: '07819',
+            postalCode: '07850',
         },
         offers: {
             '@type': 'Offer',
@@ -137,10 +138,11 @@ export default async function YogaPage({ params }: { params: Promise<{ locale: s
                 <SpotsLeftBanner itemId={FAREHARBOR_ITEM_YOGA} tourLabel="Alpaca Yoga" />
             </div>
 
-            {/* Hero — gradient until owner supplies public/images/heroes/yoga.webp */}
+            {/* Hero — yoga photo self-hosted from the live site (heroes/yoga.jpg). */}
             <GradientPageHero
                 title={translate('yoga.title')}
                 subtitle={translate('yoga.subtitle')}
+                backgroundImage="/images/heroes/yoga.jpg"
                 ctaPrimary={{
                     label: translate('yoga.cta'),
                     href: bookingUrl,
@@ -261,6 +263,13 @@ export default async function YogaPage({ params }: { params: Promise<{ locale: s
                 </div>
             </PageSection>
 
+            {/* ── Build #8 — Bundle CTA (tour+yoga slot) — env-gated; renders null unless
+                     BUNDLE_TOUR_PLUS_YOGA_DISCOUNT_EUR > 0 AND BUNDLE_TOUR_PLUS_YOGA_URL set.
+                     Failsafe: fail-open — no CTA when unset. ── */}
+            <PageSection bg="default" width="narrow" padding="sm" ariaLabel="Book tour and yoga bundle">
+                <BundleCta slot="tour-yoga" />
+            </PageSection>
+
             {/* ── AEO-Optimised FAQ ────────────────────────────────────────────── */}
             <section className="w-full bg-muted">
                 <FAQ items={faqItems} />
@@ -278,7 +287,7 @@ export default async function YogaPage({ params }: { params: Promise<{ locale: s
                     '[UNMAPPED] Off-season schedule — does Wed/Sat schedule hold year-round?',
                     '[UNMAPPED] Yoga mat provision — bring your own or provided on-site?',
                     '[UNMAPPED] Instructor name + short bio — owner must supply',
-                    '[UNMAPPED] Hero photo — drop at public/images/heroes/yoga.webp when ready',
+                    '[UNMAPPED] Hero photo — drop at public/images/heroes/yoga.jpg when ready',
                     '[UNMAPPED] FareHarbor yoga item ID — set FAREHARBOR_ITEM_YOGA in .env.local',
                 ]}
             />

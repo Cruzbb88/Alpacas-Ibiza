@@ -18,6 +18,7 @@ import {
   recordPaymentEvent,
   softDeleteSubscriptionFromStripe,
 } from '@/lib/db/upsert-from-webhook'
+import { lookupReferrer } from '@/lib/referral-codes'
 
 /**
  * POST /api/stripe-webhook
@@ -113,9 +114,45 @@ export async function POST(request: Request) {
         // StripeCheckoutSessionLike. Cast through unknown to make that
         // subset boundary explicit (and let tsc still catch any handler
         // access to fields the like-shape doesn't declare).
+        // Build referrerRewardDeps to wire the referral-reward email.
+        // stampMetadata: stamps referrer_reward_sent_at on the new donor's
+        // Stripe subscription (idempotency guard; fail-quiet if absent/throws).
+        // alreadySent: reads referrer_reward_sent_at from session metadata.
+        // lookupReferrer: resolves the 6-char code via Mollie customer scan;
+        // getMollieClient used here because referral codes are Mollie-derived
+        // (HMAC from Mollie customer IDs). Fail-quiet if Mollie unconfigured.
+        const stripeForStamp = stripe
+        const sessionSubscriptionId =
+          typeof session.subscription === 'string' ? session.subscription : null
+        const stripeReferrerRewardDeps = {
+          lookupReferrer: async (code: string) => {
+            try {
+              const { getMollieClient } = await import('@/lib/integrations/payment-mollie')
+              const mollieKey = process.env.MOLLIE_API_KEY
+              if (!mollieKey) return null
+              const mollie = await getMollieClient(mollieKey)
+              if (!mollie) return null
+              return lookupReferrer(code, mollie)
+            } catch {
+              return null
+            }
+          },
+          alreadySent: !!session.metadata?.referrer_reward_sent_at,
+          stampMetadata: sessionSubscriptionId
+            ? async () => {
+                try {
+                  await stripeForStamp.subscriptions.update(sessionSubscriptionId, {
+                    metadata: { referrer_reward_sent_at: new Date().toISOString() },
+                  })
+                } catch {
+                  // Fail-quiet — stamp failure is non-fatal
+                }
+              }
+            : undefined,
+        }
         const handlerResult = await handleStripeCheckoutCompleted(
           session as unknown as Parameters<typeof handleStripeCheckoutCompleted>[0],
-          { sendEmail, ownerEmail: process.env.CONTACT_EMAIL },
+          { sendEmail, ownerEmail: process.env.CONTACT_EMAIL, referrerRewardDeps: stripeReferrerRewardDeps },
         )
         if (handlerResult.reason !== 'ok') {
           const level = handlerResult.reason === 'missing-email' || handlerResult.reason === 'invalid-tier' ? 'warn' : 'error'
@@ -204,9 +241,11 @@ export async function POST(request: Request) {
           invoice as unknown as Parameters<typeof handleStripeInvoicePaymentFailed>[0],
           { sendEmail, ownerEmail: process.env.CONTACT_EMAIL },
         )
-        const level = failedResult.reason === 'ok' ? 'warn' : 'error'
+        const level = failedResult.reason === 'ok' ? 'info'
+          : (failedResult.reason === 'missing-donor-email' || failedResult.reason === 'recovered-no-notify' ? 'warn' : 'error')
         const msg = `invoice.payment_failed handler reason=${failedResult.reason}`
-        if (level === 'warn') log.warn(msg, failedResult.meta)
+        if (level === 'info') log.info(msg, failedResult.meta)
+        else if (level === 'warn') log.warn(msg, failedResult.meta)
         else log.error(msg, failedResult.meta)
         // DB mirror — append-only event log (fire-and-forget). No customer
         // upsert: by the time invoice.payment_failed fires the customer was

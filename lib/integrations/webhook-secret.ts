@@ -53,6 +53,9 @@ export interface WebhookSecretProvider {
  * @param envVarName   The process.env key holding the shared secret.
  * @param mode         'fail-open'  — missing secret allows traffic through (with warn).
  *                     'fail-closed' — missing secret returns 503.
+ *
+ * Callers: reminder route (REMINDER_WEBHOOK_SECRET, fail-open),
+ *          review-request route (REVIEW_REQUEST_WEBHOOK_SECRET, fail-open).
  */
 export function makeWebhookSecretProvider(
   envVarName: string,

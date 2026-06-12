@@ -22,6 +22,13 @@
  * Adding a new vendor: implement PaymentAdapter, add a case to getPaymentAdapter().
  */
 
+// ── Provider imports for delegation ───────────────────────────────────────────
+// These are imported so the legacy adapter shims can delegate URL-building to
+// the canonical PaymentProvider implementations. The adapters remain the public
+// API for page-level consumers (no change to call sites).
+import { stripeDirectPaymentProvider } from './integrations/payment-stripe-direct.ts'
+import { molliePaymentProvider } from './integrations/payment-mollie.ts'
+
 export type PaymentVendor =
   | 'mailto'
   | 'stripe'
@@ -45,11 +52,13 @@ export function isAdoptTier(value: unknown): value is AdoptTier {
 }
 
 /**
- * Canonical mailto fallback URL — shown when no payment vendor is configured
- * or when a vendor's createCheckoutSession returns unconfigured.
+ * Canonical mailto fallback URL. Defined in the dependency-free leaf
+ * lib/adopt-fallback.ts and re-exported here for back-compat with the many
+ * call sites that import it from payment-vendor. The leaf breaks the
+ * payment-vendor ↔ payment-stripe-direct circular import (TDZ build failure).
  */
-export const ADOPT_FALLBACK_MAILTO =
-  'mailto:info@alpacasibiza.com?subject=Adopt%20an%20Alpaca%20enquiry'
+import { ADOPT_FALLBACK_MAILTO } from './adopt-fallback.ts'
+export { ADOPT_FALLBACK_MAILTO }
 
 export interface AdoptCheckoutOpts {
   /**
@@ -59,6 +68,23 @@ export interface AdoptCheckoutOpts {
    * the canonical roster — the adapter does not re-validate.
    */
   alpaca?: string
+  /**
+   * Gift recipient name — set when the donor is purchasing a gift adoption.
+   * Threaded as `&gift_name=<value>` so the checkout route can read it and
+   * attach it to Stripe/Mollie session metadata. Caller provides pre-validated
+   * value from the gift wizard form (AdoptGiftAdoption).
+   */
+  giftName?: string
+  /**
+   * Gift recipient email — checkout route routes the welcome email here instead
+   * of to the buyer when this field is present.
+   */
+  giftEmail?: string
+  /**
+   * ISO date string (yyyy-mm-dd) or named slot ('now' | 'christmas' | 'birthday').
+   * Checkout route passes to Resend scheduledAt to control delivery timing.
+   */
+  giftDeliver?: string
 }
 
 export interface PaymentAdapter {
@@ -75,6 +101,15 @@ function appendAlpacaQuery(url: string, alpaca?: string): string {
   if (!alpaca) return url
   const sep = url.includes('?') ? '&' : '?'
   return `${url}${sep}alpaca=${encodeURIComponent(alpaca)}`
+}
+
+function appendGiftQuery(url: string, opts?: AdoptCheckoutOpts): string {
+  if (!opts) return url
+  let result = url
+  if (opts.giftName) result += `&gift_name=${encodeURIComponent(opts.giftName)}`
+  if (opts.giftEmail) result += `&gift_email=${encodeURIComponent(opts.giftEmail)}`
+  if (opts.giftDeliver) result += `&gift_deliver=${encodeURIComponent(opts.giftDeliver)}`
+  return result
 }
 
 // ── Mailto adapter (default) ──────────────────────────────────────────────────
@@ -96,9 +131,29 @@ const mailtoAdapter: PaymentAdapter = {
 //   STRIPE_ADOPT_PRICE_ID_MONTHLY, STRIPE_ADOPT_PRICE_ID_YEARLY
 
 function stripeAdapter(): PaymentAdapter {
+  // Lazily instantiate the provider so it does not create a logger at module
+  // load time. The provider is the canonical home of URL-building logic;
+  // this adapter is a thin compat shim for legacy callers.
+  const provider = stripeDirectPaymentProvider()
+
   return {
     vendor: 'stripe',
     buildAdoptCheckoutUrl(tier, opts) {
+      // Delegate to the PaymentProvider.buildCheckoutUrl implementation so there
+      // is ONE source of URL-building logic per vendor (provider), with the
+      // adapter as a backward-compat shim. Fallback to the original inline logic
+      // if buildCheckoutUrl is not defined (future-proof guard).
+      if (provider.buildCheckoutUrl) {
+        return provider.buildCheckoutUrl({
+          mode: tier === 'monthly' ? 'adopt-monthly' : 'adopt-yearly',
+          alpaca: opts?.alpaca,
+          giftName: opts?.giftName,
+          giftEmail: opts?.giftEmail,
+          giftDeliver: opts?.giftDeliver,
+        })
+      }
+
+      // Original inline logic (fallback — should not be reached post-migration).
       const priceId =
         tier === 'monthly'
           ? process.env.STRIPE_ADOPT_PRICE_ID_MONTHLY
@@ -115,7 +170,8 @@ function stripeAdapter(): PaymentAdapter {
         return null
       }
 
-      return appendAlpacaQuery(`/api/checkout?tier=${tier}`, opts?.alpaca)
+      const base = appendAlpacaQuery(`/api/checkout?tier=${tier}`, opts?.alpaca)
+      return appendGiftQuery(base, opts)
     },
   }
 }
@@ -207,9 +263,29 @@ function fareharborAdapter(): PaymentAdapter {
 // Mollie Payment server-side and redirects to Mollie's hosted checkout page.
 
 function mollieAdapter(): PaymentAdapter {
+  // Lazily instantiate the provider so it does not create a logger at module
+  // load time. The provider is the canonical home of URL-building logic;
+  // this adapter is a thin compat shim for legacy callers.
+  const provider = molliePaymentProvider()
+
   return {
     vendor: 'mollie',
     buildAdoptCheckoutUrl(tier, opts) {
+      // Delegate to the PaymentProvider.buildCheckoutUrl implementation so there
+      // is ONE source of URL-building logic per vendor (provider), with the
+      // adapter as a backward-compat shim. Fallback to the original inline logic
+      // if buildCheckoutUrl is not defined (future-proof guard).
+      if (provider.buildCheckoutUrl) {
+        return provider.buildCheckoutUrl({
+          mode: tier === 'monthly' ? 'adopt-monthly' : 'adopt-yearly',
+          alpaca: opts?.alpaca,
+          giftName: opts?.giftName,
+          giftEmail: opts?.giftEmail,
+          giftDeliver: opts?.giftDeliver,
+        })
+      }
+
+      // Original inline logic (fallback — should not be reached post-migration).
       const apiKey = process.env.MOLLIE_API_KEY
       const webhookSecret = process.env.MOLLIE_WEBHOOK_SECRET
 
@@ -222,7 +298,8 @@ function mollieAdapter(): PaymentAdapter {
         return null
       }
 
-      return appendAlpacaQuery(`/api/mollie-checkout?tier=${tier}`, opts?.alpaca)
+      const base = appendAlpacaQuery(`/api/mollie-checkout?tier=${tier}`, opts?.alpaca)
+      return appendGiftQuery(base, opts)
     },
   }
 }

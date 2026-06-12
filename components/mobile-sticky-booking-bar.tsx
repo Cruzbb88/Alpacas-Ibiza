@@ -10,8 +10,16 @@
  * Rendering rules:
  *   - md:hidden — mobile only
  *   - z-50 — under NavProgressBar (z-60), over normal content
- *   - hidden on /admin, /api, /billing routes and the tours route itself
+ *   - hidden on /admin, /api, /billing, /preferences, /redeem-voucher,
+ *     /my-adoption, /thank-you, /newsletter/unsubscribed routes and the
+ *     tours route itself (Baymard mobile weakness #7 — don't duplicate CTAs
+ *     when page already has a primary action)
  *   - safe-area inset for iOS home indicator
+ *
+ * Contextual CTA (Baymard mobile weakness #7):
+ *   - /adopt* → "Adopt an alpaca"
+ *   - /tours, /experiences* → "Book a tour"  (default)
+ *   - everything else → generic "Book a tour" fallback
  *
  * Wiring:
  *   - URL via getProductBookingUrl(product) or getFareHarborEmbedUrl()
@@ -32,9 +40,29 @@ import {
 
 const SESSION_KEY = 'mobile_booking_bar_dismissed_v1'
 
+/**
+ * Route segments where the bar should NOT render.
+ * Checked via pathname.includes() or exact regex — avoids duplicating a
+ * primary CTA that is already present on those pages.
+ */
+const HIDDEN_ROUTE_SEGMENTS = [
+  '/admin',
+  '/api',
+  '/billing',
+  '/preferences',
+  '/redeem-voucher',
+  '/my-adoption',
+  '/thank-you',
+  '/newsletter/unsubscribed',
+  '/newsletter/archive',
+  '/tour-confirmation',   // post-booking confirmation — CTA already fulfilled
+  '/cancel-feedback',     // cancellation flow — wrong conversion moment
+  '/share-adoption',      // post-adopt share page — conversion already complete
+]
+
 export interface MobileStickyBookingBarProps {
   locale: Locale
-  /** Optional override — defaults to "Book a tour" translation */
+  /** Optional override — defaults to contextual label derived from pathname */
   label?: string
   /** Defaults to the main calendar URL via getFareHarborEmbedUrl(). Pass a product slug to deep-link. */
   product?: FareHarborProduct
@@ -68,6 +96,12 @@ export function MobileStickyBookingBar({
   const [visible, setVisible] = useState(false)
   const [dismissed, setDismissed] = useState(true) // start hidden to avoid SSR flash
   const lastScrollY = useRef(0)
+  // Rules of Hooks: call this UNCONDITIONALLY before any early `return null`
+  // below. The next-intl migration placed `useTranslations()` after the route/
+  // dismissed guards — on the render where `dismissed` flipped false the hook
+  // count changed (6 → 7), which threw and took every page that mounts this bar
+  // down to the error boundary ("Something went wrong"). Keep it up here.
+  const tr = useTranslations()
 
   // Hydrate dismissal from sessionStorage after mount
   useEffect(() => {
@@ -114,23 +148,39 @@ export function MobileStickyBookingBar({
     }
   }, [dismissed])
 
-  // Route guards — admin, api, billing, and the tours route itself
-  if (
-    pathname.startsWith('/admin') ||
-    pathname.startsWith('/api') ||
-    pathname.includes('/billing')
-  ) {
-    return null
+  // Route guards — pages that already have a primary CTA or are non-conversion contexts.
+  // Checked before the dismissed guard so we never even render for these routes.
+  // Test at path-segment boundaries so '/billing-faq' does not accidentally match '/billing'.
+  for (const segment of HIDDEN_ROUTE_SEGMENTS) {
+    if (pathname.includes(segment + '/') || pathname.includes(segment + '?') || pathname.endsWith(segment)) return null
   }
   // Hide on the tours page itself: matches /en/tours, /de/tours, etc. exactly.
+  // Experiences sub-pages still show the bar (they benefit from a booking nudge).
   if (/^\/[a-z]{2}\/tours\/?$/.test(pathname)) {
     return null
   }
 
   if (dismissed) return null
 
-  const tr = useTranslations()
-  const ctaLabel = label ?? tr('nav.bookTour')
+  // Contextual CTA: derive label from current pathname when no explicit override.
+  // /adopt* → "Adopt an alpaca"  (Level-4 trust ask; label sets the right intent)
+  // everything else → generic "Book a tour"
+  // Baymard mobile weakness #7: CTA text must match page intent.
+  const isAdoptContext = /\/adopt(\/|$)/.test(pathname)
+
+  // Safe i18n: tr() returns the key itself when a key is missing — use English
+  // fallback in that case to prevent raw key strings leaking into the UI.
+  const rawAdoptCta = tr('nav.adoptCta')
+  const rawBookTour = tr('nav.bookTour')
+  const adoptCtaLabel = rawAdoptCta && rawAdoptCta !== 'nav.adoptCta' ? rawAdoptCta : 'Adopt an alpaca'
+  const bookTourLabel = rawBookTour && rawBookTour !== 'nav.bookTour' ? rawBookTour : 'Book a tour'
+
+  const contextualLabel = isAdoptContext ? adoptCtaLabel : bookTourLabel
+  const ctaLabel = label ?? contextualLabel
+
+  // Aria label includes the action so screen-reader users understand both buttons.
+  const ctaAriaLabel = label ?? (isAdoptContext ? adoptCtaLabel : bookTourLabel)
+
   const href = product ? getProductBookingUrl(product) : getFareHarborEmbedUrl()
   const isHidden = !visible
 
@@ -164,6 +214,7 @@ export function MobileStickyBookingBar({
 
         <a
           href={href}
+          aria-label={ctaAriaLabel}
           data-analytics-event="sticky_booking_click"
           className={[
             'flex-1 inline-flex items-center justify-center',

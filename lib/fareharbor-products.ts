@@ -11,10 +11,7 @@
 import {
   getFareHarborEmbedUrl,
   getFareHarborItemUrl,
-  FAREHARBOR_ITEM_TOUR_MEET_HERD,
   FAREHARBOR_ITEM_TOUR_WEAVING_WORKSHOP,
-  FAREHARBOR_ITEM_TOUR_FARM_EXPERIENCE,
-  FAREHARBOR_ITEM_TOUR_PHOTO_SESSION,
   FAREHARBOR_ITEM_YOGA,
   FAREHARBOR_ITEM_WEDDINGS,
   FAREHARBOR_ITEM_PHOTOSHOOTS,
@@ -29,10 +26,10 @@ import {
  * 'general' = no specific item — resolves to the main calendar.
  */
 export type FareHarborProduct =
-  | 'meet-herd'
+  // 'meet-herd' / 'farm-experience' / 'photo-session' removed 2026-06-06 —
+  // AI-fabricated tour types. FareHarbor has ONE "Alpaca Tour" (→ 'general' /
+  // base calendar). 'weaving-workshop' kept: the real /workshops page uses it.
   | 'weaving-workshop'
-  | 'farm-experience'
-  | 'photo-session'
   | 'yoga'
   | 'weddings'
   | 'photoshoots'
@@ -47,10 +44,7 @@ export type FareHarborProduct =
  * undefined = not yet wired; getProductBookingUrl() will fall back to main calendar.
  */
 const PRODUCT_ITEM_IDS: Record<FareHarborProduct, string | undefined> = {
-  'meet-herd':            FAREHARBOR_ITEM_TOUR_MEET_HERD,
   'weaving-workshop':     FAREHARBOR_ITEM_TOUR_WEAVING_WORKSHOP,
-  'farm-experience':      FAREHARBOR_ITEM_TOUR_FARM_EXPERIENCE,
-  'photo-session':        FAREHARBOR_ITEM_TOUR_PHOTO_SESSION,
   'yoga':                 FAREHARBOR_ITEM_YOGA,
   'weddings':             FAREHARBOR_ITEM_WEDDINGS,
   'photoshoots':          FAREHARBOR_ITEM_PHOTOSHOOTS,

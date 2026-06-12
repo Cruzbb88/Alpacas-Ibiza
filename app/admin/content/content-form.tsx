@@ -68,10 +68,7 @@ export interface ContentPatch {
     heroImage: string
   }>
   fareHarbor: {
-    tourMeetHerd: string
     tourWeavingWorkshop: string
-    tourFarmExperience: string
-    tourPhotoSession: string
     yoga: string
     woven: string
     commission: string
@@ -153,7 +150,7 @@ function buildInitialPatch(): ContentPatch {
     media: [],
     journal: [],
     fareHarbor: {
-      tourMeetHerd: '', tourWeavingWorkshop: '', tourFarmExperience: '', tourPhotoSession: '',
+      tourWeavingWorkshop: '',
       yoga: '', woven: '', commission: '', alcaca: '',
       giftCard: '', romanticSunset: '', weddings: '', photoshoots: '',
       businessIncentives: '', familyFarmDays: '',
@@ -432,8 +429,8 @@ export default function ContentStagingForm() {
       <Section title="2. Tenant config (lib/tenants/alpacasibiza.ts)">
         <Field label="CIF (Spanish tax ID — required on all commercial websites)" value={patch.tenant.cif} onChange={(v) => setTenant('cif', v)} placeholder="B12345678" hint="Format: B followed by 8 digits. Footer auto-shows when set." />
         <Field label="No-reply / transactional sender email" value={patch.tenant.noreplyEmail} onChange={(v) => setTenant('noreplyEmail', v)} placeholder="info@alpacasibiza.com" type="url" />
-        <Field label="Logo URL (drop file at public/images/logo.webp first)" value={patch.tenant.logoUrl} onChange={(v) => setTenant('logoUrl', v)} placeholder="/images/logo.webp" />
-        <Field label="OG default image URL (drop file at public/images/og-default.webp first)" value={patch.tenant.ogImageUrl} onChange={(v) => setTenant('ogImageUrl', v)} placeholder="/images/og-default.webp" />
+        <Field label="Logo URL (drop file at public/images/brand/logo.png first)" value={patch.tenant.logoUrl} onChange={(v) => setTenant('logoUrl', v)} placeholder="/images/brand/logo.png" />
+        <Field label="OG default image URL (drop file at public/images/heroes/home.jpg first)" value={patch.tenant.ogImageUrl} onChange={(v) => setTenant('ogImageUrl', v)} placeholder="/images/heroes/home.jpg" />
         <Field label="Google review shortlink" value={patch.tenant.googleReviewUrl} onChange={(v) => setTenant('googleReviewUrl', v)} placeholder="https://g.page/r/..." type="url" />
         <Field label="Twitter/X handle (with @)" value={patch.tenant.twitterHandle} onChange={(v) => setTenant('twitterHandle', v)} placeholder="@alpacasibiza" />
         <Field label="Instagram URL (confirm: @wishfulfillingweaving vs @alpacasibiza)" value={patch.tenant.instagramUrl} onChange={(v) => setTenant('instagramUrl', v)} placeholder="https://www.instagram.com/..." type="url" />
@@ -597,10 +594,7 @@ export default function ContentStagingForm() {
       <Section title="11. FareHarbor item IDs (env vars + tenant config)">
         <p className="text-xs text-gray-500 mb-3">Get IDs from FareHarbor admin → Items → numeric ID per tour. These become FAREHARBOR_ITEM_* env vars.</p>
         <div className="grid grid-cols-2 gap-x-4">
-          <Field label="Meet the Herd" value={patch.fareHarbor.tourMeetHerd} onChange={(v) => setFareHarbor('tourMeetHerd', v)} placeholder="123456" />
           <Field label="Weaving Workshop" value={patch.fareHarbor.tourWeavingWorkshop} onChange={(v) => setFareHarbor('tourWeavingWorkshop', v)} placeholder="123456" />
-          <Field label="Farm Experience" value={patch.fareHarbor.tourFarmExperience} onChange={(v) => setFareHarbor('tourFarmExperience', v)} placeholder="123456" />
-          <Field label="Photo Session" value={patch.fareHarbor.tourPhotoSession} onChange={(v) => setFareHarbor('tourPhotoSession', v)} placeholder="123456" />
           <Field label="Yoga" value={patch.fareHarbor.yoga} onChange={(v) => setFareHarbor('yoga', v)} placeholder="123456" />
           <Field label="Woven (shop)" value={patch.fareHarbor.woven} onChange={(v) => setFareHarbor('woven', v)} placeholder="123456" />
           <Field label="Commission" value={patch.fareHarbor.commission} onChange={(v) => setFareHarbor('commission', v)} placeholder="123456" />

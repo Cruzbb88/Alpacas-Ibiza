@@ -6,15 +6,17 @@ import type { DocumentProps } from '@react-pdf/renderer'
 import React from 'react'
 import { PaymentReceipt } from '@/components/donor-portal/receipt-pdf'
 import type { ReceiptProps, ReceiptLineItem } from '@/components/donor-portal/receipt-pdf'
+import { renderPdfToResponse } from '@/lib/pdf-renderer'
 import { rateLimit, getClientIp } from '@/lib/rate-limit'
 import { sanitiseDisplayName } from '@/lib/html'
 import { alpacasibiza } from '@/lib/tenants/alpacasibiza'
+import { verifyDonorReceiptToken } from '@/lib/donor-receipt-token'
 
 // ── ID format guards ─────────────────────────────────────────────────────────
 /** Stripe checkout session IDs */
 const STRIPE_SESSION_RE = /^cs_(test_|live_)?[A-Za-z0-9]+$/
-/** Mollie payment IDs */
-const MOLLIE_PAYMENT_RE = /^tr_[A-Za-z0-9]+$/
+/** Mollie payment IDs (tr_) and subscription IDs (sub_) */
+const MOLLIE_PAYMENT_RE = /^(tr|sub)_[A-Za-z0-9]+$/
 
 type IdKind = 'stripe' | 'mollie'
 
@@ -39,15 +41,6 @@ function formatStripeAmount(amountMinor: number | null | undefined, currency: st
   const cur = (currency ?? 'eur').toLowerCase()
   if (ZERO_DECIMAL_CURRENCIES.has(cur)) return String(amountMinor)
   return (amountMinor / 100).toFixed(2)
-}
-
-// ── Dynamic PDF renderer import ──────────────────────────────────────────────
-async function importReactPdf() {
-  try {
-    return await import('@react-pdf/renderer')
-  } catch {
-    return null
-  }
 }
 
 // ── Business identity from tenant config ─────────────────────────────────────
@@ -94,11 +87,23 @@ export async function GET(
     )
   }
 
-  // PDF renderer — fail-closed if package is missing
-  const pdfLib = await importReactPdf()
-  if (!pdfLib) {
-    console.warn('[donor-receipt] @react-pdf/renderer missing — returning 503')
-    return NextResponse.json({ ok: false, code: 'PDF_SDK_MISSING' }, { status: 503 })
+  // HMAC capability-token gate — closes the IDOR class where anyone holding
+  // a cs_/tr_/sub_ ID could fetch a PDF of donor PII. The token is issued
+  // server-side by callers that already authorised the donor (Stripe session
+  // retrieve + paid-status check). Without the token, route 404s — same shape
+  // as the catch-all "session not found" path so unauthenticated probing can't
+  // distinguish "real session, missing token" from "fake session".
+  const url = new URL(request.url)
+  const token = url.searchParams.get('token') ?? ''
+  if (!verifyDonorReceiptToken(token, sessionId)) {
+    // Response is uniform 404 (anti-oracle). Server-side log distinguishes
+    // categories so future caller wiring can be debugged without weakening
+    // the oracle-closure on the public surface. [ep-007 gd-021]
+    console.warn('[donor-receipt] token reject', {
+      reason: token === '' ? 'missing' : 'invalid',
+      sessionIdSuffix: sessionId.slice(-6),
+    })
+    return NextResponse.json({ code: 'SESSION_NOT_FOUND' }, { status: 404 })
   }
 
   // ── Build receipt props from the appropriate payment provider ────────────
@@ -117,24 +122,9 @@ export async function GET(
   }
 
   // ── Render PDF ─────────────────────────────────────────────────────────────
-  try {
-    const element = React.createElement(PaymentReceipt, receiptProps) as unknown as React.ReactElement<DocumentProps>
-    const stream = await pdfLib.renderToStream(element)
-    const filename = `receipt-${receiptProps.receiptNumber}.pdf`
-
-    // @ts-expect-error renderToStream returns a Node.js Readable; Response accepts it on Node runtime
-    return new Response(stream, {
-      headers: {
-        'Content-Type': 'application/pdf',
-        'Content-Disposition': `inline; filename="${filename}"`,
-        'Cache-Control': 'no-store',
-        'X-Robots-Tag': 'noindex, nofollow',
-      },
-    })
-  } catch (err) {
-    console.error('[donor-receipt] PDF render error', err)
-    return NextResponse.json({ ok: false, code: 'PDF_RENDER_ERROR' }, { status: 500 })
-  }
+  const element = React.createElement(PaymentReceipt, receiptProps) as unknown as React.ReactElement<DocumentProps>
+  const filename = `receipt-${receiptProps.receiptNumber}.pdf`
+  return renderPdfToResponse(element, filename, { 'X-Robots-Tag': 'noindex, nofollow' })
 }
 
 // ── Stripe path ───────────────────────────────────────────────────────────────

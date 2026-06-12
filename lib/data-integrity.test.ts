@@ -62,9 +62,12 @@ describe('lib/data/alpacas.ts', () => {
     }
   })
 
-  it('every entry has image: null (UNMAPPED contract)', () => {
+  it('every entry has a self-hosted portrait (2026-06-06: downloaded from live site)', () => {
     for (const alpaca of ALPACAS) {
-      assert.equal(alpaca.image, null, `alpaca id="${alpaca.id}" has non-null image — UNMAPPED contract violated`)
+      assert.ok(
+        typeof alpaca.image === 'string' && alpaca.image.startsWith('/images/alpacas/'),
+        `alpaca id="${alpaca.id}" missing self-hosted portrait — all 14 are under public/images/alpacas/`,
+      )
     }
   })
 
@@ -438,9 +441,10 @@ describe('lib/data/journal-posts.ts — helper functions', () => {
     return
   }
 
-  it('listJournalPostsNewest() returns posts in descending publishedAt order', () => {
+  it('listJournalPostsNewest() returns only live posts in descending publishedAt order', () => {
     const sorted = listJournalPostsNewest()
-    assert.equal(sorted.length, JOURNAL_POSTS.length)
+    const livePosts = JOURNAL_POSTS.filter((p) => p.status === 'live')
+    assert.equal(sorted.length, livePosts.length)
     for (let i = 1; i < sorted.length; i++) {
       assert.ok(
         sorted[i - 1].publishedAt >= sorted[i].publishedAt,
@@ -449,11 +453,17 @@ describe('lib/data/journal-posts.ts — helper functions', () => {
     }
   })
 
-  it('findJournalPostBySlug returns the post for the first known slug', () => {
-    const firstSlug = JOURNAL_POSTS[0].slug
-    const found = findJournalPostBySlug(firstSlug)
-    assert.ok(found !== null, `findJournalPostBySlug("${firstSlug}") returned null`)
-    assert.equal(found.slug, firstSlug)
+  it('findJournalPostBySlug returns the post for the first live slug (null for drafts)', () => {
+    const firstLive = JOURNAL_POSTS.find((p) => p.status === 'live')
+    if (!firstLive) {
+      // All posts are drafts — verify that drafts are not returned
+      const draftSlug = JOURNAL_POSTS[0].slug
+      assert.equal(findJournalPostBySlug(draftSlug), null)
+      return
+    }
+    const found = findJournalPostBySlug(firstLive.slug)
+    assert.ok(found !== null, `findJournalPostBySlug("${firstLive.slug}") returned null`)
+    assert.equal(found.slug, firstLive.slug)
   })
 
   it('findJournalPostBySlug returns null for a nonexistent slug', () => {

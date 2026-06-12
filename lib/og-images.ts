@@ -49,7 +49,6 @@ const OG_IMAGES: Record<string, string> = {
   press:          ogUrl('Press', 'In the news · Alpacas Ibiza'),
   'press-kit':    ogUrl('Press Kit', 'Media resources · Alpacas Ibiza'),
   weaving:        ogUrl('Wishfulfilling Weaving', "Handwoven scarves from our herd's fleece · Es Currals"),
-  'weaving/collection': ogUrl('Weaving Collection', 'Handcrafted textiles from Alpacas Ibiza'),
 }
 
 export interface OgImageMeta {

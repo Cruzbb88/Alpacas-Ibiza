@@ -105,7 +105,7 @@ export async function POST(request: Request) {
     log.error('Stripe PaymentIntent retrieval failed', { message })
     return attachRequestId(
       NextResponse.json(
-        { error: 'Failed to verify PaymentIntent', detail: message },
+        { error: 'Failed to verify PaymentIntent', code: 'STRIPE_ERROR' },
         { status: 502 },
       ),
       reqId,

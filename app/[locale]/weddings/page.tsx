@@ -102,16 +102,20 @@ export default async function WeddingsPage({ params }: { params: Promise<{ local
             </div>
 
             {/* ── Hero ───────────────────────────────────────────────────────── */}
-            {/* OWNER_INPUT_NEEDED: supply wedding/photoshoot hero .webp to replace gradient */}
-            <section className="w-full py-20 px-4 bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50">
-                <div className="max-w-4xl mx-auto text-center">
-                    <p className="text-sm font-semibold uppercase tracking-widest text-primary mb-3">
+            {/* Wedding photo self-hosted from the live site (heroes/weddings.jpg).
+                Full-bleed img + scrim + white text — same treatment as GradientPageHero. */}
+            <section className="relative w-full py-20 px-4 overflow-hidden min-h-[320px] flex items-center">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/images/heroes/weddings.jpg" alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-black/45" aria-hidden="true" />
+                <div className="relative max-w-4xl mx-auto text-center">
+                    <p className="text-sm font-semibold uppercase tracking-widest text-white/90 mb-3">
                         {translate('weddings.eyebrow')}
                     </p>
-                    <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
+                    <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
                         {translate('weddings.title')}
                     </h1>
-                    <p className="text-lg text-foreground/70 max-w-2xl mx-auto">
+                    <p className="text-lg text-white/85 max-w-2xl mx-auto">
                         {translate('weddings.subtitle')}
                     </p>
                 </div>

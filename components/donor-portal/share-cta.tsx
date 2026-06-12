@@ -32,9 +32,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { trackEvent } from '@/lib/analytics-events'
 import { SITE_BASE_URL } from '@/lib/config'
 import type { Locale } from '@/i18n.config'
-
-/** Regex for a valid donor referral code — mirrors the guard in share-buttons.tsx. */
-const REFERRAL_CODE_RE = /^ALPACA-[A-Z0-9]{6}$/
+import { REFERRAL_CODE_RE } from '@/lib/referral-codes'
 
 interface ShareCTAProps {
   /** Alpaca slug from the donor's subscription metadata. null = "let us pick". */
@@ -152,7 +150,7 @@ export function ShareCTA({ alpacaSlug, locale, referralCode }: ShareCTAProps) {
           type="button"
           onClick={handleShare}
           style={{
-            background: '#556B2F',
+            background: 'hsl(var(--primary))',
             color: '#fff',
             padding: '12px 24px',
             borderRadius: 8,

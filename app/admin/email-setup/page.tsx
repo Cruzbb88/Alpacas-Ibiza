@@ -1,6 +1,7 @@
 import { getServerSession } from 'next-auth/next'
 import { redirect } from 'next/navigation'
 import { auth } from '@/app/api/auth/[...nextauth]/route'
+import { SendTestEmailButton } from '@/components/admin/send-test-email-button'
 
 async function fetchResendDomainStatus(): Promise<{
   status: 'unconfigured' | 'pending' | 'verified' | 'error'
@@ -38,6 +39,7 @@ export default async function EmailSetupPage() {
   const session = await getServerSession(auth)
   if (!session) redirect('/admin/login')
 
+  const contactEmail = process.env.CONTACT_EMAIL ?? 'info@alpacasibiza.com'
   const status = await fetchResendDomainStatus()
 
   return (
@@ -71,6 +73,7 @@ export default async function EmailSetupPage() {
       <p className="text-xs text-foreground/50 mt-6">
         After adding records, wait ~5 min for DNS propagation, then refresh this page.
       </p>
+      <SendTestEmailButton defaultRecipient={contactEmail} />
     </main>
   )
 }

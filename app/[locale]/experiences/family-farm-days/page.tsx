@@ -31,7 +31,7 @@ export async function generateMetadata({
             url: `${BASE_URL}/${locale}/experiences/family-farm-days`,
             images: [
                 {
-                    url: '/images/family-alpacas-hero.webp',
+                    url: '/images/gallery/herd-chicas.jpg',
                     width: 1200,
                     height: 630,
                     alt: 'Family visiting alpacas at Ibiza eco-tourism farm in Santa Eularia',
@@ -84,7 +84,7 @@ export default async function FamilyPage({ params }: { params: Promise<{ locale:
                     label: translate('family.cta'),
                     href: getProductBookingUrl('family-farm-days'),
                 }}
-                backgroundImage="/images/family-hero.webp"
+                backgroundImage="/images/gallery/farm-05.jpg"
             />
 
             {/* Spots-left urgency widget */}
@@ -93,15 +93,15 @@ export default async function FamilyPage({ params }: { params: Promise<{ locale:
             </div>
 
             {/* FairHarbor Booking Calendar - Above the Fold */}
-            <section className="w-full py-12 md:py-16 px-4 bg-[#F9F9F9]">
+            <section className="w-full py-12 md:py-16 px-4 bg-background">
                 <div className="max-w-4xl mx-auto text-center">
-                    <h2 className="text-2xl md:text-3xl font-bold text-[#708090] mb-4">
+                    <h2 className="text-2xl md:text-3xl font-bold text-foreground/70 mb-4">
                         {translate('tours.bookingSection.title')}
                     </h2>
-                    <p className="text-[#708090]/70 mb-8 max-w-2xl mx-auto">
+                    <p className="text-foreground/60 mb-8 max-w-2xl mx-auto">
                         {translate('tours.bookingSection.subtitle')}
                     </p>
-                    <div className="bg-white rounded-[16px] p-6 md:p-8 shadow-sm border border-[#F5F5DC]">
+                    <div className="bg-white rounded-[16px] p-6 md:p-8 shadow-sm border border-secondary">
                         <FareHarborCalendar itemId={FAREHARBOR_ITEM_FAMILY_FARM_DAYS} />
                     </div>
                 </div>
@@ -112,34 +112,34 @@ export default async function FamilyPage({ params }: { params: Promise<{ locale:
                 <div className="max-w-5xl mx-auto">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                         <div>
-                            <h2 className="text-3xl font-bold text-[#556B2F] mb-6">
+                            <h2 className="text-3xl font-bold text-primary mb-6">
                                 {translate('family.educationTitle')}
                             </h2>
-                            <p className="text-lg text-[#708090] mb-6">
+                            <p className="text-lg text-foreground/70 mb-6">
                                 {translate('family.educationText')}
                             </p>
                             <ul className="space-y-3">
                                 <li className="flex items-center gap-3">
-                                    <span className="w-6 h-6 rounded-full bg-[#556B2F] text-white flex items-center justify-center text-sm flex-shrink-0">
+                                    <span className="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center text-sm flex-shrink-0">
                                         &#10003;
                                     </span>
-                                    <span className="text-[#708090]">
+                                    <span className="text-foreground/70">
                                         <strong>{translate('family.points.respect')}</strong>
                                     </span>
                                 </li>
                                 <li className="flex items-center gap-3">
-                                    <span className="w-6 h-6 rounded-full bg-[#556B2F] text-white flex items-center justify-center text-sm flex-shrink-0">
+                                    <span className="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center text-sm flex-shrink-0">
                                         &#10003;
                                     </span>
-                                    <span className="text-[#708090]">
+                                    <span className="text-foreground/70">
                                         <strong>{translate('family.points.biology')}</strong>
                                     </span>
                                 </li>
                                 <li className="flex items-center gap-3">
-                                    <span className="w-6 h-6 rounded-full bg-[#556B2F] text-white flex items-center justify-center text-sm flex-shrink-0">
+                                    <span className="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center text-sm flex-shrink-0">
                                         &#10003;
                                     </span>
-                                    <span className="text-[#708090]">
+                                    <span className="text-foreground/70">
                                         <strong>{translate('family.points.sustainability')}</strong>
                                     </span>
                                 </li>
@@ -147,7 +147,7 @@ export default async function FamilyPage({ params }: { params: Promise<{ locale:
                         </div>
                         <div className="relative h-80 rounded-[16px] overflow-hidden">
                             <Image
-                                src="/images/kids-feeding-alpacas.webp"
+                                src="/images/gallery/farm-05.jpg"
                                 alt="Kids feeding alpacas at Alpaca Trekking Santa Eularia - Ibiza Eco-Tourism"
                                 fill
                                 className="object-cover"
@@ -159,9 +159,9 @@ export default async function FamilyPage({ params }: { params: Promise<{ locale:
             </section>
 
             {/* Safety Section */}
-            <section className="w-full py-16 px-4 bg-[#F5F5DC]/30">
+            <section className="w-full py-16 px-4 bg-secondary/30">
                 <div className="max-w-4xl mx-auto">
-                    <h2 className="text-2xl font-bold mb-8 text-center text-[#556B2F]">
+                    <h2 className="text-2xl font-bold mb-8 text-center text-primary">
                         {translate('family.safetyTitle')}
                     </h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
@@ -173,13 +173,13 @@ export default async function FamilyPage({ params }: { params: Promise<{ locale:
                         ].map((item) => (
                             <div
                                 key={item.key}
-                                className="bg-white p-6 rounded-[16px] text-center border border-[#F5F5DC] shadow-sm"
+                                className="bg-white p-6 rounded-[16px] text-center border border-secondary shadow-sm"
                             >
                                 <div className="text-3xl mb-3">{item.icon}</div>
-                                <h3 className="font-semibold text-[#556B2F] mb-1">
+                                <h3 className="font-semibold text-primary mb-1">
                                     {translate(`family.safety.${item.key}.title`)}
                                 </h3>
-                                <p className="text-xs text-[#708090]">
+                                <p className="text-xs text-foreground/70">
                                     {translate(`family.safety.${item.key}.desc`)}
                                 </p>
                             </div>
@@ -193,10 +193,10 @@ export default async function FamilyPage({ params }: { params: Promise<{ locale:
                 <div className="max-w-5xl mx-auto">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {[
-                            { src: '/images/family-alpaca-walk.webp', alt: 'Family walking with alpacas in Ibiza countryside - Eco-Tourism' },
-                            { src: '/images/family-kids-petting.webp', alt: 'Children petting alpacas at Alpaca Trekking Santa Eularia' },
-                            { src: '/images/family-feeding-time.webp', alt: 'Kids feeding alpacas on Ibiza farm - Family Eco-Tourism' },
-                            { src: '/images/family-farm-landscape.webp', alt: 'Alpaca farm landscape Santa Eularia Ibiza - Eco-Tourism experience' },
+                            { src: '/images/gallery/farm-07.jpg', alt: 'Family walking with alpacas in Ibiza countryside - Eco-Tourism' },
+                            { src: '/images/gallery/herd-chicas.jpg', alt: 'Children petting alpacas at Alpaca Trekking Santa Eularia' },
+                            { src: '/images/gallery/farm-03.jpg', alt: 'Kids feeding alpacas on Ibiza farm - Family Eco-Tourism' },
+                            { src: '/images/gallery/farm-wide.jpg', alt: 'Alpaca farm landscape Santa Eularia Ibiza - Eco-Tourism experience' },
                         ].map((img, i) => (
                             <div key={i} className="relative aspect-square rounded-[16px] overflow-hidden">
                                 <Image
@@ -213,7 +213,7 @@ export default async function FamilyPage({ params }: { params: Promise<{ locale:
             </section>
 
             {/* AEO-Optimized FAQ */}
-            <section className="w-full bg-[#F9F9F9]">
+            <section className="w-full bg-background">
                 <FAQ items={faqItems} />
             </section>
 

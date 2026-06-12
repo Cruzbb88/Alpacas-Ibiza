@@ -195,7 +195,7 @@ export function buildRenewalReminderEmail(
     const safeRenewalDate  = escapeHtml(renewalDate)
     // billingPortalUrl is server-constructed — still escape for defence-in-depth.
     const safePortalUrl    = escapeHtml(billingPortalUrl)
-    // referralCode format is ALPACA-[A-Z0-9]{6} — uppercase alphanumeric, safe to display.
+    // referralCode format is [A-Z0-9]{6} (6-char base32) — uppercase alphanumeric, safe to display.
     const safeReferralCode = referralCode ? escapeHtml(referralCode) : null
 
     // --- Subject (locale-switched, same fall-through pattern as reminderSubject) ---
@@ -361,8 +361,25 @@ export interface AlpacaBirthdayOpts {
     alpacaBirthYear: number | null
     /** Two-letter locale slug, e.g. "en". */
     locale: string
-    /** Tenant-aware billing portal URL. */
-    billingPortalUrl: string
+    /**
+     * Portal URL for the "Manage your adoption" link.
+     * Mollie donors: /[locale]/my-adoption?token=<24h-status-token> — lands directly on the page.
+     * Stripe donors: /[locale]/my-adoption — page shows its own "enter email" form.
+     * Previously pointed at /adopt#manage which required re-entering email before any action.
+     */
+    portalUrl: string
+    /**
+     * Signed per-type unsubscribe URL for birthday emails only.
+     * Generated via signEmailPreferenceToken(email, 'birthday') and appended as
+     * /api/email-preferences?token=<...>&action=unsubscribe&type=birthday.
+     * When null: the global unsubscribe link is the only option shown.
+     */
+    birthdayUnsubscribeUrl?: string | null
+    /**
+     * Global unsubscribe URL — generated via signUnsubscribeToken (newsletter-token.ts).
+     * When present, shown alongside the birthday-specific unsubscribe option.
+     */
+    globalUnsubscribeUrl?: string | null
 }
 
 /**
@@ -382,11 +399,13 @@ export interface AlpacaBirthdayOpts {
 export function buildAlpacaBirthdayEmail(
     opts: AlpacaBirthdayOpts,
 ): { subject: string; html: string } {
-    const { donorName, alpacaName, alpacaBirthYear, locale: _locale, billingPortalUrl } = opts
+    const { donorName, alpacaName, alpacaBirthYear, locale: _locale, portalUrl, birthdayUnsubscribeUrl, globalUnsubscribeUrl } = opts
 
     const safeDonorName  = donorName  ? escapeHtml(donorName)  : null
     const safeAlpacaName = escapeHtml(alpacaName)
-    const safePortalUrl  = escapeHtml(billingPortalUrl)
+    const safePortalUrl  = escapeHtml(portalUrl)
+    const safeBirthdayUnsub  = birthdayUnsubscribeUrl  ? escapeHtml(birthdayUnsubscribeUrl)  : null
+    const safeGlobalUnsub    = globalUnsubscribeUrl    ? escapeHtml(globalUnsubscribeUrl)    : null
 
     // Age string: "Dusty is 7 today!" — only when birthYear is known.
     const currentYear = new Date().getFullYear()
@@ -435,12 +454,30 @@ export function buildAlpacaBirthdayEmail(
 </p>
 `
 
+    // --- Per-type unsubscribe footer ---
+    // Shows both "stop birthday emails only" and "unsubscribe from all" when
+    // both tokens are present. Falls back to global-only when birthday token absent.
+    const unsubscribeFooter = (safeBirthdayUnsub || safeGlobalUnsub)
+        ? `
+<p style="margin-top:32px;font-size:11px;color:#aaa;text-align:center">
+  ${safeBirthdayUnsub
+    ? `<a href="${safeBirthdayUnsub}" style="color:#aaa">Stop birthday emails only</a>`
+    : ''}
+  ${safeBirthdayUnsub && safeGlobalUnsub ? ' &nbsp;·&nbsp; ' : ''}
+  ${safeGlobalUnsub
+    ? `<a href="${safeGlobalUnsub}" style="color:#aaa">Unsubscribe from all</a>`
+    : ''}
+</p>
+`
+        : ''
+
     const html = retentionEmailLayout(`
 ${greeting}
 ${birthdayHeadline}
 ${alpacaLine}
 ${farmBlock}
 ${manageBlock}
+${unsubscribeFooter}
 `)
 
     return { subject, html }

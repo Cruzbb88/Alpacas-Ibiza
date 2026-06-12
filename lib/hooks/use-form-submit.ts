@@ -39,6 +39,10 @@ export function useFormSubmit<TBody>(
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(opts.buildBody()),
+                // Bound the request: a stalled server (no error, just hangs) would
+                // otherwise leave the form stuck on "loading" forever. AbortSignal
+                // fires a TimeoutError after 15s, caught below.
+                signal: AbortSignal.timeout(15_000),
             })
             if (res.ok) {
                 const json = await res.json().catch(() => null)
@@ -52,7 +56,12 @@ export function useFormSubmit<TBody>(
                 setStatus('error')
             }
         } catch (err) {
-            const message = err instanceof Error ? err.message : 'Request failed'
+            const message =
+                err instanceof DOMException && err.name === 'TimeoutError'
+                    ? 'The request timed out — please check your connection and try again.'
+                    : err instanceof Error
+                      ? err.message
+                      : 'Request failed'
             setError(message)
             opts.onError?.(err)
             setStatus('error')

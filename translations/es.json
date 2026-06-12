@@ -1,955 +1,1055 @@
 {
-    "nav":  {
-                "tours":  "Tours y Visitas",
-                "visit":  "__UNTRANSLATED__",
-                "shop":  "Tienda",
-                "about":  "Nosotros",
-                "contact":  "Contacto",
-                "bookTour":  "Reservar Tour",
-                "language":  "Idioma",
-                "recoverCertificate":  "__UNTRANSLATED__"
-            },
-    "visit":  {
-                  "title":  "__UNTRANSLATED__",
-                  "subhead":  "__UNTRANSLATED__",
-                  "gettingHere":  {
-                                      "heading":  "__UNTRANSLATED__"
-                                  },
-                  "onArrival":  {
-                                    "heading":  "__UNTRANSLATED__"
-                                },
-                  "accessibility":  {
-                                        "heading":  "__UNTRANSLATED__"
-                                    },
-                  "cancellation":  {
-                                       "heading":  "__UNTRANSLATED__"
-                                   },
-                  "photos":  {
-                                 "heading":  "__UNTRANSLATED__"
-                             },
-                  "ctas":  {
-                               "heading":  "__UNTRANSLATED__",
-                               "bookTour":  "__UNTRANSLATED__",
-                               "seeHerd":  "__UNTRANSLATED__",
-                               "contact":  "__UNTRANSLATED__"
-                           }
-              },
-    "hero":  {
-                 "title":  "Es Currals Alpacas Ibiza",
-                 "subtitle":  "La primera granja de alpacas de Ibiza, situada en el norte rural en una finca autÃ©ntica. Hogar de Wishfulfilling Weaving, donde se tejen bufandas exclusivas a mano en un telar de madera tradicional con lana de alpaca.",
-                 "ctaPrimary":  "Planifica tu Visita",
-                 "ctaSecondary":  "Comprar Ahora"
-             },
-    "paths":  {
-                  "bookNow":  "Reservar Ahora",
-                  "browseCollection":  "Ver ColecciÃ³n",
-                  "startProject":  "Iniciar Proyecto",
-                  "learnMore":  "Saber MÃ¡s",
-                  "tour":  {
-                               "title":  "Reservar un Tour",
-                               "description":  "Visita nuestra granja, conoce las alpacas, aprende el arte del tejido y disfruta del paisaje de Ibiza."
-                           },
-                  "shop":  {
-                               "title":  "Comprar Tejidos",
-                               "description":  "Bufandas, mantas y piezas artesanales hechas a mano con lana de alpaca natural y tÃ©cnicas tradicionales."
-                           },
-                  "commission":  {
-                                     "title":  "Encargo",
-                                     "description":  "Crea algo Ãºnico. Encarga una pieza personalizada con tus propios colores, patrones y dimensiones."
-                                 },
-                  "alcaca":  {
-                                 "title":  "Comprar Alcaca",
-                                 "description":  "EstiÃ©rcol de alpaca premium para jardinerÃ­a ecolÃ³gica y agricultura sostenible. Pedidos a granel o muestras."
-                             }
-              },
-    "features":  {
-                     "sectionTitle":  "Por QuÃ© Elegir Es Currals Alpacas Ibiza",
-                     "sectionSubtitle":  "La primera granja de alpacas de Ibiza en una finca autÃ©ntica del norte rural",
-                     "farm":  {
-                                  "title":  "Finca AutÃ©ntica",
-                                  "description":  "Ubicada en el norte rural de Ibiza en una finca autÃ©ntica en un hermoso entorno natural. Vive la vida real del campo."
-                              },
-                     "artisan":  {
-                                     "title":  "Tejido Tradicional",
-                                     "description":  "Bufandas exclusivas tejidas a mano en un telar de madera tradicional con lana de alpaca de alta calidad, lino, mohair y seda."
-                                 },
-                     "sustainable":  {
-                                         "title":  "Hecho en Ibiza",
-                                         "description":  "Wishfulfilling Weaving â€“ Hecho en Ibiza, abrazando el mundo. PrÃ¡cticas sostenibles con nuestra propia lana de alpaca. Cuidado de los animales y el planeta."
-                                     },
-                     "appointment":  {
-                                         "title":  "Solo con Cita",
-                                         "description":  "Solo visitas Ã­ntimas. Mantenemos nuestra granja tranquila y pacÃ­fica para las alpacas â€” y para ti."
-                                     },
-                     "quality":  {
-                                     "title":  "Calidad Premium",
-                                     "description":  "Cada producto se revisa a mano. Respaldamos la calidad y durabilidad de nuestro trabajo."
-                                 },
-                     "welfare":  {
-                                     "title":  "Bienestar Animal Primero",
-                                     "description":  "Nuestras alpacas son miembros queridos de nuestra familia. Su comodidad y felicidad impulsan todo lo que hacemos."
-                                 }
-                 },
-    "experiences":  {
-                        "sectionTitle":  "Experiencias Especiales",
-                        "sectionSubtitle":  "MÃ¡s allÃ¡ de los tours â€” crea recuerdos personalizados en nuestra granja",
-                        "privateFarm":  {
-                                            "title":  "Granja Privada",
-                                            "description":  "Visitas solo con cita previa. Experiencias Ã­ntimas y tranquilas en una granja real."
-                                        },
-                        "workshops":  {
-                                          "title":  "Talleres",
-                                          "description":  "Aprende tejido, tintado natural y artes de fibra directamente de nuestro equipo artesanal."
-                                      },
-                        "events":  {
-                                       "title":  "Eventos",
-                                       "description":  "Bodas, sesiones de fotos, retiros corporativos, yoga con alpacas â€” experiencias personalizadas."
-                                   }
-                    },
-    "cta":  {
-                "title":  "Â¿Listo para Vivir Alpacas Ibiza?",
-                "subtitle":  "Ya sea que quieras conocer el rebaÃ±o, explorar nuestra colecciÃ³n o encargar algo especial â€” estamos aquÃ­ para crear una experiencia inolvidable.",
-                "bookTour":  "Reserva Tu Tour",
-                "exploreShop":  "Explorar Tienda"
-            },
-    "newsletter":  {
-                       "title":  "Mantente Conectado",
-                       "subtitle":  "Recibe actualizaciones sobre nuevos productos, talleres e historias de la granja",
-                       "placeholder":  "Introduce tu email",
-                       "subscribe":  "Suscribirse",
-                       "success":  "Â¡Gracias por suscribirte!"
-                   },
-    "tours":  {
-                  "title":  "Reserva Tu Experiencia con Alpacas",
-                  "subtitle":  "Plazas limitadas disponibles con cita previa. Cada visita es Ã­ntima y personalizada.",
-                  "reserveTitle":  "Reserva Tu Visita",
-                  "reserveText":  "Selecciona tu fecha y hora preferidas para reservar tu visita con nuestras alpacas.",
-                  "integrationTitle":  "IntegraciÃ³n FareHarbor",
-                  "integrationText":  "Para activar el widget de reserva FareHarbor, aÃ±ade tu ID de empresa en las variables de entorno.",
-                  "heroTitle":  "Visita Alpacas Ibiza",
-                  "heroSubtitle":  "AcompÃ¡Ã±anos para una experiencia inolvidable en la granja. Conoce nuestras alpacas, aprende tejido artesanal y sumÃ©rgete en la tranquila campiÃ±a de Ibiza.",
-                  "heroCta":  "Reserva Tu Visita",
-                  "tourOptionsTitle":  "Opciones de Tour",
-                  "tourOptionsSubtitle":  "Elige la experiencia que mÃ¡s te inspire",
-                  "tourTypes":  {
-                                    "meetHerd":  {
-                                                     "title":  "Conoce el RebaÃ±o",
-                                                     "description":  "ConÃ©ctate con nuestras alpacas, conoce sus personalidades y comprende su cuidado y bienestar."
-                                                 },
-                                    "weaving":  {
-                                                    "title":  "Taller de Tejido",
-                                                    "description":  "IntroducciÃ³n prÃ¡ctica a las artes de la fibra. Prueba el procesado manual, tintado natural o tejido bÃ¡sico."
-                                                },
-                                    "farm":  {
-                                                 "title":  "Experiencia en la Granja",
-                                                 "description":  "Explora la tierra, conoce nuestras prÃ¡cticas sostenibles y disfruta del paisaje mediterrÃ¡neo."
-                                             },
-                                    "photo":  {
-                                                  "title":  "SesiÃ³n de Fotos",
-                                                  "description":  "FotografÃ­a profesional o personal con alpacas y paisajes escÃ©nicos. Perfecto para recuerdos."
-                                              }
-                                },
-                  "timelineTitle":  "QuÃ© Esperar en un Tour",
-                  "timeline":  {
-                                   "arrival":  {
-                                                   "time":  "Llegada",
-                                                   "title":  "Bienvenida y OrientaciÃ³n",
-                                                   "description":  "Conoce a tu guÃ­a, recibe una visiÃ³n general del dÃ­a y aprende las normas de la granja. RelÃ¡jate y deja que la calma te envuelva."
-                                               },
-                                   "morning":  {
-                                                   "time":  "MaÃ±ana",
-                                                   "title":  "Conoce las Alpacas",
-                                                   "description":  "Pasa tiempo con nuestro rebaÃ±o. Alimenta, acaricia y conoce las historias de nuestros animales. Los guÃ­as comparten informaciÃ³n sobre el comportamiento y cuidado de las alpacas."
-                                               },
-                                   "midday":  {
-                                                  "time":  "MediodÃ­a",
-                                                  "title":  "Tour del Estudio de Tejido",
-                                                  "description":  "Explora nuestro estudio. Observa todo el proceso: preparaciÃ³n de fibra, tintado natural, patrones tradicionales y acabado final."
-                                              },
-                                   "afternoon":  {
-                                                     "time":  "Tarde",
-                                                     "title":  "Actividad PrÃ¡ctica",
-                                                     "description":  "Participa en un taller o actividad segÃºn tus intereses: prueba el cardado manual, tintado o tÃ©cnicas sencillas de tejido."
-                                                 },
-                                   "closing":  {
-                                                   "time":  "Cierre",
-                                                   "title":  "Relax y ReflexiÃ³n",
-                                                   "description":  "Termina el dÃ­a con refrescos. Visita nuestra tienda. Haz tus Ãºltimas preguntas. Vete con el corazÃ³n lleno de recuerdos."
-                                               }
-                               },
-                  "planVisit":  {
-                                    "hours":  {
-                                                  "title":  "Horario",
-                                                  "description":  "Tours solo con cita previa. La disponibilidad varÃ­a segÃºn la temporada.",
-                                                  "summer":  "Verano: Horario ampliado",
-                                                  "winter":  "Invierno: Disponibilidad limitada",
-                                                  "contact":  "ContÃ¡ctanos para horarios exactos"
-                                              },
-                                    "location":  {
-                                                     "title":  "UbicaciÃ³n",
-                                                     "description":  "San Carlos, Ibiza, EspaÃ±a",
-                                                     "details":  "Granja privada. Indicaciones y aparcamiento se proporcionan al reservar."
-                                                 },
-                                    "pricing":  {
-                                                    "title":  "Precios",
-                                                    "starting":  "Desde 30 â‚¬ por persona",
-                                                    "custom":  "Experiencias personalizadas y tarifas de grupo disponibles"
-                                                },
-                                    "specialEvents":  {
-                                                          "title":  "Eventos Especiales y Reservas Privadas",
-                                                          "description":  "Bodas, sesiones de fotos, yoga con alpacas, talleres, retiros corporativos â€” creamos experiencias a medida segÃºn tu visiÃ³n.",
-                                                          "cta":  "Solicitar Experiencia Personalizada"
-                                                      }
-                                },
-                  "bookingSection":  {
-                                         "title":  "Reserva Tu Visita",
-                                         "subtitle":  "Selecciona tu fecha y hora preferidas para reservar tu experiencia con alpacas.",
-                                         "cardTitle":  "Reserva Tu Visita",
-                                         "cardSubtitle":  "Haz clic en el botÃ³n de abajo para ir a la pÃ¡gina de reservas y asegurar tu plaza.",
-                                         "bookNow":  "Reservar Ahora",
-                                         "viewAndBook":  "Ver fechas disponibles y reservar ahora",
-                                         "poweredBy":  "Reserva segura a travÃ©s de FareHarbor",
-                                         "questions":  "Â¿Preguntas?",
-                                         "questionsText":  "ContÃ¡ctanos en info@alpacasibiza.com o por WhatsApp para asistencia personalizada.",
-                                         "nextDates":  "PrÃ³ximas fechas disponibles",
-                                         "spotsLeft":  "plazas disponibles",
-                                         "updatedNote":  "Actualizado cada 2 horas Â· Haz clic en \"Reservar ahora\" para ver todos los horarios",
-                                         "loading":  "Cargando disponibilidad...",
-                                         "apiNote":  "La disponibilidad en tiempo real requiere configuraciÃ³n de API"
-                                     },
-                  "questionsText":  "ContÃ¡ctanos en info@alpacasibiza.com o por WhatsApp para asistencia personalizada.",
-                  "compare":  {
-                                  "title":  "Comparar tipos de tour",
-                                  "subtitle":  "Encuentra la experiencia que mejor se adapta a ti",
-                                  "meetHerd":  {
-                                                   "duration":  "Contactar para mÃ¡s detalles",
-                                                   "price":  "Contactar para mÃ¡s detalles",
-                                                   "capacity":  "Contactar para mÃ¡s detalles",
-                                                   "include1":  "Paseo guiado con alpacas",
-                                                   "include2":  "Preguntas con el anfitriÃ³n",
-                                                   "include3":  "Oportunidad para fotos",
-                                                   "bestFor":  "Primeras visitas, familias"
-                                               },
-                                  "weaving":  {
-                                                  "duration":  "Contactar para mÃ¡s detalles",
-                                                  "price":  "Contactar para mÃ¡s detalles",
-                                                  "capacity":  "Contactar para mÃ¡s detalles",
-                                                  "include1":  "Taller prÃ¡ctico de fibras",
-                                                  "include2":  "IntroducciÃ³n al tinte natural",
-                                                  "include3":  "Souvenir para llevar",
-                                                  "bestFor":  "Viajeros creativos, parejas"
-                                              },
-                                  "farm":  {
-                                               "duration":  "Contactar para mÃ¡s detalles",
-                                               "price":  "Contactar para mÃ¡s detalles",
-                                               "capacity":  "Contactar para mÃ¡s detalles",
-                                               "include1":  "Visita completa a la granja",
-                                               "include2":  "Demo de prÃ¡cticas sostenibles",
-                                               "include3":  "Alimentar e interactuar con alpacas",
-                                               "bestFor":  "Amantes de la naturaleza, grupos"
-                                           },
-                                  "photo":  {
-                                                "duration":  "Contactar para mÃ¡s detalles",
-                                                "price":  "Contactar para mÃ¡s detalles",
-                                                "capacity":  "Contactar para mÃ¡s detalles",
-                                                "include1":  "SesiÃ³n fotogrÃ¡fica con alpacas",
-                                                "include2":  "Fondos pintorescos",
-                                                "include3":  "Posicionamiento guiado",
-                                                "bestFor":  "FotÃ³grafos, redes sociales, recuerdos"
-                                            }
-                              },
-                  "backHome":  "Volver a Inicio",
-                  "adoptCrossSell":  {
-                                         "heading":  "__UNTRANSLATED__",
-                                         "body":  "__UNTRANSLATED__",
-                                         "cta":  "__UNTRANSLATED__"
-                                     }
-              },
-    "guestStories":  {
-                         "title":  "Historias de Visitantes",
-                         "subtitle":  "Descubre lo que dicen los visitantes sobre su experiencia",
-                         "testimonial":  "Una experiencia inolvidable. Las alpacas eran maravillosas, los guÃ­as eran conocedores y cÃ¡lidos, y toda la granja irradiaba paz y autenticidad.",
-                         "guest":  "Visitante",
-                         "visited":  "VisitÃ³ recientemente",
-                         "translateButton":  "Traducir",
-                         "showOriginal":  "Mostrar original",
-                         "readMore":  "Leer mÃ¡s reseÃ±as en Facebook",
-                         "facebookBadge":  "ReseÃ±a de Facebook",
-                         "reviews":  {
-                                         "sue":  "VisitÃ© a finales de agosto y lo pasÃ© genial. Ibiza tiene mucho que ofrecer ademÃ¡s de la mÃºsica y recomiendo mucho una visita para ver las hermosas alpacas. Puedes alimentarlas y aprender mucho sobre estos increÃ­bles animales â¤ï¸. Fui recibida calurosamente y tuve una experiencia muy valiosa. Â¡Id a verlas, las amarÃ©is!",
-                                         "verena":  "Visitamos las dulces y esponjosas alpacas. Una pareja sÃºper simpÃ¡tica te guÃ­a por los recintos con informaciÃ³n genial sobre estos animales. Tienes la oportunidad de alimentar, acariciar e incluso dar un beso de alpaca. Los animales son muy confiados y se emocionan con tu cercanÃ­a y la comida. Fue una experiencia maravillosa y solo puedo recomendarla a todos los que estÃ©n en Ibiza. ðŸ¤—ðŸ¥³",
-                                         "gemma":  "Hice una reserva de grupo para 6 personas para el viernes 9 de mayo. Bart se puso en contacto para avisarme de que estaban cerrados ese dÃ­a porque esquilaban las alpacas. Amablemente nos ofreciÃ³ recibirnos el dÃ­a anterior aunque la granja estaba cerrada. La experiencia fue increÃ­ble. Bart fue muy profesional y amable y las alpacas eran muy dulces. Todas estÃ¡n muy bien cuidadas y adoran a Bart, lo que demuestra cuÃ¡nto las quiere.",
-                                         "renate":  "Muy divertido para hacer con nuestros 2 chicos de 12 aÃ±os, pero realmente divertido para todas las edades. No sabÃ­amos nada sobre las alpacas, Â¡fue muy interesante! Tardamos exactamente una hora.",
-                                         "sven":  "Â¡Muy recomendable! Bart y San tienen una operaciÃ³n fantÃ¡stica. La experiencia Chill Out definitiva ðŸ¦™â¤ï¸ðŸ¦™",
-                                         "paul":  "Fui el 23 de septiembre, tour increÃ­ble, Bart es muy profesional y amable. Si tienes coche es imprescindible ðŸ˜€ðŸ¦™"
-                                     }
-                     },
-    "faq":  {
-                "sectionTitle":  "Preguntas Frecuentes",
-                "sectionSubtitle":  "Todo lo que necesitas saber antes de tu visita",
-                "duration":  {
-                                 "q":  "Â¿CuÃ¡nto dura un tour tÃ­pico?",
-                                 "a":  "Los tours estÃ¡ndar duran 2-3 horas. Los talleres y experiencias ampliadas se pueden personalizar. Te recomendamos consultar las franjas horarias disponibles al reservar."
-                             },
-                "languages":  {
-                                  "q":  "Â¿En quÃ© idiomas ofrecen tours?",
-                                  "a":  "Ofrecemos tours en inglÃ©s, espaÃ±ol y neerlandÃ©s. Si necesitas otro idioma, contÃ¡ctanos."
-                              },
-                "children":  {
-                                 "q":  "Â¿Las visitas son adecuadas para niÃ±os?",
-                                 "a":  "Â¡SÃ­! Los tours son aptos para familias. Los niÃ±os deben estar supervisados, especialmente cerca de los animales. Recomendamos a partir de 4 aÃ±os, pero los niÃ±os mÃ¡s pequeÃ±os pueden venir con supervisiÃ³n parental."
-                             },
-                "wear":  {
-                             "q":  "Â¿QuÃ© debo vestir?",
-                             "a":  "Usa zapatos cÃ³modos y cerrados aptos para terreno de granja. Trae protecciÃ³n solar en verano. Se recomiendan capas ligeras ya que la granja estÃ¡ al aire libre. Evita colores brillantes o perfumes fuertes para mantener a las alpacas tranquilas."
-                         },
-                "accessibility":  {
-                                      "q":  "Â¿La granja es accesible para personas con discapacidad?",
-                                      "a":  "Nuestra granja estÃ¡ en terreno natural. Por favor contÃ¡ctanos con antelaciÃ³n para discutir la accesibilidad y cÃ³mo podemos adaptarnos a tus necesidades."
-                                  },
-                "food":  {
-                             "q":  "Â¿Podemos traer comida o bebidas?",
-                             "a":  "No se permite traer comida, pero ofrecemos refrescos orgÃ¡nicos. Nos adaptamos a restricciones dietÃ©ticas â€” menciÃ³nalo al reservar."
-                         },
-                "booking":  {
-                                "q":  "Â¿CÃ³mo reservo un tour?",
-                                "a":  "Usa nuestro sistema de reservas online abajo para consultar disponibilidad y reservar tu plaza. Reservas de grupo y experiencias personalizadas: contÃ¡ctanos para opciones."
-                            },
-                "cancellation":  {
-                                     "q":  "Â¿QuÃ© pasa si necesito cancelar o reprogramar?",
-                                     "a":  "Las cancelaciones hasta 48 horas antes del tour reciben reembolso completo o reprogramaciÃ³n. Con menos antelaciÃ³n se aplica un cargo del 50%."
-                                 },
-                "private":  {
-                                "q":  "Â¿Ofrecen tours privados o eventos de grupo?",
-                                "a":  "Â¡SÃ­! Ofrecemos experiencias privadas en la granja, bodas, retiros corporativos y sesiones de yoga con alpacas. ContÃ¡ctanos para paquetes personalizados."
-                            },
-                "parking":  {
-                                "q":  "Â¿Hay aparcamiento disponible?",
-                                "a":  "SÃ­, aparcamiento gratuito disponible en el lugar. Las plazas son limitadas â€” llega 15 minutos antes para aparcar con tiempo."
-                            }
-            },
-    "backHome":  "Volver a Inicio",
-    "shop":  {
-                 "title":  "ColecciÃ³n Wishfulfilling Weaving",
-                 "subtitle":  "Hecho en Ibiza, abrazando el mundo",
-                 "description":  "Bufandas exclusivas tejidas a mano en un telar de madera tradicional con lana de alpaca de alta calidad, lino, mohair y lana de seda.",
-                 "categories":  {
-                                    "woven":  {
-                                                  "title":  "ColecciÃ³n Tejida",
-                                                  "description":  "Bufandas y textiles exclusivos tejidos a mano"
-                                              },
-                                    "commission":  {
-                                                       "title":  "Encargo Personalizado",
-                                                       "description":  "Crea tu propia pieza Ãºnica con colores y patrones personalizados"
-                                                   },
-                                    "alcaca":  {
-                                                   "title":  "Alcaca â€“ EstiÃ©rcol de Alpaca",
-                                                   "description":  "Fertilizante orgÃ¡nico premium de nuestras alpacas"
-                                               }
-                                },
-                 "explore":  "Explorar",
-                 "woven":  {
-                               "title":  "ColecciÃ³n Tejida",
-                               "description":  "Bufandas, mantas y textiles hechos a mano"
-                           },
-                 "commission":  {
-                                    "title":  "Encargo Personalizado",
-                                    "description":  "Crea tu propia pieza Ãºnica"
-                                },
-                 "manure":  {
-                                "title":  "EstiÃ©rcol de Alpaca",
-                                "description":  "Fertilizante orgÃ¡nico premium"
-                            }
-             },
-    "wovenPage":  {
-                      "title":  "ColecciÃ³n Tejida",
-                      "subtitle":  "Hecho a mano con amor usando tÃ©cnicas de tejido tradicionales y lana de alpaca natural",
-                      "addToCart":  "AÃ±adir al Carrito",
-                      "scarf":  "Bufanda de Lana de Alpaca",
-                      "blanket":  "Manta Tejida",
-                      "throw":  "Manta de Tinte Natural",
-                      "cushion":  "Funda de CojÃ­n Artesanal",
-                      "wallHanging":  "Tapiz Mural Premium",
-                      "poncho":  "Poncho EcolÃ³gico"
-                  },
-    "commissionPage":  {
-                           "title":  "Encargo Personalizado",
-                           "subtitle":  "Crea tu pieza soÃ±ada con colores, patrones y dimensiones personalizadas",
-                           "formTitle":  "CuÃ©ntanos Tu VisiÃ³n",
-                           "name":  "Tu Nombre",
-                           "email":  "Correo ElectrÃ³nico",
-                           "description":  "DescripciÃ³n del Proyecto",
-                           "submit":  "Enviar Solicitud",
-                           "sending":  "Enviandoâ€¦",
-                           "successMessage":  "Â¡Gracias! Revisaremos tu encargo y nos pondremos en contacto pronto. ðŸ¦™",
-                           "errorMessage":  "Algo saliÃ³ mal. Por favor intÃ©ntalo de nuevo o escrÃ­benos directamente."
-                       },
-    "alcacaPage":  {
-                       "title":  "Alcaca Oro Negro",
-                       "metaTitle":  "__UNTRANSLATED__",
-                       "metaDescription":  "__UNTRANSLATED__",
-                       "subtitle":  "__UNTRANSLATED__",
-                       "orderNow":  "Consultar",
-                       "storyTitle":  "__UNTRANSLATED__",
-                       "storyBody":  "__UNTRANSLATED__",
-                       "photo1Alt":  "__UNTRANSLATED__",
-                       "photo2Alt":  "__UNTRANSLATED__",
-                       "miniTier":  "__UNTRANSLATED__",
-                       "bagTier":  "__UNTRANSLATED__",
-                       "bulkTier":  "__UNTRANSLATED__",
-                       "enquire":  "Consultar",
-                       "whyTitle":  "__UNTRANSLATED__",
-                       "benefit1":  "__UNTRANSLATED__",
-                       "benefit2":  "__UNTRANSLATED__",
-                       "benefit3":  "__UNTRANSLATED__",
-                       "benefit4":  "__UNTRANSLATED__"
-                   },
-    "about":  {
-                  "title":  "Sobre Alpacas Ibiza",
-                  "storyTitle":  "Nuestra Historia",
-                  "storyText":  "Alpacas Ibiza se fundÃ³ con la creencia de que el turismo puede ser significativo, artesanal y profundamente conectado con el bienestar animal. Creamos la primera granja de alpacas de la isla para compartir nuestra pasiÃ³n por estas criaturas gentiles y su increÃ­ble fibra.",
-                  "valuesTitle":  "Nuestros Valores",
-                  "weavingTitle":  "Wishfulfilling Weaving",
-                  "weavingSubtitle":  "Hecho en Ibiza, abrazando el mundo",
-                  "weavingDescription":  "Wishfulfilling Weaving es nuestra lÃ­nea exclusiva de tejido. San teje bufandas exclusivas en un telar de madera tradicional, utilizando lana de alpaca de alta calidad, lino, mohair y seda. Cada pieza estÃ¡ hecha a mano con intenciÃ³n y amor en Ibiza.",
-                  "handcraftedBadge":  "Hecho a mano en Ibiza",
-                  "welfare":  {
-                                  "title":  "Bienestar Animal",
-                                  "description":  "Nuestras alpacas son lo primero en cada decisiÃ³n"
-                              },
-                  "sustainability":  {
-                                         "title":  "Sostenibilidad",
-                                         "description":  "PrÃ¡cticas ecolÃ³gicas y responsabilidad ambiental"
-                                     },
-                  "quality":  {
-                                  "title":  "Calidad Artesanal",
-                                  "description":  "Procesado a mano, verificado a mano, cuidado a mano"
-                              },
-                  "community":  {
-                                    "title":  "Comunidad",
-                                    "description":  "Compartir conocimientos y crear conexiones"
-                                }
-              },
-    "sustainability":  {
-                           "title":  "__UNTRANSLATED__",
-                           "subtitle":  "__UNTRANSLATED__",
-                           "welfareTitle":  "__UNTRANSLATED__",
-                           "welfareBody":  "__UNTRANSLATED__",
-                           "craftTitle":  "__UNTRANSLATED__",
-                           "craftBody":  "__UNTRANSLATED__",
-                           "dyesTitle":  "__UNTRANSLATED__",
-                           "dyesBody":  "__UNTRANSLATED__",
-                           "wasteTitle":  "__UNTRANSLATED__",
-                           "wasteBody":  "__UNTRANSLATED__",
-                           "landTitle":  "__UNTRANSLATED__",
-                           "landBody":  "__UNTRANSLATED__",
-                           "sourcingTitle":  "__UNTRANSLATED__",
-                           "sourcingBody":  "__UNTRANSLATED__",
-                           "trustSectionTitle":  "__UNTRANSLATED__",
-                           "trustAbout":  "__UNTRANSLATED__",
-                           "trustPress":  "__UNTRANSLATED__",
-                           "trustContact":  "__UNTRANSLATED__",
-                           "ownerConfirmHeader":  "__UNTRANSLATED__",
-                           "ownerConfirmBody":  "__UNTRANSLATED__"
-                       },
-    "contact":  {
-                    "title":  "Ponte en Contacto",
-                    "subtitle":  "Â¿Tienes preguntas? Â¡Nos encantarÃ­a escucharte!",
-                    "formTitle":  "EnvÃ­anos un Mensaje",
-                    "name":  "Nombre",
-                    "email":  "Correo ElectrÃ³nico",
-                    "subject":  "Asunto",
-                    "message":  "Mensaje",
-                    "send":  "Enviar Mensaje",
-                    "sending":  "Enviandoâ€¦",
-                    "successMessage":  "Â¡Gracias! Nos pondremos en contacto pronto. ðŸ¦™",
-                    "errorMessage":  "Algo saliÃ³ mal. Por favor intÃ©ntalo de nuevo o escrÃ­benos directamente.",
-                    "infoTitle":  "InformaciÃ³n de Contacto",
-                    "location":  "UbicaciÃ³n",
-                    "phone":  "TelÃ©fono",
-                    "emailLabel":  "Correo",
-                    "hours":  "Horario",
-                    "byAppointment":  "Solo con cita previa"
-                },
-    "footer":  {
-                   "tagline":  "La primera granja de alpacas y estudio de tejido artesanal de Ibiza",
-                   "explore":  "Explorar",
-                   "shopTitle":  "Tienda",
-                   "wovenCollection":  "ColecciÃ³n Tejida",
-                   "customCommission":  "Encargo Personalizado",
-                   "alpacaManure":  "EstiÃ©rcol de Alpaca (Alcaca)",
-                   "aboutUs":  "Nosotros",
-                   "contact":  "Contacto",
-                   "privacy":  "PolÃ­tica de Privacidad",
-                   "terms":  "TÃ©rminos de Servicio",
-                   "cookies":  "PolÃ­tica de Cookies",
-                   "copyright":  "Todos los derechos reservados."
-               },
-    "homepage":  {
-                     "experiences":  {
-                                         "title":  "Elige Tu Experiencia",
-                                         "subtitle":  "Experiencias seleccionadas para cada ocasiÃ³n",
-                                         "corporate":  {
-                                                           "title":  "Corporativo y Team Building",
-                                                           "description":  "Desconecta para reconectar. Retiros de liderazgo y uniÃ³n de equipo con nuestro gentil rebaÃ±o.",
-                                                           "cta":  "Planificar Evento"
-                                                       },
-                                         "romantic":  {
-                                                          "title":  "Paseos RomÃ¡nticos al Atardecer",
-                                                          "description":  "Magia de la hora dorada. Paseos privados e Ã­ntimos para parejas (Â¡y planificaciÃ³n de propuestas!).",
-                                                          "cta":  "Reservar Tour Privado"
-                                                      },
-                                         "family":  {
-                                                        "title":  "DÃ­as Familiares en la Granja",
-                                                        "description":  "DiversiÃ³n segura y educativa para todas las edades. Acerca a tus pequeÃ±os a la naturaleza.",
-                                                        "cta":  "Visita Familiar"
-                                                    }
-                                     }
-                 },
-    "corporate":  {
-                      "title":  "Retiros Corporativos y Team Building",
-                      "subtitle":  "Desconecta para reconectar. Trae a tu equipo a la tranquila campiÃ±a de Ibiza para una experiencia Ãºnica de uniÃ³n con nuestro rebaÃ±o de alpacas.",
-                      "cta":  "Consultar para Equipos",
-                      "whyTitle":  "Â¿Por QuÃ© Alpacas para Team Building?",
-                      "whyText":  "Las alpacas son animales sensibles y calmantes que reflejan la energÃ­a humana. Interactuar con ellas requiere paciencia, observaciÃ³n y comunicaciÃ³n no verbal â€” habilidades perfectas para un trabajo en equipo efectivo.",
-                      "features":  {
-                                       "stress":  {
-                                                      "title":  "ReducciÃ³n del EstrÃ©s",
-                                                      "description":  "La presencia calmante de las alpacas reduce el cortisol y fomenta la atenciÃ³n plena."
-                                                  },
-                                       "communication":  {
-                                                             "title":  "ComunicaciÃ³n",
-                                                             "description":  "Aprende a liderar sin fuerza. Las alpacas responden a la asertividad tranquila."
-                                                         },
-                                       "creativity":  {
-                                                          "title":  "Creatividad",
-                                                          "description":  "Los talleres de tejido estimulan la resoluciÃ³n creativa de problemas y la concentraciÃ³n."
-                                                      },
-                                       "nature":  {
-                                                      "title":  "ConexiÃ³n con la Naturaleza",
-                                                      "description":  "Saca a tu equipo de la oficina al aire fresco del MediterrÃ¡neo."
-                                                  }
-                                   },
-                      "itinerary":  {
-                                        "title":  "Itinerario de Ejemplo",
-                                        "item1":  {
-                                                      "time":  "10:00",
-                                                      "title":  "Bienvenida y Refrescos",
-                                                      "desc":  "CafÃ©, tÃ© y reposterÃ­a local en la terraza."
-                                                  },
-                                        "item2":  {
-                                                      "time":  "10:30",
-                                                      "title":  "Conoce el RebaÃ±o",
-                                                      "desc":  "PresentaciÃ³n guiada de las alpacas. Conoce sus nombres y personalidades."
-                                                  },
-                                        "item3":  {
-                                                      "time":  "11:30",
-                                                      "title":  "DesafÃ­o en Equipo",
-                                                      "desc":  "Actividad interactiva: Guiar una alpaca a travÃ©s de un circuito sencillo que requiere trabajo en equipo."
-                                                  },
-                                        "item4":  {
-                                                      "time":  "13:00",
-                                                      "title":  "Almuerzo en la Granja",
-                                                      "desc":  "Picnic orgÃ¡nico con productos locales bajo los algarrobos."
-                                                  }
-                                    },
-                      "planTitle":  "Â¿Listo para Planificar Tu Evento?",
-                      "planText":  "Personalizamos cada paquete corporativo segÃºn el tamaÃ±o y los objetivos de tu equipo. ContÃ¡ctanos para un presupuesto.",
-                      "planCta":  "Solicitar Propuesta",
-                      "liveBodyEN":  "__UNTRANSLATED__: There is no better place to reflect on the past and plan for the future with your business colleagues than among our alpacas in the unspoilt nature of northern Ibiza. An environment of pure zen that can only inspire fresh ideas and brilliant insights! On request we put together a complete package with catering on-site or at one of the charming nearby restaurants.",
-                      "subheadAlt":  "__UNTRANSLATED__: Reflecting and planning amidst our alpacas in the unspoilt nature of northern Ibiza"
-                  },
-    "romantic":  {
-                     "title":  "Paseos RomÃ¡nticos al Atardecer",
-                     "subtitle":  "Hora dorada con las alpacas. Una experiencia privada e Ã­ntima para parejas en el corazÃ³n de Ibiza.",
-                     "cta":  "Reservar Tour Privado al Atardecer",
-                     "quote":  "\"La cita mÃ¡s mÃ¡gica que hemos tenido jamÃ¡s.\"",
-                     "description":  "Escapa de las multitudes. Solo tÃº, tu pareja y nuestras dulces alpacas paseando por los naranjos mientras el sol se pone tras las colinas.",
-                     "champagne":  {
-                                       "title":  "ChampÃ¡n",
-                                       "desc":  "OpciÃ³n de aÃ±adir Cava para brindar al atardecer."
-                                   },
-                     "photos":  {
-                                    "title":  "Fotos",
-                                    "desc":  "Tu guÃ­a captura momentos espontÃ¡neos para que puedas vivir el momento."
-                                },
-                     "privacy":  {
-                                     "title":  "Privacidad",
-                                     "desc":  "Tours estrictamente privados disponibles bajo peticiÃ³n."
-                                 },
-                     "proposalTitle":  "Perfecto para Propuestas",
-                     "proposalText":  "Â¿EstÃ¡s pensando en hacer la pregunta? Podemos ayudarte a orquestar el momento perfecto con las alpacas como tus testigos.",
-                     "proposalCta":  "Contactar para Organizar"
-                 },
-    "family":  {
-                   "title":  "DÃ­as Familiares en la Granja",
-                   "subtitle":  "Presenta a tus hijos la alegrÃ­a de los animales. Seguro, educativo y divertido para todas las edades.",
-                   "cta":  "Reservar Visita Familiar",
-                   "educationTitle":  "EducaciÃ³n Adorable",
-                   "educationText":  "Nuestra granja no es solo un zoo de mascotas â€” es una experiencia educativa. Los niÃ±os aprenden:",
-                   "points":  {
-                                  "respect":  "Respeto: CÃ³mo acercarse a los animales con delicadeza.",
-                                  "biology":  "BiologÃ­a: Por quÃ© las alpacas tienen vellÃ³n suave y almohadillas en vez de pezuÃ±as.",
-                                  "sustainability":  "Sostenibilidad: CÃ³mo usamos el estiÃ©rcol de alpaca (\"Oro Negro\") para la agricultura."
-                              },
-                   "safetyTitle":  "Seguridad Ante Todo",
-                   "safety":  {
-                                  "gentle":  {
-                                                 "title":  "Animales DÃ³ciles",
-                                                 "desc":  "Nuestro rebaÃ±o estÃ¡ socializado y acostumbrado a los niÃ±os."
-                                             },
-                                  "stroller":  {
-                                                   "title":  "Apto para Carritos",
-                                                   "desc":  "Los caminos son accesibles para carritos resistentes."
-                                               },
-                                  "hygiene":  {
-                                                  "title":  "Higiene",
-                                                  "desc":  "Estaciones de lavado de manos disponibles."
-                                              },
-                                  "refreshments":  {
-                                                       "title":  "Refrescos",
-                                                       "desc":  "Bebidas y snacks aptos para niÃ±os."
-                                                   }
-                              },
-                   "faq":  {
-                               "age":  {
-                                           "q":  "Â¿CuÃ¡l es la edad mÃ­nima?",
-                                           "a":  "Â¡Damos la bienvenida a todas las edades! Los niÃ±os menores de 3 aÃ±os entran gratis. Recomendamos a partir de 4 aÃ±os para la experiencia completa de paseo."
-                                       },
-                               "safe":  {
-                                            "q":  "Â¿Son seguras las alpacas?",
-                                            "a":  "SÃ­, las alpacas no muerden (Â¡solo tienen dientes inferiores!) y generalmente son muy tranquilas. EnseÃ±amos a tus hijos exactamente cÃ³mo interactuar de forma segura."
-                                        },
-                               "duration":  {
-                                                "q":  "Â¿CuÃ¡nto dura la visita?",
-                                                "a":  "Las visitas familiares suelen durar entre 1,5 y 2 horas, ideal para perÃ­odos de atenciÃ³n mÃ¡s cortos."
-                                            }
-                           }
-               },
-    "privacy":  {
-                    "title":  "PolÃ­tica de Privacidad",
-                    "subtitle":  "CÃ³mo recogemos, usamos y protegemos tu informaciÃ³n",
-                    "section1Title":  "1. InformaciÃ³n que Recogemos",
-                    "section1Intro":  "Recogemos la informaciÃ³n que proporcionas directamente:",
-                    "section1Items":  [
-                                          "Datos de reserva de tours (nombre, email, telÃ©fono)",
-                                          "InformaciÃ³n de pedidos (direcciÃ³n de envÃ­o, datos de pago)",
-                                          "Consultas de encargos (detalles del proyecto, preferencias)",
-                                          "SuscripciÃ³n al newsletter (direcciÃ³n de email)",
-                                          "EnvÃ­os del formulario de contacto"
-                                      ],
-                    "section2Title":  "2. CÃ³mo Usamos Tu InformaciÃ³n",
-                    "section2Items":  [
-                                          "Gestionar reservas de tours y pedidos",
-                                          "Enviar emails de confirmaciÃ³n y actualizaciones",
-                                          "Responder a consultas",
-                                          "Mejorar nuestro sitio web y servicios",
-                                          "Enviar newsletters (puedes darte de baja en cualquier momento)",
-                                          "Cumplir con obligaciones legales"
-                                      ],
-                    "section3Title":  "3. ProtecciÃ³n de Datos",
-                    "section3Intro":  "Nos tomamos tu privacidad en serio. Tus datos estÃ¡n encriptados y almacenados de forma segura. No compartimos tu informaciÃ³n con terceros excepto:",
-                    "section3Items":  [
-                                          "Procesadores de pago (para transacciones seguras)",
-                                          "Sistemas de reserva (FareHarbor, segÃºn sea necesario)",
-                                          "Requisitos legales (cuando lo exija la ley)"
-                                      ],
-                    "section4Title":  "4. Cookies y Seguimiento",
-                    "section4Text":  "Usamos cookies para mejorar tu experiencia. Las cookies esenciales son necesarias para la funcionalidad. Puedes controlar las preferencias de cookies en tu navegador o en nuestro banner de cookies.",
-                    "section5Title":  "5. Tus Derechos",
-                    "section5Intro":  "Tienes derecho a:",
-                    "section5Items":  [
-                                          "Acceder a tus datos",
-                                          "Corregir informaciÃ³n inexacta",
-                                          "Solicitar la eliminaciÃ³n (derecho al olvido)",
-                                          "Optar por no recibir comunicaciones de marketing"
-                                      ],
-                    "lastUpdated":  "Ãšltima actualizaciÃ³n: Febrero 2024. ContÃ¡ctanos en info@alpacasibiza.com para consultas de privacidad."
-                },
-    "terms":  {
-                  "title":  "TÃ©rminos de Servicio",
-                  "subtitle":  "Por favor lee estos tÃ©rminos antes de usar nuestro sitio web y servicios de reserva",
-                  "section1Title":  "1. Reservas y Tours",
-                  "section1Intro":  "Al reservar un tour, aceptas:",
-                  "section1Items":  [
-                                        "Seguir todas las normas de seguridad de la granja y los animales",
-                                        "Llegar 15 minutos antes de la hora programada",
-                                        "Respetar las alpacas y la propiedad de la granja",
-                                        "Traer identificaciÃ³n vÃ¡lida si es necesario",
-                                        "Seguir los protocolos de salud/seguridad vigentes"
-                                    ],
-                  "section2Title":  "2. Cancelaciones y Reembolsos",
-                  "section2Items":  [
-                                        "CancelaciÃ³n hasta 48 horas antes: Reembolso completo o reprogramaciÃ³n",
-                                        "CancelaciÃ³n con menos de 48 horas: Se aplica cargo del 50%",
-                                        "No presentarse: Pago completo perdido",
-                                        "Cierre por condiciones climÃ¡ticas: Reembolso completo o reprogramaciÃ³n"
-                                    ],
-                  "section3Title":  "3. Pedidos de la Tienda",
-                  "section3Intro":  "Todos los productos son hechos a mano. Las pequeÃ±as variaciones e imperfecciones son normales y parte del proceso artesanal.",
-                  "section3Items":  [
-                                        "EnvÃ­o en 5-7 dÃ­as laborales",
-                                        "Los pedidos internacionales pueden tardar mÃ¡s",
-                                        "Devoluciones: 30 dÃ­as para artÃ­culos sin usar y sin daÃ±os",
-                                        "Los artÃ­culos personalizados/encargados no son retornables"
-                                    ],
-                  "section4Title":  "4. Acuerdos de Encargo",
-                  "section4Items":  [
-                                        "Se requiere un depÃ³sito del 50% para asegurar tu proyecto",
-                                        "Saldo pendiente antes del envÃ­o final",
-                                        "Las estimaciones de tiempo son aproximadas",
-                                        "CancelaciÃ³n despuÃ©s del inicio de producciÃ³n: solo 50% de reembolso"
-                                    ],
-                  "section5Title":  "5. FotografÃ­a y Consentimiento",
-                  "section5Text":  "Al visitar nuestra granja o comprar nuestros productos, consientes ser fotografiado. Estas imÃ¡genes pueden usarse en nuestro sitio web y redes sociales. Si prefieres no ser fotografiado, informa a tu guÃ­a.",
-                  "section6Title":  "6. ExenciÃ³n de Responsabilidad",
-                  "section6Text":  "Las visitas a la granja implican interacciÃ³n con animales. Los visitantes asumen todos los riesgos. No somos responsables de lesiones a menos que sean causadas por negligencia grave. Los niÃ±os deben estar supervisados en todo momento.",
-                  "section7Title":  "7. Uso del Sitio Web",
-                  "section7Items":  [
-                                        "No reproduzcas ni redistribuyas nuestro contenido sin permiso",
-                                        "No intentes hackear o interferir con el sitio web",
-                                        "Respeta los derechos de propiedad intelectual"
-                                    ],
-                  "lastUpdated":  "Ãšltima actualizaciÃ³n: Febrero 2024. Contacta info@alpacasibiza.com con preguntas.",
-                  "art1Title":  "__UNTRANSLATED__: Article 1 - Definitions",
-                  "art1Items":  "__UNTRANSLATED__: [\u0027Supplementary agreement: a contract whereby the consumer acquires products or services at a distance in relation to an earlier distance contract.\u0027, \u0027Cooling-off period: the period within which the consumer may exercise their right of withdrawal.\u0027, \u0027Consumer: the natural person who does not act for purposes relating to their trade, business, craft or professional activity.\u0027, \u0027Day: calendar day.\u0027, \u0027Digital content: data produced and supplied in digital form.\u0027, \u0027Duration contract: a contract for the regular supply of goods, services and/or digital content over a set period.\u0027, \u0027Durable medium: any tool enabling the consumer or entrepreneur to store information for future reference.\u0027, \"Right of withdrawal: the consumer\u0027s ability to cancel a distance contract within the cooling-off period.\", \u0027Model withdrawal form: the European model withdrawal form made available on the website.\u0027, \u0027Entrepreneur: the natural or legal person offering products, access to digital content and/or services to consumers at a distance.\u0027, \u0027Distance contract: a contract concluded between the entrepreneur and the consumer within an organised distance-selling system.\u0027, \u0027Distance communication technique: any means enabling a contract to be concluded without the consumer and entrepreneur being simultaneously present in the same space.\u0027]",
-                  "art2Title":  "__UNTRANSLATED__: Article 2 - Entrepreneur Identity",
-                  "art2Items":  "__UNTRANSLATED__: [\u0027Name: Sandra De Wilde - Es Currals Alpacas Ibiza \u0026 Wishfulfilling Weaving\u0027, \u0027Address: C/3 Bungalow Park 22, 07850 San Carlos Baleares Spain\u0027, \u0027Telephone: +34 689 446 781\u0027, \u0027Email: info@alpacasibiza.com\u0027, \u0027VAT number: ESY6917111J\u0027]",
-                  "art3Title":  "__UNTRANSLATED__: Article 3 - Applicability",
-                  "art3Text":  "__UNTRANSLATED__: These general terms and conditions apply to every offer by the entrepreneur and to every distance contract concluded. Before a distance contract is formed, the text of these terms is made available to the consumer either in writing or on a durable medium.",
-                  "art4Title":  "__UNTRANSLATED__: Article 4 - The Offer",
-                  "art4Text":  "__UNTRANSLATED__: Images truthfully represent the products offered. Obvious errors do not bind the entrepreneur. Every offer contains sufficient information for the consumer to understand the rights and obligations arising from acceptance.",
-                  "art5Title":  "__UNTRANSLATED__: Article 5 - The Agreement",
-                  "art5Text":  "__UNTRANSLATED__: The contract is formed at the moment the consumer accepts the offer and meets its conditions. The entrepreneur confirms receipt of acceptance electronically. Until receipt is confirmed, the consumer may cancel the contract.",
-                  "art6Title":  "__UNTRANSLATED__: Article 6 - Right of Withdrawal",
-                  "art6ProductText":  "__UNTRANSLATED__: For products: the consumer may cancel a product purchase within a minimum cooling-off period of 14 days without stating reasons.",
-                  "art6ServicesText":  "__UNTRANSLATED__: For services and non-physical digital content: the consumer may cancel within a minimum of 14 days without stating reasons. The period begins the day after the contract is formed.",
-                  "art6ExtendedText":  "__UNTRANSLATED__: Extended cooling-off period: if the entrepreneur fails to provide the required withdrawal information, the cooling-off period expires twelve months after the end of the original period.",
-                  "art7Title":  "__UNTRANSLATED__: Article 7 - Consumer Obligations During the Cooling-Off Period",
-                  "art7Text":  "__UNTRANSLATED__: The consumer shall handle the product and its packaging with care. They may only unpack or use the product to the extent necessary to assess its nature, characteristics and functioning. The consumer is liable for any diminished value resulting from handling that goes beyond what is permitted.",
-                  "art8Title":  "__UNTRANSLATED__: Article 8 - Exercising the Right of Withdrawal and Associated Costs",
-                  "art8Text":  "__UNTRANSLATED__: If the consumer exercises their right of withdrawal, they must notify the entrepreneur within the cooling-off period using the model withdrawal form or another unambiguous statement. The product must be returned within 14 days of notification in its original condition with all accessories. The consumer bears the direct cost of return shipping.",
-                  "art9Title":  "__UNTRANSLATED__: Article 9 - Entrepreneur Obligations Upon Withdrawal",
-                  "art9Text":  "__UNTRANSLATED__: The entrepreneur shall refund all consumer payments, including delivery costs, as quickly as possible and within 14 days of the withdrawal notice. Refunds are made via the same payment method used by the consumer, unless the consumer agrees to a different method.",
-                  "art10Title":  "__UNTRANSLATED__: Article 10 - Exclusions from the Right of Withdrawal",
-                  "art10Text":  "__UNTRANSLATED__: The entrepreneur may exclude the following products and services from the right of withdrawal:",
-                  "art10Items":  "__UNTRANSLATED__: [\u0027Products whose price depends on fluctuations in the financial market\u0027, \u0027Products purchased via a public auction\u0027, \u0027Fully performed services (with prior explicit consumer consent)\u0027, \u0027Package travel and passenger transport\u0027, \u0027Accommodation bookings for a specified date\u0027, \u0027Events and performances with a scheduled date\u0027, \u0027Made-to-measure or personalised products\u0027, \u0027Rapidly perishable products\u0027, \u0027Sealed health or hygiene products opened after delivery\u0027, \u0027Products irreversibly mixed with other products after delivery\u0027, \u0027Alcoholic beverages with prices agreed at the time of order\u0027, \u0027Sealed audio, video or software recordings opened after delivery\u0027, \u0027Newspapers, magazines (except subscriptions)\u0027, \u0027Non-physical digital content (with prior explicit consent)\u0027]",
-                  "art11Title":  "__UNTRANSLATED__: Article 11 - Pricing",
-                  "art11Text":  "__UNTRANSLATED__: During the stated validity period, prices of offered products and/or services will not be increased except for VAT changes. Stated prices include VAT. Price increases within 3 months of contract formation are only permitted if required by law. After 3 months, a price increase is only permitted if agreed with the consumer.",
-                  "art12Title":  "__UNTRANSLATED__: Article 12 - Contract Performance and Extended Warranty",
-                  "art12Text":  "__UNTRANSLATED__: The entrepreneur guarantees that products and/or services conform to the contract, the advertised specifications, reasonable standards of quality and usability, and applicable laws and regulations in effect on the date the contract was formed.",
-                  "art13Title":  "__UNTRANSLATED__: Article 13 - Delivery and Execution",
-                  "art13Text":  "__UNTRANSLATED__: The entrepreneur shall exercise the utmost care in receiving and fulfilling product orders. Accepted orders will be fulfilled promptly and no later than 30 days, unless a different delivery period was agreed. The risk of damage or loss rests with the entrepreneur until delivery to the consumer.",
-                  "art14Title":  "__UNTRANSLATED__: Article 14 - Duration Contracts: Term, Cancellation and Renewal",
-                  "art14Text":  "__UNTRANSLATED__: The consumer may cancel an indefinite-duration contract at any time with a maximum one-month notice period. Fixed-term contracts run for a maximum of two years. Tacit renewal is only permitted for newspapers, magazines and periodicals with a maximum renewal period of three months.",
-                  "art15Title":  "__UNTRANSLATED__: Article 15 - Payment",
-                  "art15Text":  "__UNTRANSLATED__: Amounts owed by the consumer must be paid within 14 days after the start of the cooling-off period, or, where no cooling-off period applies, within 14 days of contract formation. Prepayment may not exceed 50% of the purchase price. Late payment triggers statutory interest after the entrepreneur gives notice.",
-                  "art16Title":  "__UNTRANSLATED__: Article 16 - Complaints Procedure",
-                  "art16Text":  "__UNTRANSLATED__: The entrepreneur maintains a sufficiently publicised complaints procedure. Complaints about contract performance must be submitted promptly after the consumer discovers a defect, fully and clearly described. Submitted complaints are answered within 14 days of receipt.",
-                  "art17Title":  "__UNTRANSLATED__: Article 17 - Disputes",
-                  "art17Text":  "__UNTRANSLATED__: Contracts between the entrepreneur and the consumer to which these general terms and conditions apply are exclusively governed by Spanish law.",
-                  "art18Title":  "__UNTRANSLATED__: Article 18 - Additional or Divergent Provisions",
-                  "art18Text":  "__UNTRANSLATED__: Additional or divergent provisions may not be to the detriment of the consumer and must be recorded in writing or stored in a way that is accessible to the consumer on a durable medium."
-              },
-    "cookies":  {
-                    "title":  "PolÃ­tica de Cookies",
-                    "subtitle":  "InformaciÃ³n sobre cÃ³mo usamos cookies en nuestro sitio web",
-                    "whatTitle":  "Â¿QuÃ© Son las Cookies?",
-                    "whatText":  "Las cookies son pequeÃ±os archivos de texto almacenados en tu navegador. Ayudan a los sitios web a recordar tus preferencias y rastrear cÃ³mo usas el sitio.",
-                    "typesTitle":  "Tipos de Cookies que Usamos",
-                    "essentialTitle":  "Cookies Esenciales",
-                    "essentialText":  "Necesarias para el funcionamiento del sitio. Incluyen:",
-                    "essentialItems":  [
-                                           "Cookies de sesiÃ³n (para tu reserva)",
-                                           "Cookies de seguridad (para proteger tus datos)",
-                                           "Cookies de funcionalidad del sitio"
-                                       ],
-                    "preferenceTitle":  "Cookies de Preferencia",
-                    "preferenceText":  "Recuerdan tus opciones (idioma, tema, etc.) para una mejor experiencia.",
-                    "analyticsTitle":  "Cookies de AnalÃ­tica",
-                    "analyticsText":  "Nos ayudan a entender cÃ³mo usas nuestro sitio para poder mejorarlo. Usamos:",
-                    "analyticsItems":  [
-                                           "Google Analytics (pÃ¡ginas vistas, fuentes de trÃ¡fico)",
-                                           "Seguimiento de conversiones (reservas, seguimiento de compras)"
-                                       ],
-                    "marketingTitle":  "Cookies de Marketing",
-                    "marketingText":  "Se usan para anuncios de retargeting y campaÃ±as de remarketing. Puedes optar por no recibirlas en cualquier momento.",
-                    "choicesTitle":  "Tus Opciones de Cookies",
-                    "choicesItems":  [
-                                         "Cookies esenciales: No se pueden desactivar (necesarias para el sitio)",
-                                         "AnalÃ­tica y Marketing: Desactivar a travÃ©s de nuestro banner de cookies",
-                                         "ConfiguraciÃ³n del navegador: La mayorÃ­a de navegadores permiten controlar cookies",
-                                         "Optar por no: Usa la configuraciÃ³n \"No Rastrear\" de tu navegador"
-                                     ],
-                    "thirdPartyTitle":  "Servicios de Terceros",
-                    "thirdPartyText":  "Usamos servicios de terceros que pueden establecer sus propias cookies:",
-                    "thirdPartyItems":  [
-                                            "Procesadores de pago (para transacciones seguras)",
-                                            "Sistemas de reservas (FareHarbor)",
-                                            "Proveedores de analÃ­tica"
-                                        ],
-                    "manageTitle":  "Gestionar Cookies",
-                    "manageText":  "La mayorÃ­a de navegadores te permiten:",
-                    "manageItems":  [
-                                        "Ver cookies almacenadas",
-                                        "Eliminar cookies especÃ­ficas",
-                                        "Bloquear nuevas cookies",
-                                        "Establecer niveles de privacidad"
-                                    ],
-                    "manageNote":  "Consulta la documentaciÃ³n de tu navegador para instrucciones especÃ­ficas.",
-                    "gdprTitle":  "Conformidad RGPD",
-                    "gdprText":  "Cumplimos con el RGPD y las regulaciones ePrivacy. Nosotros:",
-                    "gdprItems":  [
-                                      "Solo establecemos cookies no esenciales con tu consentimiento",
-                                      "Proporcionamos informaciÃ³n clara sobre cookies",
-                                      "Permitimos la opciÃ³n de no participar fÃ¡cilmente",
-                                      "Respetamos tus opciones de privacidad"
-                                  ],
-                    "lastUpdated":  "Ãšltima actualizaciÃ³n: Febrero 2024. Contacta info@alpacasibiza.com para preguntas sobre cookies."
-                },
-    "notFound":  {
-                     "title":  "PÃ¡gina no encontrada",
-                     "subtitle":  "Esta pÃ¡gina parece haberse escapado como una de nuestras alpacas. Te ayudamos a encontrar lo que buscas.",
-                     "suggestionsTitle":  "Prueba una de estas opciones",
-                     "ctaText":  "O reserva tu experiencia con alpacas ahora mismo",
-                     "suggestions":  {
-                                         "home":  "Inicio",
-                                         "homeDesc":  "Volver a la pÃ¡gina principal",
-                                         "tours":  "Tours y Visitas",
-                                         "toursDesc":  "Reserva tu experiencia en la granja de alpacas",
-                                         "shop":  "Tienda",
-                                         "shopDesc":  "Bufandas tejidas a mano, textiles y mÃ¡s",
-                                         "about":  "Nosotros",
-                                         "aboutDesc":  "Nuestra historia, la granja y las alpacas",
-                                         "contact":  "Contacto",
-                                         "contactDesc":  "Ponte en contacto con nosotros"
-                                     }
-                 },
-    "journal":  {
-                    "title":  "Diario",
-                    "backToJournal":  "Volver al diario",
-                    "relatedTitle":  "MÃ¡s de"
-                },
-    "share":  {
-                  "label":  "Compartir",
-                  "copyLink":  "Copiar enlace",
-                  "copied":  "Â¡Copiado!",
-                  "whatsapp":  "Compartir en WhatsApp",
-                  "twitter":  "Compartir en X",
-                  "facebook":  "Compartir en Facebook"
-              },
-    "error":  {
-                  "title":  "Algo saliÃ³ mal",
-                  "subtitle":  "Parece que una de nuestras alpacas se escapÃ³ con la pÃ¡gina. Nuestro equipo ha sido notificado â€” intÃ©ntalo de nuevo o vuelve a la pÃ¡gina de inicio.",
-                  "tryAgain":  "Intentar de nuevo",
-                  "goHome":  "Volver al inicio",
-                  "goTours":  "Ver tours",
-                  "goAdopt":  "Adoptar una alpaca",
-                  "errorRef":  "Referencia de error"
-              },
-    "adopt":  {
-                  "cancelledHeading":  "__UNTRANSLATED__",
-                  "cancelledFullBody":  "__UNTRANSLATED__",
-                  "cancelledTryAgain":  "__UNTRANSLATED__",
-                  "cancelledTellUs":  "__UNTRANSLATED__",
-                  "thankYou":  {
-                                   "calendarDownload":  "__UNTRANSLATED__",
-                                   "calendarHint":  "__UNTRANSLATED__"
-                               },
-                  "legal":  {
-                                "withdrawalWaiver":  "__UNTRANSLATED__",
-                                "waiverRequired":  "__UNTRANSLATED__"
-                            },
-                  "share":  {
-                                "message":  "Acabo de adoptar a {name} en Alpacas Ibiza!"
-                            },
-                  "campaign":  {
-                                   "daysLeft":  "{count, plural, =0 {Ultimas horas} one {# dia restante} other {# dias restantes}}",
-                                   "daysRemainingAria":  "{count, plural, =0 {Ultimas horas restantes} one {# dia restante} other {# dias restantes}}"
-                               },
-                  "counter":  {
-                                  "heading":  "La manada, en numeros",
-                                  "empty":  "Lista en preparacion.",
-                                  "full":  "Cada alpaca tiene un patrocinador.",
-                                  "almostFull":  "{remaining, plural, one {Solo # alpaca necesita patrocinador.} other {Solo # alpacas necesitan patrocinador.}}",
-                                  "overHalf":  "{remaining, plural, one {Mas de la mitad tiene patrocinador. # espera.} other {Mas de la mitad tiene patrocinador. # esperan.}}",
-                                  "plenty":  "{remaining, plural, one {# de {total} disponibles.} other {# de {total} disponibles.}}",
-                                  "ariaEmpty":  "Contador de adoptantes",
-                                  "ariaPopulated":  "{adopted} de {total} alpacas tienen patrocinador ({pct} por ciento)."
-                              }
-              },
-    "search":  {
-                   "trigger":  "__UNTRANSLATED__",
-                   "placeholder":  "__UNTRANSLATED__",
-                   "noResults":  "__UNTRANSLATED__",
-                   "empty":  "__UNTRANSLATED__",
-                   "loading":  "__UNTRANSLATED__",
-                   "openShortcut":  "__UNTRANSLATED__",
-                   "browseJournal":  "__UNTRANSLATED__"
-               },
-    "recoverCertificate":  {
-                               "title":  "__UNTRANSLATED__",
-                               "subhead":  "__UNTRANSLATED__",
-                               "emailLabel":  "__UNTRANSLATED__",
-                               "submit":  "__UNTRANSLATED__",
-                               "successMessage":  "__UNTRANSLATED__"
-                           },
-    "floatingWhatsapp":  {
-                             "defaultMessage":  "__UNTRANSLATED__",
-                             "aria":  "__UNTRANSLATED__"
-                         },
-    "alpacaOfDay":  {
-                        "cta":  "Conocer a {name}"
-                    },
-    "alpacas":  {
-                    "filter":  {
-                                   "showing":  "Mostrando {match, number} de {total, number}"
-                               }
-                },
-    "whatsapp":  {
-                     "panel":  {
-                                   "footer":  "O escribenos directamente al {phone}"
-                               }
-                 },
-    "weddings":  {
-                     "subtitleLive":  "__UNTRANSLATED__: Alpaca weddings and photoshoots have been a US trend for years â€” now available in Europe. As the first and only alpaca farm on Ibiza, we offer unique wedding experiences among our 14 alpacas."
-                 },
-    "weaving":  {
-                    "studioHistoryBody":  "__UNTRANSLATED__: San fell in love with weaving in 2013. She started on small table looms, then invested in a traditional Swedish wooden loom from a 92-year-old master weaver who gave her private lessons and named the loom Big Ben. Every step from shearing to finished cloth is done by hand on Es Currals. Softer than silk, rarer than cashmere, warmer than sheep\u0027s wool â€” and hypoallergenic.",
-                    "processStep1Body":  "__UNTRANSLATED__: Each spring the alpacas are hand-shorn at Es Currals. The soft fleece is carefully stored per animal.",
-                    "processStep2Body":  "__UNTRANSLATED__: San washes and cards the fleece by hand. No industrial process â€” pure craftsmanship.",
-                    "processStep3Body":  "__UNTRANSLATED__: The yarn is spun and dyed with natural plant extracts â€” hibiscus, avocado, and other flowers.",
-                    "processStep4Body":  "__UNTRANSLATED__: San weaves on Big Ben, a traditional Swedish wooden loom, using centuries-old patterns from historical manuscripts combined with contemporary fashion.",
-                    "collectionSubhead":  "__UNTRANSLATED__: Made in Ibiza, embracing the world â€” Discover our own collection"
-                },
-    "skein":  {
-                  "step2Title":  "__UNTRANSLATED__",
-                  "faq1Question":  "__UNTRANSLATED__",
-                  "heroTitle":  "__UNTRANSLATED__",
-                  "howItWorksTitle":  "__UNTRANSLATED__",
-                  "onlyBody":  "__UNTRANSLATED__",
-                  "heroSubtitle":  "__UNTRANSLATED__",
-                  "tierSub":  "__UNTRANSLATED__",
-                  "faq3Question":  "__UNTRANSLATED__",
-                  "faq4Question":  "__UNTRANSLATED__",
-                  "faqTitle":  "__UNTRANSLATED__",
-                  "faq1Answer":  "__UNTRANSLATED__",
-                  "metaDescription":  "__UNTRANSLATED__",
-                  "metaTitle":  "__UNTRANSLATED__",
-                  "ctaSponsor":  "__UNTRANSLATED__",
-                  "step1Title":  "__UNTRANSLATED__",
-                  "tierPrice":  "__UNTRANSLATED__",
-                  "faq2Question":  "__UNTRANSLATED__",
-                  "faq2Answer":  "__UNTRANSLATED__",
-                  "step3Title":  "__UNTRANSLATED__",
-                  "ctaPickForMe":  "__UNTRANSLATED__",
-                  "tierTitle":  "__UNTRANSLATED__",
-                  "step2Body":  "__UNTRANSLATED__",
-                  "onlyTitle":  "__UNTRANSLATED__",
-                  "step1Body":  "__UNTRANSLATED__",
-                  "faq3Answer":  "__UNTRANSLATED__",
-                  "faq4Answer":  "__UNTRANSLATED__",
-                  "trustLine":  "__UNTRANSLATED__",
-                  "step3Body":  "__UNTRANSLATED__"
-              }
+  "nav": {
+    "tours": "Tours y Visitas",
+    "visit": "__UNTRANSLATED__",
+    "shop": "Tienda",
+    "about": "Nosotros",
+    "contact": "Contacto",
+    "bookTour": "Reservar Tour",
+    "language": "Idioma",
+    "recoverCertificate": "__UNTRANSLATED__",
+    "experiences": "__UNTRANSLATED__",
+    "membership": "__UNTRANSLATED__",
+    "herdFamily": "__UNTRANSLATED__",
+    "skein": "__UNTRANSLATED__",
+    "redeemVoucher": "__UNTRANSLATED__",
+    "adoptCta": "__UNTRANSLATED__",
+    "seeAllTours": "__UNTRANSLATED__",
+    "seeAllExperiences": "__UNTRANSLATED__",
+    "seeAllAdopt": "__UNTRANSLATED__",
+    "seeAllShop": "__UNTRANSLATED__",
+    "experiencesCorporate": "__UNTRANSLATED__",
+    "experiencesFamilyFarm": "__UNTRANSLATED__",
+    "experiencesRomanticSunset": "__UNTRANSLATED__",
+    "shopAlcaca": "__UNTRANSLATED__",
+    "shopWoven": "__UNTRANSLATED__",
+    "shopCommission": "__UNTRANSLATED__",
+    "herdDiary": "__UNTRANSLATED__"
+  },
+  "visit": {
+    "title": "__UNTRANSLATED__",
+    "subhead": "__UNTRANSLATED__",
+    "gettingHere": {
+      "heading": "__UNTRANSLATED__"
+    },
+    "onArrival": {
+      "heading": "__UNTRANSLATED__"
+    },
+    "accessibility": {
+      "heading": "__UNTRANSLATED__"
+    },
+    "cancellation": {
+      "heading": "__UNTRANSLATED__"
+    },
+    "photos": {
+      "heading": "__UNTRANSLATED__"
+    },
+    "ctas": {
+      "heading": "__UNTRANSLATED__",
+      "bookTour": "__UNTRANSLATED__",
+      "seeHerd": "__UNTRANSLATED__",
+      "contact": "__UNTRANSLATED__"
+    }
+  },
+  "hero": {
+    "title": "Es Currals Alpacas Ibiza",
+    "subtitle": "La primera granja de alpacas de Ibiza, situada en el norte rural en una finca auténtica. Hogar de Wishfulfilling Weaving, donde se tejen bufandas exclusivas a mano en un telar de madera tradicional con lana de alpaca.",
+    "ctaPrimary": "Reservar un Tour en la Granja",
+    "ctaSecondary": "Comprar Ahora"
+  },
+  "paths": {
+    "bookNow": "Reservar Ahora",
+    "browseCollection": "Ver Colección",
+    "startProject": "Iniciar Proyecto",
+    "learnMore": "Saber Más",
+    "tour": {
+      "title": "Reservar un Tour",
+      "description": "Visita nuestra granja, conoce las alpacas, aprende el arte del tejido y disfruta del paisaje de Ibiza."
+    },
+    "shop": {
+      "title": "Comprar Tejidos",
+      "description": "Bufandas, mantas y piezas artesanales hechas a mano con lana de alpaca natural y técnicas tradicionales."
+    },
+    "commission": {
+      "title": "Encargo",
+      "description": "Crea algo único. Encarga una pieza personalizada con tus propios colores, patrones y dimensiones."
+    },
+    "alcaca": {
+      "title": "Comprar Alcaca",
+      "description": "Estiércol de alpaca premium para jardinería ecológica y agricultura sostenible. Pedidos a granel o muestras."
+    }
+  },
+  "features": {
+    "sectionTitle": "Por Qué Elegir Es Currals Alpacas Ibiza",
+    "sectionSubtitle": "La primera granja de alpacas de Ibiza en una finca auténtica del norte rural",
+    "farm": {
+      "title": "Finca Auténtica",
+      "description": "Ubicada en el norte rural de Ibiza en una finca auténtica en un hermoso entorno natural. Vive la vida real del campo."
+    },
+    "artisan": {
+      "title": "Tejido Tradicional",
+      "description": "Bufandas exclusivas tejidas a mano en un telar de madera tradicional con lana de alpaca de alta calidad, lino, mohair y seda."
+    },
+    "sustainable": {
+      "title": "Hecho en Ibiza",
+      "description": "Wishfulfilling Weaving – Hecho en Ibiza, abrazando el mundo. Prácticas sostenibles con nuestra propia lana de alpaca. Cuidado de los animales y el planeta."
+    },
+    "appointment": {
+      "title": "Solo con Cita",
+      "description": "Solo visitas íntimas. Mantenemos nuestra granja tranquila y pacífica para las alpacas — y para ti."
+    },
+    "quality": {
+      "title": "Calidad Premium",
+      "description": "Cada producto se revisa a mano. Respaldamos la calidad y durabilidad de nuestro trabajo."
+    },
+    "welfare": {
+      "title": "Bienestar Animal Primero",
+      "description": "Nuestras alpacas son miembros queridos de nuestra familia. Su comodidad y felicidad impulsan todo lo que hacemos."
+    }
+  },
+  "experiences": {
+    "sectionTitle": "Experiencias Especiales",
+    "sectionSubtitle": "Más allá de los tours — crea recuerdos personalizados en nuestra granja",
+    "privateFarm": {
+      "title": "Granja Privada",
+      "description": "Visitas solo con cita previa. Experiencias íntimas y tranquilas en una granja real."
+    },
+    "workshops": {
+      "title": "Talleres",
+      "description": "Aprende tejido, tintado natural y artes de fibra directamente de nuestro equipo artesanal."
+    },
+    "events": {
+      "title": "Eventos",
+      "description": "Bodas, sesiones de fotos, retiros corporativos, yoga con alpacas — experiencias personalizadas."
+    },
+    "tour": {
+      "oneLiner": "__UNTRANSLATED__: Meet and hand-feed the herd on a guided 1-hour farm walk."
+    },
+    "romantic": {
+      "oneLiner": "__UNTRANSLATED__: A sunset alpaca experience for two."
+    }
+  },
+  "cta": {
+    "title": "¿Listo para Vivir Alpacas Ibiza?",
+    "subtitle": "Ya sea que quieras conocer el rebaño, explorar nuestra colección o encargar algo especial — estamos aquí para crear una experiencia inolvidable.",
+    "bookTour": "Reserva Tu Tour",
+    "exploreShop": "Explorar Tienda"
+  },
+  "newsletter": {
+    "title": "Mantente Conectado",
+    "subtitle": "Recibe actualizaciones sobre nuevos productos, talleres e historias de la granja",
+    "placeholder": "Introduce tu email",
+    "subscribe": "Suscribirse",
+    "success": "¡Gracias por suscribirte!"
+  },
+  "tours": {
+    "title": "Reserva Tu Experiencia con Alpacas",
+    "subtitle": "Plazas limitadas disponibles con cita previa. Cada visita es íntima y personalizada.",
+    "reserveTitle": "Reserva Tu Visita",
+    "reserveText": "Selecciona tu fecha y hora preferidas para reservar tu visita con nuestras alpacas.",
+    "integrationTitle": "Integración FareHarbor",
+    "integrationText": "Para activar el widget de reserva FareHarbor, añade tu ID de empresa en las variables de entorno.",
+    "heroTitle": "Visita Alpacas Ibiza",
+    "heroSubtitle": "Acompáñanos para una experiencia inolvidable en la granja. Conoce nuestras alpacas, aprende tejido artesanal y sumérgete en la tranquila campiña de Ibiza.",
+    "heroCta": "Reserva Tu Visita",
+    "planVisit": {
+      "hours": {
+        "title": "Horario",
+        "description": "Tours solo con cita previa. La disponibilidad varía según la temporada.",
+        "summer": "Verano: Horario ampliado",
+        "winter": "Invierno: Disponibilidad limitada",
+        "contact": "Contáctanos para horarios exactos"
+      },
+      "location": {
+        "title": "Ubicación",
+        "description": "San Carlos, Ibiza, España",
+        "details": "Granja privada. Indicaciones y aparcamiento se proporcionan al reservar."
+      },
+      "pricing": {
+        "title": "Precios",
+        "starting": "Desde 30 € por persona",
+        "custom": "Experiencias personalizadas y tarifas de grupo disponibles"
+      },
+      "specialEvents": {
+        "title": "Eventos Especiales y Reservas Privadas",
+        "description": "Bodas, sesiones de fotos, yoga con alpacas, talleres, retiros corporativos — creamos experiencias a medida según tu visión.",
+        "cta": "Solicitar Experiencia Personalizada"
+      }
+    },
+    "bookingSection": {
+      "title": "Reserva Tu Visita",
+      "subtitle": "Selecciona tu fecha y hora preferidas para reservar tu experiencia con alpacas.",
+      "cardTitle": "Reserva Tu Visita",
+      "cardSubtitle": "Haz clic en el botón de abajo para ir a la página de reservas y asegurar tu plaza.",
+      "bookNow": "Reservar Ahora",
+      "viewAndBook": "Ver fechas disponibles y reservar ahora",
+      "poweredBy": "Reserva segura a través de FareHarbor",
+      "questions": "¿Preguntas?",
+      "questionsText": "Contáctanos en info@alpacasibiza.com o por WhatsApp para asistencia personalizada.",
+      "nextDates": "Próximas fechas disponibles",
+      "spotsLeft": "plazas disponibles",
+      "updatedNote": "Actualizado cada 2 horas · Haz clic en \"Reservar ahora\" para ver todos los horarios",
+      "loading": "Cargando disponibilidad...",
+      "apiNote": "La disponibilidad en tiempo real requiere configuración de API"
+    },
+    "questionsText": "Contáctanos en info@alpacasibiza.com o por WhatsApp para asistencia personalizada.",
+    "backHome": "Volver a Inicio",
+    "adoptCrossSell": {
+      "heading": "__UNTRANSLATED__",
+      "body": "__UNTRANSLATED__",
+      "cta": "__UNTRANSLATED__"
+    }
+  },
+  "guestStories": {
+    "title": "Historias de Visitantes",
+    "subtitle": "Descubre lo que dicen los visitantes sobre su experiencia",
+    "translateButton": "Traducir",
+    "showOriginal": "Mostrar original",
+    "readMore": "Leer más reseñas en Facebook",
+    "facebookBadge": "Reseña de Facebook",
+    "reviews": {
+      "sue": "Visité a finales de agosto y lo pasé genial. Ibiza tiene mucho que ofrecer además de la música y recomiendo mucho una visita para ver las hermosas alpacas. Puedes alimentarlas y aprender mucho sobre estos increíbles animales ❤️. Fui recibida calurosamente y tuve una experiencia muy valiosa. ¡Id a verlas, las amaréis!",
+      "verena": "Visitamos las dulces y esponjosas alpacas. Una pareja súper simpática te guía por los recintos con información genial sobre estos animales. Tienes la oportunidad de alimentar, acariciar e incluso dar un beso de alpaca. Los animales son muy confiados y se emocionan con tu cercanía y la comida. Fue una experiencia maravillosa y solo puedo recomendarla a todos los que estén en Ibiza. 🤗🥳",
+      "gemma": "Hice una reserva de grupo para 6 personas para el viernes 9 de mayo. Bart se puso en contacto para avisarme de que estaban cerrados ese día porque esquilaban las alpacas. Amablemente nos ofreció recibirnos el día anterior aunque la granja estaba cerrada. La experiencia fue increíble. Bart fue muy profesional y amable y las alpacas eran muy dulces. Todas están muy bien cuidadas y adoran a Bart, lo que demuestra cuánto las quiere.",
+      "renate": "Muy divertido para hacer con nuestros 2 chicos de 12 años, pero realmente divertido para todas las edades. No sabíamos nada sobre las alpacas, ¡fue muy interesante! Tardamos exactamente una hora.",
+      "sven": "¡Muy recomendable! Bart y San tienen una operación fantástica. La experiencia Chill Out definitiva 🦙❤️🦙",
+      "paul": "Fui el 23 de septiembre, tour increíble, Bart es muy profesional y amable. Si tienes coche es imprescindible 😀🦙"
+    }
+  },
+  "faq": {
+    "sectionTitle": "Preguntas Frecuentes",
+    "sectionSubtitle": "Todo lo que necesitas saber antes de tu visita",
+    "duration": {
+      "q": "¿Cuánto dura un tour típico?",
+      "a": "Los tours estándar duran 2-3 horas. Los talleres y experiencias ampliadas se pueden personalizar. Te recomendamos consultar las franjas horarias disponibles al reservar."
+    },
+    "languages": {
+      "q": "¿En qué idiomas ofrecen tours?",
+      "a": "Ofrecemos tours en inglés, español y neerlandés. Si necesitas otro idioma, contáctanos."
+    },
+    "children": {
+      "q": "¿Las visitas son adecuadas para niños?",
+      "a": "¡Sí! Los tours son aptos para familias. Los niños deben estar supervisados, especialmente cerca de los animales. Recomendamos a partir de 4 años, pero los niños más pequeños pueden venir con supervisión parental."
+    },
+    "wear": {
+      "q": "¿Qué debo vestir?",
+      "a": "Usa zapatos cómodos y cerrados aptos para terreno de granja. Trae protección solar en verano. Se recomiendan capas ligeras ya que la granja está al aire libre. Evita colores brillantes o perfumes fuertes para mantener a las alpacas tranquilas."
+    },
+    "accessibility": {
+      "q": "¿La granja es accesible para personas con discapacidad?",
+      "a": "Nuestra granja está en terreno natural. Por favor contáctanos con antelación para discutir la accesibilidad y cómo podemos adaptarnos a tus necesidades."
+    },
+    "food": {
+      "q": "¿Podemos traer comida o bebidas?",
+      "a": "No se permite traer comida, pero ofrecemos refrescos orgánicos. Nos adaptamos a restricciones dietéticas — menciónalo al reservar."
+    },
+    "booking": {
+      "q": "¿Cómo reservo un tour?",
+      "a": "Usa nuestro sistema de reservas online abajo para consultar disponibilidad y reservar tu plaza. Reservas de grupo y experiencias personalizadas: contáctanos para opciones."
+    },
+    "cancellation": {
+      "q": "¿Qué pasa si necesito cancelar o reprogramar?",
+      "a": "Las cancelaciones hasta 48 horas antes del tour reciben reembolso completo o reprogramación. Con menos antelación se aplica un cargo del 50%."
+    },
+    "private": {
+      "q": "¿Ofrecen tours privados o eventos de grupo?",
+      "a": "¡Sí! Ofrecemos experiencias privadas en la granja, bodas, retiros corporativos y sesiones de yoga con alpacas. Contáctanos para paquetes personalizados."
+    },
+    "parking": {
+      "q": "¿Hay aparcamiento disponible?",
+      "a": "Sí, aparcamiento gratuito disponible en el lugar. Las plazas son limitadas — llega 15 minutos antes para aparcar con tiempo."
+    }
+  },
+  "backHome": "Volver a Inicio",
+  "shop": {
+    "title": "Colección Wishfulfilling Weaving",
+    "subtitle": "Hecho en Ibiza, abrazando el mundo",
+    "description": "Bufandas exclusivas tejidas a mano en un telar de madera tradicional con lana de alpaca de alta calidad, lino, mohair y lana de seda.",
+    "categories": {
+      "woven": {
+        "title": "Colección Tejida",
+        "description": "Bufandas y textiles exclusivos tejidos a mano"
+      },
+      "commission": {
+        "title": "Encargo Personalizado",
+        "description": "Crea tu propia pieza única con colores y patrones personalizados"
+      },
+      "alcaca": {
+        "title": "Alcaca – Estiércol de Alpaca",
+        "description": "Fertilizante orgánico premium de nuestras alpacas"
+      }
+    },
+    "explore": "Explorar",
+    "woven": {
+      "title": "Colección Tejida",
+      "description": "Bufandas, mantas y textiles hechos a mano"
+    },
+    "commission": {
+      "title": "Encargo Personalizado",
+      "description": "Crea tu propia pieza única"
+    },
+    "manure": {
+      "title": "Estiércol de Alpaca",
+      "description": "Fertilizante orgánico premium"
+    }
+  },
+  "wovenPage": {
+    "title": "Colección Tejida",
+    "subtitle": "Hecho a mano con amor usando técnicas de tejido tradicionales y lana de alpaca natural",
+    "addToCart": "Añadir al Carrito"
+  },
+  "commissionPage": {
+    "title": "Encargo Personalizado",
+    "subtitle": "Crea tu pieza soñada con colores, patrones y dimensiones personalizadas",
+    "formTitle": "Cuéntanos Tu Visión",
+    "name": "Tu Nombre",
+    "email": "Correo Electrónico",
+    "description": "Descripción del Proyecto",
+    "submit": "Enviar Solicitud",
+    "sending": "Enviando…",
+    "successMessage": "¡Gracias! Revisaremos tu encargo y nos pondremos en contacto pronto. 🦙",
+    "errorMessage": "Algo salió mal. Por favor inténtalo de nuevo o escríbenos directamente."
+  },
+  "alcacaPage": {
+    "title": "Alcaca Oro Negro",
+    "metaTitle": "__UNTRANSLATED__",
+    "metaDescription": "__UNTRANSLATED__",
+    "subtitle": "__UNTRANSLATED__",
+    "orderNow": "Consultar",
+    "storyTitle": "__UNTRANSLATED__",
+    "storyBody": "__UNTRANSLATED__",
+    "photo1Alt": "__UNTRANSLATED__",
+    "photo2Alt": "__UNTRANSLATED__",
+    "miniTier": "__UNTRANSLATED__",
+    "bagTier": "__UNTRANSLATED__",
+    "bulkTier": "__UNTRANSLATED__",
+    "enquire": "Consultar",
+    "whyTitle": "__UNTRANSLATED__",
+    "benefit1": "__UNTRANSLATED__",
+    "benefit2": "__UNTRANSLATED__",
+    "benefit3": "__UNTRANSLATED__",
+    "benefit4": "__UNTRANSLATED__"
+  },
+  "about": {
+    "title": "Sobre Alpacas Ibiza",
+    "storyTitle": "Nuestra Historia",
+    "storyText": "Alpacas Ibiza se fundó con la creencia de que el turismo puede ser significativo, artesanal y profundamente conectado con el bienestar animal. Creamos la primera granja de alpacas de la isla para compartir nuestra pasión por estas criaturas gentiles y su increíble fibra.",
+    "valuesTitle": "Nuestros Valores",
+    "weavingTitle": "Wishfulfilling Weaving",
+    "weavingSubtitle": "Hecho en Ibiza, abrazando el mundo",
+    "weavingDescription": "Wishfulfilling Weaving es nuestra línea exclusiva de tejido. San teje bufandas exclusivas en un telar de madera tradicional, utilizando lana de alpaca de alta calidad, lino, mohair y seda. Cada pieza está hecha a mano con intención y amor en Ibiza.",
+    "handcraftedBadge": "Hecho a mano en Ibiza",
+    "welfare": {
+      "title": "Bienestar Animal",
+      "description": "Nuestras alpacas son lo primero en cada decisión"
+    },
+    "sustainability": {
+      "title": "Sostenibilidad",
+      "description": "Prácticas ecológicas y responsabilidad ambiental"
+    },
+    "quality": {
+      "title": "Calidad Artesanal",
+      "description": "Procesado a mano, verificado a mano, cuidado a mano"
+    },
+    "community": {
+      "title": "Comunidad",
+      "description": "Compartir conocimientos y crear conexiones"
+    }
+  },
+  "sustainability": {
+    "title": "__UNTRANSLATED__",
+    "subtitle": "__UNTRANSLATED__",
+    "welfareTitle": "__UNTRANSLATED__",
+    "welfareBody": "__UNTRANSLATED__",
+    "craftTitle": "__UNTRANSLATED__",
+    "craftBody": "__UNTRANSLATED__: Alpacas are sheared only once a year, so every lock of fleece is almost literally worth its weight in gold. San processes all of it by hand in the Wishfulfilling Weaving studio: hand-washing the raw fleece, carding it, spinning the yarn, and weaving on traditional wooden looms. She works from centuries-old patterns found in historical manuscripts, combining them with contemporary design. Every piece is unique and non-duplicable, made to order, 100% sustainable. OWNER_REVIEW_TRANSLATION",
+    "dyesTitle": "__UNTRANSLATED__",
+    "dyesBody": "__UNTRANSLATED__",
+    "wasteTitle": "__UNTRANSLATED__",
+    "wasteBody": "__UNTRANSLATED__",
+    "landTitle": "__UNTRANSLATED__",
+    "landBody": "__UNTRANSLATED__",
+    "sourcingTitle": "__UNTRANSLATED__",
+    "sourcingBody": "__UNTRANSLATED__",
+    "trustSectionTitle": "__UNTRANSLATED__",
+    "trustAbout": "__UNTRANSLATED__",
+    "trustPress": "__UNTRANSLATED__",
+    "trustContact": "__UNTRANSLATED__",
+    "ownerConfirmHeader": "__UNTRANSLATED__",
+    "ownerConfirmBody": "__UNTRANSLATED__"
+  },
+  "contact": {
+    "title": "Ponte en Contacto",
+    "subtitle": "¿Tienes preguntas? ¡Nos encantaría escucharte!",
+    "formTitle": "Envíanos un Mensaje",
+    "name": "Nombre",
+    "email": "Correo Electrónico",
+    "subject": "Asunto",
+    "message": "Mensaje",
+    "send": "Enviar Mensaje",
+    "sending": "Enviando…",
+    "successMessage": "¡Gracias! Nos pondremos en contacto pronto. 🦙",
+    "errorMessage": "Algo salió mal. Por favor inténtalo de nuevo o escríbenos directamente.",
+    "infoTitle": "Información de Contacto",
+    "location": "Ubicación",
+    "phone": "Teléfono",
+    "emailLabel": "Correo",
+    "hours": "Horario",
+    "byAppointment": "Solo con cita previa"
+  },
+  "footer": {
+    "tagline": "La primera granja de alpacas y estudio de tejido artesanal de Ibiza",
+    "explore": "Explorar",
+    "shopTitle": "Tienda",
+    "wovenCollection": "Colección Tejida",
+    "customCommission": "Encargo Personalizado",
+    "alpacaManure": "Estiércol de Alpaca (Alcaca)",
+    "aboutUs": "Nosotros",
+    "contact": "Contacto",
+    "privacy": "Política de Privacidad",
+    "terms": "Términos de Servicio",
+    "cookies": "Política de Cookies",
+    "copyright": "Todos los derechos reservados.",
+    "newsletterArchive": "__UNTRANSLATED__",
+    "herdFamily": "__UNTRANSLATED__",
+    "membership": "__UNTRANSLATED__",
+    "redeemVoucher": "__UNTRANSLATED__",
+    "donors": "__UNTRANSLATED__",
+    "myAdoption": "__UNTRANSLATED__",
+    "emailPreferences": "__UNTRANSLATED__",
+    "recoverCertificate": "__UNTRANSLATED__",
+    "press": "__UNTRANSLATED__",
+    "pressRoom": "__UNTRANSLATED__",
+    "pressKit": "__UNTRANSLATED__",
+    "mediaGallery": "__UNTRANSLATED__",
+    "info": "__UNTRANSLATED__",
+    "siteMap": "__UNTRANSLATED__"
+  },
+  "homepage": {
+    "experiences": {
+      "title": "Elige Tu Experiencia",
+      "subtitle": "Experiencias seleccionadas para cada ocasión"
+    },
+    "skeinCallout": {
+      "headline": "__UNTRANSLATED__",
+      "body": "__UNTRANSLATED__",
+      "cta": "__UNTRANSLATED__"
+    },
+    "activityCards": {
+      "weddings": {
+        "title": "__UNTRANSLATED__",
+        "description": "__UNTRANSLATED__",
+        "cta": "__UNTRANSLATED__"
+      },
+      "adopt": {
+        "title": "__UNTRANSLATED__",
+        "description": "__UNTRANSLATED__",
+        "cta": "__UNTRANSLATED__"
+      },
+      "yoga": {
+        "title": "__UNTRANSLATED__",
+        "description": "__UNTRANSLATED__",
+        "cta": "__UNTRANSLATED__"
+      },
+      "workshops": {
+        "title": "__UNTRANSLATED__",
+        "description": "__UNTRANSLATED__",
+        "cta": "__UNTRANSLATED__"
+      },
+      "business": {
+        "title": "__UNTRANSLATED__",
+        "description": "__UNTRANSLATED__",
+        "cta": "__UNTRANSLATED__"
+      }
+    }
+  },
+  "corporate": {
+    "title": "Retiros Corporativos y Team Building",
+    "subtitle": "Desconecta para reconectar. Trae a tu equipo a la tranquila campiña de Ibiza para una experiencia única de unión con nuestro rebaño de alpacas.",
+    "cta": "Consultar para Equipos",
+    "whyTitle": "¿Por Qué Alpacas para Team Building?",
+    "whyText": "Las alpacas son animales sensibles y calmantes que reflejan la energía humana. Interactuar con ellas requiere paciencia, observación y comunicación no verbal — habilidades perfectas para un trabajo en equipo efectivo.",
+    "features": {
+      "stress": {
+        "title": "Reducción del Estrés",
+        "description": "La presencia calmante de las alpacas reduce el cortisol y fomenta la atención plena."
+      },
+      "communication": {
+        "title": "Comunicación",
+        "description": "Aprende a liderar sin fuerza. Las alpacas responden a la asertividad tranquila."
+      },
+      "creativity": {
+        "title": "Creatividad",
+        "description": "Los talleres de tejido estimulan la resolución creativa de problemas y la concentración."
+      },
+      "nature": {
+        "title": "Conexión con la Naturaleza",
+        "description": "Saca a tu equipo de la oficina al aire fresco del Mediterráneo."
+      }
+    },
+    "itinerary": {
+      "title": "Itinerario de Ejemplo",
+      "item1": {
+        "time": "10:00",
+        "title": "Bienvenida y Refrescos",
+        "desc": "Café, té y repostería local en la terraza."
+      },
+      "item2": {
+        "time": "10:30",
+        "title": "Conoce el Rebaño",
+        "desc": "Presentación guiada de las alpacas. Conoce sus nombres y personalidades."
+      },
+      "item3": {
+        "time": "11:30",
+        "title": "Desafío en Equipo",
+        "desc": "Actividad interactiva: Guiar una alpaca a través de un circuito sencillo que requiere trabajo en equipo."
+      },
+      "item4": {
+        "time": "13:00",
+        "title": "Almuerzo en la Granja",
+        "desc": "Picnic orgánico con productos locales bajo los algarrobos."
+      }
+    },
+    "planTitle": "¿Listo para Planificar Tu Evento?",
+    "planText": "Personalizamos cada paquete corporativo según el tamaño y los objetivos de tu equipo. Contáctanos para un presupuesto.",
+    "planCta": "Solicitar Propuesta",
+    "liveBodyEN": "__UNTRANSLATED__: There is no better place to reflect on the past and plan for the future with your business colleagues than among our alpacas in the unspoilt nature of northern Ibiza. An environment of pure zen that can only inspire fresh ideas and brilliant insights! On request we put together a complete package with catering on-site or at one of the charming nearby restaurants.",
+    "subheadAlt": "__UNTRANSLATED__: Reflecting and planning amidst our alpacas in the unspoilt nature of northern Ibiza"
+  },
+  "romantic": {
+    "title": "Paseos Románticos al Atardecer",
+    "subtitle": "Hora dorada con las alpacas. Una experiencia privada e íntima para parejas en el corazón de Ibiza.",
+    "cta": "Reservar Tour Privado al Atardecer",
+    "quote": "\"La cita más mágica que hemos tenido jamás.\"",
+    "description": "Escapa de las multitudes. Solo tú, tu pareja y nuestras dulces alpacas paseando por los naranjos mientras el sol se pone tras las colinas.",
+    "champagne": {
+      "title": "Champán",
+      "desc": "__UNTRANSLATED__: Optional add-on to toast the sunset."
+    },
+    "photos": {
+      "title": "Fotos",
+      "desc": "Tu guía captura momentos espontáneos para que puedas vivir el momento."
+    },
+    "privacy": {
+      "title": "Privacidad",
+      "desc": "Tours estrictamente privados disponibles bajo petición."
+    },
+    "proposalTitle": "Perfecto para Propuestas",
+    "proposalText": "¿Estás pensando en hacer la pregunta? Podemos ayudarte a orquestar el momento perfecto con las alpacas como tus testigos.",
+    "proposalCta": "Contactar para Organizar"
+  },
+  "family": {
+    "title": "Días Familiares en la Granja",
+    "subtitle": "Presenta a tus hijos la alegría de los animales. Seguro, educativo y divertido para todas las edades.",
+    "cta": "Reservar Visita Familiar",
+    "educationTitle": "Educación Adorable",
+    "educationText": "Nuestra granja no es solo un zoo de mascotas — es una experiencia educativa. Los niños aprenden:",
+    "points": {
+      "respect": "Respeto: Cómo acercarse a los animales con delicadeza.",
+      "biology": "Biología: Por qué las alpacas tienen vellón suave y almohadillas en vez de pezuñas.",
+      "sustainability": "Sostenibilidad: Cómo usamos el estiércol de alpaca (\"Oro Negro\") para la agricultura."
+    },
+    "safetyTitle": "Seguridad Ante Todo",
+    "safety": {
+      "gentle": {
+        "title": "Animales Dóciles",
+        "desc": "Nuestro rebaño está socializado y acostumbrado a los niños."
+      },
+      "stroller": {
+        "title": "Apto para Carritos",
+        "desc": "Los caminos son accesibles para carritos resistentes."
+      },
+      "hygiene": {
+        "title": "Higiene",
+        "desc": "Estaciones de lavado de manos disponibles."
+      },
+      "refreshments": {
+        "title": "Refrescos",
+        "desc": "Bebidas y snacks aptos para niños."
+      }
+    },
+    "faq": {
+      "age": {
+        "q": "¿Cuál es la edad mínima?",
+        "a": "¡Damos la bienvenida a todas las edades! Los niños menores de 3 años entran gratis. Recomendamos a partir de 4 años para la experiencia completa de paseo."
+      },
+      "safe": {
+        "q": "¿Son seguras las alpacas?",
+        "a": "Sí, las alpacas no muerden (¡solo tienen dientes inferiores!) y generalmente son muy tranquilas. Enseñamos a tus hijos exactamente cómo interactuar de forma segura."
+      },
+      "duration": {
+        "q": "¿Cuánto dura la visita?",
+        "a": "Las visitas familiares suelen durar entre 1,5 y 2 horas, ideal para períodos de atención más cortos."
+      }
+    }
+  },
+  "privacy": {
+    "title": "Política de Privacidad",
+    "subtitle": "Cómo recogemos, usamos y protegemos tu información",
+    "section1Title": "1. Información que Recogemos",
+    "section1Intro": "Recogemos la información que proporcionas directamente:",
+    "section1Items": [
+      "Datos de reserva de tours (nombre, email, teléfono)",
+      "Información de pedidos (dirección de envío, datos de pago)",
+      "Consultas de encargos (detalles del proyecto, preferencias)",
+      "Suscripción al newsletter (dirección de email)",
+      "Envíos del formulario de contacto"
+    ],
+    "section2Title": "2. Cómo Usamos Tu Información",
+    "section2Items": [
+      "Gestionar reservas de tours y pedidos",
+      "Enviar emails de confirmación y actualizaciones",
+      "Responder a consultas",
+      "Mejorar nuestro sitio web y servicios",
+      "Enviar newsletters (puedes darte de baja en cualquier momento)",
+      "Cumplir con obligaciones legales"
+    ],
+    "section3Title": "3. Protección de Datos",
+    "section3Intro": "Nos tomamos tu privacidad en serio. Tus datos están encriptados y almacenados de forma segura. No compartimos tu información con terceros excepto:",
+    "section3Items": [
+      "Procesadores de pago (para transacciones seguras)",
+      "Sistemas de reserva (FareHarbor, según sea necesario)",
+      "Requisitos legales (cuando lo exija la ley)"
+    ],
+    "section4Title": "4. Cookies y Seguimiento",
+    "section4Text": "Usamos cookies para mejorar tu experiencia. Las cookies esenciales son necesarias para la funcionalidad. Puedes controlar las preferencias de cookies en tu navegador o en nuestro banner de cookies.",
+    "section5Title": "5. Tus Derechos",
+    "section5Intro": "Tienes derecho a:",
+    "section5Items": [
+      "Acceder a tus datos",
+      "Corregir información inexacta",
+      "Solicitar la eliminación (derecho al olvido)",
+      "Optar por no recibir comunicaciones de marketing"
+    ],
+    "lastUpdated": "Última actualización: Febrero 2024. Contáctanos en info@alpacasibiza.com para consultas de privacidad."
+  },
+  "terms": {
+    "title": "Términos de Servicio",
+    "subtitle": "Por favor lee estos términos antes de usar nuestro sitio web y servicios de reserva",
+    "section1Title": "1. Reservas y Tours",
+    "section1Intro": "Al reservar un tour, aceptas:",
+    "section1Items": [
+      "Seguir todas las normas de seguridad de la granja y los animales",
+      "Llegar 15 minutos antes de la hora programada",
+      "Respetar las alpacas y la propiedad de la granja",
+      "Traer identificación válida si es necesario",
+      "Seguir los protocolos de salud/seguridad vigentes"
+    ],
+    "section2Title": "2. Cancelaciones y Reembolsos",
+    "section2Items": [
+      "Cancelación hasta 48 horas antes: Reembolso completo o reprogramación",
+      "Cancelación con menos de 48 horas: Se aplica cargo del 50%",
+      "No presentarse: Pago completo perdido",
+      "Cierre por condiciones climáticas: Reembolso completo o reprogramación"
+    ],
+    "section3Title": "3. Pedidos de la Tienda",
+    "section3Intro": "Todos los productos son hechos a mano. Las pequeñas variaciones e imperfecciones son normales y parte del proceso artesanal.",
+    "section3Items": [
+      "Envío en 5-7 días laborales",
+      "Los pedidos internacionales pueden tardar más",
+      "Devoluciones: 30 días para artículos sin usar y sin daños",
+      "Los artículos personalizados/encargados no son retornables"
+    ],
+    "section4Title": "4. Acuerdos de Encargo",
+    "section4Items": [
+      "Se requiere un depósito del 50% para asegurar tu proyecto",
+      "Saldo pendiente antes del envío final",
+      "Las estimaciones de tiempo son aproximadas",
+      "Cancelación después del inicio de producción: solo 50% de reembolso"
+    ],
+    "section5Title": "5. Fotografía y Consentimiento",
+    "section5Text": "Al visitar nuestra granja o comprar nuestros productos, consientes ser fotografiado. Estas imágenes pueden usarse en nuestro sitio web y redes sociales. Si prefieres no ser fotografiado, informa a tu guía.",
+    "section6Title": "6. Exención de Responsabilidad",
+    "section6Text": "Las visitas a la granja implican interacción con animales. Los visitantes asumen todos los riesgos. No somos responsables de lesiones a menos que sean causadas por negligencia grave. Los niños deben estar supervisados en todo momento.",
+    "section7Title": "7. Uso del Sitio Web",
+    "section7Items": [
+      "No reproduzcas ni redistribuyas nuestro contenido sin permiso",
+      "No intentes hackear o interferir con el sitio web",
+      "Respeta los derechos de propiedad intelectual"
+    ],
+    "lastUpdated": "Última actualización: Febrero 2024. Contacta info@alpacasibiza.com con preguntas.",
+    "art1Title": "__UNTRANSLATED__: Article 1 - Definitions",
+    "art1Items": "__UNTRANSLATED__: ['Supplementary agreement: a contract whereby the consumer acquires products or services at a distance in relation to an earlier distance contract.', 'Cooling-off period: the period within which the consumer may exercise their right of withdrawal.', 'Consumer: the natural person who does not act for purposes relating to their trade, business, craft or professional activity.', 'Day: calendar day.', 'Digital content: data produced and supplied in digital form.', 'Duration contract: a contract for the regular supply of goods, services and/or digital content over a set period.', 'Durable medium: any tool enabling the consumer or entrepreneur to store information for future reference.', \"Right of withdrawal: the consumer's ability to cancel a distance contract within the cooling-off period.\", 'Model withdrawal form: the European model withdrawal form made available on the website.', 'Entrepreneur: the natural or legal person offering products, access to digital content and/or services to consumers at a distance.', 'Distance contract: a contract concluded between the entrepreneur and the consumer within an organised distance-selling system.', 'Distance communication technique: any means enabling a contract to be concluded without the consumer and entrepreneur being simultaneously present in the same space.']",
+    "art2Title": "__UNTRANSLATED__: Article 2 - Entrepreneur Identity",
+    "art2Name": "__UNTRANSLATED__: Name",
+    "art2Address": "__UNTRANSLATED__: Address",
+    "art2Phone": "__UNTRANSLATED__: Telephone",
+    "art2Email": "__UNTRANSLATED__: Email",
+    "art2Vat": "__UNTRANSLATED__: VAT number",
+    "art2Items": "__OWNER_INPUT_REQUIRED__: legal identifiers now read from lib/tenants/alpacasibiza.ts; do not hardcode here",
+    "art3Title": "__UNTRANSLATED__: Article 3 - Applicability",
+    "art3Text": "__UNTRANSLATED__: These general terms and conditions apply to every offer by the entrepreneur and to every distance contract concluded. Before a distance contract is formed, the text of these terms is made available to the consumer either in writing or on a durable medium.",
+    "art4Title": "__UNTRANSLATED__: Article 4 - The Offer",
+    "art4Text": "__UNTRANSLATED__: Images truthfully represent the products offered. Obvious errors do not bind the entrepreneur. Every offer contains sufficient information for the consumer to understand the rights and obligations arising from acceptance.",
+    "art5Title": "__UNTRANSLATED__: Article 5 - The Agreement",
+    "art5Text": "__UNTRANSLATED__: The contract is formed at the moment the consumer accepts the offer and meets its conditions. The entrepreneur confirms receipt of acceptance electronically. Until receipt is confirmed, the consumer may cancel the contract.",
+    "art6Title": "__UNTRANSLATED__: Article 6 - Right of Withdrawal",
+    "art6ProductText": "__UNTRANSLATED__: For products: the consumer may cancel a product purchase within a minimum cooling-off period of 14 days without stating reasons.",
+    "art6ServicesText": "__UNTRANSLATED__: For services and non-physical digital content: the consumer may cancel within a minimum of 14 days without stating reasons. The period begins the day after the contract is formed.",
+    "art6ExtendedText": "__UNTRANSLATED__: Extended cooling-off period: if the entrepreneur fails to provide the required withdrawal information, the cooling-off period expires twelve months after the end of the original period.",
+    "art7Title": "__UNTRANSLATED__: Article 7 - Consumer Obligations During the Cooling-Off Period",
+    "art7Text": "__UNTRANSLATED__: The consumer shall handle the product and its packaging with care. They may only unpack or use the product to the extent necessary to assess its nature, characteristics and functioning. The consumer is liable for any diminished value resulting from handling that goes beyond what is permitted.",
+    "art8Title": "__UNTRANSLATED__: Article 8 - Exercising the Right of Withdrawal and Associated Costs",
+    "art8Text": "__UNTRANSLATED__: If the consumer exercises their right of withdrawal, they must notify the entrepreneur within the cooling-off period using the model withdrawal form or another unambiguous statement. The product must be returned within 14 days of notification in its original condition with all accessories. The consumer bears the direct cost of return shipping.",
+    "art9Title": "__UNTRANSLATED__: Article 9 - Entrepreneur Obligations Upon Withdrawal",
+    "art9Text": "__UNTRANSLATED__: The entrepreneur shall refund all consumer payments, including delivery costs, as quickly as possible and within 14 days of the withdrawal notice. Refunds are made via the same payment method used by the consumer, unless the consumer agrees to a different method.",
+    "art10Title": "__UNTRANSLATED__: Article 10 - Exclusions from the Right of Withdrawal",
+    "art10Text": "__UNTRANSLATED__: The entrepreneur may exclude the following products and services from the right of withdrawal:",
+    "art10Items": "__UNTRANSLATED__: ['Products whose price depends on fluctuations in the financial market', 'Products purchased via a public auction', 'Fully performed services (with prior explicit consumer consent)', 'Package travel and passenger transport', 'Accommodation bookings for a specified date', 'Events and performances with a scheduled date', 'Made-to-measure or personalised products', 'Rapidly perishable products', 'Sealed health or hygiene products opened after delivery', 'Products irreversibly mixed with other products after delivery', 'Alcoholic beverages with prices agreed at the time of order', 'Sealed audio, video or software recordings opened after delivery', 'Newspapers, magazines (except subscriptions)', 'Non-physical digital content (with prior explicit consent)']",
+    "art11Title": "__UNTRANSLATED__: Article 11 - Pricing",
+    "art11Text": "__UNTRANSLATED__: During the stated validity period, prices of offered products and/or services will not be increased except for VAT changes. Stated prices include VAT. Price increases within 3 months of contract formation are only permitted if required by law. After 3 months, a price increase is only permitted if agreed with the consumer.",
+    "art12Title": "__UNTRANSLATED__: Article 12 - Contract Performance and Extended Warranty",
+    "art12Text": "__UNTRANSLATED__: The entrepreneur guarantees that products and/or services conform to the contract, the advertised specifications, reasonable standards of quality and usability, and applicable laws and regulations in effect on the date the contract was formed.",
+    "art13Title": "__UNTRANSLATED__: Article 13 - Delivery and Execution",
+    "art13Text": "__UNTRANSLATED__: The entrepreneur shall exercise the utmost care in receiving and fulfilling product orders. Accepted orders will be fulfilled promptly and no later than 30 days, unless a different delivery period was agreed. The risk of damage or loss rests with the entrepreneur until delivery to the consumer.",
+    "art14Title": "__UNTRANSLATED__: Article 14 - Duration Contracts: Term, Cancellation and Renewal",
+    "art14Text": "__UNTRANSLATED__: The consumer may cancel an indefinite-duration contract at any time with a maximum one-month notice period. Fixed-term contracts run for a maximum of two years. Tacit renewal is only permitted for newspapers, magazines and periodicals with a maximum renewal period of three months.",
+    "art15Title": "__UNTRANSLATED__: Article 15 - Payment",
+    "art15Text": "__UNTRANSLATED__: Amounts owed by the consumer must be paid within 14 days after the start of the cooling-off period, or, where no cooling-off period applies, within 14 days of contract formation. Prepayment may not exceed 50% of the purchase price. Late payment triggers statutory interest after the entrepreneur gives notice.",
+    "art16Title": "__UNTRANSLATED__: Article 16 - Complaints Procedure",
+    "art16Text": "__UNTRANSLATED__: The entrepreneur maintains a sufficiently publicised complaints procedure. Complaints about contract performance must be submitted promptly after the consumer discovers a defect, fully and clearly described. Submitted complaints are answered within 14 days of receipt.",
+    "art17Title": "__UNTRANSLATED__: Article 17 - Disputes",
+    "art17Text": "__UNTRANSLATED__: Contracts between the entrepreneur and the consumer to which these general terms and conditions apply are exclusively governed by Spanish law.",
+    "art18Title": "__UNTRANSLATED__: Article 18 - Additional or Divergent Provisions",
+    "art18Text": "__UNTRANSLATED__: Additional or divergent provisions may not be to the detriment of the consumer and must be recorded in writing or stored in a way that is accessible to the consumer on a durable medium."
+  },
+  "cookies": {
+    "title": "Política de Cookies",
+    "subtitle": "Información sobre cómo usamos cookies en nuestro sitio web",
+    "whatTitle": "¿Qué Son las Cookies?",
+    "whatText": "Las cookies son pequeños archivos de texto almacenados en tu navegador. Ayudan a los sitios web a recordar tus preferencias y rastrear cómo usas el sitio.",
+    "typesTitle": "Tipos de Cookies que Usamos",
+    "essentialTitle": "Cookies Esenciales",
+    "essentialText": "Necesarias para el funcionamiento del sitio. Incluyen:",
+    "essentialItems": [
+      "Cookies de sesión (para tu reserva)",
+      "Cookies de seguridad (para proteger tus datos)",
+      "Cookies de funcionalidad del sitio"
+    ],
+    "preferenceTitle": "Cookies de Preferencia",
+    "preferenceText": "Recuerdan tus opciones (idioma, tema, etc.) para una mejor experiencia.",
+    "analyticsTitle": "Cookies de Analítica",
+    "analyticsText": "Nos ayudan a entender cómo usas nuestro sitio para poder mejorarlo. Usamos:",
+    "analyticsItems": [
+      "Google Analytics (páginas vistas, fuentes de tráfico)",
+      "Seguimiento de conversiones (reservas, seguimiento de compras)"
+    ],
+    "marketingTitle": "Cookies de Marketing",
+    "marketingText": "Se usan para anuncios de retargeting y campañas de remarketing. Puedes optar por no recibirlas en cualquier momento.",
+    "choicesTitle": "Tus Opciones de Cookies",
+    "choicesItems": [
+      "Cookies esenciales: No se pueden desactivar (necesarias para el sitio)",
+      "Analítica y Marketing: Desactivar a través de nuestro banner de cookies",
+      "Configuración del navegador: La mayoría de navegadores permiten controlar cookies",
+      "Optar por no: Usa la configuración \"No Rastrear\" de tu navegador"
+    ],
+    "thirdPartyTitle": "Servicios de Terceros",
+    "thirdPartyText": "Usamos servicios de terceros que pueden establecer sus propias cookies:",
+    "thirdPartyItems": [
+      "Procesadores de pago (para transacciones seguras)",
+      "Sistemas de reservas (FareHarbor)",
+      "Proveedores de analítica"
+    ],
+    "manageTitle": "Gestionar Cookies",
+    "manageText": "La mayoría de navegadores te permiten:",
+    "manageItems": [
+      "Ver cookies almacenadas",
+      "Eliminar cookies específicas",
+      "Bloquear nuevas cookies",
+      "Establecer niveles de privacidad"
+    ],
+    "manageNote": "Consulta la documentación de tu navegador para instrucciones específicas.",
+    "gdprTitle": "Conformidad RGPD",
+    "gdprText": "Cumplimos con el RGPD y las regulaciones ePrivacy. Nosotros:",
+    "gdprItems": [
+      "Solo establecemos cookies no esenciales con tu consentimiento",
+      "Proporcionamos información clara sobre cookies",
+      "Permitimos la opción de no participar fácilmente",
+      "Respetamos tus opciones de privacidad"
+    ],
+    "lastUpdated": "Última actualización: Febrero 2024. Contacta info@alpacasibiza.com para preguntas sobre cookies."
+  },
+  "notFound": {
+    "title": "Página no encontrada",
+    "subtitle": "Esta página parece haberse escapado como una de nuestras alpacas. Te ayudamos a encontrar lo que buscas.",
+    "suggestionsTitle": "Prueba una de estas opciones",
+    "ctaText": "O reserva tu experiencia con alpacas ahora mismo",
+    "suggestions": {
+      "home": "Inicio",
+      "homeDesc": "Volver a la página principal",
+      "tours": "Tours y Visitas",
+      "toursDesc": "Reserva tu experiencia en la granja de alpacas",
+      "shop": "Tienda",
+      "shopDesc": "Bufandas tejidas a mano, textiles y más",
+      "about": "Nosotros",
+      "aboutDesc": "Nuestra historia, la granja y las alpacas",
+      "contact": "Contacto",
+      "contactDesc": "Ponte en contacto con nosotros"
+    }
+  },
+  "journal": {
+    "title": "Diario",
+    "backToJournal": "Volver al diario",
+    "relatedTitle": "Más de"
+  },
+  "share": {
+    "label": "Compartir",
+    "copyLink": "Copiar enlace",
+    "copied": "¡Copiado!",
+    "whatsapp": "Compartir en WhatsApp",
+    "twitter": "Compartir en X",
+    "facebook": "Compartir en Facebook"
+  },
+  "error": {
+    "title": "Algo salió mal",
+    "subtitle": "Parece que una de nuestras alpacas se escapó con la página. Nuestro equipo ha sido notificado — inténtalo de nuevo o vuelve a la página de inicio.",
+    "tryAgain": "Intentar de nuevo",
+    "goHome": "Volver al inicio",
+    "goTours": "Ver tours",
+    "goAdopt": "Adoptar una alpaca",
+    "errorRef": "Referencia de error"
+  },
+  "adopt": {
+    "cancelledHeading": "__UNTRANSLATED__",
+    "cancelledFullBody": "__UNTRANSLATED__",
+    "cancelledTryAgain": "__UNTRANSLATED__",
+    "cancelledTellUs": "__UNTRANSLATED__",
+    "thankYou": {
+      "calendarDownload": "__UNTRANSLATED__",
+      "calendarHint": "__UNTRANSLATED__"
+    },
+    "legal": {
+      "withdrawalWaiver": "__UNTRANSLATED__",
+      "waiverRequired": "__UNTRANSLATED__"
+    },
+    "certPreviewCaption": "__UNTRANSLATED__",
+    "certPreview": {
+      "namePlaceholder": "__UNTRANSLATED__",
+      "namePromptLabel": "__UNTRANSLATED__",
+      "nameInputAria": "__UNTRANSLATED__"
+    },
+    "share": {
+      "message": "Acabo de adoptar a {name} en Alpacas Ibiza!"
+    },
+    "referral": {
+      "welcomeFromFriend": "Bienvenido de parte de un amigo",
+      "codeApplied": "Descuento aplicado automáticamente al pagar con el código",
+      "attributionHeading": "Recomendado por un amigo",
+      "attributionBody": "Tu amigo recibirá crédito cuando adoptes. ¡Gracias por seguir su enlace!"
+    },
+    "campaign": {
+      "daysLeft": "{count, plural, =0 {Ultimas horas} one {# dia restante} other {# dias restantes}}",
+      "daysRemainingAria": "{count, plural, =0 {Ultimas horas restantes} one {# dia restante} other {# dias restantes}}"
+    },
+    "counter": {
+      "heading": "La manada, en numeros",
+      "empty": "Lista en preparacion.",
+      "full": "Cada alpaca tiene un patrocinador.",
+      "almostFull": "{remaining, plural, one {Solo # alpaca necesita patrocinador.} other {Solo # alpacas necesitan patrocinador.}}",
+      "overHalf": "{remaining, plural, one {Mas de la mitad tiene patrocinador. # espera.} other {Mas de la mitad tiene patrocinador. # esperan.}}",
+      "plenty": "{remaining, plural, one {# de {total} disponibles.} other {# de {total} disponibles.}}",
+      "ariaEmpty": "Contador de adoptantes",
+      "ariaPopulated": "{adopted} de {total} alpacas tienen patrocinador ({pct} por ciento)."
+    },
+    "timeline": {
+      "photoshoot": {
+        "desc": "__UNTRANSLATED__: An hour with your alpaca during a coordinated photo opportunity."
+      }
+    },
+    "junior": {
+      "tierName": "__UNTRANSLATED__",
+      "tagline": "__UNTRANSLATED__",
+      "bullet1": "__UNTRANSLATED__",
+      "bullet2": "__UNTRANSLATED__",
+      "bullet3": "__UNTRANSLATED__",
+      "cta": "__UNTRANSLATED__"
+    },
+    "feature": {
+      "sixTours": "__UNTRANSLATED__",
+      "fertilizer5kg": "__UNTRANSLATED__",
+      "calendar": "__UNTRANSLATED__",
+      "keychain": "__UNTRANSLATED__",
+      "framedPhoto": "__UNTRANSLATED__"
+    },
+    "visitInsteadCta": "__UNTRANSLATED__"
+  },
+  "search": {
+    "trigger": "__UNTRANSLATED__",
+    "placeholder": "__UNTRANSLATED__",
+    "noResults": "__UNTRANSLATED__",
+    "empty": "__UNTRANSLATED__",
+    "loading": "__UNTRANSLATED__",
+    "openShortcut": "__UNTRANSLATED__",
+    "browseJournal": "__UNTRANSLATED__"
+  },
+  "recoverCertificate": {
+    "title": "__UNTRANSLATED__",
+    "subhead": "__UNTRANSLATED__",
+    "emailLabel": "__UNTRANSLATED__",
+    "submit": "__UNTRANSLATED__",
+    "successMessage": "__UNTRANSLATED__"
+  },
+  "floatingWhatsapp": {
+    "defaultMessage": "__UNTRANSLATED__",
+    "aria": "__UNTRANSLATED__"
+  },
+  "alpacaOfDay": {
+    "cta": "Conocer a {name}"
+  },
+  "alpacas": {
+    "filter": {
+      "showing": "Mostrando {match, number} de {total, number}"
+    }
+  },
+  "whatsapp": {
+    "panel": {
+      "footer": "O escribenos directamente al {phone}"
+    }
+  },
+  "weddings": {
+    "subtitleLive": "__UNTRANSLATED__: Alpaca weddings and photoshoots have been a US trend for years — now available in Europe. As the first and only alpaca farm on Ibiza, we offer unique wedding experiences among our 14 alpacas."
+  },
+  "weaving": {
+    "studioHistoryBody": "__UNTRANSLATED__: The weaving studio works with antique looms, traditional techniques, and locally-sourced fibre from our herd.",
+    "processStep1Body": "__UNTRANSLATED__: Each spring the alpacas are hand-shorn at Es Currals. The soft fleece is carefully stored per animal.",
+    "processStep2Body": "__UNTRANSLATED__: San washes and cards the fleece by hand. No industrial process — pure craftsmanship.",
+    "processStep3Body": "__UNTRANSLATED__: The yarn is spun and dyed with natural plant extracts — hibiscus, avocado, and other flowers.",
+    "processStep4Body": "__UNTRANSLATED__: San weaves on traditional wooden looms, using centuries-old patterns from historical manuscripts combined with contemporary fashion.",
+    "collectionSubhead": "__UNTRANSLATED__: Made in Ibiza, embracing the world — Discover our own collection"
+  },
+  "skein": {
+    "step2Title": "__UNTRANSLATED__",
+    "faq1Question": "__UNTRANSLATED__",
+    "heroTitle": "__UNTRANSLATED__",
+    "howItWorksTitle": "__UNTRANSLATED__",
+    "onlyBody": "__UNTRANSLATED__",
+    "heroSubtitle": "__UNTRANSLATED__",
+    "tierSub": "__UNTRANSLATED__",
+    "faq3Question": "__UNTRANSLATED__",
+    "faq4Question": "__UNTRANSLATED__",
+    "faqTitle": "__UNTRANSLATED__",
+    "faq1Answer": "__UNTRANSLATED__",
+    "metaDescription": "__UNTRANSLATED__",
+    "metaTitle": "__UNTRANSLATED__",
+    "ctaSponsor": "__UNTRANSLATED__",
+    "step1Title": "__UNTRANSLATED__",
+    "tierPrice": "__UNTRANSLATED__",
+    "faq2Question": "__UNTRANSLATED__",
+    "faq2Answer": "__UNTRANSLATED__",
+    "step3Title": "__UNTRANSLATED__",
+    "ctaPickForMe": "__UNTRANSLATED__",
+    "tierTitle": "__UNTRANSLATED__",
+    "step2Body": "__UNTRANSLATED__",
+    "onlyTitle": "__UNTRANSLATED__",
+    "step1Body": "__UNTRANSLATED__",
+    "faq3Answer": "__UNTRANSLATED__",
+    "faq4Answer": "__UNTRANSLATED__",
+    "trustLine": "__UNTRANSLATED__",
+    "step3Body": "__UNTRANSLATED__",
+    "gift": {
+      "toggle": "__UNTRANSLATED__",
+      "subheading": "__UNTRANSLATED__",
+      "recipientName": "__UNTRANSLATED__",
+      "recipientEmail": "__UNTRANSLATED__",
+      "message": "__UNTRANSLATED__",
+      "activeBadge": "__UNTRANSLATED__",
+      "expandHint": "__UNTRANSLATED__",
+      "confirmation": "__UNTRANSLATED__",
+      "reset": "__UNTRANSLATED__"
+    },
+    "thankYou": {
+      "giftMode": "__UNTRANSLATED__"
+    }
+  },
+  "socialProof": {
+    "visitsThisWeek": "__UNTRANSLATED__",
+    "toursUpcoming": "__UNTRANSLATED__",
+    "adoptersCount": "__UNTRANSLATED__",
+    "fallback": "__UNTRANSLATED__"
+  },
+  "waitlist": {
+    "heading": "__UNTRANSLATED__",
+    "subheading": "__UNTRANSLATED__",
+    "emailPlaceholder": "__UNTRANSLATED__",
+    "datePlaceholder": "__UNTRANSLATED__",
+    "submitLabel": "__UNTRANSLATED__",
+    "successMessage": "__UNTRANSLATED__"
+  },
+  "redeemVoucher": {
+    "heroTitle": "__UNTRANSLATED__",
+    "heroSubtitle": "__UNTRANSLATED__",
+    "codeLabel": "__UNTRANSLATED__",
+    "codePlaceholder": "__UNTRANSLATED__",
+    "submitLabel": "__UNTRANSLATED__",
+    "submitting": "__UNTRANSLATED__",
+    "successTitle": "__UNTRANSLATED__",
+    "successMessage": "__UNTRANSLATED__",
+    "invalidMessage": "__UNTRANSLATED__",
+    "helpTitle": "__UNTRANSLATED__",
+    "helpBody": "__UNTRANSLATED__"
+  },
+  "gifts": {
+    "flow": {
+      "tourDescription": "__UNTRANSLATED__: 1-hour farm tour"
+    }
+  },
+  "reviews": {
+    "translateButton": "__UNTRANSLATED__",
+    "translateAria": "__UNTRANSLATED__",
+    "showOriginal": "__UNTRANSLATED__",
+    "translating": "__UNTRANSLATED__",
+    "translateError": "__UNTRANSLATED__",
+    "attribution": "__UNTRANSLATED__"
+  },
+  "tourConfirmation": {
+    "crossSell": {
+      "adoptHeading": "__UNTRANSLATED__",
+      "adoptBody": "__UNTRANSLATED__",
+      "adoptCta": "__UNTRANSLATED__",
+      "herdHeading": "__UNTRANSLATED__",
+      "herdBody": "__UNTRANSLATED__",
+      "herdCta": "__UNTRANSLATED__"
+    }
+  },
+  "herdDiary": {
+    "heading": "__UNTRANSLATED__",
+    "subhead": "__UNTRANSLATED__",
+    "emptyState": "__UNTRANSLATED__",
+    "eventDateLabel": "__UNTRANSLATED__",
+    "alpacaChipLabel": "__UNTRANSLATED__",
+    "donorPortalCta": "__UNTRANSLATED__",
+    "diaryEntriesFor": "__UNTRANSLATED__",
+    "seeFullDiary": "__UNTRANSLATED__",
+    "metaTitle": "__UNTRANSLATED__",
+    "metaDescription": "__UNTRANSLATED__"
+  },
+  "portal": {
+    "title": "Tu apadrinamiento",
+    "matchedAlpacaFallback": "Tu alpaca asignada",
+    "subscriptionHeader": "Suscripción",
+    "amount": "Importe",
+    "nextCharge": "Próximo cobro",
+    "started": "Iniciado",
+    "canceled": "Cancelado",
+    "updatePayment": "Actualizar método de pago",
+    "cancel": "Cancelar apadrinamiento",
+    "adoptAgain": "Apadrinar de nuevo",
+    "failureWarningPrefix": "Atención: {count} pagos fallidos recientes.",
+    "failureWarningSuffix": "Tu apadrinamiento se pausará si no podemos cobrar pronto. Usa el botón «Actualizar método de pago» de abajo para solucionarlo.",
+    "photoComingSoon": "Foto próximamente. El propietario está recopilando retratos; tu paquete de bienvenida incluye uno.",
+    "farmNewsHeader": "{label} de la granja",
+    "sneakPeek": "Adelanto",
+    "weWillPick": "Nos dejas elegir: te asignaremos uno de la manada en unos días y actualizaremos esta página.",
+    "bioComingSoon": "Biografía próximamente: el propietario está recopilando notas de personalidad de la manada.",
+    "personalityLabel": "Personalidad:",
+    "footerHelpPrefix": "¿Necesitas ayuda? Responde a tu correo de bienvenida o escribe a",
+    "requestFreshLink": "Solicitar un nuevo correo del portal",
+    "emailUs": "Escríbenos",
+    "errorTitle": {
+      "noToken": "Falta el enlace del portal",
+      "expired": "El enlace del portal ha caducado",
+      "sdkMissing": "El servicio se está iniciando",
+      "fetchFailed": "No se pudo cargar tu apadrinamiento"
+    }
+  }
 }

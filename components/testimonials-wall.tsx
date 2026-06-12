@@ -3,6 +3,7 @@ import {
   hasLiveTestimonials,
   type Testimonial as DataTestimonial,
 } from '@/lib/data/testimonials'
+import { ReviewTranslateButton } from '@/components/review-translate-button'
 
 /**
  * Public Testimonial shape accepted by `TestimonialsWall` when `items` is
@@ -24,6 +25,8 @@ export interface Testimonial {
   date?: string
   /** Optional inline photo of the author */
   authorImage?: string | null
+  /** BCP47 language code the review was written in (e.g. 'de'). Used as Google Translate source hint. */
+  lang?: string
 }
 
 export interface TestimonialsWallProps {
@@ -105,10 +108,10 @@ function SourceBadge({ source }: { source: Testimonial['source'] }) {
 
 // 4 brand-pastel tints used for initials avatars. Deterministic hash → index.
 const AVATAR_TINTS = [
-  'bg-amber-100 text-amber-800',
-  'bg-emerald-100 text-emerald-800',
-  'bg-sky-100 text-sky-800',
-  'bg-rose-100 text-rose-800',
+  'bg-primary/10 text-primary',
+  'bg-secondary text-secondary-foreground',
+  'bg-accent/15 text-accent',
+  'bg-muted text-muted-foreground',
 ] as const
 
 function tintForAuthor(author: string): string {
@@ -185,6 +188,7 @@ function adaptDataTestimonial(t: DataTestimonial): Testimonial {
     source,
     date: t.date ?? undefined,
     authorImage: t.photoUrl ?? null,
+    lang: t.locale ?? undefined,
   }
 }
 
@@ -203,15 +207,21 @@ function TestimonialFigure({ t }: { t: Testimonial }) {
         </div>
       )}
 
-      <blockquote className="text-foreground text-base md:text-lg leading-relaxed mb-6 grow">
-        <span
-          aria-hidden="true"
-          className="text-accent text-3xl leading-none font-serif align-top mr-1 select-none"
-        >
-          &ldquo;
-        </span>
-        {t.quote}
-      </blockquote>
+      <ReviewTranslateButton
+        text={t.quote}
+        sourceLang={t.lang}
+        className="mb-6 grow"
+      >
+        <blockquote className="text-foreground text-base md:text-lg leading-relaxed mb-3 grow">
+          <span
+            aria-hidden="true"
+            className="text-accent text-3xl leading-none font-serif align-top mr-1 select-none"
+          >
+            &ldquo;
+          </span>
+          {t.quote}
+        </blockquote>
+      </ReviewTranslateButton>
 
       <figcaption className="flex items-center gap-3 mt-auto">
         <AuthorAvatar image={t.authorImage} author={t.author} />

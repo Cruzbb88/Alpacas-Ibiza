@@ -184,7 +184,7 @@ export function PaymentHistoryTable({ payments, locale }: PaymentHistoryTablePro
           {hidden > 0 && (
             <p style={{ margin: '12px 0 0', fontSize: 12, color: '#71717a', fontStyle: 'italic' }}>
               + {hidden} earlier charge{hidden === 1 ? '' : 's'} — contact us at{' '}
-              <a href="mailto:info@alpacasibiza.com" style={{ color: '#556B2F' }}>
+              <a href="mailto:info@alpacasibiza.com" style={{ color: 'hsl(var(--primary))' }}>
                 info@alpacasibiza.com
               </a>{' '}
               for full history.

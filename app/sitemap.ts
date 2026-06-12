@@ -8,6 +8,7 @@ import { getProviders } from '@/lib/integrations'
 const routes = [
     '',           // homepage
     '/tours',
+    '/visit',
     '/about',
     '/adopt',     // primary conversion page — was missing per SEO audit 2026-05-29
     '/contact',
@@ -21,6 +22,9 @@ const routes = [
     '/experiences/romantic-sunset',
     '/experiences/family-farm-days',
     '/gifts',
+    '/redeem-voucher',  // gift voucher redemption — public-facing
+    '/weaving',
+    '/skein',           // alpaca-fibre sponsor page
     '/sustainability',
     '/weddings',
     '/workshops',
@@ -29,11 +33,13 @@ const routes = [
     '/terms',
     '/cookies',
     '/impressum', // LSSI-CE Art. 10 legal notice — required for EU-targeted commercial site (indexable)
-    // '/media'     — excluded: no live photos yet; page is noindex, direct URL still works
-    // '/press'     — excluded: no live press logos/articles yet; page is noindex, direct URL still works
+    '/press',     // press room
     // '/press-kit' — excluded: no assets uploaded yet; page is noindex, direct URL still works
+    // '/media'     — excluded: no live photos yet; page is noindex, direct URL still works
     '/sitemap',   // human-readable site map
     '/journal',   // journal index
+    '/herd-diary', // herd diary feed (empty-state until owner adds events)
+    '/newsletter/archive',  // public newsletter archive (empty-state until owner adds issues)
 ]
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -55,38 +61,42 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         }
     }
 
-    // Dynamic alpaca detail pages — one per alpaca per locale (84 entries total)
+    // Dynamic alpaca detail pages — one per alpaca per locale (14 alpacas × N locales)
     const tenant = await getTenant()
     const providers = getProviders(tenant)
     const animals = providers.content.listAnimals()
-    for (const animal of animals) {
-        entries.push({
-            url: `${BASE_URL}/en/alpacas/${animal.id}`,
-            lastModified: new Date(),
-            changeFrequency: 'monthly',
-            priority: 0.7,
-            alternates: {
-                languages: Object.fromEntries(
-                    i18nConfig.locales.map((l) => [l, `${BASE_URL}/${l}/alpacas/${animal.id}`])
-                ),
-            },
-        })
+    for (const locale of i18nConfig.locales) {
+        for (const animal of animals) {
+            entries.push({
+                url: `${BASE_URL}/${locale}/alpacas/${animal.id}`,
+                lastModified: new Date(),
+                changeFrequency: 'monthly',
+                priority: 0.7,
+                alternates: {
+                    languages: Object.fromEntries(
+                        i18nConfig.locales.map((l) => [l, `${BASE_URL}/${l}/alpacas/${animal.id}`])
+                    ),
+                },
+            })
+        }
     }
 
     // Dynamic journal post entries — one per post per locale
     const posts = listJournalPostsNewest()
-    for (const post of posts) {
-        entries.push({
-            url: `${BASE_URL}/en/journal/${post.slug}`,
-            lastModified: new Date(post.updatedAt ?? post.publishedAt),
-            changeFrequency: 'yearly',
-            priority: 0.6,
-            alternates: {
-                languages: Object.fromEntries(
-                    i18nConfig.locales.map((l) => [l, `${BASE_URL}/${l}/journal/${post.slug}`])
-                ),
-            },
-        })
+    for (const locale of i18nConfig.locales) {
+        for (const post of posts) {
+            entries.push({
+                url: `${BASE_URL}/${locale}/journal/${post.slug}`,
+                lastModified: new Date(post.updatedAt ?? post.publishedAt),
+                changeFrequency: 'yearly',
+                priority: 0.6,
+                alternates: {
+                    languages: Object.fromEntries(
+                        i18nConfig.locales.map((l) => [l, `${BASE_URL}/${l}/journal/${post.slug}`])
+                    ),
+                },
+            })
+        }
     }
 
     return entries

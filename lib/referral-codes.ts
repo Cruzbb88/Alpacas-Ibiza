@@ -34,12 +34,21 @@
  */
 
 import { createHmac } from 'crypto'
+import type { MollieClient } from '@mollie/api-client'
 
 /** RFC 4648 base32 alphabet — uppercase, no padding, no confusables. */
 const BASE32_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'
 
-/** Format guard regex — exported only via verifyReferralCode for the metadata write path. */
-const REFERRAL_CODE_FORMAT = /^[A-Z0-9]{6}$/
+/**
+ * Format guard regex — 6-char RFC 4648 base32 suffix, uppercase.
+ * Exported for use in UI validation so consumers don't re-derive the pattern.
+ * The prefix-free format (`/^[A-Z0-9]{6}$/`) matches what generateReferralCode
+ * emits; the old `ALPACA-[A-Z0-9]{6}` UI guard was wrong and stripped every
+ * valid code before it reached checkout.
+ */
+export const REFERRAL_CODE_RE = /^[A-Z0-9]{6}$/
+/** @internal alias kept for the metadata write path inside this module. */
+const REFERRAL_CODE_FORMAT = REFERRAL_CODE_RE
 
 /** Length in chars of every emitted referral code. Single source of truth. */
 export const REFERRAL_CODE_LENGTH = 6
@@ -122,4 +131,69 @@ export function verifyReferralCode(code: string | null | undefined): string | nu
   const upper = code.toUpperCase()
   if (!REFERRAL_CODE_FORMAT.test(upper)) return null
   return upper
+}
+
+// ── Referrer lookup — additive export ────────────────────────────────────────
+
+/**
+ * Resolve a referral code slug to the referrer's `{ email, name }` by scanning
+ * Mollie customers.
+ *
+ * Strategy: iterate Mollie customers (capped at 200 — same bound as
+ * referral-count-reader.ts), regenerate the deterministic code for each
+ * customer's ID via `generateReferralCode`, and return the first match.
+ *
+ * Why this approach:
+ *   Rule 2 in the module header says "one-way — we never need to reverse the
+ *   code back to a customerId". The code is an HMAC derivation of the customer
+ *   ID; there is no stored reverse map. To look up who generated a given code
+ *   we must iterate customers and re-derive, exactly as the admin referrals
+ *   page does. At small scale (≤200 donors) this is acceptably fast; at larger
+ *   scale we'd add a DB column (out of scope for this build).
+ *
+ * Fail-quiet: returns `null` on any error, missing SDK, or no match found.
+ * The caller (`sendReferrerRewardQuiet`) converts `null` into `reason: 'referrer-not-found'`.
+ *
+ * @param code     The 6-char referral code stored in `metadata.referredBy`.
+ * @param mollie   A live MollieClient instance (caller-provided).
+ */
+export async function lookupReferrer(
+  code: string,
+  mollie: MollieClient,
+): Promise<{ email: string; name: string | null } | null> {
+  // Guard: must be a valid format before burning API quota
+  if (!verifyReferralCode(code)) return null
+
+  let signingKey: string
+  try {
+    signingKey = getSigningKey()
+  } catch {
+    return null
+  }
+
+  const CUSTOMER_CAP = 200
+  let scanned = 0
+
+  try {
+    for await (const customer of mollie.customers.iterate()) {
+      if (scanned >= CUSTOMER_CAP) break
+      scanned++
+      // Re-derive the deterministic code for this customer to check for a match.
+      // We avoid calling generateReferralCode() (which would call getSigningKey()
+      // again in a loop) by inlining the derivation here with the key we already
+      // resolved once above.
+      const digest = createHmac('sha256', signingKey).update(customer.id.trim()).digest()
+      const derived = bufferToBase32(digest, REFERRAL_CODE_LENGTH)
+      if (derived === code.toUpperCase()) {
+        return {
+          email: customer.email ?? '',
+          name: customer.name ?? null,
+        }
+      }
+    }
+  } catch {
+    return null
+  }
+
+  return null
 }

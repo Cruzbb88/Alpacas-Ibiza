@@ -53,7 +53,7 @@ For each row below: paste the value, select **all 3 environments** (Production, 
 |---|---|---|---|
 | `RESEND_API_KEY` | `re_xxxxxxxxxxxx` | [resend.com/api-keys](https://resend.com/api-keys) → Create API Key | Domain unverified at this point is OK — emails will send from Resend's shared domain until DKIM verified |
 | `CONTACT_EMAIL` | `info@alpacasibiza.com` | (your business inbox) | All form submissions route here |
-| `NEXTAUTH_SECRET` | `openssl rand -hex 32` output | Run locally: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"` | Used for JWT signing on admin login |
+| `NEXTAUTH_SECRET` | output of `openssl rand -hex 32` | Run `openssl rand -hex 32` in your terminal — produces a 64-char hex string | Used for JWT signing on admin login |
 | `NEXTAUTH_URL` | `https://alpacasibiza.com` | (your final domain) | Will fail-quiet on preview URLs |
 | `ADMIN_USERNAME` | (your pick) | — | Used to sign in at `/admin/login` |
 | `ADMIN_PASSWORD` | (a strong password) | Generate at [1password.com/password-generator](https://1password.com/password-generator/) — 24+ chars | Hashed in transit only |
@@ -78,7 +78,7 @@ For each row below: paste the value, select **all 3 environments** (Production, 
 | `GA4_PRIVATE_KEY` | same JSON — **paste with literal `\n` chars** | same — Vercel preserves them |
 | `GOOGLE_PLACES_API_KEY` | [GCP Maps Platform → Credentials](https://console.cloud.google.com/google/maps-apis/credentials) | Live Google Reviews badge |
 | `GOOGLE_PLACES_PLACE_ID` | [Place ID finder](https://developers.google.com/maps/documentation/places/web-service/place-id) | same |
-| `PAYMENT_VENDOR` | `manual-mailto` to start; `stripe-direct` later | Selects payment adapter |
+| `PAYMENT_VENDOR` | `mollie` (recommended, default per ADR 019) or `stripe` | Selects payment adapter — if unset, adopt CTA falls back to mailto |
 | `STRIPE_SECRET_KEY` | [stripe.com/dashboard/apikeys](https://dashboard.stripe.com/apikeys) | Adopt-a-Paca checkout |
 | `STRIPE_WEBHOOK_SECRET` | Stripe Dashboard → Developers → Webhooks → endpoint signing secret | webhook signature verification |
 | `STRIPE_ADOPT_PRICE_ID_MONTHLY` | Stripe Dashboard → Products → Adopt-a-Paca → Pricing | recurring sub |
@@ -126,17 +126,25 @@ After you switch DNS to production (next doc), update the webhook URL to `https:
 
 ---
 
-## Phase 5 — Cron jobs (auto-enabled on Vercel Hobby tier)
+## Phase 5 — Cron jobs (auto-enabled on Vercel Pro tier)
 
-The repo already has [`vercel.json`](vercel.json) with one cron:
+The repo already has [`vercel.json`](vercel.json) with **7 crons**:
 
-```json
-{ "crons": [{ "path": "/api/owner-digest", "schedule": "0 9 * * MON" }] }
-```
+| Path | Schedule | What it sends |
+|---|---|---|
+| `/api/owner-digest` | Mon 09:00 UTC | Weekly booking/revenue digest |
+| `/api/owner-mrr-digest` | Mon 06:00 UTC | MRR/ARR/dunning summary |
+| `/api/adopt-quarterly-update` | 1 Jan/Apr/Jul/Oct 09:00 UTC | Quarterly farm-news email to all adopters |
+| `/api/adopt-deferred-gifts` | Daily 09:00 UTC | Processes gift adoptions on their delivery date |
+| `/api/adopt-renewal-reminders` | Daily 10:00 UTC | 7-day renewal reminder to annual adopters |
+| `/api/adopt-milestone-emails` | Daily 11:00 UTC | Milestone celebrations (6-month, 1-year, etc.) |
+| `/api/alpaca-birthday-cards` | Daily 09:00 UTC | Birthday cards for adopter's chosen alpaca |
 
-Mondays 9am UTC — sends owner the weekly digest. Vercel auto-detects from `vercel.json`. No manual setup needed.
+**Important:** Vercel Hobby plan is limited to **2 crons**. With 7 crons configured, the excess 5 will silently never fire on Hobby. **Upgrade to Vercel Pro** (or confirm you are already on Pro) before relying on the quarterly, gifts, renewal-reminder, milestone, or birthday-card crons.
 
-To trigger manually for testing:
+Vercel auto-detects crons from `vercel.json`. No manual setup needed beyond the plan check.
+
+To trigger any cron manually for testing:
 
 ```
 curl 'https://<your-vercel-url>/api/owner-digest?secret=<CRON_SECRET>'

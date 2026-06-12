@@ -1,12 +1,14 @@
 import type { Locale } from '@/i18n.config'
 import { getTranslations } from 'next-intl/server'
+import Link from 'next/link'
 import { Hero } from '@/components/hero'
+import { productSchema, toJsonLd } from '@/lib/structured-data'
+import { SITE_BASE_URL, getFareHarborEmbedUrl } from '@/lib/config'
 import { FareHarborCalendar } from '@/components/booking/fareharbor-calendar'
 import { CancellationBadge } from '@/components/booking/cancellation-badge'
 import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
 import { GiftFlow, type GiftType } from '@/components/gifts/gift-flow'
 import { getPaymentAdapter, ADOPT_FALLBACK_MAILTO } from '@/lib/payment-vendor'
-import { getFareHarborEmbedUrl } from '@/lib/config'
 import type { Metadata } from 'next'
 import { buildLocaleAlternates } from '@/lib/i18n-metadata'
 import { getOgImage } from '@/lib/og-images'
@@ -63,8 +65,23 @@ export default async function GiftsPage({
             'mailto:info@alpacasibiza.com?subject=Shop%20credit%20gift%20voucher',
     }
 
+    // Build #5 — Product JSON-LD for gift voucher.
+    const giftVoucherSchema = productSchema({
+        name: 'Alpacas Ibiza Gift Voucher',
+        description: translate('gifts.meta.description') || 'Give someone a memorable day with our alpaca herd. Gift vouchers valid for any of our tours.',
+        image: `${SITE_BASE_URL}/images/gallery/herd-chicas.jpg`,
+        priceEur: 21.19,  // Lowest tier: tour-voucher entry price (matches TOUR_BASE_PRICE_EUR)
+        url: `${SITE_BASE_URL}/${locale}/gifts`,
+        availability: 'InStock',
+    })
+
     return (
         <div className="flex flex-col min-h-screen">
+            {/* Build #5 — Product JSON-LD for gift voucher */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: toJsonLd(giftVoucherSchema) }}
+            />
             <PageBreadcrumbs
                 locale={locale}
                 homeLabel={translate('nav.home') || 'Home'}
@@ -80,6 +97,7 @@ export default async function GiftsPage({
                     label: translate('gifts.hero.cta') || 'Buy a gift voucher',
                     href: '#gift-booking',
                 }}
+                backgroundImage="/images/gallery/herd-chicas.jpg"
             />
 
             <section className="w-full py-16 md:py-24 px-4 bg-background">
@@ -134,7 +152,7 @@ export default async function GiftsPage({
                         giftTypes: {
                             tour: {
                                 title: translate('gifts.flow.tourTitle') || 'Tour voucher',
-                                price: translate('gifts.flow.tourPrice') || 'From €45 / guest',
+                                price: translate('gifts.flow.tourPrice') || 'From €21.19 / guest',
                                 description:
                                     translate('gifts.flow.tourDescription') ||
                                     '90-min farm tour, valid for 12 months. Choose any tour type at booking.',
@@ -220,6 +238,21 @@ export default async function GiftsPage({
                             </p>
                         </div>
                     </div>
+                </div>
+            </section>
+
+            {/* Redeem an existing voucher */}
+            <section className="w-full py-10 px-4 bg-background border-t border-border">
+                <div className="max-w-xl mx-auto text-center">
+                    <p className="text-sm text-foreground/70">
+                        {translate('gifts.redeemPrompt') || 'Already have a voucher?'}{' '}
+                        <Link
+                            href={`/${locale}/redeem-voucher`}
+                            className="font-medium text-accent underline underline-offset-2 hover:text-accent/80"
+                        >
+                            {translate('gifts.redeemLink') || 'Redeem it here'}
+                        </Link>
+                    </p>
                 </div>
             </section>
         </div>

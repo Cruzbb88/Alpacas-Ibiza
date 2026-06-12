@@ -25,6 +25,7 @@
 import { NextResponse } from 'next/server'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
 import { rateLimit, getClientIp } from '@/lib/rate-limit'
+import { appendClientError } from '@/lib/client-error-buffer'
 
 const RATE_LIMIT = 20
 const RATE_WINDOW_MS = 60 * 60 * 1000 // 1 hour
@@ -62,7 +63,11 @@ export async function POST(request: Request) {
   const digest = typeof payload.digest === 'string' ? payload.digest.slice(0, 64) : undefined
   const ua = (request.headers.get('user-agent') ?? '').slice(0, 100)
 
-  log.error('client error', { message, stack, path, type, ...(digest ? { digest } : {}), ua })
+  log.error('client error', { message, stack, path, type, ...(digest !== undefined ? { digest } : {}), ua })
+
+  // Append to in-process ring buffer for /admin/monitoring. The buffer module's
+  // own try/catch guarantees no throw — no outer wrapper needed.
+  appendClientError({ type, message, path, ...(digest !== undefined ? { digest } : {}), ip })
 
   return attachRequestId(new NextResponse(null, { status: 204 }), reqId)
 }

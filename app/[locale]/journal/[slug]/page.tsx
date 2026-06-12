@@ -28,6 +28,7 @@ import { ReadingProgress } from '@/components/reading-progress'
 import { ShareButtons } from '@/components/share-buttons'
 import { JournalToc, type TocItem } from '@/components/journal-toc'
 import { JournalCard } from '@/components/journal-card'
+import { NewsletterForm } from '@/components/newsletter-form'
 
 import { SITE_BASE_URL as BASE_URL } from '@/lib/config'
 
@@ -144,7 +145,7 @@ export default async function JournalPostPage({
     publisher: {
       '@type': 'Organization',
       name: 'Alpacas Ibiza',
-      logo: { '@type': 'ImageObject', url: `${BASE_URL}/images/logo.webp` },
+      logo: { '@type': 'ImageObject', url: `${BASE_URL}/images/brand/logo.png` },
     },
     mainEntityOfPage: { '@type': 'WebPage', '@id': `${BASE_URL}/${locale}/journal/${post.slug}` },
     image: post.heroImage ? `${BASE_URL}${post.heroImage}` : ogImageFallback.url,
@@ -306,6 +307,22 @@ export default async function JournalPostPage({
           </div>
         </section>
       )}
+
+      {/* Newsletter cross-sell — an engaged reader at the foot of a post is a
+          warm subscribe lead. Same client form + keys as the homepage/index. */}
+      <section className="w-full py-12 md:py-16 px-4 bg-background border-t border-border">
+        <div className="max-w-2xl mx-auto">
+          <div className="text-center mb-6">
+            <h2 className="text-xl font-semibold text-foreground mb-2">
+              {translate('newsletter.title')}
+            </h2>
+            <p className="text-sm text-foreground/70">
+              {translate('newsletter.subtitle')}
+            </p>
+          </div>
+          <NewsletterForm locale={locale} source="journal-post" />
+        </div>
+      </section>
 
     </main>
   )

@@ -30,6 +30,13 @@ export const alpacasibiza = Object.freeze({
    * OWNER_INPUT_NEEDED: confirm this is still the active CIF before going live.
    */
   cif: 'Y6917111J',
+  /**
+   * EU VAT number extracted from live-site /algemene-voorwaarden (2026-05-31).
+   * Source: "VAT: ESY6917111J" in LIVE_SITE_CONTENT_INVENTORY.md.
+   * OWNER_INPUT_NEEDED: confirm this is still the active VAT number before going live.
+   * Terms page omits the VAT line when this is null.
+   */
+  vatNumber: 'ESY6917111J' as string | null,
   tagline: 'The very first alpaca farm on Ibiza',
   siteUrl: 'https://alpacasibiza.com',
   hosts: Object.freeze([
@@ -80,6 +87,7 @@ export const alpacasibiza = Object.freeze({
      */
     postalCode: '07850',
   }),
+  // OWNER_VERIFY: lat/lng not authoritatively confirmed; check against Google Maps pin before launch.
   geo: Object.freeze({
     latitude: 38.9861,
     longitude: 1.5228,
@@ -103,11 +111,13 @@ export const alpacasibiza = Object.freeze({
    * File: LOGO-alpacas-ibiza-DEF.png (full-size Squarespace CDN variant).
    * ACTION: per CONTENT-MIGRATION-2026-05-31-OWNER-REVIEW.md §6, owner to decide
    * between keeping this Squarespace CDN URL (a) or self-hosting (b, recommended).
-   * If Squarespace subscription lapses, this URL will 404.
+   * Self-hosted from the live site (2026-06-06) so it survives the old
+   * Squarespace site being taken down. Was a Squarespace CDN URL that would
+   * 404 once the subscription lapses.
    */
-  logoUrl: 'https://images.squarespace-cdn.com/content/v1/63f5dee81e8cfc3a0d2638e3/db346187-6229-47b0-b5d1-57ba89a893d1/LOGO-alpacas-ibiza-DEF.png',
+  logoUrl: '/images/brand/logo.png',
   /**
-   * UNMAPPED — /public/images/og-default.webp listed in OWNER_INPUT_NEEDED.md
+   * UNMAPPED — /public/images/heroes/home.jpg listed in OWNER_INPUT_NEEDED.md
    * content shopping list but file does not exist.
    */
   ogImageUrl: null,
@@ -183,6 +193,26 @@ export const alpacasibiza = Object.freeze({
      */
     gtmContainerId: 'GTM-KR3CGLS6',
   }),
+
+  // ── Trust / compliance (Build #4 — Spanish regulatory equivalents of WWF UK badge) ──
+  /**
+   * UNMAPPED — OWNER_INPUT_NEEDED: supply the Consell Insular d'Eivissa Turismo Activo
+   * registration number (e.g. "Registro Insular de Turismo de Ibiza XX-XXXXX").
+   * Footer renders iff set.
+   */
+  touristRegistration: null,
+  /**
+   * UNMAPPED — OWNER_INPUT_NEEDED: supply if the farm holds a carnet de manipulador
+   * de alimentos (required for selling farm produce to the public).
+   * Footer renders iff set.
+   */
+  foodHandlingCert: null,
+  /**
+   * UNMAPPED — OWNER_INPUT_NEEDED: add certifications such as Consell Balear Producció
+   * Agraria Ecológica (organic certification, used by Can Martí competitor) when obtained.
+   * Format: [{ label: 'Organic Certified', certifier: 'CBPAE', logoSrc: '/images/badges/cbpae.svg' }]
+   */
+  trustBadges: [],
 
   // ── i18n ────────────────────────────────────────────────────────────────────
   /**

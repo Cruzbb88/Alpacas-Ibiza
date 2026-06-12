@@ -159,8 +159,10 @@ async function sendTelegram(
 }
 
 // ── Discord ──────────────────────────────────────────────────────────────────
-// Discord incoming webhooks accept the same `{ content, embeds }` JSON shape as
-// Slack — no additional auth header required beyond the URL token itself.
+// Discord incoming webhooks use their OWN payload shape — `{ content, embeds }`
+// — NOT Slack's `{ text, blocks }`. Sending Slack Block Kit to Discord yields a
+// 400 "Cannot send an empty message" because Discord ignores `text`/`blocks`.
+// Embeds use `{ title, color, fields: [{ name, value, inline }] }`.
 
 async function sendDiscord(
   webhookUrl: string,
@@ -170,31 +172,18 @@ async function sendDiscord(
   const payloadText = `🦙 Alpaca adoption: ${severityUpper(input.severity)} — failureCount=${input.failureCount} on ${input.vendor} customer ${input.customerId} (${donorDisplay})`
 
   const body = JSON.stringify({
-    text: payloadText,
-    blocks: [
+    content: payloadText,
+    embeds: [
       {
-        type: 'header',
-        text: {
-          type: 'plain_text',
-          text: 'Adopt-a-Paca escalation',
-        },
-      },
-      {
-        type: 'section',
+        title: 'Adopt-a-Paca escalation',
+        color: 0xcc0000,
         fields: [
-          { type: 'mrkdwn', text: `*Severity:* ${input.severity}` },
-          { type: 'mrkdwn', text: `*Failures:* ${input.failureCount}` },
-          { type: 'mrkdwn', text: `*Vendor:* ${input.vendor}` },
-          { type: 'mrkdwn', text: `*Donor:* ${donorDisplay}` },
-        ],
-      },
-      {
-        type: 'context',
-        elements: [
-          {
-            type: 'mrkdwn',
-            text: `Customer: \`${input.customerId}\` | Ref: \`${input.paymentRef ?? '—'}\``,
-          },
+          { name: 'Severity', value: severityUpper(input.severity), inline: true },
+          { name: 'Failures', value: String(input.failureCount), inline: true },
+          { name: 'Vendor', value: String(input.vendor), inline: true },
+          { name: 'Donor', value: donorDisplay, inline: true },
+          { name: 'Customer', value: `\`${input.customerId}\``, inline: false },
+          { name: 'Ref', value: `\`${input.paymentRef ?? '—'}\``, inline: false },
         ],
       },
     ],

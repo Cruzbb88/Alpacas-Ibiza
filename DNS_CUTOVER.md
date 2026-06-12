@@ -19,6 +19,33 @@ Every line MUST be ✅ before proceeding. If any is red, stop.
 
 ---
 
+## Complete DNS records reference
+
+All records you need at your DNS host (One.com, Squarespace DNS, GoDaddy, Cloudflare — wherever your DNS is managed). Add the Resend rows BEFORE cutover to ensure email works from day one.
+
+| Type | Host / Name | Value | TTL | Purpose |
+|---|---|---|---|---|
+| `A` | `@` (apex) | `76.76.21.21` | 3600 | Vercel hosting |
+| `CNAME` | `www` | `cname.vercel-dns.com` | 3600 | Vercel www redirect |
+| `MX` | `@` | (keep existing — do NOT change) | — | Email delivery |
+| `TXT` | `@` | `v=spf1 include:_spf.resend.com -all` | 3600 | Resend SPF (replaces or merges with existing SPF) |
+| `CNAME` | `resend._domainkey` | `resend._domainkey.resend.com` (Resend provides the exact CNAME target in their dashboard) | 3600 | Resend DKIM signing |
+| `TXT` | `_dmarc` | `v=DMARC1; p=quarantine; rua=mailto:info@alpacasibiza.com` | 3600 | DMARC — bounces quarantined, reports to owner |
+
+**How to get the exact Resend DKIM CNAME value:** Resend dashboard → Domains → Add Domain → `alpacasibiza.com` → Resend shows you all 3 records with exact copy-paste values. Use those — do not guess. The SPF and DMARC values above are stable public Resend values.
+
+**SPF note:** If your DNS already has a `v=spf1` TXT record on `@` (common with Google Workspace), you must MERGE them — only one SPF record is allowed per name. Combine: `v=spf1 include:_spf.resend.com include:_spf.google.com ~all`.
+
+**One.com specific steps:**
+1. Log in → Domains → DNS settings for `alpacasibiza.com`
+2. Under "A records" → delete the existing A record(s) → add new A record: `@` / `76.76.21.21`
+3. Under "CNAME records" → delete the existing `www` CNAME → add: `www` / `cname.vercel-dns.com`
+4. Under "TXT records" → add SPF, DMARC
+5. Under "CNAME records" → add `resend._domainkey` / (value from Resend dashboard)
+6. **Do NOT touch** your MX records — those control your email inbox
+
+---
+
 ## Phase A — Add custom domain in Vercel
 
 1. Vercel project → **Settings** → **Domains** → **Add**

@@ -4,6 +4,7 @@ import type { Locale } from '@/i18n.config'
 import { getTranslations } from 'next-intl/server'
 import { buildLocaleAlternates } from '@/lib/i18n-metadata'
 import { getOgImage } from '@/lib/og-images'
+import { shopCategoryItemListSchema, toJsonLd } from '@/lib/structured-data'
 
 export async function generateMetadata({
   params,
@@ -32,6 +33,20 @@ export async function generateMetadata({
 export default async function ShopPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params
   const translate = await getTranslations()
+
+  const baseUrl = `https://alpacasibiza.com/${locale}/shop`
+
+  // Build #5 — ItemList JSON-LD wrapping the four shop category products.
+  const shopItemListSchema = shopCategoryItemListSchema({
+    categoryName: 'Alpacas Ibiza Farm Shop',
+    baseUrl,
+    items: [
+      { name: 'Woven Alpaca Textiles', url: `${baseUrl}/woven`, description: 'Hand-woven scarves, blankets and throws from Es Currals alpaca wool.' },
+      { name: 'Custom Commission', url: `${baseUrl}/commission`, description: 'Bespoke woven pieces crafted to order by San at Wishfulfilling Weaving.' },
+      { name: 'Alcaca Oro Negro — Alpaca Manure Compost', url: `${baseUrl}/alcaca`, description: 'Premium slow-release organic fertiliser from our alpaca herd.' },
+      { name: 'Name Your Skein — Spring Shearing Sponsorship', url: `https://alpacasibiza.com/${locale}/skein`, description: 'Sponsor an alpaca\'s spring shearing and receive their spun wool in autumn.' },
+    ],
+  })
 
   const shopCategories = [
     {
@@ -63,12 +78,20 @@ export default async function ShopPage({ params }: { params: Promise<{ locale: L
 
   return (
     <>
-      <section className="w-full py-20 px-4 bg-gradient-to-br from-primary/10 to-accent/10">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
+      {/* Build #5 — ItemList Product JSON-LD for shop index */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: toJsonLd(shopItemListSchema) }}
+      />
+      <section className="relative w-full py-20 px-4 overflow-hidden min-h-[300px] flex items-center">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/images/gallery/weaving-15.jpg" alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-black/45" aria-hidden="true" />
+        <div className="relative max-w-4xl mx-auto text-center">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
             {translate('shop.title')}
           </h1>
-          <p className="text-lg text-foreground/70">
+          <p className="text-lg text-white/85">
             {translate('shop.subtitle')}
           </p>
         </div>

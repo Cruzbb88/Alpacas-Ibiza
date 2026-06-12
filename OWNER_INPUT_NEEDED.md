@@ -1,5 +1,7 @@
 # Owner Input Needed — Alpacas Ibiza Site
 
+> 📋 **For the exhaustive, file-cited gap list (every null/placeholder/UNMAPPED field with `file:line`), see [OWNER_DATA_LEDGER_2026-06-10.md](OWNER_DATA_LEDGER_2026-06-10.md).** That ledger is newer and supersedes the tour-pricing section below (the site has ONE Alpaca Tour + Yoga + Gift Card, not 4 tours). This file remains the narrative + accounts/access guide.
+
 **Context**: the site code is ready. These are the things only the owner can confirm, produce, or grant access to. Grouped by priority so you can ask in batches.
 
 > ⚠️ = launch blocker
@@ -85,11 +87,7 @@ For a business registered in Spain, the footer needs:
    - `booking.created` → `POST /api/reminder` (48h before tour — reminder email)
    - `availability.completed` → `POST /api/review-request` (24h after tour — review request email)
    Include header `x-webhook-secret: <FAREHARBOR_WEBHOOK_SECRET>` (we set this env var)
-3. **Item IDs for each tour** — in FareHarbor go to Online Booking → Booking Flows → Default Flow → click each tour. The URL shows `/items/<ID>/`. We need the IDs for:
-   - Meet the Herd
-   - Weaving Workshop
-   - Farm Experience
-   - Photo Session
+3. **Item IDs for each tour** — Run DevTools script #3 from `handoff/SQUARESPACE_DEVTOOLS_SCRIPTS.md` while logged into the live site. The script visits each tour page and copies all FareHarbor item IDs to the clipboard in ~5 minutes. No FareHarbor admin login required. IDs needed: Meet the Herd, Weaving Workshop, Farm Experience, Photo Session, plus all experience + product pages.
    (Used for per-tour "Book this one" buttons and tour-specific availability.)
 4. **Gift card item setup** — FareHarbor → Build → Gift Cards → create gift card offering. Gets embedded on `/gifts` page.
 5. **Discount codes** — FareHarbor → Build → Discount Codes. Suggested codes:
@@ -136,7 +134,7 @@ The `GoogleReviewsBadge` component is built but needs:
 - Vercel account connected to the GitHub repo
 - Environment variables pasted into Vercel dashboard (everything from `.env.local.example`)
 - Custom domain `alpacasibiza.com` pointed at Vercel
-- **Set strong `ADMIN_USERNAME` + `ADMIN_PASSWORD`** before going live (currently defaults are `admin`/`password`)
+- **Set strong `ADMIN_USERNAME` + `ADMIN_PASSWORD`** before going live — admin login is fail-CLOSED when either is unset (no default credentials exist in the code)
 
 ### Resend domain verification
 Right now emails go from Resend's default domain. For production:
@@ -144,20 +142,28 @@ Right now emails go from Resend's default domain. For production:
 - Add DKIM/SPF DNS records (Resend provides them, owner pastes into domain registrar)
 - Change `from` addresses in routes to `hello@alpacasibiza.com`
 
-### Cloudflare Turnstile registration
-Free, 5 minutes. Protects contact/commission/newsletter forms from bots.
-- Register site at https://dash.cloudflare.com → Turnstile
-- Choose "Managed" widget
-- Copy **Site Key** (public) → env `NEXT_PUBLIC_TURNSTILE_SITE_KEY`
-- Copy **Secret Key** (private) → env `TURNSTILE_SECRET_KEY`
-- Without these set, forms still work but are unprotected
+### Form bot protection — reuse your existing reCAPTCHA (recommended) OR Cloudflare Turnstile
+The live site already runs **Google reCAPTCHA** (confirmed in its served HTML, 2026-06-10). The redesign supports it with **zero code changes** — see [PLUGIN_PARITY_2026-06-10.md](PLUGIN_PARITY_2026-06-10.md).
 
-### Cron service for weekly digest
-The `/api/owner-digest` endpoint sends a weekly email. Needs to be triggered by:
-- **Vercel Cron** (easiest — `vercel.json` file, free tier supports weekly)
-- Or UptimeRobot free plan hitting the URL every Monday 9am
-- Pass `?secret=<CRON_SECRET>` in the URL
-- Requires the FareHarbor API creds from above to return real data
+**Recommended (less work — reuse what you already have):**
+- `CAPTCHA_PROVIDER=recaptcha`
+- `RECAPTCHA_SECRET_KEY=<your existing reCAPTCHA secret>`
+- `NEXT_PUBLIC_RECAPTCHA_SITE_KEY=<your existing reCAPTCHA site key>`
+- (optional) `RECAPTCHA_MIN_SCORE=0.5` — raise to 0.7 for stricter filtering
+
+**Alternative (Cloudflare Turnstile — the redesign's default; free, ~5 min):**
+- Register at https://dash.cloudflare.com → Turnstile, "Managed" widget
+- `NEXT_PUBLIC_TURNSTILE_SITE_KEY` + `TURNSTILE_SECRET_KEY` (CAPTCHA_PROVIDER defaults to turnstile)
+
+Either way: without keys, forms still work but are unprotected (fail-open + prod warning). All 6 form endpoints route through whichever provider is selected.
+
+### Cron jobs (7 configured — Vercel Pro is NOT required — saves ~€220/yr)
+`vercel.json` wires 7 cron jobs (owner digest, MRR digest, quarterly update, gifts, renewal reminders, milestones, birthday cards). **All 7 fire daily or less often** (weekly/quarterly/daily — none sub-daily). Per 2026 Vercel pricing, **Hobby (free) allows up to 100 crons/project, capped at once-per-day frequency** — so **all 7 run on the free Hobby plan. You do NOT need Vercel Pro ($20/mo) for these.** (The old "Hobby only supports 2 crons" guidance is outdated — Vercel raised it to 100/project on every plan.)
+
+- Verify on your Vercel dashboard after deploy that all 7 crons show as scheduled.
+- **Free fallback if Vercel ever tightens limits:** delete the `crons` block from `vercel.json` and point a free external scheduler (cron-job.org, or a free Cloudflare Worker) at each `/api/*` route — they're already secured by `CRON_SECRET`. €0, ~2h.
+
+All cron routes accept `?secret=<CRON_SECRET>` for manual test triggers. See [VENDOR_COST_REDUCTION_2026-06-11.md](VENDOR_COST_REDUCTION_2026-06-11.md) for the full cost analysis.
 
 ---
 
@@ -166,12 +172,7 @@ The `/api/owner-digest` endpoint sends a weekly email. Needs to be triggered by:
 Same format as the launch section — each idea is a short block. Owner answers questions → we build.
 
 ### "Adopt an Alpaca" monthly subscription
-- Yes / No?
-- Price per month? (suggested: €15)
-- Which alpacas can be sponsored?
-- What does a sponsor get each month? (photo? video? email update? plaque on-site?)
-- Max sponsors per alpaca?
-- Cancellation policy?
+**RESOLVED — code is live at €75/month or €900/year.** Benefits verified from the live site (6 tour entries, 5 kg manure, photo session, 10% weaving discount, 15% farm shop discount, keychain, framed photo, calendar). Owner still needs to provide payment vendor keys (Mollie recommended). See OWNER_LAUNCH_RUNBOOK.md §1c.
 
 ### Photography package (golden-hour shoots with alpacas)
 - Yes / No?

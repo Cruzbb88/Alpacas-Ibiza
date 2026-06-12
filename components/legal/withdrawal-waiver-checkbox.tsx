@@ -24,8 +24,10 @@ interface WithdrawalWaiverCheckboxProps {
  * Pre-ticked boxes or bundled T&C acceptance INVALIDATE the waiver.
  * Box MUST be unticked by default and required for checkout.
  *
- * NOT YET WIRED to the adopt checkout page — pending owner sign-off on copy.
- * See handoff/PEER_REVIEW_2026-05-29-mollie-management.md Cycle 11.
+ * Wired into the adopt checkout page via CheckoutGate (components/adopt/checkout-gate.tsx).
+ * CheckoutGate renders its own inline checkbox using the same i18n keys and blocks checkout
+ * navigation until the donor checks it.
+ * Note: final waiver copy is still owner-blocked (legal review per ADR-022).
  */
 export function WithdrawalWaiverCheckbox({ locale, name = 'withdrawal_waiver', required = true }: WithdrawalWaiverCheckboxProps) {
   const translate = useTranslations()

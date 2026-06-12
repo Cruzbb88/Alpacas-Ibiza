@@ -21,12 +21,12 @@ export async function generateMetadata({
     return {
         title: tr('romantic.metaTitle'),
         description:
-            'A private sunset walk with alpacas at Es Currals, Ibiza. Perfect for couples — cava, tapas, and a professional photographer included.',
+            'A private sunset walk with alpacas at Es Currals, Ibiza. Perfect for couples — advance reservation required.',
         alternates: buildLocaleAlternates(locale, 'experiences/romantic-sunset'),
         openGraph: {
             title: tr('romantic.metaTitle'),
             description:
-                'Private golden-hour walk through the alpaca paddocks with cava, tapas, and photography.',
+                'Private golden-hour walk through the alpaca paddocks. Private booking, advance reservation required.',
             images: [ogImage],
         },
         twitter: {
@@ -45,6 +45,7 @@ export default async function RomanticPage({ params }: { params: Promise<{ local
             <Hero
                 title={translate('romantic.title')}
                 subtitle={translate('romantic.subtitle')}
+                backgroundImage="/images/gallery/wedding-49.jpg"
                 cta={{
                     label: translate('romantic.cta'),
                     // Use canonical per-tour resolver — fail-open to base
@@ -99,8 +100,9 @@ export default async function RomanticPage({ params }: { params: Promise<{ local
                             </Link>
                         </Button>
                     </div>
-                    <div className="flex-1 h-64 bg-gradient-to-br from-rose-100 via-orange-100 to-amber-100 rounded-lg flex items-center justify-center text-5xl">
-                        💍
+                    <div className="flex-1 h-64 rounded-lg overflow-hidden relative">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src="/images/gallery/wedding-49.jpg" alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover" />
                     </div>
                 </div>
             </section>

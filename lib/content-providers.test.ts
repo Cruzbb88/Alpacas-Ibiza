@@ -49,28 +49,29 @@ describe('alpacasibiza-content module', () => {
     }
   })
 
-  it('every animal image is null OR a verified live-site URL (no invented values)', () => {
-    // Images, when set, MUST point at a real CDN URL sourced from the live
-    // alpacasibiza.com site (see handoff/LIVE_SITE_CONTENT_INVENTORY.md
-    // scraped 2026-05-31). The rule that matters is "don't invent" — not
-    // "must be null forever". Allow null OR Squarespace CDN URLs.
+  it('every animal image is null OR a self-hosted live-site portrait (no invented values)', () => {
+    // Images, when set, MUST point at a self-hosted portrait under
+    // /images/alpacas/ — these were downloaded from the live alpacasibiza.com
+    // site (2026-06-06) so they survive the old Squarespace site being taken
+    // down. The rule that matters is "don't invent" — not "must be null".
     for (const animal of alpacasibizaContent.animals) {
       if (animal.image === null) continue
       assert.match(
         animal.image,
-        /^https:\/\/images\.squarespace-cdn\.com\/content\/v1\//,
-        `animal "${animal.id}" image must be null or a real Squarespace CDN URL — got: ${animal.image}`,
+        /^\/images\/alpacas\/[a-z-]+\.jpg$/,
+        `animal "${animal.id}" image must be null or a self-hosted /images/alpacas/ portrait — got: ${animal.image}`,
       )
     }
   })
 
-  it('has exactly 4 experiences (Meet the Herd, Weaving Workshop, Farm Experience, Photo Session)', () => {
-    assert.equal(alpacasibizaContent.experiences.length, 4)
+  it('has exactly 1 experience (Weaving Workshop) — the 3 fabricated tour types were removed 2026-06-06', () => {
+    assert.equal(alpacasibizaContent.experiences.length, 1)
     const ids = alpacasibizaContent.experiences.map((e) => e.id)
-    assert.ok(ids.includes('meet-the-herd'))
     assert.ok(ids.includes('weaving-workshop'))
-    assert.ok(ids.includes('farm-experience'))
-    assert.ok(ids.includes('photo-session'))
+    // Removed AI fabrications — FareHarbor has one "Alpaca Tour", not 4 types.
+    assert.ok(!ids.includes('meet-the-herd'))
+    assert.ok(!ids.includes('farm-experience'))
+    assert.ok(!ids.includes('photo-session'))
   })
 
   it('every experience has priceEur === null (UNMAPPED)', () => {

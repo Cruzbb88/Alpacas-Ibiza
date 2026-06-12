@@ -1,955 +1,1055 @@
 {
-    "nav":  {
-                "tours":  "Visites et Tours",
-                "visit":  "__UNTRANSLATED__",
-                "shop":  "Boutique",
-                "about":  "Ã€ Propos",
-                "contact":  "Contact",
-                "bookTour":  "RÃ©server",
-                "language":  "Langue",
-                "recoverCertificate":  "__UNTRANSLATED__"
-            },
-    "visit":  {
-                  "title":  "__UNTRANSLATED__",
-                  "subhead":  "__UNTRANSLATED__",
-                  "gettingHere":  {
-                                      "heading":  "__UNTRANSLATED__"
-                                  },
-                  "onArrival":  {
-                                    "heading":  "__UNTRANSLATED__"
-                                },
-                  "accessibility":  {
-                                        "heading":  "__UNTRANSLATED__"
-                                    },
-                  "cancellation":  {
-                                       "heading":  "__UNTRANSLATED__"
-                                   },
-                  "photos":  {
-                                 "heading":  "__UNTRANSLATED__"
-                             },
-                  "ctas":  {
-                               "heading":  "__UNTRANSLATED__",
-                               "bookTour":  "__UNTRANSLATED__",
-                               "seeHerd":  "__UNTRANSLATED__",
-                               "contact":  "__UNTRANSLATED__"
-                           }
-              },
-    "hero":  {
-                 "title":  "Es Currals Alpacas Ibiza",
-                 "subtitle":  "La toute premiÃ¨re ferme d\u0027alpagas d\u0027Ibiza, situÃ©e dans le nord rural sur une finca authentique. Foyer de Wishfulfilling Weaving, oÃ¹ des Ã©charpes exclusives sont tissÃ©es Ã  la main sur un mÃ©tier Ã  tisser traditionnel en bois avec de la laine d\u0027alpaga.",
-                 "ctaPrimary":  "Planifiez Votre Visite",
-                 "ctaSecondary":  "Acheter Maintenant"
-             },
-    "paths":  {
-                  "bookNow":  "RÃ©server",
-                  "browseCollection":  "Voir la Collection",
-                  "startProject":  "Commencer un Projet",
-                  "learnMore":  "En Savoir Plus",
-                  "tour":  {
-                               "title":  "RÃ©server un Tour",
-                               "description":  "Visitez notre ferme, rencontrez les alpagas, apprenez l\u0027art du tissage et profitez du paysage d\u0027Ibiza."
-                           },
-                  "shop":  {
-                               "title":  "Acheter des Tissages",
-                               "description":  "Ã‰charpes, couvertures et piÃ¨ces artisanales faites main en laine d\u0027alpaga naturelle avec des techniques traditionnelles."
-                           },
-                  "commission":  {
-                                     "title":  "Sur Commande",
-                                     "description":  "CrÃ©ez quelque chose d\u0027unique. Commandez une piÃ¨ce personnalisÃ©e avec vos propres couleurs, motifs et dimensions."
-                                 },
-                  "alcaca":  {
-                                 "title":  "Acheter Alcaca",
-                                 "description":  "Fumier d\u0027alpaga premium pour jardinage bio et agriculture durable. Commandes en gros ou packs d\u0027Ã©chantillons."
-                             }
-              },
-    "features":  {
-                     "sectionTitle":  "Pourquoi Choisir Es Currals Alpacas Ibiza",
-                     "sectionSubtitle":  "La premiÃ¨re ferme d\u0027alpagas d\u0027Ibiza sur une finca authentique dans le nord rural",
-                     "farm":  {
-                                  "title":  "Finca Authentique",
-                                  "description":  "SituÃ©e dans le nord rural d\u0027Ibiza sur une finca authentique dans un cadre naturel magnifique. Vivez la vraie vie rurale."
-                              },
-                     "artisan":  {
-                                     "title":  "Tissage Traditionnel",
-                                     "description":  "Ã‰charpes exclusives tissÃ©es Ã  la main sur un mÃ©tier Ã  tisser traditionnel en bois avec de la laine d\u0027alpaga de haute qualitÃ©, du lin, du mohair et de la soie."
-                                 },
-                     "sustainable":  {
-                                         "title":  "FabriquÃ© Ã  Ibiza",
-                                         "description":  "Wishfulfilling Weaving â€“ FabriquÃ© Ã  Ibiza, embrassant le monde. Pratiques durables avec notre propre laine d\u0027alpaga. Soin des animaux et de la planÃ¨te."
-                                     },
-                     "appointment":  {
-                                         "title":  "Sur Rendez-vous",
-                                         "description":  "Visites intimes uniquement. Nous gardons notre ferme calme et paisible pour les alpagas â€” et pour vous."
-                                     },
-                     "quality":  {
-                                     "title":  "QualitÃ© Premium",
-                                     "description":  "Chaque produit est vÃ©rifiÃ© Ã  la main. Nous garantissons la qualitÃ© et la durabilitÃ© de notre travail."
-                                 },
-                     "welfare":  {
-                                     "title":  "Bien-Ãªtre Animal d\u0027Abord",
-                                     "description":  "Nos alpagas sont des membres prÃ©cieux de notre famille. Leur confort et leur bonheur guident tout ce que nous faisons."
-                                 }
-                 },
-    "experiences":  {
-                        "sectionTitle":  "ExpÃ©riences SpÃ©ciales",
-                        "sectionSubtitle":  "Au-delÃ  des tours â€” crÃ©ez des souvenirs personnalisÃ©s dans notre ferme",
-                        "privateFarm":  {
-                                            "title":  "Ferme PrivÃ©e",
-                                            "description":  "Visites sur rendez-vous uniquement. ExpÃ©riences intimes et paisibles dans une vraie ferme."
-                                        },
-                        "workshops":  {
-                                          "title":  "Ateliers",
-                                          "description":  "Apprenez le tissage, la teinture naturelle et les arts de la fibre directement avec notre Ã©quipe artisanale."
-                                      },
-                        "events":  {
-                                       "title":  "Ã‰vÃ©nements",
-                                       "description":  "Mariages, sÃ©ances photo, retraites d\u0027entreprise, yoga avec alpagas â€” expÃ©riences sur mesure."
-                                   }
-                    },
-    "cta":  {
-                "title":  "PrÃªt Ã  DÃ©couvrir Alpacas Ibiza ?",
-                "subtitle":  "Que vous souhaitiez rencontrer le troupeau, explorer notre collection ou commander quelque chose de spÃ©cial â€” nous sommes lÃ  pour crÃ©er une expÃ©rience inoubliable.",
-                "bookTour":  "RÃ©servez Votre Tour",
-                "exploreShop":  "Explorer la Boutique"
-            },
-    "newsletter":  {
-                       "title":  "Restez ConnectÃ©",
-                       "subtitle":  "Recevez des nouvelles sur les nouveaux produits, ateliers et histoires de la ferme",
-                       "placeholder":  "Entrez votre email",
-                       "subscribe":  "S\u0027abonner",
-                       "success":  "Merci pour votre inscription !"
-                   },
-    "tours":  {
-                  "title":  "RÃ©servez Votre ExpÃ©rience Alpaga",
-                  "subtitle":  "Places limitÃ©es disponibles sur rendez-vous. Chaque visite est intime et personnalisÃ©e.",
-                  "reserveTitle":  "RÃ©servez Votre Visite",
-                  "reserveText":  "SÃ©lectionnez votre date et heure prÃ©fÃ©rÃ©es pour rÃ©server votre visite chez nos alpagas.",
-                  "integrationTitle":  "IntÃ©gration FareHarbor",
-                  "integrationText":  "Pour activer le widget de rÃ©servation FareHarbor, ajoutez votre identifiant d\u0027entreprise dans les variables d\u0027environnement.",
-                  "heroTitle":  "Visitez Alpacas Ibiza",
-                  "heroSubtitle":  "Rejoignez-nous pour une expÃ©rience inoubliable Ã  la ferme. Rencontrez nos alpagas, apprenez le tissage artisanal et plongez dans la campagne paisible d\u0027Ibiza.",
-                  "heroCta":  "RÃ©servez Votre Visite",
-                  "tourOptionsTitle":  "Options de Tour",
-                  "tourOptionsSubtitle":  "Choisissez l\u0027expÃ©rience qui vous inspire",
-                  "tourTypes":  {
-                                    "meetHerd":  {
-                                                     "title":  "Rencontrer le Troupeau",
-                                                     "description":  "Connectez-vous avec nos alpagas, dÃ©couvrez leurs personnalitÃ©s et comprenez leurs soins et leur bien-Ãªtre."
-                                                 },
-                                    "weaving":  {
-                                                    "title":  "Atelier Tissage",
-                                                    "description":  "Introduction pratique aux arts de la fibre. Essayez le traitement manuel, la teinture naturelle ou le tissage de base."
-                                                },
-                                    "farm":  {
-                                                 "title":  "ExpÃ©rience Ã  la Ferme",
-                                                 "description":  "Explorez les terres, dÃ©couvrez nos pratiques durables et profitez du paysage mÃ©diterranÃ©en."
-                                             },
-                                    "photo":  {
-                                                  "title":  "SÃ©ance Photo",
-                                                  "description":  "Photographie professionnelle ou personnelle avec des alpagas et des dÃ©cors pittoresques. Parfait pour les souvenirs."
-                                              }
-                                },
-                  "timelineTitle":  "Ce Qui Vous Attend Lors d\u0027un Tour",
-                  "timeline":  {
-                                   "arrival":  {
-                                                   "time":  "ArrivÃ©e",
-                                                   "title":  "Accueil et Orientation",
-                                                   "description":  "Rencontrez votre guide, recevez un aperÃ§u de la journÃ©e et dÃ©couvrez les rÃ¨gles de la ferme. Installez-vous et laissez la sÃ©rÃ©nitÃ© vous envahir."
-                                               },
-                                   "morning":  {
-                                                   "time":  "Matin",
-                                                   "title":  "Rencontrer les Alpagas",
-                                                   "description":  "Passez du temps avec notre troupeau. Nourrissez, caressez et dÃ©couvrez les histoires de nos animaux. Les guides partagent des informations sur le comportement et les soins des alpagas."
-                                               },
-                                   "midday":  {
-                                                  "time":  "Midi",
-                                                  "title":  "Visite du Studio de Tissage",
-                                                  "description":  "Explorez notre studio. Observez tout le processus : prÃ©paration des fibres, teinture naturelle, motifs traditionnels et finition."
-                                              },
-                                   "afternoon":  {
-                                                     "time":  "AprÃ¨s-midi",
-                                                     "title":  "ActivitÃ© Pratique",
-                                                     "description":  "Participez Ã  un atelier ou une activitÃ© selon vos intÃ©rÃªts : essayez le cardage manuel, la teinture ou des techniques simples de tissage."
-                                                 },
-                                   "closing":  {
-                                                   "time":  "ClÃ´ture",
-                                                   "title":  "DÃ©tente et RÃ©flexion",
-                                                   "description":  "Terminez la journÃ©e avec des rafraÃ®chissements. Parcourez notre boutique. Posez vos derniÃ¨res questions. Repartez le cÅ“ur plein de souvenirs."
-                                               }
-                               },
-                  "planVisit":  {
-                                    "hours":  {
-                                                  "title":  "Horaires",
-                                                  "description":  "Tours sur rendez-vous uniquement. La disponibilitÃ© varie selon la saison.",
-                                                  "summer":  "Ã‰tÃ© : Horaires Ã©tendus",
-                                                  "winter":  "Hiver : DisponibilitÃ© limitÃ©e",
-                                                  "contact":  "Contactez-nous pour les horaires exacts"
-                                              },
-                                    "location":  {
-                                                     "title":  "Emplacement",
-                                                     "description":  "San Carlos, Ibiza, Espagne",
-                                                     "details":  "Ferme privÃ©e. ItinÃ©raire et informations de stationnement fournis Ã  la rÃ©servation."
-                                                 },
-                                    "pricing":  {
-                                                    "title":  "Tarifs",
-                                                    "starting":  "Ã€ partir de 30 â‚¬ par personne",
-                                                    "custom":  "ExpÃ©riences personnalisÃ©es et tarifs de groupe disponibles"
-                                                },
-                                    "specialEvents":  {
-                                                          "title":  "Ã‰vÃ©nements SpÃ©ciaux et RÃ©servations PrivÃ©es",
-                                                          "description":  "Mariages, sÃ©ances photo, yoga avec alpagas, ateliers, retraites d\u0027entreprise â€” nous crÃ©ons des expÃ©riences sur mesure selon votre vision.",
-                                                          "cta":  "Demander une ExpÃ©rience PersonnalisÃ©e"
-                                                      }
-                                },
-                  "bookingSection":  {
-                                         "title":  "RÃ©servez Votre Visite",
-                                         "subtitle":  "SÃ©lectionnez votre date et heure prÃ©fÃ©rÃ©es pour rÃ©server votre expÃ©rience alpaga.",
-                                         "cardTitle":  "RÃ©server Votre Visite",
-                                         "cardSubtitle":  "Cliquez sur le bouton ci-dessous pour accÃ©der Ã  la page de rÃ©servation et sÃ©curiser votre place.",
-                                         "bookNow":  "RÃ©server Maintenant",
-                                         "viewAndBook":  "Voir les dates disponibles et rÃ©server maintenant",
-                                         "poweredBy":  "RÃ©servation sÃ©curisÃ©e via FareHarbor",
-                                         "questions":  "Questions ?",
-                                         "questionsText":  "Contactez-nous Ã  info@alpacasibiza.com ou par WhatsApp pour une assistance personnalisÃ©e.",
-                                         "nextDates":  "Prochaines dates disponibles",
-                                         "spotsLeft":  "places restantes",
-                                         "updatedNote":  "Mis Ã  jour toutes les 2 heures Â· Cliquez sur \"RÃ©server maintenant\" pour voir tous les horaires",
-                                         "loading":  "Chargement de la disponibilitÃ©...",
-                                         "apiNote":  "La disponibilitÃ© en tempo rÃ©el nÃ©cessite une configuration API"
-                                     },
-                  "questionsText":  "Contactez-nous Ã  info@alpacasibiza.com ou par WhatsApp pour une assistance personnalisÃ©e.",
-                  "compare":  {
-                                  "title":  "Comparer les types de visite",
-                                  "subtitle":  "Trouvez l\u0027expÃ©rience qui vous correspond",
-                                  "meetHerd":  {
-                                                   "duration":  "Contactez-nous pour plus de dÃ©tails",
-                                                   "price":  "Contactez-nous pour plus de dÃ©tails",
-                                                   "capacity":  "Contactez-nous pour plus de dÃ©tails",
-                                                   "include1":  "Promenade guidÃ©e avec les alpagas",
-                                                   "include2":  "Questions avec l\u0027hÃ´te",
-                                                   "include3":  "SÃ©ance photo",
-                                                   "bestFor":  "PremiÃ¨res visites, familles"
-                                               },
-                                  "weaving":  {
-                                                  "duration":  "Contactez-nous pour plus de dÃ©tails",
-                                                  "price":  "Contactez-nous pour plus de dÃ©tails",
-                                                  "capacity":  "Contactez-nous pour plus de dÃ©tails",
-                                                  "include1":  "Atelier pratique de fibres",
-                                                  "include2":  "Introduction Ã  la teinture naturelle",
-                                                  "include3":  "Souvenir Ã  emporter",
-                                                  "bestFor":  "Voyageurs crÃ©atifs, couples"
-                                              },
-                                  "farm":  {
-                                               "duration":  "Contactez-nous pour plus de dÃ©tails",
-                                               "price":  "Contactez-nous pour plus de dÃ©tails",
-                                               "capacity":  "Contactez-nous pour plus de dÃ©tails",
-                                               "include1":  "Visite complÃ¨te de la ferme",
-                                               "include2":  "DÃ©monstration de pratiques durables",
-                                               "include3":  "Nourrir et interagir avec les alpagas",
-                                               "bestFor":  "Amoureux de la nature, groupes"
-                                           },
-                                  "photo":  {
-                                                "duration":  "Contactez-nous pour plus de dÃ©tails",
-                                                "price":  "Contactez-nous pour plus de dÃ©tails",
-                                                "capacity":  "Contactez-nous pour plus de dÃ©tails",
-                                                "include1":  "SÃ©ance photo avec alpagas",
-                                                "include2":  "DÃ©cors pittoresques",
-                                                "include3":  "Conseils de mise en scÃ¨ne",
-                                                "bestFor":  "Photographes, rÃ©seaux sociaux, souvenirs"
-                                            }
-                              },
-                  "backHome":  "Retour Ã  l\u0027Accueil",
-                  "adoptCrossSell":  {
-                                         "heading":  "__UNTRANSLATED__",
-                                         "body":  "__UNTRANSLATED__",
-                                         "cta":  "__UNTRANSLATED__"
-                                     }
-              },
-    "guestStories":  {
-                         "title":  "TÃ©moignages des Visiteurs",
-                         "subtitle":  "DÃ©couvrez ce que les visiteurs disent de leur expÃ©rience",
-                         "testimonial":  "Une expÃ©rience inoubliable. Les alpagas Ã©taient merveilleux, les guides Ã©taient compÃ©tents et chaleureux, et toute la ferme respirait la paix et l\u0027authenticitÃ©.",
-                         "guest":  "Visiteur",
-                         "visited":  "A visitÃ© rÃ©cemment",
-                         "translateButton":  "Traduire",
-                         "showOriginal":  "Afficher l\u0027original",
-                         "readMore":  "Lire plus d\u0027avis sur Facebook",
-                         "facebookBadge":  "Avis Facebook",
-                         "reviews":  {
-                                         "sue":  "J\u0027ai visitÃ© fin aoÃ»t et j\u0027ai passÃ© un moment fantastique ! Ibiza a tellement Ã  offrir en plus de la musique et je recommande vivement une visite pour voir les magnifiques alpagas. Vous pouvez les nourrir et apprendre tellement sur ces animaux incroyables â¤ï¸. J\u0027ai Ã©tÃ© chaleureusement accueillie et j\u0027ai eu une expÃ©rience prÃ©cieuse. Allez les voir - vous les adorerez !",
-                                         "verena":  "Nous avons rendu visite aux doux et pelucheux alpagas. Un couple super sympathique vous guide Ã  travers les enclos avec d\u0027excellentes informations sur ces animaux. Vous avez l\u0027opportunitÃ© de nourrir, caresser et mÃªme donner un bisou aux alpagas. Les animaux sont trÃ¨s confiants et ravis de votre proximitÃ© et de la nourriture. C\u0027Ã©tait une expÃ©rience merveilleuse et je ne peux que la recommander Ã  tous ceux qui sont Ã  Ibiza. ðŸ¤—ðŸ¥³",
-                                         "gemma":  "J\u0027ai fait une rÃ©servation de groupe pour 6 personnes pour le vendredi 9 mai. Bart m\u0027a contactÃ©e pour me prÃ©venir qu\u0027ils Ã©taient fermÃ©s ce jour-lÃ  car ils tondaient les alpagas. Il a ensuite gentiment proposÃ© de nous accueillir la veille mÃªme si la ferme Ã©tait fermÃ©e. L\u0027expÃ©rience elle-mÃªme Ã©tait incroyable. Bart Ã©tait trÃ¨s compÃ©tent et amical et les alpagas Ã©taient si mignons. Tous les alpagas sont trÃ¨s bien soignÃ©s et adorent Bart, ce qui montre combien il les aime.",
-                                         "renate":  "TrÃ¨s amusant Ã  faire avec nos 2 garÃ§ons de 12 ans, mais en fait amusant pour tous les Ã¢ges. Nous ne savions rien des alpagas, c\u0027Ã©tait trÃ¨s intÃ©ressant ! Cela a pris exactement une heure.",
-                                         "sven":  "Fortement recommandÃ© ! Bart et San gÃ¨rent une opÃ©ration fantastique. L\u0027expÃ©rience Chill Out ultime ðŸ¦™â¤ï¸ðŸ¦™",
-                                         "paul":  "Y suis allÃ© le 23 septembre, tour incroyable, Bart est trÃ¨s compÃ©tent et amical. Si vous avez une voiture c\u0027est un incontournable ðŸ˜€ðŸ¦™"
-                                     }
-                     },
-    "faq":  {
-                "sectionTitle":  "Questions FrÃ©quentes",
-                "sectionSubtitle":  "Tout ce que vous devez savoir avant votre visite",
-                "duration":  {
-                                 "q":  "Combien de temps dure un tour ?",
-                                 "a":  "Les tours standards durent 2-3 heures. Les ateliers et expÃ©riences prolongÃ©es peuvent Ãªtre personnalisÃ©s. Nous vous recommandons de vÃ©rifier les crÃ©neaux disponibles lors de la rÃ©servation."
-                             },
-                "languages":  {
-                                  "q":  "En quelles langues proposez-vous des tours ?",
-                                  "a":  "Nous proposons des tours en anglais, espagnol et nÃ©erlandais. Si vous avez besoin d\u0027une autre langue, contactez-nous."
-                              },
-                "children":  {
-                                 "q":  "Les visites conviennent-elles aux enfants ?",
-                                 "a":  "Oui ! Les tours sont adaptÃ©s aux familles. Les enfants doivent Ãªtre accompagnÃ©s, surtout prÃ¨s des animaux. Nous recommandons Ã  partir de 4 ans, mais les plus petits peuvent venir avec leurs parents."
-                             },
-                "wear":  {
-                             "q":  "Comment dois-je m\u0027habiller ?",
-                             "a":  "Portez des chaussures fermÃ©es et confortables adaptÃ©es au terrain de la ferme. Apportez de la crÃ¨me solaire en Ã©tÃ©. Des vÃªtements lÃ©gers sont idÃ©aux car la ferme est en plein air. Ã‰vitez les couleurs vives ou les parfums forts pour garder les alpagas calmes."
-                         },
-                "accessibility":  {
-                                      "q":  "La ferme est-elle accessible aux personnes Ã  mobilitÃ© rÃ©duite ?",
-                                      "a":  "Notre ferme est sur un terrain naturel. Contactez-nous Ã  l\u0027avance pour discuter de l\u0027accessibilitÃ© et comment nous pouvons nous adapter Ã  vos besoins."
-                                  },
-                "food":  {
-                             "q":  "Peut-on apporter de la nourriture ou des boissons ?",
-                             "a":  "La nourriture extÃ©rieure n\u0027est pas autorisÃ©e, mais nous proposons des rafraÃ®chissements bio. Nous nous adaptons aux restrictions alimentaires â€” mentionnez-les lors de la rÃ©servation."
-                         },
-                "booking":  {
-                                "q":  "Comment rÃ©server un tour ?",
-                                "a":  "Utilisez notre systÃ¨me de rÃ©servation en ligne ci-dessous pour vÃ©rifier la disponibilitÃ© et rÃ©server votre place. RÃ©servations de groupe et expÃ©riences personnalisÃ©es : contactez-nous."
-                            },
-                "cancellation":  {
-                                     "q":  "Que faire si je dois annuler ou reprogrammer ?",
-                                     "a":  "Les annulations jusqu\u0027Ã  48 heures avant le tour bÃ©nÃ©ficient d\u0027un remboursement complet ou d\u0027un report. Moins de 48 heures : des frais de 50% s\u0027appliquent."
-                                 },
-                "private":  {
-                                "q":  "Proposez-vous des tours privÃ©s ou des Ã©vÃ©nements de groupe ?",
-                                "a":  "Oui ! Nous proposons des expÃ©riences privÃ©es Ã  la ferme, mariages, retraites d\u0027entreprise et sÃ©ances de yoga avec alpagas. Contactez-nous pour des forfaits personnalisÃ©s."
-                            },
-                "parking":  {
-                                "q":  "Y a-t-il un parking ?",
-                                "a":  "Oui, parking gratuit sur place. Les places sont limitÃ©es â€” arrivez 15 minutes en avance pour vous garer."
-                            }
-            },
-    "backHome":  "Retour Ã  l\u0027Accueil",
-    "shop":  {
-                 "title":  "Collection Wishfulfilling Weaving",
-                 "subtitle":  "FabriquÃ© Ã  Ibiza, embrassant le monde",
-                 "description":  "Ã‰charpes exclusives tissÃ©es Ã  la main sur un mÃ©tier Ã  tisser traditionnel en bois Ã  partir de laine d\u0027alpaga de haute qualitÃ©, de lin, de mohair et de laine de soie.",
-                 "categories":  {
-                                    "woven":  {
-                                                  "title":  "Collection TissÃ©e",
-                                                  "description":  "Ã‰charpes et textiles exclusifs tissÃ©s Ã  la main"
-                                              },
-                                    "commission":  {
-                                                       "title":  "Commande PersonnalisÃ©e",
-                                                       "description":  "CrÃ©ez votre propre piÃ¨ce unique avec des couleurs et motifs personnalisÃ©s"
-                                                   },
-                                    "alcaca":  {
-                                                   "title":  "Alcaca â€“ Fumier d\u0027Alpaga",
-                                                   "description":  "Engrais biologique premium de nos alpagas"
-                                               }
-                                },
-                 "explore":  "Explorer",
-                 "woven":  {
-                               "title":  "Collection TissÃ©e",
-                               "description":  "Ã‰charpes, couvertures et textiles faits main"
-                           },
-                 "commission":  {
-                                    "title":  "Commande PersonnalisÃ©e",
-                                    "description":  "CrÃ©ez votre propre piÃ¨ce unique"
-                                },
-                 "manure":  {
-                                "title":  "Fumier d\u0027Alpaga",
-                                "description":  "Engrais biologique premium"
-                            }
-             },
-    "wovenPage":  {
-                      "title":  "Collection TissÃ©e",
-                      "subtitle":  "Faite main avec amour en utilisant des techniques de tissage traditionnelles et de la laine d\u0027alpaga naturelle",
-                      "addToCart":  "Ajouter au Panier",
-                      "scarf":  "Ã‰charpe en Laine d\u0027Alpaga",
-                      "blanket":  "Couverture TissÃ©e",
-                      "throw":  "Plaid Teinture Naturelle",
-                      "cushion":  "Housse de Coussin Artisanale",
-                      "wallHanging":  "Tapisserie Murale Premium",
-                      "poncho":  "Poncho Ã‰cologique"
-                  },
-    "commissionPage":  {
-                           "title":  "Commande PersonnalisÃ©e",
-                           "subtitle":  "CrÃ©ez votre piÃ¨ce de rÃªve avec des couleurs, motifs et dimensions personnalisÃ©s",
-                           "formTitle":  "Parlez-nous de Votre Vision",
-                           "name":  "Votre Nom",
-                           "email":  "Email",
-                           "description":  "Description du Projet",
-                           "submit":  "Envoyer la Demande",
-                           "sending":  "Envoiâ€¦",
-                           "successMessage":  "MerciÂ ! Nous examinerons votre commande et vous contacterons bientÃ´t. ðŸ¦™",
-                           "errorMessage":  "Une erreur s\u0027est produite. Veuillez rÃ©essayer ou nous Ã©crire directement."
-                       },
-    "alcacaPage":  {
-                       "title":  "Alcaca Oro Negro",
-                       "metaTitle":  "__UNTRANSLATED__",
-                       "metaDescription":  "__UNTRANSLATED__",
-                       "subtitle":  "__UNTRANSLATED__",
-                       "orderNow":  "Renseignez-vous",
-                       "storyTitle":  "__UNTRANSLATED__",
-                       "storyBody":  "__UNTRANSLATED__",
-                       "photo1Alt":  "__UNTRANSLATED__",
-                       "photo2Alt":  "__UNTRANSLATED__",
-                       "miniTier":  "__UNTRANSLATED__",
-                       "bagTier":  "__UNTRANSLATED__",
-                       "bulkTier":  "__UNTRANSLATED__",
-                       "enquire":  "Renseignez-vous",
-                       "whyTitle":  "__UNTRANSLATED__",
-                       "benefit1":  "__UNTRANSLATED__",
-                       "benefit2":  "__UNTRANSLATED__",
-                       "benefit3":  "__UNTRANSLATED__",
-                       "benefit4":  "__UNTRANSLATED__"
-                   },
-    "about":  {
-                  "title":  "Ã€ Propos d\u0027Alpacas Ibiza",
-                  "storyTitle":  "Notre Histoire",
-                  "storyText":  "Alpacas Ibiza a Ã©tÃ© fondÃ©e sur la conviction que le tourisme peut Ãªtre significatif, artisanal et profondÃ©ment liÃ© au bien-Ãªtre animal. Nous avons crÃ©Ã© la premiÃ¨re ferme d\u0027alpagas de l\u0027Ã®le pour partager notre passion pour ces crÃ©atures douces et leurs fibres incroyables.",
-                  "valuesTitle":  "Nos Valeurs",
-                  "weavingTitle":  "Wishfulfilling Weaving",
-                  "weavingSubtitle":  "FabriquÃ© Ã  Ibiza, embrassant le monde",
-                  "weavingDescription":  "Wishfulfilling Weaving est notre ligne de tissage exclusive. San tisse des Ã©charpes exclusives sur un mÃ©tier Ã  tisser traditionnel en bois, utilisant de la laine d\u0027alpaga de haute qualitÃ©, du lin, du mohair et de la soie. Chaque piÃ¨ce est fabriquÃ©e Ã  la main avec intention et amour Ã  Ibiza.",
-                  "handcraftedBadge":  "Fait main Ã  Ibiza",
-                  "welfare":  {
-                                  "title":  "Bien-Ãªtre Animal",
-                                  "description":  "Nos alpagas passent en premier dans chaque dÃ©cision"
-                              },
-                  "sustainability":  {
-                                         "title":  "DurabilitÃ©",
-                                         "description":  "Pratiques biologiques et responsabilitÃ© environnementale"
-                                     },
-                  "quality":  {
-                                  "title":  "QualitÃ© Artisanale",
-                                  "description":  "TransformÃ©, vÃ©rifiÃ© et soignÃ© Ã  la main"
-                              },
-                  "community":  {
-                                    "title":  "CommunautÃ©",
-                                    "description":  "Partager les connaissances et crÃ©er des connexions"
-                                }
-              },
-    "sustainability":  {
-                           "title":  "__UNTRANSLATED__",
-                           "subtitle":  "__UNTRANSLATED__",
-                           "welfareTitle":  "__UNTRANSLATED__",
-                           "welfareBody":  "__UNTRANSLATED__",
-                           "craftTitle":  "__UNTRANSLATED__",
-                           "craftBody":  "__UNTRANSLATED__",
-                           "dyesTitle":  "__UNTRANSLATED__",
-                           "dyesBody":  "__UNTRANSLATED__",
-                           "wasteTitle":  "__UNTRANSLATED__",
-                           "wasteBody":  "__UNTRANSLATED__",
-                           "landTitle":  "__UNTRANSLATED__",
-                           "landBody":  "__UNTRANSLATED__",
-                           "sourcingTitle":  "__UNTRANSLATED__",
-                           "sourcingBody":  "__UNTRANSLATED__",
-                           "trustSectionTitle":  "__UNTRANSLATED__",
-                           "trustAbout":  "__UNTRANSLATED__",
-                           "trustPress":  "__UNTRANSLATED__",
-                           "trustContact":  "__UNTRANSLATED__",
-                           "ownerConfirmHeader":  "__UNTRANSLATED__",
-                           "ownerConfirmBody":  "__UNTRANSLATED__"
-                       },
-    "contact":  {
-                    "title":  "Nous Contacter",
-                    "subtitle":  "Vous avez des questions ? Nous aimerions vous entendre !",
-                    "formTitle":  "Envoyez-nous un Message",
-                    "name":  "Nom",
-                    "email":  "Email",
-                    "subject":  "Sujet",
-                    "message":  "Message",
-                    "send":  "Envoyer le Message",
-                    "sending":  "Envoiâ€¦",
-                    "successMessage":  "MerciÂ ! Nous vous rÃ©pondrons bientÃ´t. ðŸ¦™",
-                    "errorMessage":  "Une erreur s\u0027est produite. Veuillez rÃ©essayer ou nous Ã©crire directement.",
-                    "infoTitle":  "Informations de Contact",
-                    "location":  "Localisation",
-                    "phone":  "TÃ©lÃ©phone",
-                    "emailLabel":  "Email",
-                    "hours":  "Horaires",
-                    "byAppointment":  "Sur rendez-vous uniquement"
-                },
-    "footer":  {
-                   "tagline":  "La premiÃ¨re ferme d\u0027alpagas et atelier de tissage artisanal d\u0027Ibiza",
-                   "explore":  "Explorer",
-                   "shopTitle":  "Boutique",
-                   "wovenCollection":  "Collection TissÃ©e",
-                   "customCommission":  "Commande PersonnalisÃ©e",
-                   "alpacaManure":  "Fumier d\u0027Alpaga (Alcaca)",
-                   "aboutUs":  "Ã€ Propos",
-                   "contact":  "Contact",
-                   "privacy":  "Politique de ConfidentialitÃ©",
-                   "terms":  "Conditions de Service",
-                   "cookies":  "Politique de Cookies",
-                   "copyright":  "Tous droits rÃ©servÃ©s."
-               },
-    "homepage":  {
-                     "experiences":  {
-                                         "title":  "Choisissez Votre ExpÃ©rience",
-                                         "subtitle":  "ExpÃ©riences curatÃ©es pour chaque occasion",
-                                         "corporate":  {
-                                                           "title":  "Entreprise et Team Building",
-                                                           "description":  "DÃ©connectez-vous pour vous reconnecter. Retraites de leadership et renforcement d\u0027Ã©quipe avec notre troupeau.",
-                                                           "cta":  "Planifier un Ã‰vÃ©nement"
-                                                       },
-                                         "romantic":  {
-                                                          "title":  "Promenades Romantiques au Coucher de Soleil",
-                                                          "description":  "Magie de l\u0027heure dorÃ©e. Promenades privÃ©es et intimes pour les couples (et les demandes en mariage !).",
-                                                          "cta":  "RÃ©server un Tour PrivÃ©"
-                                                      },
-                                         "family":  {
-                                                        "title":  "JournÃ©es Famille Ã  la Ferme",
-                                                        "description":  "Amusement sÃ»r et Ã©ducatif pour tous les Ã¢ges. Rapprochez vos petits de la nature.",
-                                                        "cta":  "Visite Famille"
-                                                    }
-                                     }
-                 },
-    "corporate":  {
-                      "title":  "Retraites d\u0027Entreprise et Team Building",
-                      "subtitle":  "DÃ©connectez-vous pour vous reconnecter. Amenez votre Ã©quipe dans la campagne paisible d\u0027Ibiza pour une expÃ©rience de cohÃ©sion unique avec notre troupeau d\u0027alpagas.",
-                      "cta":  "Renseignements pour Ã‰quipes",
-                      "whyTitle":  "Pourquoi les Alpagas pour le Team Building ?",
-                      "whyText":  "Les alpagas sont des animaux sensibles et apaisants qui reflÃ¨tent l\u0027Ã©nergie humaine. Interagir avec eux nÃ©cessite patience, observation et communication non verbale â€” des compÃ©tences parfaites pour un travail d\u0027Ã©quipe efficace.",
-                      "features":  {
-                                       "stress":  {
-                                                      "title":  "RÃ©duction du Stress",
-                                                      "description":  "La prÃ©sence apaisante des alpagas rÃ©duit le cortisol et favorise la pleine conscience."
-                                                  },
-                                       "communication":  {
-                                                             "title":  "Communication",
-                                                             "description":  "Apprenez Ã  diriger sans forcer. Les alpagas rÃ©pondent Ã  l\u0027assurance calme."
-                                                         },
-                                       "creativity":  {
-                                                          "title":  "CrÃ©ativitÃ©",
-                                                          "description":  "Les ateliers de tissage stimulent la rÃ©solution crÃ©ative de problÃ¨mes et la concentration."
-                                                      },
-                                       "nature":  {
-                                                      "title":  "Connexion avec la Nature",
-                                                      "description":  "Sortez votre Ã©quipe du bureau pour profiter de l\u0027air frais mÃ©diterranÃ©en."
-                                                  }
-                                   },
-                      "itinerary":  {
-                                        "title":  "Programme Type",
-                                        "item1":  {
-                                                      "time":  "10h00",
-                                                      "title":  "Accueil et RafraÃ®chissements",
-                                                      "desc":  "CafÃ©, thÃ© et pÃ¢tisseries locales sur la terrasse."
-                                                  },
-                                        "item2":  {
-                                                      "time":  "10h30",
-                                                      "title":  "Rencontre du Troupeau",
-                                                      "desc":  "PrÃ©sentation guidÃ©e des alpagas. DÃ©couvrez leurs noms et personnalitÃ©s."
-                                                  },
-                                        "item3":  {
-                                                      "time":  "11h30",
-                                                      "title":  "DÃ©fi d\u0027Ã‰quipe",
-                                                      "desc":  "ActivitÃ© interactive : Guider un alpaga Ã  travers un parcours simple nÃ©cessitant du travail d\u0027Ã©quipe."
-                                                  },
-                                        "item4":  {
-                                                      "time":  "13h00",
-                                                      "title":  "DÃ©jeuner Ã  la Ferme",
-                                                      "desc":  "Pique-nique bio avec des produits locaux sous les caroubiers."
-                                                  }
-                                    },
-                      "planTitle":  "PrÃªt Ã  Organiser Votre Ã‰vÃ©nement ?",
-                      "planText":  "Nous personnalisons chaque forfait entreprise selon la taille et les objectifs de votre Ã©quipe. Contactez-nous pour un devis.",
-                      "planCta":  "Demander un Devis",
-                      "liveBodyEN":  "__UNTRANSLATED__: There is no better place to reflect on the past and plan for the future with your business colleagues than among our alpacas in the unspoilt nature of northern Ibiza. An environment of pure zen that can only inspire fresh ideas and brilliant insights! On request we put together a complete package with catering on-site or at one of the charming nearby restaurants.",
-                      "subheadAlt":  "__UNTRANSLATED__: Reflecting and planning amidst our alpacas in the unspoilt nature of northern Ibiza"
-                  },
-    "romantic":  {
-                     "title":  "Promenades Romantiques au Coucher de Soleil",
-                     "subtitle":  "L\u0027heure dorÃ©e avec les alpagas. Une expÃ©rience privÃ©e et intime pour les couples au cÅ“ur d\u0027Ibiza.",
-                     "cta":  "RÃ©server un Tour Coucher de Soleil",
-                     "quote":  "Â« Le rendez-vous le plus magique que nous ayons jamais eu. Â»",
-                     "description":  "Ã‰chappez Ã  la foule. Juste vous, votre partenaire et nos doux alpagas se promenant dans les orangeraies tandis que le soleil se couche derriÃ¨re les collines.",
-                     "champagne":  {
-                                       "title":  "Champagne",
-                                       "desc":  "Option Cava en supplÃ©ment pour porter un toast au coucher de soleil."
-                                   },
-                     "photos":  {
-                                    "title":  "Photos",
-                                    "desc":  "Votre guide capture des moments spontanÃ©s pour que vous puissiez vivre l\u0027instant."
-                                },
-                     "privacy":  {
-                                     "title":  "IntimitÃ©",
-                                     "desc":  "Tours strictement privÃ©s disponibles sur demande."
-                                 },
-                     "proposalTitle":  "Parfait pour les Demandes en Mariage",
-                     "proposalText":  "Vous pensez Ã  poser la question ? Nous pouvons vous aider Ã  orchestrer le moment parfait avec les alpagas comme tÃ©moins.",
-                     "proposalCta":  "Nous Contacter pour Organiser"
-                 },
-    "family":  {
-                   "title":  "JournÃ©es Famille Ã  la Ferme",
-                   "subtitle":  "Faites dÃ©couvrir Ã  vos enfants la joie des animaux. SÃ»r, Ã©ducatif et amusant pour tous les Ã¢ges.",
-                   "cta":  "RÃ©server une Visite Famille",
-                   "educationTitle":  "L\u0027Ã‰ducation Rencontre la Tendresse",
-                   "educationText":  "Notre ferme n\u0027est pas qu\u0027un zoo â€” c\u0027est une expÃ©rience Ã©ducative. Les enfants apprennent :",
-                   "points":  {
-                                  "respect":  "Le Respect : Comment approcher les animaux en douceur.",
-                                  "biology":  "La Biologie : Pourquoi les alpagas ont une toison douce et des coussinets au lieu de sabots.",
-                                  "sustainability":  "La DurabilitÃ© : Comment nous utilisons le fumier d\u0027alpaga (Â« Oro Negro Â») pour l\u0027agriculture."
-                              },
-                   "safetyTitle":  "La SÃ©curitÃ© d\u0027Abord",
-                   "safety":  {
-                                  "gentle":  {
-                                                 "title":  "Animaux Doux",
-                                                 "desc":  "Notre troupeau est socialisÃ© et habituÃ© aux enfants."
-                                             },
-                                  "stroller":  {
-                                                   "title":  "AccÃ¨s Poussette",
-                                                   "desc":  "Les chemins sont accessibles aux poussettes robustes."
-                                               },
-                                  "hygiene":  {
-                                                  "title":  "HygiÃ¨ne",
-                                                  "desc":  "Stations de lavage des mains disponibles."
-                                              },
-                                  "refreshments":  {
-                                                       "title":  "RafraÃ®chissements",
-                                                       "desc":  "Boissons et collations adaptÃ©es aux enfants."
-                                                   }
-                              },
-                   "faq":  {
-                               "age":  {
-                                           "q":  "Quel est l\u0027Ã¢ge minimum ?",
-                                           "a":  "Tous les Ã¢ges sont les bienvenus ! Les enfants de moins de 3 ans sont gratuits. Nous recommandons Ã  partir de 4 ans pour l\u0027expÃ©rience complÃ¨te de balade."
-                                       },
-                               "safe":  {
-                                            "q":  "Les alpagas sont-ils sÃ»rs ?",
-                                            "a":  "Oui, les alpagas ne mordent pas (ils n\u0027ont que des dents infÃ©rieures !) et sont gÃ©nÃ©ralement trÃ¨s calmes. Nous enseignons Ã  vos enfants comment interagir en toute sÃ©curitÃ©."
-                                        },
-                               "duration":  {
-                                                "q":  "Combien de temps dure la visite ?",
-                                                "a":  "Les visites familiales durent gÃ©nÃ©ralement 1,5 Ã  2 heures, parfait pour les enfants."
-                                            }
-                           }
-               },
-    "privacy":  {
-                    "title":  "Politique de ConfidentialitÃ©",
-                    "subtitle":  "Comment nous collectons, utilisons et protÃ©geons vos informations",
-                    "section1Title":  "1. Informations CollectÃ©es",
-                    "section1Intro":  "Nous collectons les informations que vous fournissez directement :",
-                    "section1Items":  [
-                                          "DÃ©tails de rÃ©servation (nom, email, tÃ©lÃ©phone)",
-                                          "Informations de commande (adresse de livraison, informations de paiement)",
-                                          "Demandes de commission (dÃ©tails du projet, prÃ©fÃ©rences)",
-                                          "Inscription Ã  la newsletter (adresse email)",
-                                          "Soumissions du formulaire de contact"
-                                      ],
-                    "section2Title":  "2. Utilisation de Vos Informations",
-                    "section2Items":  [
-                                          "Traiter les rÃ©servations et commandes",
-                                          "Envoyer des emails de confirmation et mises Ã  jour",
-                                          "RÃ©pondre aux demandes",
-                                          "AmÃ©liorer notre site web et services",
-                                          "Envoyer des newsletters (vous pouvez vous dÃ©sabonner Ã  tout moment)",
-                                          "Remplir nos obligations lÃ©gales"
-                                      ],
-                    "section3Title":  "3. Protection des DonnÃ©es",
-                    "section3Intro":  "Nous prenons votre vie privÃ©e au sÃ©rieux. Vos donnÃ©es sont cryptÃ©es et stockÃ©es en sÃ©curitÃ©. Nous ne partageons pas vos informations sauf :",
-                    "section3Items":  [
-                                          "Processeurs de paiement (pour transactions sÃ©curisÃ©es)",
-                                          "SystÃ¨mes de rÃ©servation (FareHarbor, selon besoin)",
-                                          "Exigences lÃ©gales (quand la loi l\u0027exige)"
-                                      ],
-                    "section4Title":  "4. Cookies et Suivi",
-                    "section4Text":  "Nous utilisons des cookies pour amÃ©liorer votre expÃ©rience. Les cookies essentiels sont nÃ©cessaires au fonctionnement. Vous pouvez contrÃ´ler les prÃ©fÃ©rences de cookies dans votre navigateur ou notre banniÃ¨re de cookies.",
-                    "section5Title":  "5. Vos Droits",
-                    "section5Intro":  "Vous avez le droit de :",
-                    "section5Items":  [
-                                          "AccÃ©der Ã  vos donnÃ©es",
-                                          "Corriger les informations inexactes",
-                                          "Demander la suppression (droit Ã  l\u0027oubli)",
-                                          "Refuser les communications marketing"
-                                      ],
-                    "lastUpdated":  "DerniÃ¨re mise Ã  jour : FÃ©vrier 2024. Contactez-nous Ã  info@alpacasibiza.com pour toute question."
-                },
-    "terms":  {
-                  "title":  "Conditions de Service",
-                  "subtitle":  "Veuillez lire ces conditions avant d\u0027utiliser notre site web et nos services de rÃ©servation",
-                  "section1Title":  "1. RÃ©servations et Tours",
-                  "section1Intro":  "En rÃ©servant un tour, vous acceptez de :",
-                  "section1Items":  [
-                                        "Suivre toutes les consignes de sÃ©curitÃ© de la ferme et des animaux",
-                                        "Arriver 15 minutes avant l\u0027heure prÃ©vue",
-                                        "Respecter les alpagas et la propriÃ©tÃ© de la ferme",
-                                        "Apporter une piÃ¨ce d\u0027identitÃ© valide si nÃ©cessaire",
-                                        "Suivre tous les protocoles de santÃ©/sÃ©curitÃ© en vigueur"
-                                    ],
-                  "section2Title":  "2. Annulations et Remboursements",
-                  "section2Items":  [
-                                        "Annulation jusqu\u0027Ã  48 heures avant : Remboursement complet ou report",
-                                        "Annulation Ã  moins de 48 heures : Frais de 50%",
-                                        "Non-prÃ©sentation : Paiement intÃ©gral perdu",
-                                        "Fermeture mÃ©tÃ©o : Remboursement complet ou report"
-                                    ],
-                  "section3Title":  "3. Commandes Boutique",
-                  "section3Intro":  "Tous les produits sont faits main. Les lÃ©gÃ¨res variations et imperfections sont normales et font partie du processus artisanal.",
-                  "section3Items":  [
-                                        "ExpÃ©dition sous 5-7 jours ouvrables",
-                                        "Les commandes internationales peuvent prendre plus de temps",
-                                        "Retours : 30 jours pour les articles non utilisÃ©s et non endommagÃ©s",
-                                        "Les articles personnalisÃ©s/sur commande ne sont pas retournables"
-                                    ],
-                  "section4Title":  "4. Accords de Commission",
-                  "section4Items":  [
-                                        "Acompte de 50% requis pour sÃ©curiser votre projet",
-                                        "Solde dÃ» avant l\u0027expÃ©dition finale",
-                                        "Les estimations de dÃ©lai sont approximatives",
-                                        "Annulation aprÃ¨s dÃ©but de production : remboursement de 50% uniquement"
-                                    ],
-                  "section5Title":  "5. Photographie et Consentement",
-                  "section5Text":  "En visitant notre ferme ou achetant nos produits, vous consentez Ã  Ãªtre photographiÃ©. Ces images peuvent Ãªtre utilisÃ©es sur notre site web et nos rÃ©seaux sociaux. Si vous prÃ©fÃ©rez ne pas Ãªtre photographiÃ©, informez votre guide.",
-                  "section6Title":  "6. Limitation de ResponsabilitÃ©",
-                  "section6Text":  "Les visites Ã  la ferme impliquent une interaction avec des animaux. Les visiteurs assument tous les risques. Nous ne sommes pas responsables des blessures sauf en cas de nÃ©gligence grave. Les enfants doivent Ãªtre surveillÃ©s en permanence.",
-                  "section7Title":  "7. Utilisation du Site Web",
-                  "section7Items":  [
-                                        "Ne reproduisez pas ou ne redistribuez pas notre contenu sans permission",
-                                        "N\u0027essayez pas de pirater ou d\u0027interfÃ©rer avec le site web",
-                                        "Respectez les droits de propriÃ©tÃ© intellectuelle"
-                                    ],
-                  "lastUpdated":  "DerniÃ¨re mise Ã  jour : FÃ©vrier 2024. Contactez info@alpacasibiza.com pour toute question.",
-                  "art1Title":  "__UNTRANSLATED__: Article 1 - Definitions",
-                  "art1Items":  "__UNTRANSLATED__: [\u0027Supplementary agreement: a contract whereby the consumer acquires products or services at a distance in relation to an earlier distance contract.\u0027, \u0027Cooling-off period: the period within which the consumer may exercise their right of withdrawal.\u0027, \u0027Consumer: the natural person who does not act for purposes relating to their trade, business, craft or professional activity.\u0027, \u0027Day: calendar day.\u0027, \u0027Digital content: data produced and supplied in digital form.\u0027, \u0027Duration contract: a contract for the regular supply of goods, services and/or digital content over a set period.\u0027, \u0027Durable medium: any tool enabling the consumer or entrepreneur to store information for future reference.\u0027, \"Right of withdrawal: the consumer\u0027s ability to cancel a distance contract within the cooling-off period.\", \u0027Model withdrawal form: the European model withdrawal form made available on the website.\u0027, \u0027Entrepreneur: the natural or legal person offering products, access to digital content and/or services to consumers at a distance.\u0027, \u0027Distance contract: a contract concluded between the entrepreneur and the consumer within an organised distance-selling system.\u0027, \u0027Distance communication technique: any means enabling a contract to be concluded without the consumer and entrepreneur being simultaneously present in the same space.\u0027]",
-                  "art2Title":  "__UNTRANSLATED__: Article 2 - Entrepreneur Identity",
-                  "art2Items":  "__UNTRANSLATED__: [\u0027Name: Sandra De Wilde - Es Currals Alpacas Ibiza \u0026 Wishfulfilling Weaving\u0027, \u0027Address: C/3 Bungalow Park 22, 07850 San Carlos Baleares Spain\u0027, \u0027Telephone: +34 689 446 781\u0027, \u0027Email: info@alpacasibiza.com\u0027, \u0027VAT number: ESY6917111J\u0027]",
-                  "art3Title":  "__UNTRANSLATED__: Article 3 - Applicability",
-                  "art3Text":  "__UNTRANSLATED__: These general terms and conditions apply to every offer by the entrepreneur and to every distance contract concluded. Before a distance contract is formed, the text of these terms is made available to the consumer either in writing or on a durable medium.",
-                  "art4Title":  "__UNTRANSLATED__: Article 4 - The Offer",
-                  "art4Text":  "__UNTRANSLATED__: Images truthfully represent the products offered. Obvious errors do not bind the entrepreneur. Every offer contains sufficient information for the consumer to understand the rights and obligations arising from acceptance.",
-                  "art5Title":  "__UNTRANSLATED__: Article 5 - The Agreement",
-                  "art5Text":  "__UNTRANSLATED__: The contract is formed at the moment the consumer accepts the offer and meets its conditions. The entrepreneur confirms receipt of acceptance electronically. Until receipt is confirmed, the consumer may cancel the contract.",
-                  "art6Title":  "__UNTRANSLATED__: Article 6 - Right of Withdrawal",
-                  "art6ProductText":  "__UNTRANSLATED__: For products: the consumer may cancel a product purchase within a minimum cooling-off period of 14 days without stating reasons.",
-                  "art6ServicesText":  "__UNTRANSLATED__: For services and non-physical digital content: the consumer may cancel within a minimum of 14 days without stating reasons. The period begins the day after the contract is formed.",
-                  "art6ExtendedText":  "__UNTRANSLATED__: Extended cooling-off period: if the entrepreneur fails to provide the required withdrawal information, the cooling-off period expires twelve months after the end of the original period.",
-                  "art7Title":  "__UNTRANSLATED__: Article 7 - Consumer Obligations During the Cooling-Off Period",
-                  "art7Text":  "__UNTRANSLATED__: The consumer shall handle the product and its packaging with care. They may only unpack or use the product to the extent necessary to assess its nature, characteristics and functioning. The consumer is liable for any diminished value resulting from handling that goes beyond what is permitted.",
-                  "art8Title":  "__UNTRANSLATED__: Article 8 - Exercising the Right of Withdrawal and Associated Costs",
-                  "art8Text":  "__UNTRANSLATED__: If the consumer exercises their right of withdrawal, they must notify the entrepreneur within the cooling-off period using the model withdrawal form or another unambiguous statement. The product must be returned within 14 days of notification in its original condition with all accessories. The consumer bears the direct cost of return shipping.",
-                  "art9Title":  "__UNTRANSLATED__: Article 9 - Entrepreneur Obligations Upon Withdrawal",
-                  "art9Text":  "__UNTRANSLATED__: The entrepreneur shall refund all consumer payments, including delivery costs, as quickly as possible and within 14 days of the withdrawal notice. Refunds are made via the same payment method used by the consumer, unless the consumer agrees to a different method.",
-                  "art10Title":  "__UNTRANSLATED__: Article 10 - Exclusions from the Right of Withdrawal",
-                  "art10Text":  "__UNTRANSLATED__: The entrepreneur may exclude the following products and services from the right of withdrawal:",
-                  "art10Items":  "__UNTRANSLATED__: [\u0027Products whose price depends on fluctuations in the financial market\u0027, \u0027Products purchased via a public auction\u0027, \u0027Fully performed services (with prior explicit consumer consent)\u0027, \u0027Package travel and passenger transport\u0027, \u0027Accommodation bookings for a specified date\u0027, \u0027Events and performances with a scheduled date\u0027, \u0027Made-to-measure or personalised products\u0027, \u0027Rapidly perishable products\u0027, \u0027Sealed health or hygiene products opened after delivery\u0027, \u0027Products irreversibly mixed with other products after delivery\u0027, \u0027Alcoholic beverages with prices agreed at the time of order\u0027, \u0027Sealed audio, video or software recordings opened after delivery\u0027, \u0027Newspapers, magazines (except subscriptions)\u0027, \u0027Non-physical digital content (with prior explicit consent)\u0027]",
-                  "art11Title":  "__UNTRANSLATED__: Article 11 - Pricing",
-                  "art11Text":  "__UNTRANSLATED__: During the stated validity period, prices of offered products and/or services will not be increased except for VAT changes. Stated prices include VAT. Price increases within 3 months of contract formation are only permitted if required by law. After 3 months, a price increase is only permitted if agreed with the consumer.",
-                  "art12Title":  "__UNTRANSLATED__: Article 12 - Contract Performance and Extended Warranty",
-                  "art12Text":  "__UNTRANSLATED__: The entrepreneur guarantees that products and/or services conform to the contract, the advertised specifications, reasonable standards of quality and usability, and applicable laws and regulations in effect on the date the contract was formed.",
-                  "art13Title":  "__UNTRANSLATED__: Article 13 - Delivery and Execution",
-                  "art13Text":  "__UNTRANSLATED__: The entrepreneur shall exercise the utmost care in receiving and fulfilling product orders. Accepted orders will be fulfilled promptly and no later than 30 days, unless a different delivery period was agreed. The risk of damage or loss rests with the entrepreneur until delivery to the consumer.",
-                  "art14Title":  "__UNTRANSLATED__: Article 14 - Duration Contracts: Term, Cancellation and Renewal",
-                  "art14Text":  "__UNTRANSLATED__: The consumer may cancel an indefinite-duration contract at any time with a maximum one-month notice period. Fixed-term contracts run for a maximum of two years. Tacit renewal is only permitted for newspapers, magazines and periodicals with a maximum renewal period of three months.",
-                  "art15Title":  "__UNTRANSLATED__: Article 15 - Payment",
-                  "art15Text":  "__UNTRANSLATED__: Amounts owed by the consumer must be paid within 14 days after the start of the cooling-off period, or, where no cooling-off period applies, within 14 days of contract formation. Prepayment may not exceed 50% of the purchase price. Late payment triggers statutory interest after the entrepreneur gives notice.",
-                  "art16Title":  "__UNTRANSLATED__: Article 16 - Complaints Procedure",
-                  "art16Text":  "__UNTRANSLATED__: The entrepreneur maintains a sufficiently publicised complaints procedure. Complaints about contract performance must be submitted promptly after the consumer discovers a defect, fully and clearly described. Submitted complaints are answered within 14 days of receipt.",
-                  "art17Title":  "__UNTRANSLATED__: Article 17 - Disputes",
-                  "art17Text":  "__UNTRANSLATED__: Contracts between the entrepreneur and the consumer to which these general terms and conditions apply are exclusively governed by Spanish law.",
-                  "art18Title":  "__UNTRANSLATED__: Article 18 - Additional or Divergent Provisions",
-                  "art18Text":  "__UNTRANSLATED__: Additional or divergent provisions may not be to the detriment of the consumer and must be recorded in writing or stored in a way that is accessible to the consumer on a durable medium."
-              },
-    "cookies":  {
-                    "title":  "Politique de Cookies",
-                    "subtitle":  "Informations sur l\u0027utilisation des cookies sur notre site web",
-                    "whatTitle":  "Qu\u0027est-ce qu\u0027un Cookie ?",
-                    "whatText":  "Les cookies sont de petits fichiers texte stockÃ©s dans votre navigateur. Ils aident les sites web Ã  mÃ©moriser vos prÃ©fÃ©rences et Ã  suivre votre utilisation du site.",
-                    "typesTitle":  "Types de Cookies UtilisÃ©s",
-                    "essentialTitle":  "Cookies Essentiels",
-                    "essentialText":  "NÃ©cessaires au fonctionnement du site. Ils comprennent :",
-                    "essentialItems":  [
-                                           "Cookies de session (pour votre rÃ©servation)",
-                                           "Cookies de sÃ©curitÃ© (pour protÃ©ger vos donnÃ©es)",
-                                           "Cookies de fonctionnalitÃ© du site"
-                                       ],
-                    "preferenceTitle":  "Cookies de PrÃ©fÃ©rence",
-                    "preferenceText":  "MÃ©morisent vos choix (langue, thÃ¨me, etc.) pour une meilleure expÃ©rience.",
-                    "analyticsTitle":  "Cookies d\u0027Analyse",
-                    "analyticsText":  "Nous aident Ã  comprendre comment vous utilisez notre site pour pouvoir l\u0027amÃ©liorer. Nous utilisons :",
-                    "analyticsItems":  [
-                                           "Google Analytics (pages vues, sources de trafic)",
-                                           "Suivi des conversions (rÃ©servations, suivi des achats)"
-                                       ],
-                    "marketingTitle":  "Cookies Marketing",
-                    "marketingText":  "UtilisÃ©s pour le reciblage publicitaire et les campagnes de remarketing. Vous pouvez les refuser Ã  tout moment.",
-                    "choicesTitle":  "Vos Choix de Cookies",
-                    "choicesItems":  [
-                                         "Cookies essentiels : Ne peuvent pas Ãªtre dÃ©sactivÃ©s (nÃ©cessaires au site)",
-                                         "Analyse et Marketing : DÃ©sactivables via notre banniÃ¨re de cookies",
-                                         "ParamÃ¨tres du navigateur : La plupart des navigateurs permettent le contrÃ´le des cookies",
-                                         "Refus : Utilisez le paramÃ¨tre Â« Ne pas suivre Â» de votre navigateur"
-                                     ],
-                    "thirdPartyTitle":  "Services Tiers",
-                    "thirdPartyText":  "Nous utilisons des services tiers qui peuvent dÃ©poser leurs propres cookies :",
-                    "thirdPartyItems":  [
-                                            "Processeurs de paiement (pour transactions sÃ©curisÃ©es)",
-                                            "SystÃ¨mes de rÃ©servation (FareHarbor)",
-                                            "Fournisseurs d\u0027analyse"
-                                        ],
-                    "manageTitle":  "GÃ©rer les Cookies",
-                    "manageText":  "La plupart des navigateurs vous permettent de :",
-                    "manageItems":  [
-                                        "Voir les cookies stockÃ©s",
-                                        "Supprimer des cookies spÃ©cifiques",
-                                        "Bloquer les nouveaux cookies",
-                                        "DÃ©finir des niveaux de confidentialitÃ©"
-                                    ],
-                    "manageNote":  "Consultez la documentation de votre navigateur pour des instructions spÃ©cifiques.",
-                    "gdprTitle":  "ConformitÃ© RGPD",
-                    "gdprText":  "Nous respectons le RGPD et les rÃ©glementations ePrivacy. Nous :",
-                    "gdprItems":  [
-                                      "Ne dÃ©posons de cookies non essentiels qu\u0027avec votre consentement",
-                                      "Fournissons des informations claires sur les cookies",
-                                      "Permettons un refus facile",
-                                      "Respectons vos choix de confidentialitÃ©"
-                                  ],
-                    "lastUpdated":  "DerniÃ¨re mise Ã  jour : FÃ©vrier 2024. Contactez info@alpacasibiza.com pour toute question sur les cookies."
-                },
-    "notFound":  {
-                     "title":  "Page introuvable",
-                     "subtitle":  "Cette page semble s\u0027Ãªtre Ã©chappÃ©e comme l\u0027un de nos alpagas. Laissez-nous vous aider Ã  trouver ce que vous cherchez.",
-                     "suggestionsTitle":  "Essayez plutÃ´t l\u0027une de ces pages",
-                     "ctaText":  "Ou rÃ©servez votre expÃ©rience alpaga dÃ¨s maintenant",
-                     "suggestions":  {
-                                         "home":  "Accueil",
-                                         "homeDesc":  "Retour Ã  la page principale",
-                                         "tours":  "Visites et Tours",
-                                         "toursDesc":  "RÃ©servez votre expÃ©rience Ã  la ferme d\u0027alpagas",
-                                         "shop":  "Boutique",
-                                         "shopDesc":  "Ã‰charpes tissÃ©es Ã  la main, textiles et plus",
-                                         "about":  "Ã€ Propos",
-                                         "aboutDesc":  "Notre histoire, la ferme et les alpagas",
-                                         "contact":  "Contact",
-                                         "contactDesc":  "Contactez-nous"
-                                     }
-                 },
-    "journal":  {
-                    "title":  "Journal",
-                    "backToJournal":  "Retour au journal",
-                    "relatedTitle":  "Plus de"
-                },
-    "share":  {
-                  "label":  "Partager",
-                  "copyLink":  "Copier le lien",
-                  "copied":  "CopiÃ© !",
-                  "whatsapp":  "Partager sur WhatsApp",
-                  "twitter":  "Partager sur X",
-                  "facebook":  "Partager sur Facebook"
-              },
-    "error":  {
-                  "title":  "Une erreur s\u0027est produite",
-                  "subtitle":  "On dirait qu\u0027un de nos alpagas s\u0027est Ã©chappÃ© avec la page. Notre Ã©quipe a Ã©tÃ© notifiÃ©e â€” veuillez rÃ©essayer ou retourner Ã  l\u0027accueil.",
-                  "tryAgain":  "RÃ©essayer",
-                  "goHome":  "Retour Ã  l\u0027accueil",
-                  "goTours":  "Voir les visites",
-                  "goAdopt":  "Adopter un alpaga",
-                  "errorRef":  "RÃ©fÃ©rence d\u0027erreur"
-              },
-    "adopt":  {
-                  "cancelledHeading":  "__UNTRANSLATED__",
-                  "cancelledFullBody":  "__UNTRANSLATED__",
-                  "cancelledTryAgain":  "__UNTRANSLATED__",
-                  "cancelledTellUs":  "__UNTRANSLATED__",
-                  "thankYou":  {
-                                   "calendarDownload":  "__UNTRANSLATED__",
-                                   "calendarHint":  "__UNTRANSLATED__"
-                               },
-                  "legal":  {
-                                "withdrawalWaiver":  "__UNTRANSLATED__",
-                                "waiverRequired":  "__UNTRANSLATED__"
-                            },
-                  "share":  {
-                                "message":  "Je viens d\u0027adopter {name} chez Alpacas Ibiza !"
-                            },
-                  "campaign":  {
-                                   "daysLeft":  "{count, plural, =0 {Dernieres heures} one {# jour restant} other {# jours restants}}",
-                                   "daysRemainingAria":  "{count, plural, =0 {Dernieres heures restantes} one {# jour restant} other {# jours restants}}"
-                               },
-                  "counter":  {
-                                  "heading":  "Le troupeau en chiffres",
-                                  "empty":  "Liste en cours de preparation.",
-                                  "full":  "Chaque alpaga a un sponsor.",
-                                  "almostFull":  "{remaining, plural, one {Seulement # alpaga cherche un sponsor.} other {Seulement # alpagas cherchent un sponsor.}}",
-                                  "overHalf":  "{remaining, plural, one {Plus de la moitie a un sponsor. # attend.} other {Plus de la moitie a un sponsor. # attendent.}}",
-                                  "plenty":  "{remaining, plural, one {# sur {total} disponibles.} other {# sur {total} disponibles.}}",
-                                  "ariaEmpty":  "Compteur adoptants",
-                                  "ariaPopulated":  "{adopted} sur {total} alpagas ont un sponsor ({pct} pour cent)."
-                              }
-              },
-    "search":  {
-                   "trigger":  "__UNTRANSLATED__",
-                   "placeholder":  "__UNTRANSLATED__",
-                   "noResults":  "__UNTRANSLATED__",
-                   "empty":  "__UNTRANSLATED__",
-                   "loading":  "__UNTRANSLATED__",
-                   "openShortcut":  "__UNTRANSLATED__",
-                   "browseJournal":  "__UNTRANSLATED__"
-               },
-    "recoverCertificate":  {
-                               "title":  "__UNTRANSLATED__",
-                               "subhead":  "__UNTRANSLATED__",
-                               "emailLabel":  "__UNTRANSLATED__",
-                               "submit":  "__UNTRANSLATED__",
-                               "successMessage":  "__UNTRANSLATED__"
-                           },
-    "floatingWhatsapp":  {
-                             "defaultMessage":  "__UNTRANSLATED__",
-                             "aria":  "__UNTRANSLATED__"
-                         },
-    "alpacaOfDay":  {
-                        "cta":  "Rencontrer {name}"
-                    },
-    "alpacas":  {
-                    "filter":  {
-                                   "showing":  "Affichage de {match, number} sur {total, number}"
-                               }
-                },
-    "whatsapp":  {
-                     "panel":  {
-                                   "footer":  "Ou ecrivez-nous directement au {phone}"
-                               }
-                 },
-    "weddings":  {
-                     "subtitleLive":  "__UNTRANSLATED__: Alpaca weddings and photoshoots have been a US trend for years â€” now available in Europe. As the first and only alpaca farm on Ibiza, we offer unique wedding experiences among our 14 alpacas."
-                 },
-    "weaving":  {
-                    "studioHistoryBody":  "__UNTRANSLATED__: San fell in love with weaving in 2013. She started on small table looms, then invested in a traditional Swedish wooden loom from a 92-year-old master weaver who gave her private lessons and named the loom Big Ben. Every step from shearing to finished cloth is done by hand on Es Currals. Softer than silk, rarer than cashmere, warmer than sheep\u0027s wool â€” and hypoallergenic.",
-                    "processStep1Body":  "__UNTRANSLATED__: Each spring the alpacas are hand-shorn at Es Currals. The soft fleece is carefully stored per animal.",
-                    "processStep2Body":  "__UNTRANSLATED__: San washes and cards the fleece by hand. No industrial process â€” pure craftsmanship.",
-                    "processStep3Body":  "__UNTRANSLATED__: The yarn is spun and dyed with natural plant extracts â€” hibiscus, avocado, and other flowers.",
-                    "processStep4Body":  "__UNTRANSLATED__: San weaves on Big Ben, a traditional Swedish wooden loom, using centuries-old patterns from historical manuscripts combined with contemporary fashion.",
-                    "collectionSubhead":  "__UNTRANSLATED__: Made in Ibiza, embracing the world â€” Discover our own collection"
-                },
-    "skein":  {
-                  "step2Title":  "__UNTRANSLATED__",
-                  "faq1Question":  "__UNTRANSLATED__",
-                  "heroTitle":  "__UNTRANSLATED__",
-                  "howItWorksTitle":  "__UNTRANSLATED__",
-                  "onlyBody":  "__UNTRANSLATED__",
-                  "heroSubtitle":  "__UNTRANSLATED__",
-                  "tierSub":  "__UNTRANSLATED__",
-                  "faq3Question":  "__UNTRANSLATED__",
-                  "faq4Question":  "__UNTRANSLATED__",
-                  "faqTitle":  "__UNTRANSLATED__",
-                  "faq1Answer":  "__UNTRANSLATED__",
-                  "metaDescription":  "__UNTRANSLATED__",
-                  "metaTitle":  "__UNTRANSLATED__",
-                  "ctaSponsor":  "__UNTRANSLATED__",
-                  "step1Title":  "__UNTRANSLATED__",
-                  "tierPrice":  "__UNTRANSLATED__",
-                  "faq2Question":  "__UNTRANSLATED__",
-                  "faq2Answer":  "__UNTRANSLATED__",
-                  "step3Title":  "__UNTRANSLATED__",
-                  "ctaPickForMe":  "__UNTRANSLATED__",
-                  "tierTitle":  "__UNTRANSLATED__",
-                  "step2Body":  "__UNTRANSLATED__",
-                  "onlyTitle":  "__UNTRANSLATED__",
-                  "step1Body":  "__UNTRANSLATED__",
-                  "faq3Answer":  "__UNTRANSLATED__",
-                  "faq4Answer":  "__UNTRANSLATED__",
-                  "trustLine":  "__UNTRANSLATED__",
-                  "step3Body":  "__UNTRANSLATED__"
-              }
+  "nav": {
+    "tours": "Visites et Tours",
+    "visit": "__UNTRANSLATED__",
+    "shop": "Boutique",
+    "about": "À Propos",
+    "contact": "Contact",
+    "bookTour": "Réserver",
+    "language": "Langue",
+    "recoverCertificate": "__UNTRANSLATED__",
+    "experiences": "__UNTRANSLATED__",
+    "membership": "__UNTRANSLATED__",
+    "herdFamily": "__UNTRANSLATED__",
+    "skein": "__UNTRANSLATED__",
+    "redeemVoucher": "__UNTRANSLATED__",
+    "adoptCta": "__UNTRANSLATED__",
+    "seeAllTours": "__UNTRANSLATED__",
+    "seeAllExperiences": "__UNTRANSLATED__",
+    "seeAllAdopt": "__UNTRANSLATED__",
+    "seeAllShop": "__UNTRANSLATED__",
+    "experiencesCorporate": "__UNTRANSLATED__",
+    "experiencesFamilyFarm": "__UNTRANSLATED__",
+    "experiencesRomanticSunset": "__UNTRANSLATED__",
+    "shopAlcaca": "__UNTRANSLATED__",
+    "shopWoven": "__UNTRANSLATED__",
+    "shopCommission": "__UNTRANSLATED__",
+    "herdDiary": "__UNTRANSLATED__"
+  },
+  "visit": {
+    "title": "__UNTRANSLATED__",
+    "subhead": "__UNTRANSLATED__",
+    "gettingHere": {
+      "heading": "__UNTRANSLATED__"
+    },
+    "onArrival": {
+      "heading": "__UNTRANSLATED__"
+    },
+    "accessibility": {
+      "heading": "__UNTRANSLATED__"
+    },
+    "cancellation": {
+      "heading": "__UNTRANSLATED__"
+    },
+    "photos": {
+      "heading": "__UNTRANSLATED__"
+    },
+    "ctas": {
+      "heading": "__UNTRANSLATED__",
+      "bookTour": "__UNTRANSLATED__",
+      "seeHerd": "__UNTRANSLATED__",
+      "contact": "__UNTRANSLATED__"
+    }
+  },
+  "hero": {
+    "title": "Es Currals Alpacas Ibiza",
+    "subtitle": "La toute première ferme d'alpagas d'Ibiza, située dans le nord rural sur une finca authentique. Foyer de Wishfulfilling Weaving, où des écharpes exclusives sont tissées à la main sur un métier à tisser traditionnel en bois avec de la laine d'alpaga.",
+    "ctaPrimary": "Réserver une Visite de la Ferme",
+    "ctaSecondary": "Acheter Maintenant"
+  },
+  "paths": {
+    "bookNow": "Réserver",
+    "browseCollection": "Voir la Collection",
+    "startProject": "Commencer un Projet",
+    "learnMore": "En Savoir Plus",
+    "tour": {
+      "title": "Réserver un Tour",
+      "description": "Visitez notre ferme, rencontrez les alpagas, apprenez l'art du tissage et profitez du paysage d'Ibiza."
+    },
+    "shop": {
+      "title": "Acheter des Tissages",
+      "description": "Écharpes, couvertures et pièces artisanales faites main en laine d'alpaga naturelle avec des techniques traditionnelles."
+    },
+    "commission": {
+      "title": "Sur Commande",
+      "description": "Créez quelque chose d'unique. Commandez une pièce personnalisée avec vos propres couleurs, motifs et dimensions."
+    },
+    "alcaca": {
+      "title": "Acheter Alcaca",
+      "description": "Fumier d'alpaga premium pour jardinage bio et agriculture durable. Commandes en gros ou packs d'échantillons."
+    }
+  },
+  "features": {
+    "sectionTitle": "Pourquoi Choisir Es Currals Alpacas Ibiza",
+    "sectionSubtitle": "La première ferme d'alpagas d'Ibiza sur une finca authentique dans le nord rural",
+    "farm": {
+      "title": "Finca Authentique",
+      "description": "Située dans le nord rural d'Ibiza sur une finca authentique dans un cadre naturel magnifique. Vivez la vraie vie rurale."
+    },
+    "artisan": {
+      "title": "Tissage Traditionnel",
+      "description": "Écharpes exclusives tissées à la main sur un métier à tisser traditionnel en bois avec de la laine d'alpaga de haute qualité, du lin, du mohair et de la soie."
+    },
+    "sustainable": {
+      "title": "Fabriqué à Ibiza",
+      "description": "Wishfulfilling Weaving – Fabriqué à Ibiza, embrassant le monde. Pratiques durables avec notre propre laine d'alpaga. Soin des animaux et de la planète."
+    },
+    "appointment": {
+      "title": "Sur Rendez-vous",
+      "description": "Visites intimes uniquement. Nous gardons notre ferme calme et paisible pour les alpagas — et pour vous."
+    },
+    "quality": {
+      "title": "Qualité Premium",
+      "description": "Chaque produit est vérifié à la main. Nous garantissons la qualité et la durabilité de notre travail."
+    },
+    "welfare": {
+      "title": "Bien-être Animal d'Abord",
+      "description": "Nos alpagas sont des membres précieux de notre famille. Leur confort et leur bonheur guident tout ce que nous faisons."
+    }
+  },
+  "experiences": {
+    "sectionTitle": "Expériences Spéciales",
+    "sectionSubtitle": "Au-delà des tours — créez des souvenirs personnalisés dans notre ferme",
+    "privateFarm": {
+      "title": "Ferme Privée",
+      "description": "Visites sur rendez-vous uniquement. Expériences intimes et paisibles dans une vraie ferme."
+    },
+    "workshops": {
+      "title": "Ateliers",
+      "description": "Apprenez le tissage, la teinture naturelle et les arts de la fibre directement avec notre équipe artisanale."
+    },
+    "events": {
+      "title": "Événements",
+      "description": "Mariages, séances photo, retraites d'entreprise, yoga avec alpagas — expériences sur mesure."
+    },
+    "tour": {
+      "oneLiner": "__UNTRANSLATED__: Meet and hand-feed the herd on a guided 1-hour farm walk."
+    },
+    "romantic": {
+      "oneLiner": "__UNTRANSLATED__: A sunset alpaca experience for two."
+    }
+  },
+  "cta": {
+    "title": "Prêt à Découvrir Alpacas Ibiza ?",
+    "subtitle": "Que vous souhaitiez rencontrer le troupeau, explorer notre collection ou commander quelque chose de spécial — nous sommes là pour créer une expérience inoubliable.",
+    "bookTour": "Réservez Votre Tour",
+    "exploreShop": "Explorer la Boutique"
+  },
+  "newsletter": {
+    "title": "Restez Connecté",
+    "subtitle": "Recevez des nouvelles sur les nouveaux produits, ateliers et histoires de la ferme",
+    "placeholder": "Entrez votre email",
+    "subscribe": "S'abonner",
+    "success": "Merci pour votre inscription !"
+  },
+  "tours": {
+    "title": "Réservez Votre Expérience Alpaga",
+    "subtitle": "Places limitées disponibles sur rendez-vous. Chaque visite est intime et personnalisée.",
+    "reserveTitle": "Réservez Votre Visite",
+    "reserveText": "Sélectionnez votre date et heure préférées pour réserver votre visite chez nos alpagas.",
+    "integrationTitle": "Intégration FareHarbor",
+    "integrationText": "Pour activer le widget de réservation FareHarbor, ajoutez votre identifiant d'entreprise dans les variables d'environnement.",
+    "heroTitle": "Visitez Alpacas Ibiza",
+    "heroSubtitle": "Rejoignez-nous pour une expérience inoubliable à la ferme. Rencontrez nos alpagas, apprenez le tissage artisanal et plongez dans la campagne paisible d'Ibiza.",
+    "heroCta": "Réservez Votre Visite",
+    "planVisit": {
+      "hours": {
+        "title": "Horaires",
+        "description": "Tours sur rendez-vous uniquement. La disponibilité varie selon la saison.",
+        "summer": "Été : Horaires étendus",
+        "winter": "Hiver : Disponibilité limitée",
+        "contact": "Contactez-nous pour les horaires exacts"
+      },
+      "location": {
+        "title": "Emplacement",
+        "description": "San Carlos, Ibiza, Espagne",
+        "details": "Ferme privée. Itinéraire et informations de stationnement fournis à la réservation."
+      },
+      "pricing": {
+        "title": "Tarifs",
+        "starting": "À partir de 30 € par personne",
+        "custom": "Expériences personnalisées et tarifs de groupe disponibles"
+      },
+      "specialEvents": {
+        "title": "Événements Spéciaux et Réservations Privées",
+        "description": "Mariages, séances photo, yoga avec alpagas, ateliers, retraites d'entreprise — nous créons des expériences sur mesure selon votre vision.",
+        "cta": "Demander une Expérience Personnalisée"
+      }
+    },
+    "bookingSection": {
+      "title": "Réservez Votre Visite",
+      "subtitle": "Sélectionnez votre date et heure préférées pour réserver votre expérience alpaga.",
+      "cardTitle": "Réserver Votre Visite",
+      "cardSubtitle": "Cliquez sur le bouton ci-dessous pour accéder à la page de réservation et sécuriser votre place.",
+      "bookNow": "Réserver Maintenant",
+      "viewAndBook": "Voir les dates disponibles et réserver maintenant",
+      "poweredBy": "Réservation sécurisée via FareHarbor",
+      "questions": "Questions ?",
+      "questionsText": "Contactez-nous à info@alpacasibiza.com ou par WhatsApp pour une assistance personnalisée.",
+      "nextDates": "Prochaines dates disponibles",
+      "spotsLeft": "places restantes",
+      "updatedNote": "Mis à jour toutes les 2 heures · Cliquez sur \"Réserver maintenant\" pour voir tous les horaires",
+      "loading": "Chargement de la disponibilité...",
+      "apiNote": "La disponibilité en tempo réel nécessite une configuration API"
+    },
+    "questionsText": "Contactez-nous à info@alpacasibiza.com ou par WhatsApp pour une assistance personnalisée.",
+    "backHome": "Retour à l'Accueil",
+    "adoptCrossSell": {
+      "heading": "__UNTRANSLATED__",
+      "body": "__UNTRANSLATED__",
+      "cta": "__UNTRANSLATED__"
+    }
+  },
+  "guestStories": {
+    "title": "Témoignages des Visiteurs",
+    "subtitle": "Découvrez ce que les visiteurs disent de leur expérience",
+    "translateButton": "Traduire",
+    "showOriginal": "Afficher l'original",
+    "readMore": "Lire plus d'avis sur Facebook",
+    "facebookBadge": "Avis Facebook",
+    "reviews": {
+      "sue": "J'ai visité fin août et j'ai passé un moment fantastique ! Ibiza a tellement à offrir en plus de la musique et je recommande vivement une visite pour voir les magnifiques alpagas. Vous pouvez les nourrir et apprendre tellement sur ces animaux incroyables ❤️. J'ai été chaleureusement accueillie et j'ai eu une expérience précieuse. Allez les voir - vous les adorerez !",
+      "verena": "Nous avons rendu visite aux doux et pelucheux alpagas. Un couple super sympathique vous guide à travers les enclos avec d'excellentes informations sur ces animaux. Vous avez l'opportunité de nourrir, caresser et même donner un bisou aux alpagas. Les animaux sont très confiants et ravis de votre proximité et de la nourriture. C'était une expérience merveilleuse et je ne peux que la recommander à tous ceux qui sont à Ibiza. 🤗🥳",
+      "gemma": "J'ai fait une réservation de groupe pour 6 personnes pour le vendredi 9 mai. Bart m'a contactée pour me prévenir qu'ils étaient fermés ce jour-là car ils tondaient les alpagas. Il a ensuite gentiment proposé de nous accueillir la veille même si la ferme était fermée. L'expérience elle-même était incroyable. Bart était très compétent et amical et les alpagas étaient si mignons. Tous les alpagas sont très bien soignés et adorent Bart, ce qui montre combien il les aime.",
+      "renate": "Très amusant à faire avec nos 2 garçons de 12 ans, mais en fait amusant pour tous les âges. Nous ne savions rien des alpagas, c'était très intéressant ! Cela a pris exactement une heure.",
+      "sven": "Fortement recommandé ! Bart et San gèrent une opération fantastique. L'expérience Chill Out ultime 🦙❤️🦙",
+      "paul": "Y suis allé le 23 septembre, tour incroyable, Bart est très compétent et amical. Si vous avez une voiture c'est un incontournable 😀🦙"
+    }
+  },
+  "faq": {
+    "sectionTitle": "Questions Fréquentes",
+    "sectionSubtitle": "Tout ce que vous devez savoir avant votre visite",
+    "duration": {
+      "q": "Combien de temps dure un tour ?",
+      "a": "Les tours standards durent 2-3 heures. Les ateliers et expériences prolongées peuvent être personnalisés. Nous vous recommandons de vérifier les créneaux disponibles lors de la réservation."
+    },
+    "languages": {
+      "q": "En quelles langues proposez-vous des tours ?",
+      "a": "Nous proposons des tours en anglais, espagnol et néerlandais. Si vous avez besoin d'une autre langue, contactez-nous."
+    },
+    "children": {
+      "q": "Les visites conviennent-elles aux enfants ?",
+      "a": "Oui ! Les tours sont adaptés aux familles. Les enfants doivent être accompagnés, surtout près des animaux. Nous recommandons à partir de 4 ans, mais les plus petits peuvent venir avec leurs parents."
+    },
+    "wear": {
+      "q": "Comment dois-je m'habiller ?",
+      "a": "Portez des chaussures fermées et confortables adaptées au terrain de la ferme. Apportez de la crème solaire en été. Des vêtements légers sont idéaux car la ferme est en plein air. Évitez les couleurs vives ou les parfums forts pour garder les alpagas calmes."
+    },
+    "accessibility": {
+      "q": "La ferme est-elle accessible aux personnes à mobilité réduite ?",
+      "a": "Notre ferme est sur un terrain naturel. Contactez-nous à l'avance pour discuter de l'accessibilité et comment nous pouvons nous adapter à vos besoins."
+    },
+    "food": {
+      "q": "Peut-on apporter de la nourriture ou des boissons ?",
+      "a": "La nourriture extérieure n'est pas autorisée, mais nous proposons des rafraîchissements bio. Nous nous adaptons aux restrictions alimentaires — mentionnez-les lors de la réservation."
+    },
+    "booking": {
+      "q": "Comment réserver un tour ?",
+      "a": "Utilisez notre système de réservation en ligne ci-dessous pour vérifier la disponibilité et réserver votre place. Réservations de groupe et expériences personnalisées : contactez-nous."
+    },
+    "cancellation": {
+      "q": "Que faire si je dois annuler ou reprogrammer ?",
+      "a": "Les annulations jusqu'à 48 heures avant le tour bénéficient d'un remboursement complet ou d'un report. Moins de 48 heures : des frais de 50% s'appliquent."
+    },
+    "private": {
+      "q": "Proposez-vous des tours privés ou des événements de groupe ?",
+      "a": "Oui ! Nous proposons des expériences privées à la ferme, mariages, retraites d'entreprise et séances de yoga avec alpagas. Contactez-nous pour des forfaits personnalisés."
+    },
+    "parking": {
+      "q": "Y a-t-il un parking ?",
+      "a": "Oui, parking gratuit sur place. Les places sont limitées — arrivez 15 minutes en avance pour vous garer."
+    }
+  },
+  "backHome": "Retour à l'Accueil",
+  "shop": {
+    "title": "Collection Wishfulfilling Weaving",
+    "subtitle": "Fabriqué à Ibiza, embrassant le monde",
+    "description": "Écharpes exclusives tissées à la main sur un métier à tisser traditionnel en bois à partir de laine d'alpaga de haute qualité, de lin, de mohair et de laine de soie.",
+    "categories": {
+      "woven": {
+        "title": "Collection Tissée",
+        "description": "Écharpes et textiles exclusifs tissés à la main"
+      },
+      "commission": {
+        "title": "Commande Personnalisée",
+        "description": "Créez votre propre pièce unique avec des couleurs et motifs personnalisés"
+      },
+      "alcaca": {
+        "title": "Alcaca – Fumier d'Alpaga",
+        "description": "Engrais biologique premium de nos alpagas"
+      }
+    },
+    "explore": "Explorer",
+    "woven": {
+      "title": "Collection Tissée",
+      "description": "Écharpes, couvertures et textiles faits main"
+    },
+    "commission": {
+      "title": "Commande Personnalisée",
+      "description": "Créez votre propre pièce unique"
+    },
+    "manure": {
+      "title": "Fumier d'Alpaga",
+      "description": "Engrais biologique premium"
+    }
+  },
+  "wovenPage": {
+    "title": "Collection Tissée",
+    "subtitle": "Faite main avec amour en utilisant des techniques de tissage traditionnelles et de la laine d'alpaga naturelle",
+    "addToCart": "Ajouter au Panier"
+  },
+  "commissionPage": {
+    "title": "Commande Personnalisée",
+    "subtitle": "Créez votre pièce de rêve avec des couleurs, motifs et dimensions personnalisés",
+    "formTitle": "Parlez-nous de Votre Vision",
+    "name": "Votre Nom",
+    "email": "Email",
+    "description": "Description du Projet",
+    "submit": "Envoyer la Demande",
+    "sending": "Envoi…",
+    "successMessage": "Merci ! Nous examinerons votre commande et vous contacterons bientôt. 🦙",
+    "errorMessage": "Une erreur s'est produite. Veuillez réessayer ou nous écrire directement."
+  },
+  "alcacaPage": {
+    "title": "Alcaca Oro Negro",
+    "metaTitle": "__UNTRANSLATED__",
+    "metaDescription": "__UNTRANSLATED__",
+    "subtitle": "__UNTRANSLATED__",
+    "orderNow": "Renseignez-vous",
+    "storyTitle": "__UNTRANSLATED__",
+    "storyBody": "__UNTRANSLATED__",
+    "photo1Alt": "__UNTRANSLATED__",
+    "photo2Alt": "__UNTRANSLATED__",
+    "miniTier": "__UNTRANSLATED__",
+    "bagTier": "__UNTRANSLATED__",
+    "bulkTier": "__UNTRANSLATED__",
+    "enquire": "Renseignez-vous",
+    "whyTitle": "__UNTRANSLATED__",
+    "benefit1": "__UNTRANSLATED__",
+    "benefit2": "__UNTRANSLATED__",
+    "benefit3": "__UNTRANSLATED__",
+    "benefit4": "__UNTRANSLATED__"
+  },
+  "about": {
+    "title": "À Propos d'Alpacas Ibiza",
+    "storyTitle": "Notre Histoire",
+    "storyText": "Alpacas Ibiza a été fondée sur la conviction que le tourisme peut être significatif, artisanal et profondément lié au bien-être animal. Nous avons créé la première ferme d'alpagas de l'île pour partager notre passion pour ces créatures douces et leurs fibres incroyables.",
+    "valuesTitle": "Nos Valeurs",
+    "weavingTitle": "Wishfulfilling Weaving",
+    "weavingSubtitle": "Fabriqué à Ibiza, embrassant le monde",
+    "weavingDescription": "Wishfulfilling Weaving est notre ligne de tissage exclusive. San tisse des écharpes exclusives sur un métier à tisser traditionnel en bois, utilisant de la laine d'alpaga de haute qualité, du lin, du mohair et de la soie. Chaque pièce est fabriquée à la main avec intention et amour à Ibiza.",
+    "handcraftedBadge": "Fait main à Ibiza",
+    "welfare": {
+      "title": "Bien-être Animal",
+      "description": "Nos alpagas passent en premier dans chaque décision"
+    },
+    "sustainability": {
+      "title": "Durabilité",
+      "description": "Pratiques biologiques et responsabilité environnementale"
+    },
+    "quality": {
+      "title": "Qualité Artisanale",
+      "description": "Transformé, vérifié et soigné à la main"
+    },
+    "community": {
+      "title": "Communauté",
+      "description": "Partager les connaissances et créer des connexions"
+    }
+  },
+  "sustainability": {
+    "title": "__UNTRANSLATED__",
+    "subtitle": "__UNTRANSLATED__",
+    "welfareTitle": "__UNTRANSLATED__",
+    "welfareBody": "__UNTRANSLATED__",
+    "craftTitle": "__UNTRANSLATED__",
+    "craftBody": "__UNTRANSLATED__: Alpacas are sheared only once a year, so every lock of fleece is almost literally worth its weight in gold. San processes all of it by hand in the Wishfulfilling Weaving studio: hand-washing the raw fleece, carding it, spinning the yarn, and weaving on traditional wooden looms. She works from centuries-old patterns found in historical manuscripts, combining them with contemporary design. Every piece is unique and non-duplicable, made to order, 100% sustainable. OWNER_REVIEW_TRANSLATION",
+    "dyesTitle": "__UNTRANSLATED__",
+    "dyesBody": "__UNTRANSLATED__",
+    "wasteTitle": "__UNTRANSLATED__",
+    "wasteBody": "__UNTRANSLATED__",
+    "landTitle": "__UNTRANSLATED__",
+    "landBody": "__UNTRANSLATED__",
+    "sourcingTitle": "__UNTRANSLATED__",
+    "sourcingBody": "__UNTRANSLATED__",
+    "trustSectionTitle": "__UNTRANSLATED__",
+    "trustAbout": "__UNTRANSLATED__",
+    "trustPress": "__UNTRANSLATED__",
+    "trustContact": "__UNTRANSLATED__",
+    "ownerConfirmHeader": "__UNTRANSLATED__",
+    "ownerConfirmBody": "__UNTRANSLATED__"
+  },
+  "contact": {
+    "title": "Nous Contacter",
+    "subtitle": "Vous avez des questions ? Nous aimerions vous entendre !",
+    "formTitle": "Envoyez-nous un Message",
+    "name": "Nom",
+    "email": "Email",
+    "subject": "Sujet",
+    "message": "Message",
+    "send": "Envoyer le Message",
+    "sending": "Envoi…",
+    "successMessage": "Merci ! Nous vous répondrons bientôt. 🦙",
+    "errorMessage": "Une erreur s'est produite. Veuillez réessayer ou nous écrire directement.",
+    "infoTitle": "Informations de Contact",
+    "location": "Localisation",
+    "phone": "Téléphone",
+    "emailLabel": "Email",
+    "hours": "Horaires",
+    "byAppointment": "Sur rendez-vous uniquement"
+  },
+  "footer": {
+    "tagline": "La première ferme d'alpagas et atelier de tissage artisanal d'Ibiza",
+    "explore": "Explorer",
+    "shopTitle": "Boutique",
+    "wovenCollection": "Collection Tissée",
+    "customCommission": "Commande Personnalisée",
+    "alpacaManure": "Fumier d'Alpaga (Alcaca)",
+    "aboutUs": "À Propos",
+    "contact": "Contact",
+    "privacy": "Politique de Confidentialité",
+    "terms": "Conditions de Service",
+    "cookies": "Politique de Cookies",
+    "copyright": "Tous droits réservés.",
+    "newsletterArchive": "__UNTRANSLATED__",
+    "herdFamily": "__UNTRANSLATED__",
+    "membership": "__UNTRANSLATED__",
+    "redeemVoucher": "__UNTRANSLATED__",
+    "donors": "__UNTRANSLATED__",
+    "myAdoption": "__UNTRANSLATED__",
+    "emailPreferences": "__UNTRANSLATED__",
+    "recoverCertificate": "__UNTRANSLATED__",
+    "press": "__UNTRANSLATED__",
+    "pressRoom": "__UNTRANSLATED__",
+    "pressKit": "__UNTRANSLATED__",
+    "mediaGallery": "__UNTRANSLATED__",
+    "info": "__UNTRANSLATED__",
+    "siteMap": "__UNTRANSLATED__"
+  },
+  "homepage": {
+    "experiences": {
+      "title": "Choisissez Votre Expérience",
+      "subtitle": "Expériences curatées pour chaque occasion"
+    },
+    "skeinCallout": {
+      "headline": "__UNTRANSLATED__",
+      "body": "__UNTRANSLATED__",
+      "cta": "__UNTRANSLATED__"
+    },
+    "activityCards": {
+      "weddings": {
+        "title": "__UNTRANSLATED__",
+        "description": "__UNTRANSLATED__",
+        "cta": "__UNTRANSLATED__"
+      },
+      "adopt": {
+        "title": "__UNTRANSLATED__",
+        "description": "__UNTRANSLATED__",
+        "cta": "__UNTRANSLATED__"
+      },
+      "yoga": {
+        "title": "__UNTRANSLATED__",
+        "description": "__UNTRANSLATED__",
+        "cta": "__UNTRANSLATED__"
+      },
+      "workshops": {
+        "title": "__UNTRANSLATED__",
+        "description": "__UNTRANSLATED__",
+        "cta": "__UNTRANSLATED__"
+      },
+      "business": {
+        "title": "__UNTRANSLATED__",
+        "description": "__UNTRANSLATED__",
+        "cta": "__UNTRANSLATED__"
+      }
+    }
+  },
+  "corporate": {
+    "title": "Retraites d'Entreprise et Team Building",
+    "subtitle": "Déconnectez-vous pour vous reconnecter. Amenez votre équipe dans la campagne paisible d'Ibiza pour une expérience de cohésion unique avec notre troupeau d'alpagas.",
+    "cta": "Renseignements pour Équipes",
+    "whyTitle": "Pourquoi les Alpagas pour le Team Building ?",
+    "whyText": "Les alpagas sont des animaux sensibles et apaisants qui reflètent l'énergie humaine. Interagir avec eux nécessite patience, observation et communication non verbale — des compétences parfaites pour un travail d'équipe efficace.",
+    "features": {
+      "stress": {
+        "title": "Réduction du Stress",
+        "description": "La présence apaisante des alpagas réduit le cortisol et favorise la pleine conscience."
+      },
+      "communication": {
+        "title": "Communication",
+        "description": "Apprenez à diriger sans forcer. Les alpagas répondent à l'assurance calme."
+      },
+      "creativity": {
+        "title": "Créativité",
+        "description": "Les ateliers de tissage stimulent la résolution créative de problèmes et la concentration."
+      },
+      "nature": {
+        "title": "Connexion avec la Nature",
+        "description": "Sortez votre équipe du bureau pour profiter de l'air frais méditerranéen."
+      }
+    },
+    "itinerary": {
+      "title": "Programme Type",
+      "item1": {
+        "time": "10h00",
+        "title": "Accueil et Rafraîchissements",
+        "desc": "Café, thé et pâtisseries locales sur la terrasse."
+      },
+      "item2": {
+        "time": "10h30",
+        "title": "Rencontre du Troupeau",
+        "desc": "Présentation guidée des alpagas. Découvrez leurs noms et personnalités."
+      },
+      "item3": {
+        "time": "11h30",
+        "title": "Défi d'Équipe",
+        "desc": "Activité interactive : Guider un alpaga à travers un parcours simple nécessitant du travail d'équipe."
+      },
+      "item4": {
+        "time": "13h00",
+        "title": "Déjeuner à la Ferme",
+        "desc": "Pique-nique bio avec des produits locaux sous les caroubiers."
+      }
+    },
+    "planTitle": "Prêt à Organiser Votre Événement ?",
+    "planText": "Nous personnalisons chaque forfait entreprise selon la taille et les objectifs de votre équipe. Contactez-nous pour un devis.",
+    "planCta": "Demander un Devis",
+    "liveBodyEN": "__UNTRANSLATED__: There is no better place to reflect on the past and plan for the future with your business colleagues than among our alpacas in the unspoilt nature of northern Ibiza. An environment of pure zen that can only inspire fresh ideas and brilliant insights! On request we put together a complete package with catering on-site or at one of the charming nearby restaurants.",
+    "subheadAlt": "__UNTRANSLATED__: Reflecting and planning amidst our alpacas in the unspoilt nature of northern Ibiza"
+  },
+  "romantic": {
+    "title": "Promenades Romantiques au Coucher de Soleil",
+    "subtitle": "L'heure dorée avec les alpagas. Une expérience privée et intime pour les couples au cœur d'Ibiza.",
+    "cta": "Réserver un Tour Coucher de Soleil",
+    "quote": "« Le rendez-vous le plus magique que nous ayons jamais eu. »",
+    "description": "Échappez à la foule. Juste vous, votre partenaire et nos doux alpagas se promenant dans les orangeraies tandis que le soleil se couche derrière les collines.",
+    "champagne": {
+      "title": "Champagne",
+      "desc": "__UNTRANSLATED__: Optional add-on to toast the sunset."
+    },
+    "photos": {
+      "title": "Photos",
+      "desc": "Votre guide capture des moments spontanés pour que vous puissiez vivre l'instant."
+    },
+    "privacy": {
+      "title": "Intimité",
+      "desc": "Tours strictement privés disponibles sur demande."
+    },
+    "proposalTitle": "Parfait pour les Demandes en Mariage",
+    "proposalText": "Vous pensez à poser la question ? Nous pouvons vous aider à orchestrer le moment parfait avec les alpagas comme témoins.",
+    "proposalCta": "Nous Contacter pour Organiser"
+  },
+  "family": {
+    "title": "Journées Famille à la Ferme",
+    "subtitle": "Faites découvrir à vos enfants la joie des animaux. Sûr, éducatif et amusant pour tous les âges.",
+    "cta": "Réserver une Visite Famille",
+    "educationTitle": "L'Éducation Rencontre la Tendresse",
+    "educationText": "Notre ferme n'est pas qu'un zoo — c'est une expérience éducative. Les enfants apprennent :",
+    "points": {
+      "respect": "Le Respect : Comment approcher les animaux en douceur.",
+      "biology": "La Biologie : Pourquoi les alpagas ont une toison douce et des coussinets au lieu de sabots.",
+      "sustainability": "La Durabilité : Comment nous utilisons le fumier d'alpaga (« Oro Negro ») pour l'agriculture."
+    },
+    "safetyTitle": "La Sécurité d'Abord",
+    "safety": {
+      "gentle": {
+        "title": "Animaux Doux",
+        "desc": "Notre troupeau est socialisé et habitué aux enfants."
+      },
+      "stroller": {
+        "title": "Accès Poussette",
+        "desc": "Les chemins sont accessibles aux poussettes robustes."
+      },
+      "hygiene": {
+        "title": "Hygiène",
+        "desc": "Stations de lavage des mains disponibles."
+      },
+      "refreshments": {
+        "title": "Rafraîchissements",
+        "desc": "Boissons et collations adaptées aux enfants."
+      }
+    },
+    "faq": {
+      "age": {
+        "q": "Quel est l'âge minimum ?",
+        "a": "Tous les âges sont les bienvenus ! Les enfants de moins de 3 ans sont gratuits. Nous recommandons à partir de 4 ans pour l'expérience complète de balade."
+      },
+      "safe": {
+        "q": "Les alpagas sont-ils sûrs ?",
+        "a": "Oui, les alpagas ne mordent pas (ils n'ont que des dents inférieures !) et sont généralement très calmes. Nous enseignons à vos enfants comment interagir en toute sécurité."
+      },
+      "duration": {
+        "q": "Combien de temps dure la visite ?",
+        "a": "Les visites familiales durent généralement 1,5 à 2 heures, parfait pour les enfants."
+      }
+    }
+  },
+  "privacy": {
+    "title": "Politique de Confidentialité",
+    "subtitle": "Comment nous collectons, utilisons et protégeons vos informations",
+    "section1Title": "1. Informations Collectées",
+    "section1Intro": "Nous collectons les informations que vous fournissez directement :",
+    "section1Items": [
+      "Détails de réservation (nom, email, téléphone)",
+      "Informations de commande (adresse de livraison, informations de paiement)",
+      "Demandes de commission (détails du projet, préférences)",
+      "Inscription à la newsletter (adresse email)",
+      "Soumissions du formulaire de contact"
+    ],
+    "section2Title": "2. Utilisation de Vos Informations",
+    "section2Items": [
+      "Traiter les réservations et commandes",
+      "Envoyer des emails de confirmation et mises à jour",
+      "Répondre aux demandes",
+      "Améliorer notre site web et services",
+      "Envoyer des newsletters (vous pouvez vous désabonner à tout moment)",
+      "Remplir nos obligations légales"
+    ],
+    "section3Title": "3. Protection des Données",
+    "section3Intro": "Nous prenons votre vie privée au sérieux. Vos données sont cryptées et stockées en sécurité. Nous ne partageons pas vos informations sauf :",
+    "section3Items": [
+      "Processeurs de paiement (pour transactions sécurisées)",
+      "Systèmes de réservation (FareHarbor, selon besoin)",
+      "Exigences légales (quand la loi l'exige)"
+    ],
+    "section4Title": "4. Cookies et Suivi",
+    "section4Text": "Nous utilisons des cookies pour améliorer votre expérience. Les cookies essentiels sont nécessaires au fonctionnement. Vous pouvez contrôler les préférences de cookies dans votre navigateur ou notre bannière de cookies.",
+    "section5Title": "5. Vos Droits",
+    "section5Intro": "Vous avez le droit de :",
+    "section5Items": [
+      "Accéder à vos données",
+      "Corriger les informations inexactes",
+      "Demander la suppression (droit à l'oubli)",
+      "Refuser les communications marketing"
+    ],
+    "lastUpdated": "Dernière mise à jour : Février 2024. Contactez-nous à info@alpacasibiza.com pour toute question."
+  },
+  "terms": {
+    "title": "Conditions de Service",
+    "subtitle": "Veuillez lire ces conditions avant d'utiliser notre site web et nos services de réservation",
+    "section1Title": "1. Réservations et Tours",
+    "section1Intro": "En réservant un tour, vous acceptez de :",
+    "section1Items": [
+      "Suivre toutes les consignes de sécurité de la ferme et des animaux",
+      "Arriver 15 minutes avant l'heure prévue",
+      "Respecter les alpagas et la propriété de la ferme",
+      "Apporter une pièce d'identité valide si nécessaire",
+      "Suivre tous les protocoles de santé/sécurité en vigueur"
+    ],
+    "section2Title": "2. Annulations et Remboursements",
+    "section2Items": [
+      "Annulation jusqu'à 48 heures avant : Remboursement complet ou report",
+      "Annulation à moins de 48 heures : Frais de 50%",
+      "Non-présentation : Paiement intégral perdu",
+      "Fermeture météo : Remboursement complet ou report"
+    ],
+    "section3Title": "3. Commandes Boutique",
+    "section3Intro": "Tous les produits sont faits main. Les légères variations et imperfections sont normales et font partie du processus artisanal.",
+    "section3Items": [
+      "Expédition sous 5-7 jours ouvrables",
+      "Les commandes internationales peuvent prendre plus de temps",
+      "Retours : 30 jours pour les articles non utilisés et non endommagés",
+      "Les articles personnalisés/sur commande ne sont pas retournables"
+    ],
+    "section4Title": "4. Accords de Commission",
+    "section4Items": [
+      "Acompte de 50% requis pour sécuriser votre projet",
+      "Solde dû avant l'expédition finale",
+      "Les estimations de délai sont approximatives",
+      "Annulation après début de production : remboursement de 50% uniquement"
+    ],
+    "section5Title": "5. Photographie et Consentement",
+    "section5Text": "En visitant notre ferme ou achetant nos produits, vous consentez à être photographié. Ces images peuvent être utilisées sur notre site web et nos réseaux sociaux. Si vous préférez ne pas être photographié, informez votre guide.",
+    "section6Title": "6. Limitation de Responsabilité",
+    "section6Text": "Les visites à la ferme impliquent une interaction avec des animaux. Les visiteurs assument tous les risques. Nous ne sommes pas responsables des blessures sauf en cas de négligence grave. Les enfants doivent être surveillés en permanence.",
+    "section7Title": "7. Utilisation du Site Web",
+    "section7Items": [
+      "Ne reproduisez pas ou ne redistribuez pas notre contenu sans permission",
+      "N'essayez pas de pirater ou d'interférer avec le site web",
+      "Respectez les droits de propriété intellectuelle"
+    ],
+    "lastUpdated": "Dernière mise à jour : Février 2024. Contactez info@alpacasibiza.com pour toute question.",
+    "art1Title": "__UNTRANSLATED__: Article 1 - Definitions",
+    "art1Items": "__UNTRANSLATED__: ['Supplementary agreement: a contract whereby the consumer acquires products or services at a distance in relation to an earlier distance contract.', 'Cooling-off period: the period within which the consumer may exercise their right of withdrawal.', 'Consumer: the natural person who does not act for purposes relating to their trade, business, craft or professional activity.', 'Day: calendar day.', 'Digital content: data produced and supplied in digital form.', 'Duration contract: a contract for the regular supply of goods, services and/or digital content over a set period.', 'Durable medium: any tool enabling the consumer or entrepreneur to store information for future reference.', \"Right of withdrawal: the consumer's ability to cancel a distance contract within the cooling-off period.\", 'Model withdrawal form: the European model withdrawal form made available on the website.', 'Entrepreneur: the natural or legal person offering products, access to digital content and/or services to consumers at a distance.', 'Distance contract: a contract concluded between the entrepreneur and the consumer within an organised distance-selling system.', 'Distance communication technique: any means enabling a contract to be concluded without the consumer and entrepreneur being simultaneously present in the same space.']",
+    "art2Title": "__UNTRANSLATED__: Article 2 - Entrepreneur Identity",
+    "art2Name": "__UNTRANSLATED__: Name",
+    "art2Address": "__UNTRANSLATED__: Address",
+    "art2Phone": "__UNTRANSLATED__: Telephone",
+    "art2Email": "__UNTRANSLATED__: Email",
+    "art2Vat": "__UNTRANSLATED__: VAT number",
+    "art2Items": "__OWNER_INPUT_REQUIRED__: legal identifiers now read from lib/tenants/alpacasibiza.ts; do not hardcode here",
+    "art3Title": "__UNTRANSLATED__: Article 3 - Applicability",
+    "art3Text": "__UNTRANSLATED__: These general terms and conditions apply to every offer by the entrepreneur and to every distance contract concluded. Before a distance contract is formed, the text of these terms is made available to the consumer either in writing or on a durable medium.",
+    "art4Title": "__UNTRANSLATED__: Article 4 - The Offer",
+    "art4Text": "__UNTRANSLATED__: Images truthfully represent the products offered. Obvious errors do not bind the entrepreneur. Every offer contains sufficient information for the consumer to understand the rights and obligations arising from acceptance.",
+    "art5Title": "__UNTRANSLATED__: Article 5 - The Agreement",
+    "art5Text": "__UNTRANSLATED__: The contract is formed at the moment the consumer accepts the offer and meets its conditions. The entrepreneur confirms receipt of acceptance electronically. Until receipt is confirmed, the consumer may cancel the contract.",
+    "art6Title": "__UNTRANSLATED__: Article 6 - Right of Withdrawal",
+    "art6ProductText": "__UNTRANSLATED__: For products: the consumer may cancel a product purchase within a minimum cooling-off period of 14 days without stating reasons.",
+    "art6ServicesText": "__UNTRANSLATED__: For services and non-physical digital content: the consumer may cancel within a minimum of 14 days without stating reasons. The period begins the day after the contract is formed.",
+    "art6ExtendedText": "__UNTRANSLATED__: Extended cooling-off period: if the entrepreneur fails to provide the required withdrawal information, the cooling-off period expires twelve months after the end of the original period.",
+    "art7Title": "__UNTRANSLATED__: Article 7 - Consumer Obligations During the Cooling-Off Period",
+    "art7Text": "__UNTRANSLATED__: The consumer shall handle the product and its packaging with care. They may only unpack or use the product to the extent necessary to assess its nature, characteristics and functioning. The consumer is liable for any diminished value resulting from handling that goes beyond what is permitted.",
+    "art8Title": "__UNTRANSLATED__: Article 8 - Exercising the Right of Withdrawal and Associated Costs",
+    "art8Text": "__UNTRANSLATED__: If the consumer exercises their right of withdrawal, they must notify the entrepreneur within the cooling-off period using the model withdrawal form or another unambiguous statement. The product must be returned within 14 days of notification in its original condition with all accessories. The consumer bears the direct cost of return shipping.",
+    "art9Title": "__UNTRANSLATED__: Article 9 - Entrepreneur Obligations Upon Withdrawal",
+    "art9Text": "__UNTRANSLATED__: The entrepreneur shall refund all consumer payments, including delivery costs, as quickly as possible and within 14 days of the withdrawal notice. Refunds are made via the same payment method used by the consumer, unless the consumer agrees to a different method.",
+    "art10Title": "__UNTRANSLATED__: Article 10 - Exclusions from the Right of Withdrawal",
+    "art10Text": "__UNTRANSLATED__: The entrepreneur may exclude the following products and services from the right of withdrawal:",
+    "art10Items": "__UNTRANSLATED__: ['Products whose price depends on fluctuations in the financial market', 'Products purchased via a public auction', 'Fully performed services (with prior explicit consumer consent)', 'Package travel and passenger transport', 'Accommodation bookings for a specified date', 'Events and performances with a scheduled date', 'Made-to-measure or personalised products', 'Rapidly perishable products', 'Sealed health or hygiene products opened after delivery', 'Products irreversibly mixed with other products after delivery', 'Alcoholic beverages with prices agreed at the time of order', 'Sealed audio, video or software recordings opened after delivery', 'Newspapers, magazines (except subscriptions)', 'Non-physical digital content (with prior explicit consent)']",
+    "art11Title": "__UNTRANSLATED__: Article 11 - Pricing",
+    "art11Text": "__UNTRANSLATED__: During the stated validity period, prices of offered products and/or services will not be increased except for VAT changes. Stated prices include VAT. Price increases within 3 months of contract formation are only permitted if required by law. After 3 months, a price increase is only permitted if agreed with the consumer.",
+    "art12Title": "__UNTRANSLATED__: Article 12 - Contract Performance and Extended Warranty",
+    "art12Text": "__UNTRANSLATED__: The entrepreneur guarantees that products and/or services conform to the contract, the advertised specifications, reasonable standards of quality and usability, and applicable laws and regulations in effect on the date the contract was formed.",
+    "art13Title": "__UNTRANSLATED__: Article 13 - Delivery and Execution",
+    "art13Text": "__UNTRANSLATED__: The entrepreneur shall exercise the utmost care in receiving and fulfilling product orders. Accepted orders will be fulfilled promptly and no later than 30 days, unless a different delivery period was agreed. The risk of damage or loss rests with the entrepreneur until delivery to the consumer.",
+    "art14Title": "__UNTRANSLATED__: Article 14 - Duration Contracts: Term, Cancellation and Renewal",
+    "art14Text": "__UNTRANSLATED__: The consumer may cancel an indefinite-duration contract at any time with a maximum one-month notice period. Fixed-term contracts run for a maximum of two years. Tacit renewal is only permitted for newspapers, magazines and periodicals with a maximum renewal period of three months.",
+    "art15Title": "__UNTRANSLATED__: Article 15 - Payment",
+    "art15Text": "__UNTRANSLATED__: Amounts owed by the consumer must be paid within 14 days after the start of the cooling-off period, or, where no cooling-off period applies, within 14 days of contract formation. Prepayment may not exceed 50% of the purchase price. Late payment triggers statutory interest after the entrepreneur gives notice.",
+    "art16Title": "__UNTRANSLATED__: Article 16 - Complaints Procedure",
+    "art16Text": "__UNTRANSLATED__: The entrepreneur maintains a sufficiently publicised complaints procedure. Complaints about contract performance must be submitted promptly after the consumer discovers a defect, fully and clearly described. Submitted complaints are answered within 14 days of receipt.",
+    "art17Title": "__UNTRANSLATED__: Article 17 - Disputes",
+    "art17Text": "__UNTRANSLATED__: Contracts between the entrepreneur and the consumer to which these general terms and conditions apply are exclusively governed by Spanish law.",
+    "art18Title": "__UNTRANSLATED__: Article 18 - Additional or Divergent Provisions",
+    "art18Text": "__UNTRANSLATED__: Additional or divergent provisions may not be to the detriment of the consumer and must be recorded in writing or stored in a way that is accessible to the consumer on a durable medium."
+  },
+  "cookies": {
+    "title": "Politique de Cookies",
+    "subtitle": "Informations sur l'utilisation des cookies sur notre site web",
+    "whatTitle": "Qu'est-ce qu'un Cookie ?",
+    "whatText": "Les cookies sont de petits fichiers texte stockés dans votre navigateur. Ils aident les sites web à mémoriser vos préférences et à suivre votre utilisation du site.",
+    "typesTitle": "Types de Cookies Utilisés",
+    "essentialTitle": "Cookies Essentiels",
+    "essentialText": "Nécessaires au fonctionnement du site. Ils comprennent :",
+    "essentialItems": [
+      "Cookies de session (pour votre réservation)",
+      "Cookies de sécurité (pour protéger vos données)",
+      "Cookies de fonctionnalité du site"
+    ],
+    "preferenceTitle": "Cookies de Préférence",
+    "preferenceText": "Mémorisent vos choix (langue, thème, etc.) pour une meilleure expérience.",
+    "analyticsTitle": "Cookies d'Analyse",
+    "analyticsText": "Nous aident à comprendre comment vous utilisez notre site pour pouvoir l'améliorer. Nous utilisons :",
+    "analyticsItems": [
+      "Google Analytics (pages vues, sources de trafic)",
+      "Suivi des conversions (réservations, suivi des achats)"
+    ],
+    "marketingTitle": "Cookies Marketing",
+    "marketingText": "Utilisés pour le reciblage publicitaire et les campagnes de remarketing. Vous pouvez les refuser à tout moment.",
+    "choicesTitle": "Vos Choix de Cookies",
+    "choicesItems": [
+      "Cookies essentiels : Ne peuvent pas être désactivés (nécessaires au site)",
+      "Analyse et Marketing : Désactivables via notre bannière de cookies",
+      "Paramètres du navigateur : La plupart des navigateurs permettent le contrôle des cookies",
+      "Refus : Utilisez le paramètre « Ne pas suivre » de votre navigateur"
+    ],
+    "thirdPartyTitle": "Services Tiers",
+    "thirdPartyText": "Nous utilisons des services tiers qui peuvent déposer leurs propres cookies :",
+    "thirdPartyItems": [
+      "Processeurs de paiement (pour transactions sécurisées)",
+      "Systèmes de réservation (FareHarbor)",
+      "Fournisseurs d'analyse"
+    ],
+    "manageTitle": "Gérer les Cookies",
+    "manageText": "La plupart des navigateurs vous permettent de :",
+    "manageItems": [
+      "Voir les cookies stockés",
+      "Supprimer des cookies spécifiques",
+      "Bloquer les nouveaux cookies",
+      "Définir des niveaux de confidentialité"
+    ],
+    "manageNote": "Consultez la documentation de votre navigateur pour des instructions spécifiques.",
+    "gdprTitle": "Conformité RGPD",
+    "gdprText": "Nous respectons le RGPD et les réglementations ePrivacy. Nous :",
+    "gdprItems": [
+      "Ne déposons de cookies non essentiels qu'avec votre consentement",
+      "Fournissons des informations claires sur les cookies",
+      "Permettons un refus facile",
+      "Respectons vos choix de confidentialité"
+    ],
+    "lastUpdated": "Dernière mise à jour : Février 2024. Contactez info@alpacasibiza.com pour toute question sur les cookies."
+  },
+  "notFound": {
+    "title": "Page introuvable",
+    "subtitle": "Cette page semble s'être échappée comme l'un de nos alpagas. Laissez-nous vous aider à trouver ce que vous cherchez.",
+    "suggestionsTitle": "Essayez plutôt l'une de ces pages",
+    "ctaText": "Ou réservez votre expérience alpaga dès maintenant",
+    "suggestions": {
+      "home": "Accueil",
+      "homeDesc": "Retour à la page principale",
+      "tours": "Visites et Tours",
+      "toursDesc": "Réservez votre expérience à la ferme d'alpagas",
+      "shop": "Boutique",
+      "shopDesc": "Écharpes tissées à la main, textiles et plus",
+      "about": "À Propos",
+      "aboutDesc": "Notre histoire, la ferme et les alpagas",
+      "contact": "Contact",
+      "contactDesc": "Contactez-nous"
+    }
+  },
+  "journal": {
+    "title": "Journal",
+    "backToJournal": "Retour au journal",
+    "relatedTitle": "Plus de"
+  },
+  "share": {
+    "label": "Partager",
+    "copyLink": "Copier le lien",
+    "copied": "Copié !",
+    "whatsapp": "Partager sur WhatsApp",
+    "twitter": "Partager sur X",
+    "facebook": "Partager sur Facebook"
+  },
+  "error": {
+    "title": "Une erreur s'est produite",
+    "subtitle": "On dirait qu'un de nos alpagas s'est échappé avec la page. Notre équipe a été notifiée — veuillez réessayer ou retourner à l'accueil.",
+    "tryAgain": "Réessayer",
+    "goHome": "Retour à l'accueil",
+    "goTours": "Voir les visites",
+    "goAdopt": "Adopter un alpaga",
+    "errorRef": "Référence d'erreur"
+  },
+  "adopt": {
+    "cancelledHeading": "__UNTRANSLATED__",
+    "cancelledFullBody": "__UNTRANSLATED__",
+    "cancelledTryAgain": "__UNTRANSLATED__",
+    "cancelledTellUs": "__UNTRANSLATED__",
+    "thankYou": {
+      "calendarDownload": "__UNTRANSLATED__",
+      "calendarHint": "__UNTRANSLATED__"
+    },
+    "legal": {
+      "withdrawalWaiver": "__UNTRANSLATED__",
+      "waiverRequired": "__UNTRANSLATED__"
+    },
+    "certPreviewCaption": "__UNTRANSLATED__",
+    "certPreview": {
+      "namePlaceholder": "__UNTRANSLATED__",
+      "namePromptLabel": "__UNTRANSLATED__",
+      "nameInputAria": "__UNTRANSLATED__"
+    },
+    "share": {
+      "message": "Je viens d'adopter {name} chez Alpacas Ibiza !"
+    },
+    "referral": {
+      "welcomeFromFriend": "Bienvenue de la part d'un ami",
+      "codeApplied": "Remise appliquée automatiquement au paiement avec le code",
+      "attributionHeading": "Recommandé par un ami",
+      "attributionBody": "Ton ami recevra des crédits quand tu adopteras. Merci d'avoir suivi son lien !"
+    },
+    "campaign": {
+      "daysLeft": "{count, plural, =0 {Dernieres heures} one {# jour restant} other {# jours restants}}",
+      "daysRemainingAria": "{count, plural, =0 {Dernieres heures restantes} one {# jour restant} other {# jours restants}}"
+    },
+    "counter": {
+      "heading": "Le troupeau en chiffres",
+      "empty": "Liste en cours de preparation.",
+      "full": "Chaque alpaga a un sponsor.",
+      "almostFull": "{remaining, plural, one {Seulement # alpaga cherche un sponsor.} other {Seulement # alpagas cherchent un sponsor.}}",
+      "overHalf": "{remaining, plural, one {Plus de la moitie a un sponsor. # attend.} other {Plus de la moitie a un sponsor. # attendent.}}",
+      "plenty": "{remaining, plural, one {# sur {total} disponibles.} other {# sur {total} disponibles.}}",
+      "ariaEmpty": "Compteur adoptants",
+      "ariaPopulated": "{adopted} sur {total} alpagas ont un sponsor ({pct} pour cent)."
+    },
+    "timeline": {
+      "photoshoot": {
+        "desc": "__UNTRANSLATED__: An hour with your alpaca during a coordinated photo opportunity."
+      }
+    },
+    "junior": {
+      "tierName": "__UNTRANSLATED__",
+      "tagline": "__UNTRANSLATED__",
+      "bullet1": "__UNTRANSLATED__",
+      "bullet2": "__UNTRANSLATED__",
+      "bullet3": "__UNTRANSLATED__",
+      "cta": "__UNTRANSLATED__"
+    },
+    "feature": {
+      "sixTours": "__UNTRANSLATED__",
+      "fertilizer5kg": "__UNTRANSLATED__",
+      "calendar": "__UNTRANSLATED__",
+      "keychain": "__UNTRANSLATED__",
+      "framedPhoto": "__UNTRANSLATED__"
+    },
+    "visitInsteadCta": "__UNTRANSLATED__"
+  },
+  "search": {
+    "trigger": "__UNTRANSLATED__",
+    "placeholder": "__UNTRANSLATED__",
+    "noResults": "__UNTRANSLATED__",
+    "empty": "__UNTRANSLATED__",
+    "loading": "__UNTRANSLATED__",
+    "openShortcut": "__UNTRANSLATED__",
+    "browseJournal": "__UNTRANSLATED__"
+  },
+  "recoverCertificate": {
+    "title": "__UNTRANSLATED__",
+    "subhead": "__UNTRANSLATED__",
+    "emailLabel": "__UNTRANSLATED__",
+    "submit": "__UNTRANSLATED__",
+    "successMessage": "__UNTRANSLATED__"
+  },
+  "floatingWhatsapp": {
+    "defaultMessage": "__UNTRANSLATED__",
+    "aria": "__UNTRANSLATED__"
+  },
+  "alpacaOfDay": {
+    "cta": "Rencontrer {name}"
+  },
+  "alpacas": {
+    "filter": {
+      "showing": "Affichage de {match, number} sur {total, number}"
+    }
+  },
+  "whatsapp": {
+    "panel": {
+      "footer": "Ou ecrivez-nous directement au {phone}"
+    }
+  },
+  "weddings": {
+    "subtitleLive": "__UNTRANSLATED__: Alpaca weddings and photoshoots have been a US trend for years — now available in Europe. As the first and only alpaca farm on Ibiza, we offer unique wedding experiences among our 14 alpacas."
+  },
+  "weaving": {
+    "studioHistoryBody": "__UNTRANSLATED__: The weaving studio works with antique looms, traditional techniques, and locally-sourced fibre from our herd.",
+    "processStep1Body": "__UNTRANSLATED__: Each spring the alpacas are hand-shorn at Es Currals. The soft fleece is carefully stored per animal.",
+    "processStep2Body": "__UNTRANSLATED__: San washes and cards the fleece by hand. No industrial process — pure craftsmanship.",
+    "processStep3Body": "__UNTRANSLATED__: The yarn is spun and dyed with natural plant extracts — hibiscus, avocado, and other flowers.",
+    "processStep4Body": "__UNTRANSLATED__: San weaves on traditional wooden looms, using centuries-old patterns from historical manuscripts combined with contemporary fashion.",
+    "collectionSubhead": "__UNTRANSLATED__: Made in Ibiza, embracing the world — Discover our own collection"
+  },
+  "skein": {
+    "step2Title": "__UNTRANSLATED__",
+    "faq1Question": "__UNTRANSLATED__",
+    "heroTitle": "__UNTRANSLATED__",
+    "howItWorksTitle": "__UNTRANSLATED__",
+    "onlyBody": "__UNTRANSLATED__",
+    "heroSubtitle": "__UNTRANSLATED__",
+    "tierSub": "__UNTRANSLATED__",
+    "faq3Question": "__UNTRANSLATED__",
+    "faq4Question": "__UNTRANSLATED__",
+    "faqTitle": "__UNTRANSLATED__",
+    "faq1Answer": "__UNTRANSLATED__",
+    "metaDescription": "__UNTRANSLATED__",
+    "metaTitle": "__UNTRANSLATED__",
+    "ctaSponsor": "__UNTRANSLATED__",
+    "step1Title": "__UNTRANSLATED__",
+    "tierPrice": "__UNTRANSLATED__",
+    "faq2Question": "__UNTRANSLATED__",
+    "faq2Answer": "__UNTRANSLATED__",
+    "step3Title": "__UNTRANSLATED__",
+    "ctaPickForMe": "__UNTRANSLATED__",
+    "tierTitle": "__UNTRANSLATED__",
+    "step2Body": "__UNTRANSLATED__",
+    "onlyTitle": "__UNTRANSLATED__",
+    "step1Body": "__UNTRANSLATED__",
+    "faq3Answer": "__UNTRANSLATED__",
+    "faq4Answer": "__UNTRANSLATED__",
+    "trustLine": "__UNTRANSLATED__",
+    "step3Body": "__UNTRANSLATED__",
+    "gift": {
+      "toggle": "__UNTRANSLATED__",
+      "subheading": "__UNTRANSLATED__",
+      "recipientName": "__UNTRANSLATED__",
+      "recipientEmail": "__UNTRANSLATED__",
+      "message": "__UNTRANSLATED__",
+      "activeBadge": "__UNTRANSLATED__",
+      "expandHint": "__UNTRANSLATED__",
+      "confirmation": "__UNTRANSLATED__",
+      "reset": "__UNTRANSLATED__"
+    },
+    "thankYou": {
+      "giftMode": "__UNTRANSLATED__"
+    }
+  },
+  "socialProof": {
+    "visitsThisWeek": "__UNTRANSLATED__",
+    "toursUpcoming": "__UNTRANSLATED__",
+    "adoptersCount": "__UNTRANSLATED__",
+    "fallback": "__UNTRANSLATED__"
+  },
+  "waitlist": {
+    "heading": "__UNTRANSLATED__",
+    "subheading": "__UNTRANSLATED__",
+    "emailPlaceholder": "__UNTRANSLATED__",
+    "datePlaceholder": "__UNTRANSLATED__",
+    "submitLabel": "__UNTRANSLATED__",
+    "successMessage": "__UNTRANSLATED__"
+  },
+  "redeemVoucher": {
+    "heroTitle": "__UNTRANSLATED__",
+    "heroSubtitle": "__UNTRANSLATED__",
+    "codeLabel": "__UNTRANSLATED__",
+    "codePlaceholder": "__UNTRANSLATED__",
+    "submitLabel": "__UNTRANSLATED__",
+    "submitting": "__UNTRANSLATED__",
+    "successTitle": "__UNTRANSLATED__",
+    "successMessage": "__UNTRANSLATED__",
+    "invalidMessage": "__UNTRANSLATED__",
+    "helpTitle": "__UNTRANSLATED__",
+    "helpBody": "__UNTRANSLATED__"
+  },
+  "gifts": {
+    "flow": {
+      "tourDescription": "__UNTRANSLATED__: 1-hour farm tour"
+    }
+  },
+  "reviews": {
+    "translateButton": "__UNTRANSLATED__",
+    "translateAria": "__UNTRANSLATED__",
+    "showOriginal": "__UNTRANSLATED__",
+    "translating": "__UNTRANSLATED__",
+    "translateError": "__UNTRANSLATED__",
+    "attribution": "__UNTRANSLATED__"
+  },
+  "tourConfirmation": {
+    "crossSell": {
+      "adoptHeading": "__UNTRANSLATED__",
+      "adoptBody": "__UNTRANSLATED__",
+      "adoptCta": "__UNTRANSLATED__",
+      "herdHeading": "__UNTRANSLATED__",
+      "herdBody": "__UNTRANSLATED__",
+      "herdCta": "__UNTRANSLATED__"
+    }
+  },
+  "herdDiary": {
+    "heading": "__UNTRANSLATED__",
+    "subhead": "__UNTRANSLATED__",
+    "emptyState": "__UNTRANSLATED__",
+    "eventDateLabel": "__UNTRANSLATED__",
+    "alpacaChipLabel": "__UNTRANSLATED__",
+    "donorPortalCta": "__UNTRANSLATED__",
+    "diaryEntriesFor": "__UNTRANSLATED__",
+    "seeFullDiary": "__UNTRANSLATED__",
+    "metaTitle": "__UNTRANSLATED__",
+    "metaDescription": "__UNTRANSLATED__"
+  },
+  "portal": {
+    "title": "Votre parrainage",
+    "matchedAlpacaFallback": "Votre alpaga attribué",
+    "subscriptionHeader": "Abonnement",
+    "amount": "Montant",
+    "nextCharge": "Prochain prélèvement",
+    "started": "Commencé",
+    "canceled": "Annulé",
+    "updatePayment": "Mettre à jour le moyen de paiement",
+    "cancel": "Annuler le parrainage",
+    "adoptAgain": "Parrainer à nouveau",
+    "failureWarningPrefix": "Attention — {count} échecs de paiement récents.",
+    "failureWarningSuffix": "Votre parrainage sera suspendu si nous ne pouvons pas prélever bientôt. Utilisez le bouton « Mettre à jour le moyen de paiement » ci-dessous pour le corriger.",
+    "photoComingSoon": "Photo à venir. Le propriétaire rassemble les portraits — votre pack de bienvenue en contient un aussi.",
+    "farmNewsHeader": "{label} de la ferme",
+    "sneakPeek": "Aperçu",
+    "weWillPick": "Vous nous laissez choisir — nous vous associerons à l’un des animaux du troupeau d’ici quelques jours et mettrons cette page à jour.",
+    "bioComingSoon": "Biographie à venir — le propriétaire recueille des notes de personnalité auprès du troupeau.",
+    "personalityLabel": "Personnalité :",
+    "footerHelpPrefix": "Besoin d’aide ? Répondez à votre e-mail de bienvenue ou écrivez à",
+    "requestFreshLink": "Demander un nouvel e-mail du portail",
+    "emailUs": "Écrivez-nous",
+    "errorTitle": {
+      "noToken": "Lien du portail manquant",
+      "expired": "Lien du portail expiré",
+      "sdkMissing": "Service en cours de démarrage",
+      "fetchFailed": "Impossible de charger votre parrainage"
+    }
+  }
 }

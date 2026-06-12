@@ -68,7 +68,7 @@ Items that either (a) constitute an active legal risk or (b) render the site non
 - **Vercel deployment and domain cutover.**
   Referenced: `OWNER_LAUNCH_RUNBOOK.md §2k`, `CANT_BE_DONE.md` "Domain DNS coordination".
   The site is not live until: Vercel account created, repo connected, all Tier 1 + Tier 2 env vars pasted, custom domain `alpacasibiza.com` pointed at Vercel via A + CNAME records.
-  How to resolve: Full step-by-step at `OWNER_LAUNCH_RUNBOOK.md §2k`. DNS cutover runbook at `docs/deploy/cutover.md` (if it exists) or follow the Vercel domain setup UI. Run at a low-traffic window after lowering TTL 24h ahead.
+  How to resolve: Full step-by-step at `OWNER_LAUNCH_RUNBOOK.md §2k`. DNS cutover runbook at `DNS_CUTOVER.md` (includes Resend email records and One.com-specific steps). Run at a low-traffic window after lowering TTL 24h ahead.
 
 - **Phone number to display — currently showing a Belgian mobile.**
   Referenced: `OWNER_INPUT_NEEDED.md §"Phone contact method"`, `OWNER_LAUNCH_RUNBOOK.md §4d`.

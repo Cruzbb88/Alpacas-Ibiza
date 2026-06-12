@@ -24,7 +24,10 @@ function fetchAvailability(): Promise<AvailabilityResponse> {
     if (fresh) return cachedPromise!
 
     cachedAt = Date.now()
-    cachedPromise = fetch('/api/availability')
+    // 8s ceiling: /api/availability proxies FareHarbor; a stalled upstream would
+    // otherwise leave the date grid pending forever. The abort rejects, and the
+    // existing .catch converts it to the graceful "failed" fallback.
+    cachedPromise = fetch('/api/availability', { signal: AbortSignal.timeout(8_000) })
         .then((r) => r.json() as Promise<AvailabilityResponse>)
         .catch(() => ({ dates: [], error: 'failed' }))
     return cachedPromise

@@ -41,7 +41,13 @@ export function ConsentNotice({ locale, actionLabel }: ConsentNoticeProps) {
   // reorder around the verb (e.g. German verb-final). For unknown locales we
   // fall back to English. The translation helper already falls back to en,
   // and then to the default value, so we always render something readable.
-  const byTemplate = translate('legal.consentBy')
+  // `.raw()` returns the literal message ("By {action} you agree to our")
+  // WITHOUT running ICU formatting. We need the raw template here because we
+  // split on the `{action}` placeholder and inject `actionLabel` as a styled
+  // span below. Calling `translate('legal.consentBy')` instead throws
+  // FORMATTING_ERROR — ICU sees `{action}` and demands a value we deliberately
+  // don't pass (we render it as markup, not a plain string).
+  const byTemplate = String(translate.raw('legal.consentBy'))
   const termsLabel = translate('legal.consentTerms')
   const privacyLabel = translate('legal.consentPrivacy')
 

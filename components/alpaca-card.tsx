@@ -15,6 +15,7 @@ import Link from 'next/link'
 import type { Locale } from '@/i18n.config'
 import type { AnimalEntity } from '@/lib/integrations/content-types'
 import { getTranslations } from 'next-intl/server'
+import { InitialsAvatar } from '@/components/initials-avatar'
 
 interface AlpacaCardProps {
   alpaca: AnimalEntity
@@ -74,14 +75,10 @@ export async function AlpacaCard({ alpaca, locale, showAdoptCta = false }: Alpac
           />
         </div>
       ) : (
-        <div
-          className="aspect-square bg-secondary/60 flex items-center justify-center"
-          aria-label={`${translate('alpacas.photoComingSoon')}: ${alpaca.name}`}
-        >
-          <span className="text-2xl font-bold text-muted-foreground/40">
-            {alpaca.name}
-          </span>
-        </div>
+        <InitialsAvatar
+          name={alpaca.name}
+          className="aspect-square w-full"
+        />
       )}
 
       <div className="p-4 flex flex-col gap-2 flex-1">

@@ -6,7 +6,7 @@
 
 import { describe, it } from 'node:test'
 import assert from 'node:assert/strict'
-import { yogaWeeklyEventSchema, personSchema, websiteSearchSchema, touristTripSchema, weddingsServiceSchema, workshopHowToSchema, herdAttractionSchema, adoptAPacaServiceSchema, siteNavigationSchema, shopCategoryItemListSchema } from './structured-data.ts'
+import { yogaWeeklyEventSchema, personSchema, websiteSearchSchema, touristTripSchema, weddingsServiceSchema, workshopHowToSchema, herdAttractionSchema, adoptAPacaServiceSchema, siteNavigationSchema, shopCategoryItemListSchema, productSchema } from './structured-data.ts'
 
 describe('yogaWeeklyEventSchema', () => {
     it('startDate rolls forward to next Wednesday from a Tuesday', () => {
@@ -37,9 +37,10 @@ describe('yogaWeeklyEventSchema', () => {
         assert.equal(result.offers.priceCurrency, 'EUR')
     })
 
-    it('event location includes the Es Currals address', () => {
+    it('event location includes the Es Currals address from tenant config', () => {
         const result = yogaWeeklyEventSchema({ now: new Date('2026-06-01T12:00:00Z') }) as any
-        assert.equal(result.location.address.streetAddress, 'San Carlos')
+        // streetAddress now sourced from lib/tenants/alpacasibiza.ts (TENANT_ADDRESS)
+        assert.equal(result.location.address.streetAddress, 'C/3 Bungalow Park 22')
         assert.equal(result.location.address.addressCountry, 'ES')
     })
 })
@@ -141,20 +142,20 @@ describe('herdAttractionSchema', () => {
 
 describe('touristTripSchema AggregateOffer fork', () => {
     it('emits Offer when no highPriceEur given', () => {
-        const s = touristTripSchema() as any
+        const s = touristTripSchema({ lowPriceEur: 30 }) as any
         assert.equal(s.offers['@type'], 'Offer')
         assert.equal(s.offers.price, '30')
     })
 
     it('emits AggregateOffer when highPriceEur > lowPriceEur', () => {
-        const s = touristTripSchema({ highPriceEur: 75 }) as any
+        const s = touristTripSchema({ lowPriceEur: 30, highPriceEur: 75 }) as any
         assert.equal(s.offers['@type'], 'AggregateOffer')
         assert.equal(s.offers.lowPrice, '30')
         assert.equal(s.offers.highPrice, '75')
     })
 
     it('emits Offer (not AggregateOffer) when highPriceEur === lowPriceEur', () => {
-        const s = touristTripSchema({ highPriceEur: 30 }) as any
+        const s = touristTripSchema({ lowPriceEur: 30, highPriceEur: 30 }) as any
         assert.equal(s.offers['@type'], 'Offer')
     })
 
@@ -184,10 +185,10 @@ describe('adoptAPacaServiceSchema', () => {
 })
 
 describe('siteNavigationSchema', () => {
-    it('emits 10 items', () => {
+    it('emits 15 items', () => {
         const s = siteNavigationSchema('en') as any
-        assert.equal(s.name.length, 10)
-        assert.equal(s.url.length, 10)
+        assert.equal(s.name.length, 15)
+        assert.equal(s.url.length, 15)
     })
 
     it('honors locale param', () => {
@@ -221,5 +222,108 @@ describe('shopCategoryItemListSchema', () => {
             items: [{ name: 'A', url: 'https://x.com/a', image: null }],
         }) as any
         assert.equal(s.itemListElement[0].item.image, undefined)
+    })
+})
+
+// ─── Build #5 — productSchema ─────────────────────────────────────────────────
+
+describe('productSchema', () => {
+    it('emits @type Product with correct name and description', () => {
+        const s = productSchema({
+            name: 'Gift Voucher',
+            description: 'A tour voucher',
+            image: '/images/test.jpg',
+            priceEur: 21.19,
+        }) as any
+        assert.equal(s['@type'], 'Product')
+        assert.equal(s.name, 'Gift Voucher')
+        assert.equal(s.description, 'A tour voucher')
+    })
+
+    it('defaults availability to InStock when omitted', () => {
+        const s = productSchema({
+            name: 'Skein',
+            description: 'Shearing sponsorship',
+            image: '/images/skein.jpg',
+            priceEur: 200,
+        }) as any
+        assert.equal(s.offers.availability, 'https://schema.org/InStock')
+    })
+
+    it('respects explicit availability param', () => {
+        const s = productSchema({
+            name: 'Sold out item',
+            description: 'No stock',
+            image: '/images/x.jpg',
+            priceEur: 99,
+            availability: 'OutOfStock',
+        }) as any
+        assert.equal(s.offers.availability, 'https://schema.org/OutOfStock')
+    })
+
+    it('formats priceEur as 2-decimal-place string', () => {
+        const s = productSchema({
+            name: 'Alpaca tour',
+            description: 'Tour',
+            image: '/images/tour.jpg',
+            priceEur: 21.19,
+        }) as any
+        assert.equal(s.offers.price, '21.19')
+    })
+
+    it('formats integer price as 2-decimal string', () => {
+        const s = productSchema({
+            name: 'Skein',
+            description: 'Skein',
+            image: '/images/skein.jpg',
+            priceEur: 200,
+        }) as any
+        assert.equal(s.offers.price, '200.00')
+    })
+
+    it('uses Alpacas Ibiza as default brand', () => {
+        const s = productSchema({
+            name: 'Woven scarf',
+            description: 'Handwoven',
+            image: '/images/scarf.jpg',
+            priceEur: 150,
+        }) as any
+        assert.equal(s.brand['@type'], 'Brand')
+        assert.equal(s.brand.name, 'Alpacas Ibiza')
+    })
+
+    it('uses custom brand when provided', () => {
+        const s = productSchema({
+            name: 'Woven scarf',
+            description: 'Handwoven',
+            image: '/images/scarf.jpg',
+            priceEur: 150,
+            brand: 'Wishfulfilling Weaving',
+        }) as any
+        assert.equal(s.brand.name, 'Wishfulfilling Weaving')
+    })
+
+    it('omits offers field when priceEur is 0 (price-on-request sentinel)', () => {
+        // priceEur=0 is used as an OWNER_INPUT_NEEDED placeholder on alcaca + woven pages.
+        // Google Rich Results must NOT surface "€0.00" — offers must be absent.
+        const s = productSchema({
+            name: 'Alcaca Oro Negro',
+            description: 'Organic fertiliser',
+            image: '/images/shop/alcaca-1.jpg',
+            priceEur: 0,
+        }) as any
+        assert.equal(s.offers, undefined, 'offers field must be omitted when priceEur=0')
+    })
+
+    it('still emits name/description/image/brand when priceEur is 0', () => {
+        const s = productSchema({
+            name: 'Alcaca Oro Negro',
+            description: 'Organic fertiliser',
+            image: '/images/shop/alcaca-1.jpg',
+            priceEur: 0,
+        }) as any
+        assert.equal(s['@type'], 'Product')
+        assert.equal(s.name, 'Alcaca Oro Negro')
+        assert.ok(s.brand['@type'] === 'Brand')
     })
 })

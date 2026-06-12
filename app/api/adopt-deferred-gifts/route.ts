@@ -18,27 +18,40 @@
  * Implementing (b) is safe today; (a) is for parallel AI to add later.
  */
 
-import { NextResponse } from 'next/server'
-import { verifyCronSecret } from '@/lib/cron-auth'
+import { runCron } from '@/lib/cron-runner'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
 
-export async function POST(request: Request) {
-  // 1. Auth
-  if (!verifyCronSecret(request)) {
-    return NextResponse.json({ ok: false, code: 'UNAUTHORIZED' }, { status: 401 })
-  }
+// Vercel cron invokes routes via GET; POST is kept for manual/test calls.
+export async function GET(request: Request) {
+  return runCron(
+    request,
+    {
+      routeName: 'adopt-deferred-gifts',
+      heartbeatEnvKey: 'HEARTBEAT_ADOPT_DEFERRED_GIFTS_URL',
+    },
+    async () => {
+      // TODO (parallel AI): swap to direct welcome-email send by calling
+      // handleGiftWelcomeForDate(today) from lib/payment-handlers.ts.
 
-  // 2. For now, dispatch an owner digest (option b above).
-  // TODO (parallel AI): swap to direct welcome-email send by calling
-  // handleGiftWelcomeForDate(today) from lib/payment-handlers.ts.
+      const today = new Date().toISOString().slice(0, 10)
 
-  const today = new Date().toISOString().slice(0, 10)
+      // Iterate Mollie + Stripe active subs, collect gift_send_date===today.
+      // For now, this is a stub that confirms the route works. Parallel AI
+      // fills in the iteration when they wire the handler.
 
-  // Iterate Mollie + Stripe active subs, collect gift_send_date===today
-  // For now, this is a stub that confirms the route works. Parallel AI
-  // fills in the iteration when they wire the handler.
-
-  return NextResponse.json({ ok: true, scheduled_for: today, dispatched: 0, scheduler_only: true })
+      return {
+        ok: true,
+        routeName: 'adopt-deferred-gifts',
+        durationMs: 0,
+        successes: 0,
+        failures: 0,
+        skipped: 0,
+        detail: { scheduled_for: today, scheduler_only: true },
+      }
+    },
+  )
 }
+
+export const POST = GET

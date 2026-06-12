@@ -17,7 +17,10 @@ import { getTranslations } from 'next-intl/server'
 import { buildLocaleAlternates } from '@/lib/i18n-metadata'
 import { findAlpacaName } from '@/lib/data/alpacas'
 import { SKEIN_SPONSORSHIP_PRICE_EUR, SITE_BASE_URL } from '@/lib/config'
+import { productSchema, toJsonLd } from '@/lib/structured-data'
 import { AlpacaPicker } from '@/components/adopt/alpaca-picker'
+import { SkeinGiftToggle } from '@/components/skein/skein-gift-toggle'
+import { FAQ } from '@/components/faq'
 
 export async function generateMetadata({
   params,
@@ -54,18 +57,45 @@ export default async function SkeinPage({
   const selectedSlug = rawSlug && findAlpacaName(rawSlug) ? rawSlug : null
   const alpacaDisplayName = selectedSlug ? findAlpacaName(selectedSlug) : null
 
-  // Checkout URLs: both use SITE_BASE_URL (ADR 017 — never Origin header).
-  const sponsorHref = selectedSlug
-    ? `/api/skein-checkout?alpaca=${encodeURIComponent(selectedSlug)}&locale=${locale}`
-    : `/api/skein-checkout?alpaca=any&locale=${locale}`
+  // Read gift params from URL (set by SkeinGiftToggle client component).
+  const rawGiftName = typeof sp.gift_name === 'string' ? sp.gift_name.trim() : ''
+  const rawGiftEmail = typeof sp.gift_email === 'string' ? sp.gift_email.trim() : ''
+  const rawGiftMessage = typeof sp.gift_message === 'string' ? sp.gift_message.trim() : ''
 
-  const pickForMeHref = `/api/skein-checkout?alpaca=any&locale=${locale}`
+  // Checkout URLs: both use SITE_BASE_URL (ADR 017 — never Origin header).
+  // Append gift params if present so the checkout route can read them.
+  function buildCheckoutHref(alpacaParam: string): string {
+    const params = new URLSearchParams({ alpaca: alpacaParam, locale })
+    if (rawGiftName) params.set('gift_name', rawGiftName)
+    if (rawGiftEmail) params.set('gift_email', rawGiftEmail)
+    if (rawGiftMessage) params.set('gift_message', rawGiftMessage)
+    return `/api/skein-checkout?${params.toString()}`
+  }
+
+  const sponsorHref = buildCheckoutHref(selectedSlug ?? 'any')
+  const pickForMeHref = buildCheckoutHref('any')
 
   // Show cancelled banner if returning from abandoned checkout.
   const cancelled = sp.cancelled === '1'
 
+  // Build #5 — Product JSON-LD for Name Your Skein sponsorship.
+  const skeinSchema = productSchema({
+    name: 'Name Your Skein — Spring Shearing Sponsorship',
+    description: translate('skein.metaDescription') || 'Sponsor an alpaca\'s spring shearing at Es Currals and receive their spun wool in autumn. 14 named slots per shearing season.',
+    image: `${SITE_BASE_URL}/images/gallery/farm-02.jpg`,
+    priceEur: SKEIN_SPONSORSHIP_PRICE_EUR,
+    url: `${SITE_BASE_URL}/${locale}/skein`,
+    availability: 'InStock',
+  })
+
   return (
     <>
+      {/* Build #5 — Product JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: toJsonLd(skeinSchema) }}
+      />
+
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <section className="w-full py-20 px-4 bg-gradient-to-br from-primary/10 to-accent/10">
         <div className="max-w-4xl mx-auto text-center">
@@ -127,6 +157,15 @@ export default async function SkeinPage({
         </div>
       </section>
 
+      {/* ── Gift toggle ──────────────────────────────────────────────────── */}
+      <section className="w-full py-6 px-4 bg-primary/5">
+        <div className="max-w-md mx-auto">
+          <Suspense>
+            <SkeinGiftToggle locale={locale} />
+          </Suspense>
+        </div>
+      </section>
+
       {/* ── Tier card + CTAs ─────────────────────────────────────────────── */}
       <section id="cta" className="w-full py-16 px-4 bg-background">
         <div className="max-w-md mx-auto">
@@ -182,27 +221,19 @@ export default async function SkeinPage({
         </div>
       </section>
 
-      {/* ── FAQ ──────────────────────────────────────────────────────────── */}
+      {/* ── FAQ — emitSchema=true wires faqPageSchema JSON-LD for SEO ───── */}
       <section className="w-full py-16 px-4 bg-background">
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-2xl font-bold text-foreground mb-8">
-            {translate('skein.faqTitle')}
-          </h2>
-          <div className="space-y-6">
-            {(
-              [
-                { q: translate('skein.faq1Question'), a: translate('skein.faq1Answer') },
-                { q: translate('skein.faq2Question'), a: translate('skein.faq2Answer') },
-                { q: translate('skein.faq3Question'), a: translate('skein.faq3Answer') },
-                { q: translate('skein.faq4Question'), a: translate('skein.faq4Answer') },
-              ] as const
-            ).map(({ q, a }, i) => (
-              <div key={i} className="bg-card rounded-lg border border-border p-6">
-                <h3 className="font-bold text-foreground mb-2">{q}</h3>
-                <p className="text-foreground/70 text-sm">{a}</p>
-              </div>
-            ))}
-          </div>
+          <FAQ
+            emitSchema={true}
+            title={translate('skein.faqTitle')}
+            items={[
+              { question: translate('skein.faq1Question'), answer: translate('skein.faq1Answer') },
+              { question: translate('skein.faq2Question'), answer: translate('skein.faq2Answer') },
+              { question: translate('skein.faq3Question'), answer: translate('skein.faq3Answer') },
+              { question: translate('skein.faq4Question'), answer: translate('skein.faq4Answer') },
+            ]}
+          />
         </div>
       </section>
     </>

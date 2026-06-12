@@ -1,14 +1,29 @@
+'use client'
+
 /**
  * AdoptionCertificatePreview — visual mockup of the adoption certificate.
  *
  * Makes the abstract "adoption certificate" benefit concrete. Renders as a
  * stylised paper certificate card so donors can see what they'll receive
- * before they pay. When the donor has picked a specific alpaca, the
- * preview is personalised with that alpaca's name; otherwise it shows
- * "Your alpaca" as a placeholder.
+ * before they pay.
  *
- * Pure render. All copy localised through props so the /adopt page owns i18n.
+ * Reactive behaviour:
+ *   - Reads `?alpaca=<slug>` from the URL via useSearchParams so the preview
+ *     updates instantly when the AlpacaPicker changes (no full reload).
+ *   - Accepts an `initialAlpacaName` prop (resolved server-side) used on the
+ *     first render to avoid a flash.
+ *   - Shows a small inline input ("Enter your name to preview") so adopters
+ *     can see their own name on the certificate before paying. Local state
+ *     only — no URL persistence. Debounced 200ms. Validates: ≤ 80 chars,
+ *     strips HTML tags and control characters.
+ *
+ * All copy localised through the next-intl useTranslations hook.
  */
+
+import { useState, useEffect, useRef } from 'react'
+import { useSearchParams } from 'next/navigation'
+import { useTranslations } from 'next-intl'
+import { findAlpacaName } from '@/lib/data/alpacas'
 
 interface AdoptionCertificatePreviewProps {
   /** Heading above the preview, e.g. "Your adoption certificate". */
@@ -23,12 +38,25 @@ interface AdoptionCertificatePreviewProps {
   sponsorOfLabel: string
   /** Localised footer line on the certificate (e.g. "Es Currals, Ibiza"). */
   certificateFooter: string
-  /** Name of the alpaca the donor picked, or null for the "Your alpaca" placeholder. */
-  alpacaName: string | null
-  /** Localised placeholder name shown when alpacaName is null. */
+  /**
+   * SSR-resolved alpaca name (from the page's selectedAlpacaSlug).
+   * The component overrides this with the live URL param on mount so the
+   * preview stays in sync when the picker changes without a page reload.
+   */
+  initialAlpacaName: string | null
+  /** Localised placeholder name shown when no alpaca is selected. */
   alpacaPlaceholder: string
-  /** Localised placeholder for donor name (we don't know it yet at preview time). */
+  /** Localised placeholder for donor name (shown until the adopter types). */
   donorPlaceholder: string
+}
+
+/** Strip HTML tags and ASCII control chars from a candidate name (client-side). */
+function sanitiseName(raw: string): string {
+  return raw
+    .replace(/<[^>]*>/g, '')
+    .replace(/[\r\n\t\x00-\x1F]+/g, ' ')
+    .trim()
+    .slice(0, 80)
 }
 
 export function AdoptionCertificatePreview({
@@ -38,11 +66,37 @@ export function AdoptionCertificatePreview({
   presentedToLabel,
   sponsorOfLabel,
   certificateFooter,
-  alpacaName,
+  initialAlpacaName,
   alpacaPlaceholder,
   donorPlaceholder,
 }: AdoptionCertificatePreviewProps) {
-  const displayAlpaca = alpacaName ?? alpacaPlaceholder
+  const translate = useTranslations()
+  const searchParams = useSearchParams()
+
+  // Live alpaca name from URL param — overrides the SSR prop so the certificate
+  // updates instantly when the AlpacaPicker changes the ?alpaca= query string.
+  const alpacaSlug = searchParams?.get('alpaca') ?? null
+  const liveAlpacaName = alpacaSlug ? findAlpacaName(alpacaSlug) : null
+  const displayAlpaca = liveAlpacaName ?? initialAlpacaName ?? alpacaPlaceholder
+
+  // Local donor-name state — preview only, never sent to the server.
+  // Debounced 200ms to avoid re-renders on every keystroke.
+  const [inputValue, setInputValue] = useState('')
+  const [displayDonor, setDisplayDonor] = useState('')
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => {
+    if (debounceRef.current) clearTimeout(debounceRef.current)
+    debounceRef.current = setTimeout(() => {
+      const clean = sanitiseName(inputValue)
+      setDisplayDonor(clean)
+    }, 200)
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current)
+    }
+  }, [inputValue])
+
+  const donorLabel = displayDonor.length > 0 ? displayDonor : donorPlaceholder
 
   return (
     <section aria-labelledby="cert-preview-heading" className="w-full">
@@ -86,7 +140,7 @@ export function AdoptionCertificatePreview({
             {presentedToLabel}
           </p>
           <p className="text-xl md:text-2xl font-serif font-semibold text-foreground/90 mb-4 border-b border-primary/20 pb-1 min-w-[60%]">
-            {donorPlaceholder}
+            {donorLabel}
           </p>
 
           <p className="text-xs md:text-sm text-foreground/70 italic mb-1">
@@ -103,8 +157,28 @@ export function AdoptionCertificatePreview({
 
         {/* Caption under the preview — sets expectations that it's a preview */}
         <p className="text-xs text-center text-muted-foreground italic mt-3">
-          Preview — the printed certificate ships within 7–10 days of adoption.
+          {translate('adopt.certPreviewCaption')}
         </p>
+
+        {/* Donor-name preview input — conversion lever. Local state only. */}
+        <div className="mt-5 flex flex-col items-center gap-1.5">
+          <label
+            htmlFor="cert-preview-name"
+            className="text-xs font-semibold text-foreground/60 uppercase tracking-wide"
+          >
+            {translate('adopt.certPreview.namePromptLabel')}
+          </label>
+          <input
+            id="cert-preview-name"
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            maxLength={80}
+            aria-label={translate('adopt.certPreview.nameInputAria')}
+            placeholder={translate('adopt.certPreview.namePlaceholder')}
+            className="w-full max-w-xs rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-foreground/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 text-center"
+          />
+        </div>
       </div>
     </section>
   )

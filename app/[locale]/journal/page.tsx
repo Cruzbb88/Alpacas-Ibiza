@@ -18,6 +18,7 @@ import { localBusinessSchema, toJsonLd } from '@/lib/structured-data'
 import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
 import { GradientPageHero, PageSection, OwnerConfirmBanner } from '@/components/layout'
 import { JournalCard } from '@/components/journal-card'
+import { NewsletterForm } from '@/components/newsletter-form'
 import { livePosts, hasLivePosts } from '@/lib/data/journal'
 
 // ── Metadata ──────────────────────────────────────────────────────────────────
@@ -102,6 +103,7 @@ export default async function JournalPage({
           translate('journal.subtitle') ||
           'Stories from the farm — life with the herd, weaving rhythms, seasonal notes.'
         }
+        backgroundImage="/images/gallery/herd-chicas.jpg"
       />
 
       {postsExist ? (
@@ -153,6 +155,22 @@ export default async function JournalPage({
           </div>
         </PageSection>
       )}
+
+      {/* Newsletter cross-sell — journal readers are warm subscribe leads.
+          Mirrors the homepage section; same keys, same client form (double opt-in). */}
+      <section className="w-full py-12 md:py-16 px-4 bg-background border-t border-border">
+        <div className="max-w-2xl mx-auto">
+          <div className="text-center mb-6">
+            <h2 className="text-xl font-semibold text-foreground mb-2">
+              {translate('newsletter.title')}
+            </h2>
+            <p className="text-sm text-foreground/70">
+              {translate('newsletter.subtitle')}
+            </p>
+          </div>
+          <NewsletterForm locale={locale} source="journal" />
+        </div>
+      </section>
 
       {/* Owner-confirm banner — dev/staging only, hidden in production */}
       <OwnerConfirmBanner

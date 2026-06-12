@@ -10,6 +10,7 @@ import { toJsonLd, adoptAPacaServiceSchema } from '@/lib/structured-data'
 import { GradientPageHero, PageSection, OwnerConfirmBanner } from '@/components/layout'
 import { BillingPortalLink } from '@/components/billing-portal-link'
 import { AdoptTierCard } from '@/components/adopt/adopt-tier-card'
+import { JuniorTierCard } from '@/components/adopt/junior-tier-card'
 import { TierComparison } from '@/components/adopt/tier-comparison'
 import { AdoptBenefitsList } from '@/components/adopt/adopt-benefits-list'
 import { AdoptionTimeline } from '@/components/adopt/adoption-timeline'
@@ -39,9 +40,9 @@ import { getOgImage } from '@/lib/og-images'
 import { getActiveAdopterCount } from '@/lib/adopters/count'
 import { AdoptersCounterBadge } from '@/components/adopters-counter-badge'
 import { AdoptersWall } from '@/components/adopt/adopters-wall'
+import { SocialProofStrip } from '@/components/social-proof-strip'
 
-/** Mirrors the full referral-code URL format from lib/referral-codes.ts (ALPACA-XXXXXX). */
-const REFERRAL_CODE_URL_RE = /^ALPACA-[A-Z0-9]{6}$/
+import { REFERRAL_CODE_RE as REFERRAL_CODE_URL_RE } from '@/lib/referral-codes'
 
 export async function generateMetadata({
     params,
@@ -102,7 +103,7 @@ export default async function AdoptPage({
 }) {
     const { locale } = await params
     const { checkout, alpaca: alpacaParam, referral, gift_name, gift_email, gift_deliver } = await searchParams
-    // Validate referral code — only pass through if it matches the full URL format (ALPACA-XXXXXX).
+    // Validate referral code — only pass through if it matches the 6-char base32 format.
     const validReferral = referral && REFERRAL_CODE_URL_RE.test(referral) ? referral : null
     const translate = await getTranslations()
     const tenant = await getTenant()
@@ -247,9 +248,17 @@ export default async function AdoptPage({
             <GradientPageHero
                 title={translate('adopt.title')}
                 subtitle={translate('adopt.subtitle')}
+                backgroundImage="/images/gallery/herd-chicas.jpg"
             />
 
-            {/* Referral discount banner — shown when ?referral=ALPACA-XXXXXX is in the URL.
+            {/* Social proof strip — compact between hero and tier cards */}
+            <PageSection bg="default" width="narrow" className="pt-6 pb-0">
+                <Suspense fallback={null}>
+                    <SocialProofStrip variant="compact" />
+                </Suspense>
+            </PageSection>
+
+            {/* Referral discount banner — shown when ?referral=<6-char-code> is in the URL.
                 Client component; Suspense required by Next.js for useSearchParams in static build.
                 Renders null when referral param is absent or malformed. */}
             <PageSection bg="default" width="narrow" className="pt-8 pb-0">
@@ -279,21 +288,27 @@ export default async function AdoptPage({
             </PageSection>
 
             {/* Alpaca picker — donor can pin a specific alpaca. Slug rides through Stripe/Mollie metadata
-                so the welcome email mentions which alpaca they adopted. "Pick for me" clears selection. */}
+                so the welcome email mentions which alpaca they adopted. "Pick for me" clears selection.
+                Suspense required by Next.js for useSearchParams in static build. */}
             <PageSection bg="default" width="narrow" className="pt-12 pb-2">
-                <AlpacaPicker
-                    locale={locale}
-                    selectedSlug={selectedAlpacaSlug}
-                    heading={translate('adopt.pickerHeading') || 'Pick your alpaca'}
-                    subheading={translate('adopt.pickerSubheading') || 'Or let us match you with one of the herd.'}
-                    randomLabel={translate('adopt.pickerRandomLabel') || 'Pick for me'}
-                />
+                <Suspense fallback={null}>
+                    <AlpacaPicker
+                        locale={locale}
+                        selectedSlug={selectedAlpacaSlug}
+                        heading={translate('adopt.pickerHeading') || 'Pick your alpaca'}
+                        subheading={translate('adopt.pickerSubheading') || 'Or let us match you with one of the herd.'}
+                        randomLabel={translate('adopt.pickerRandomLabel') || 'Pick for me'}
+                    />
+                </Suspense>
             </PageSection>
 
             {/* Gift adoption disclosure — threads recipient name/email/delivery date
-                into URL params; the tier CTAs above pick them up automatically. */}
+                into URL params; the tier CTAs above pick them up automatically.
+                Suspense required by Next.js for useSearchParams in static build. */}
             <PageSection bg="default" width="narrow" className="pt-2 pb-6">
-                <AdoptGiftAdoption locale={locale} />
+                <Suspense fallback={null}>
+                    <AdoptGiftAdoption locale={locale} />
+                </Suspense>
             </PageSection>
 
             {/* Tier comparison table — richer decision aid above the quick-checkout cards.
@@ -324,7 +339,7 @@ export default async function AdoptPage({
                             yearly: true,
                         },
                         {
-                            label: translate('adopt.feature.farmTour') || 'Farm tour invitation',
+                            label: translate('adopt.feature.sixTours') || '6 farm tours per year (up to 4 guests each)',
                             monthly: true,
                             yearly: true,
                         },
@@ -339,12 +354,27 @@ export default async function AdoptPage({
                             yearly: true,
                         },
                         {
-                            label: translate('adopt.feature.fertilizer') || 'Alpaca fertilizer bag',
+                            label: translate('adopt.feature.fertilizer5kg') || '5 kg filtered Alcaca manure — organic fertilizer',
                             monthly: false,
                             yearly: true,
                         },
                         {
                             label: translate('adopt.feature.photoshoot') || 'Professional alpaca photoshoot',
+                            monthly: false,
+                            yearly: true,
+                        },
+                        {
+                            label: translate('adopt.feature.calendar') || 'Alpaca calendar and agenda',
+                            monthly: false,
+                            yearly: true,
+                        },
+                        {
+                            label: translate('adopt.feature.keychain') || 'Alpaca keychain',
+                            monthly: false,
+                            yearly: true,
+                        },
+                        {
+                            label: translate('adopt.feature.framedPhoto') || 'Framed photo of your adopted alpaca',
                             monthly: false,
                             yearly: true,
                         },
@@ -391,6 +421,21 @@ export default async function AdoptPage({
                         isGift={hasGiftFields}
                     />
                 </div>
+                {/* Junior tier — secondary card in its own row below monthly + yearly.
+                    Renders null when JUNIOR_TIER_LIVE=false or JUNIOR_TIER_PRICE_EUR=0
+                    so there is zero layout change until the owner activates the tier. */}
+                <JuniorTierCard locale={locale} className="mt-4" alpacaSlug={selectedAlpacaSlug} />
+
+                {/* Secondary CTA — continuity bridge for visitors who prefer a visit first.
+                    Subtle text-link so it doesn't compete with the primary adopt CTAs. */}
+                <p className="text-center text-sm text-foreground/60 mt-6">
+                    <a
+                        href={`/${locale}/tours`}
+                        className="hover:text-accent transition-colors underline underline-offset-2"
+                    >
+                        {translate('adopt.visitInsteadCta') || 'Or arrange a visit instead →'}
+                    </a>
+                </p>
             </PageSection>
 
             {/* Embedded Stripe Elements — Stage 2 of embedded checkout migration.
@@ -428,19 +473,22 @@ export default async function AdoptPage({
             </PageSection>
 
             {/* Certificate preview — makes the headline perk concrete + personalises
-                with the picker selection when present. */}
+                with the picker selection when present. Wrapped in Suspense because
+                the component uses useSearchParams() (client component). */}
             <PageSection bg="muted" width="narrow" className="border-t border-border">
-                <AdoptionCertificatePreview
-                    title={translate('adopt.certPreviewTitle')}
-                    subtitle={translate('adopt.certPreviewSubtitle')}
-                    certificateLabel={translate('adopt.certPreviewLabel')}
-                    presentedToLabel={translate('adopt.certPreviewPresentedTo')}
-                    sponsorOfLabel={translate('adopt.certPreviewSponsorOf')}
-                    certificateFooter={translate('adopt.certPreviewFooter')}
-                    alpacaName={selectedAlpacaSlug ? findAlpacaName(selectedAlpacaSlug) : null}
-                    alpacaPlaceholder={translate('adopt.certPreviewAlpacaPlaceholder')}
-                    donorPlaceholder={translate('adopt.certPreviewDonorPlaceholder')}
-                />
+                <Suspense fallback={null}>
+                    <AdoptionCertificatePreview
+                        title={translate('adopt.certPreviewTitle')}
+                        subtitle={translate('adopt.certPreviewSubtitle')}
+                        certificateLabel={translate('adopt.certPreviewLabel')}
+                        presentedToLabel={translate('adopt.certPreviewPresentedTo')}
+                        sponsorOfLabel={translate('adopt.certPreviewSponsorOf')}
+                        certificateFooter={translate('adopt.certPreviewFooter')}
+                        initialAlpacaName={selectedAlpacaSlug ? findAlpacaName(selectedAlpacaSlug) : null}
+                        alpacaPlaceholder={translate('adopt.certPreviewAlpacaPlaceholder')}
+                        donorPlaceholder={translate('adopt.certPreviewDonorPlaceholder')}
+                    />
+                </Suspense>
             </PageSection>
 
             {/* CTA — routes through payment adapter; falls back to mailto until PAYMENT_VENDOR is set.

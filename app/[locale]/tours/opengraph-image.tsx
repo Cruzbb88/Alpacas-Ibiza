@@ -54,7 +54,7 @@ export default function ToursOgImage() {
             Alpaca Tours at Es Currals
           </div>
           <div style={{ fontSize: 36, fontWeight: 400, opacity: 0.85 }}>
-            From €30 · By appointment
+            From €21.19 · By appointment
           </div>
         </div>
 

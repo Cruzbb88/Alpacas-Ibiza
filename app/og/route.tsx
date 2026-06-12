@@ -30,7 +30,7 @@ export async function GET(request: Request) {
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          background: 'linear-gradient(135deg, #FFFAF0 0%, #F5E6D3 50%, #E8C9A5 100%)',
+          background: 'linear-gradient(135deg, #F4EEDD 0%, #E8DCC2 50%, #D7C8A4 100%)',
           padding: '80px',
           position: 'relative',
         }}
@@ -41,7 +41,7 @@ export async function GET(request: Request) {
           top: 60,
           left: 60,
           fontSize: 22,
-          color: '#AD561A',
+          color: '#556B2F',
           letterSpacing: 6,
           textTransform: 'uppercase',
           fontWeight: 600,

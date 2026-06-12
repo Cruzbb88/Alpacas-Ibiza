@@ -48,7 +48,6 @@ import type {
 } from '@/lib/integrations/content-types'
 
 /** CDN base shared by all alpaca portrait URLs. */
-const CDN = 'https://images.squarespace-cdn.com/content/v1/63f5dee81e8cfc3a0d2638e3'
 
 // ── Animals ───────────────────────────────────────────────────────────────────
 // Bios (nl): verbatim from live site scrape (handoff/LIVE_SITE_CONTENT_INVENTORY.md).
@@ -71,7 +70,7 @@ const animals: ReadonlyArray<AnimalEntity> = [
     color: 'light rose grey',
     personality: 'calm, sociable, friendly',
     fun_fact: 'Despite being named after a sci-fi vamp, Barbarella is the gentlest, most easy-going mare in the paddock.',
-    image: `${CDN}/d2625434-cecd-4c7e-a656-b6faef7b974b/BARBARELLA+kopie.jpg`,
+    image: '/images/alpacas/barbarella.jpg',
   },
   {
     kind: 'animal',
@@ -87,7 +86,7 @@ const animals: ReadonlyArray<AnimalEntity> = [
     color: null,
     personality: 'sociable, calm, friendly',
     fun_fact: "Avalon and Marrón are aunt and niece — Avalon's mother is Marrón's sister.",
-    image: `${CDN}/18b959ad-0cf1-4b30-87e6-f730c25f43ab/AVALON+kopie.jpg`,
+    image: '/images/alpacas/avalon.jpg',
   },
   {
     kind: 'animal',
@@ -103,7 +102,7 @@ const animals: ReadonlyArray<AnimalEntity> = [
     color: 'greyish-brown',
     personality: 'bold, sociable',
     fun_fact: 'Bardot is the youngest cria on the farm, born 19 January 2022, daughter of Lewis and Marrón.',
-    image: `${CDN}/3148a6f3-5270-4cde-bb5d-d15db5a1fa76/BARDOT+kopie.jpg`,
+    image: '/images/alpacas/bardot.jpg',
   },
   {
     kind: 'animal',
@@ -119,7 +118,7 @@ const animals: ReadonlyArray<AnimalEntity> = [
     color: null,
     personality: 'calm, independent',
     fun_fact: 'Chet was the first alpaca ever born on Ibiza, on 20 November 2020.',
-    image: `${CDN}/6a435b6c-19ea-4251-a55a-8a570b79dd4d/CHET-needswork+kopie.jpg`,
+    image: '/images/alpacas/chet.jpg',
   },
   {
     kind: 'animal',
@@ -135,7 +134,7 @@ const animals: ReadonlyArray<AnimalEntity> = [
     color: 'white',
     personality: 'playful, bold',
     fun_fact: 'Dusty is half-sister to Moloko and was one of the founding five alpacas who arrived on Ibiza in 2019.',
-    image: `${CDN}/5771b57d-c258-4489-ac5c-c7fedb208b3b/DUSTY+kopie.jpg`,
+    image: '/images/alpacas/dusty.jpg',
   },
   {
     kind: 'animal',
@@ -151,7 +150,7 @@ const animals: ReadonlyArray<AnimalEntity> = [
     color: 'brown',
     personality: 'sociable, friendly',
     fun_fact: 'Named after Afrobeat legend Fela Kuti, Fela arrived on Ibiza in March 2021 with his gleaming light-brown fleece.',
-    image: `${CDN}/2f73fb70-67e6-4a91-9cae-7e1438e6b99f/FELA+kopie.jpg`,
+    image: '/images/alpacas/fela.jpg',
   },
   {
     kind: 'animal',
@@ -167,7 +166,7 @@ const animals: ReadonlyArray<AnimalEntity> = [
     color: null,
     personality: 'bold, sociable',
     fun_fact: 'Fonda carries the looks of her Hollywood namesake Jane Fonda — striking dark-rimmed eyes and a full, glamorous fleece.',
-    image: `${CDN}/78dfb6f8-8aa0-4ba2-bb67-863332e95df2/FONDA+kopie.jpg`,
+    image: '/images/alpacas/fonda.jpg',
   },
   {
     kind: 'animal',
@@ -183,7 +182,7 @@ const animals: ReadonlyArray<AnimalEntity> = [
     color: 'milk white',
     personality: 'bold, independent',
     fun_fact: "Lewis is the herd's stud male and father of all three Ibiza-born crias: Chet, Toots and Bardot.",
-    image: `${CDN}/bf594c02-56e5-4dd2-a07a-ce02cdfcc0f2/LEWIS+kopie.jpg`,
+    image: '/images/alpacas/lewis.jpg',
   },
   {
     kind: 'animal',
@@ -199,7 +198,7 @@ const animals: ReadonlyArray<AnimalEntity> = [
     color: 'brown',
     personality: 'bold, independent',
     fun_fact: 'Marrón\'s name means "brown" in Spanish — she is the supermodel of the herd and mother of three Ibiza-born crias.',
-    image: `${CDN}/9aaf4ec1-0d95-4931-86d5-265830a9cbd7/MARRON+kopie.jpg`,
+    image: '/images/alpacas/marron.jpg',
   },
   {
     kind: 'animal',
@@ -215,7 +214,7 @@ const animals: ReadonlyArray<AnimalEntity> = [
     color: 'light beige, curly coat in three brown tones',
     personality: 'calm, sociable, friendly',
     fun_fact: 'Mojo is the largest alpaca in the herd and the ultimate gentle giant — one of the original five who arrived from Belgium in 2019.',
-    image: `${CDN}/a472e021-29b9-4fe6-b95b-c8703a920c94/MOJO+kopie.jpg`,
+    image: '/images/alpacas/mojo.jpg',
   },
   {
     kind: 'animal',
@@ -231,7 +230,7 @@ const animals: ReadonlyArray<AnimalEntity> = [
     color: null,
     personality: 'shy, calm',
     fun_fact: 'Singer Róisín Murphy of the band Moloko — who lives on Ibiza — has personally visited her woolly namesake at the farm.',
-    image: `${CDN}/585b2090-d734-4eba-817f-f67185bd991a/MOLOKO-needswork+kopie.jpg`,
+    image: '/images/alpacas/moloko.jpg',
   },
   {
     kind: 'animal',
@@ -247,7 +246,7 @@ const animals: ReadonlyArray<AnimalEntity> = [
     color: 'white with orange tint',
     personality: 'shy, independent',
     fun_fact: 'Nelson is the most skittish alpaca on the farm — earning his trust takes patience, but the reward is priceless.',
-    image: `${CDN}/b6dfabf6-e859-43c7-9036-e6e60a7c2a11/NELSON-needswork+kopie.jpg`,
+    image: '/images/alpacas/nelson.jpg',
   },
   {
     kind: 'animal',
@@ -263,7 +262,7 @@ const animals: ReadonlyArray<AnimalEntity> = [
     color: 'medium fawn with lighter belly, muzzle, and legs',
     personality: 'bold, independent',
     fun_fact: "Suki's medium-fawn fleece makes her look like a wild vicuña — the rarest colour in the herd.",
-    image: `${CDN}/1f8eeef2-0378-45e0-a4e9-6ff510255081/SUKI+kopie.jpg`,
+    image: '/images/alpacas/suki.jpg',
   },
   {
     kind: 'animal',
@@ -279,7 +278,7 @@ const animals: ReadonlyArray<AnimalEntity> = [
     color: 'orange-reddish with long curls',
     personality: 'playful, sociable, bold',
     fun_fact: 'Named after Belgian jazz legend Toots Thielemans, Toots was the second alpaca ever born on Ibiza (3 February 2021).',
-    image: `${CDN}/ae38973d-7ac0-46c9-bab7-16614327b782/TOOTS-needwork+kopie.jpg`,
+    image: '/images/alpacas/toots.jpg',
   },
 ] as const
 
@@ -287,41 +286,14 @@ const animals: ReadonlyArray<AnimalEntity> = [
 // 4 stubs matching the FareHarbor tour names. All numeric fields null = UNMAPPED.
 // durationMin, priceEur, capacity: fill in when owner supplies FareHarbor item data.
 
+// 2026-06-06: only the real weaving-workshop remains. 'meet-the-herd',
+// 'farm-experience' and 'photo-session' were AI-fabricated tour types —
+// FareHarbor has one "Alpaca Tour". See FABRICATED_INFO_2026-06-06.md.
 const experiences: ReadonlyArray<ExperienceEntity> = [
-  {
-    kind: 'experience',
-    id: 'meet-the-herd',
-    name: 'Meet the Herd',
-    bio: null,
-    image: null,
-    durationMin: null, // OWNER_INPUT_NEEDED
-    priceEur: null,    // OWNER_INPUT_NEEDED
-    capacity: null,    // OWNER_INPUT_NEEDED
-  },
   {
     kind: 'experience',
     id: 'weaving-workshop',
     name: 'Weaving Workshop',
-    bio: null,
-    image: null,
-    durationMin: null, // OWNER_INPUT_NEEDED
-    priceEur: null,    // OWNER_INPUT_NEEDED
-    capacity: null,    // OWNER_INPUT_NEEDED
-  },
-  {
-    kind: 'experience',
-    id: 'farm-experience',
-    name: 'Farm Experience',
-    bio: null,
-    image: null,
-    durationMin: null, // OWNER_INPUT_NEEDED
-    priceEur: null,    // OWNER_INPUT_NEEDED
-    capacity: null,    // OWNER_INPUT_NEEDED
-  },
-  {
-    kind: 'experience',
-    id: 'photo-session',
-    name: 'Photo Session',
     bio: null,
     image: null,
     durationMin: null, // OWNER_INPUT_NEEDED

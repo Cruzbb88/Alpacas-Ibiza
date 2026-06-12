@@ -5,6 +5,8 @@ import { AlpacaPeerGrid } from '@/components/alpacas/alpaca-peer-grid'
 import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
 import { PageSection } from '@/components/layout'
 import { getTranslations } from 'next-intl/server'
+import Image from 'next/image'
+import Link from 'next/link'
 import { toJsonLd, animalSchema } from '@/lib/structured-data'
 import { tenantMetadata } from '@/lib/tenants/metadata'
 import { getTenant } from '@/lib/tenants/server'
@@ -12,6 +14,7 @@ import { getProviders } from '@/lib/integrations'
 import { SITE_BASE_URL } from '@/lib/config'
 import type { Locale } from '@/i18n.config'
 import { i18nConfig } from '@/i18n.config'
+import { liveHerdEventsByAlpaca } from '@/lib/data/herd-events'
 
 /**
  * /[locale]/alpacas/[slug] — individual alpaca detail page.
@@ -49,7 +52,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!animal) {
     return { title: 'Alpaca not found' }
   }
-  const translate = await getTranslations()
+  // Pass locale explicitly — in generateMetadata the request locale is not
+  // always in context, so a bare getTranslations() fell back to the raw dot-key
+  // ("alpacas.detailTitle" leaked into <title>).
+  const translate = await getTranslations({ locale })
   // Templates with {name} placeholder so each locale controls word order.
   // Fallback strings are English defaults; non-EN locales should override
   // alpacas.detailTitle / .detailDescriptionWithPersonality / .detailDescription
@@ -77,7 +83,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function AlpacaDetailPage({ params }: PageProps) {
   const { locale, slug } = await params
-  const translate = await getTranslations()
+  // Pass locale explicitly (same reason as generateMetadata above): this page
+  // is statically generated, so the request locale isn't always in context —
+  // a bare getTranslations() can fall back to English on non-EN routes.
+  const translate = await getTranslations({ locale })
 
   const tenant = await getTenant()
   const providers = getProviders(tenant)
@@ -121,6 +130,9 @@ export default async function AlpacaDetailPage({ params }: PageProps) {
       })
     : null
 
+  // Diary entries for this alpaca — render null when empty (FAILSAFE: no fake events)
+  const diaryEvents = liveHerdEventsByAlpaca(animal.id)
+
   return (
     <main>
       <script
@@ -139,13 +151,67 @@ export default async function AlpacaDetailPage({ params }: PageProps) {
         homeLabel={translate('nav.home') || 'Home'}
         crumbs={[
           { name: translate('nav.alpacas') || 'Our Alpacas', path: 'alpacas' },
-          { name: animal.name, path: `alpacas/${animal.id}` },
+          // PageBreadcrumbs accumulates paths (/en → /alpacas → /<leaf>), so the
+          // leaf crumb must be just the id, not `alpacas/<id>` (which produced
+          // the doubled /en/alpacas/alpacas/avalon URL).
+          { name: animal.name, path: animal.id },
         ]}
       />
 
       <PageSection bg="default" width="wide" className="py-12">
         <AlpacaDetailHero locale={locale} animal={animal} />
       </PageSection>
+
+      {/* Diary entries for this alpaca — renders null when empty (no fake events) */}
+      {diaryEvents.length > 0 && (
+        <PageSection id="diary" bg="default" width="wide" className="py-12 border-t border-border">
+          <h2 className="text-2xl font-bold text-foreground mb-6">
+            {`${translate('herdDiary.diaryEntriesFor') || 'Diary entries for'} ${animal.name}`}
+          </h2>
+          <ol className="relative border-l border-border space-y-8 pl-6">
+            {diaryEvents.map((event) => (
+              <li key={event.id} className="relative">
+                <span
+                  aria-hidden="true"
+                  className="absolute -left-[1.625rem] top-1.5 h-3 w-3 rounded-full bg-primary border-2 border-background"
+                />
+                <article className="rounded-xl border border-border bg-card p-5 shadow-sm">
+                  <p className="text-xs font-medium text-muted-foreground mb-1">
+                    <time dateTime={event.date}>
+                      {translate('herdDiary.eventDateLabel') || 'Date'}: {event.date}
+                    </time>
+                  </p>
+                  <h3 className="text-base font-semibold text-foreground mb-2">
+                    {event.title}
+                  </h3>
+                  {event.imageSrc && (
+                    <div className="relative w-full aspect-video rounded-lg overflow-hidden mb-3 bg-muted">
+                      <Image
+                        src={event.imageSrc}
+                        alt={event.title}
+                        fill
+                        sizes="(min-width: 768px) 672px, 100vw"
+                        className="object-cover"
+                      />
+                    </div>
+                  )}
+                  <p className="text-foreground/80 text-sm leading-relaxed">
+                    {event.body}
+                  </p>
+                </article>
+              </li>
+            ))}
+          </ol>
+          <div className="mt-6">
+            <Link
+              href={`/${locale}/herd-diary`}
+              className="text-sm font-medium text-primary hover:underline"
+            >
+              {translate('herdDiary.seeFullDiary') || 'See the full herd diary'} →
+            </Link>
+          </div>
+        </PageSection>
+      )}
 
       {/* Rest of the herd — small thumbnail grid */}
       <PageSection bg="muted" width="wide" className="py-12 border-t border-border">

@@ -54,7 +54,7 @@ export default async function CorporatePage({ params }: { params: Promise<{ loca
         },
         {
             question: 'What is included in a corporate package?',
-            answer: 'Standard packages include welcome refreshments, guided alpaca interaction, a team challenge activity, and an organic farm lunch. Weaving workshops, photography, and custom add-ons are available.',
+            answer: 'Custom package contents are arranged with the organizer. Weaving workshops, photography, and other add-ons are available.',
         },
         {
             question: 'How far in advance should we book?',
@@ -94,7 +94,7 @@ export default async function CorporatePage({ params }: { params: Promise<{ loca
                     label: translate('corporate.cta'),
                     href: `/${locale}/contact`,
                 }}
-                backgroundImage="/images/corporate-hero.webp"
+                backgroundImage="/images/gallery/farm-02.jpg"
             />
 
             {/* Spots-left urgency widget */}
@@ -103,15 +103,15 @@ export default async function CorporatePage({ params }: { params: Promise<{ loca
             </div>
 
             {/* FairHarbor Booking Calendar - Above the Fold */}
-            <section className="w-full py-12 md:py-16 px-4 bg-[#F9F9F9]">
+            <section className="w-full py-12 md:py-16 px-4 bg-background">
                 <div className="max-w-4xl mx-auto text-center">
-                    <h2 className="text-2xl md:text-3xl font-bold text-[#708090] mb-4">
+                    <h2 className="text-2xl md:text-3xl font-bold text-foreground/70 mb-4">
                         {translate('tours.bookingSection.title')}
                     </h2>
-                    <p className="text-[#708090]/70 mb-8 max-w-2xl mx-auto">
+                    <p className="text-foreground/60 mb-8 max-w-2xl mx-auto">
                         {translate('tours.bookingSection.subtitle')}
                     </p>
-                    <div className="bg-white rounded-[16px] p-6 md:p-8 shadow-sm border border-[#F5F5DC]">
+                    <div className="bg-white rounded-[16px] p-6 md:p-8 shadow-sm border border-secondary">
                         <FareHarborCalendar itemId={FAREHARBOR_ITEM_BUSINESS_INCENTIVES} />
                     </div>
                 </div>
@@ -121,10 +121,10 @@ export default async function CorporatePage({ params }: { params: Promise<{ loca
             <section className="w-full py-16 md:py-24 px-4 bg-white" aria-labelledby="corporate-quote-heading">
                 <div className="max-w-2xl mx-auto">
                     <div className="text-center mb-10">
-                        <h2 id="corporate-quote-heading" className="text-3xl font-bold text-[#556B2F] mb-3">
+                        <h2 id="corporate-quote-heading" className="text-3xl font-bold text-primary mb-3">
                             Get a custom quote
                         </h2>
-                        <p className="text-[#708090]">
+                        <p className="text-foreground/70">
                             Every corporate retreat is bespoke. Share your details and we&apos;ll send a
                             tailored proposal within 48 hours.
                         </p>
@@ -136,10 +136,10 @@ export default async function CorporatePage({ params }: { params: Promise<{ loca
             {/* Why Alpacas for Team Building */}
             <section className="w-full py-16 md:py-24 px-4 bg-white">
                 <div className="max-w-4xl mx-auto text-center">
-                    <h2 className="text-3xl font-bold text-[#556B2F] mb-6">
+                    <h2 className="text-3xl font-bold text-primary mb-6">
                         {translate('corporate.whyTitle')}
                     </h2>
-                    <p className="text-lg text-[#708090] mb-12">
+                    <p className="text-lg text-foreground/70 mb-12">
                         {translate('corporate.whyText')}
                     </p>
                 </div>
@@ -171,13 +171,13 @@ export default async function CorporatePage({ params }: { params: Promise<{ loca
             </section>
 
             {/* Team Experience Image */}
-            <section className="w-full py-12 px-4 bg-[#F5F5DC]/20">
+            <section className="w-full py-12 px-4 bg-secondary/20">
                 <div className="max-w-5xl mx-auto">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                         <div className="relative aspect-[4/3] rounded-[16px] overflow-hidden">
                             <Image
-                                src="/images/corporate-team-alpacas.webp"
-                                alt="Corporate team building with alpacas - Alpaca Trekking Santa Eularia Ibiza Eco-Tourism"
+                                src="/images/gallery/farm-wide.jpg"
+                                alt="Corporate team building with alpacas at the Ibiza finca - Alpacas Ibiza Eco-Tourism"
                                 fill
                                 className="object-cover"
                                 sizes="(max-width: 768px) 100vw, 50vw"
@@ -185,8 +185,8 @@ export default async function CorporatePage({ params }: { params: Promise<{ loca
                         </div>
                         <div className="relative aspect-[4/3] rounded-[16px] overflow-hidden">
                             <Image
-                                src="/images/corporate-weaving-workshop.webp"
-                                alt="Team weaving workshop at Ibiza alpaca farm - Corporate Eco-Tourism"
+                                src="/images/gallery/weaving-15.jpg"
+                                alt="Team weaving workshop with alpaca wool at Ibiza alpaca farm - Corporate Eco-Tourism"
                                 fill
                                 className="object-cover"
                                 sizes="(max-width: 768px) 100vw, 50vw"
@@ -196,26 +196,30 @@ export default async function CorporatePage({ params }: { params: Promise<{ loca
                 </div>
             </section>
 
-            {/* Itinerary */}
-            <section className="w-full py-16 px-4 bg-[#F9F9F9]">
+            {/* Itinerary — hidden until the owner supplies real program details.
+                The item keys are __OWNER_INPUT__ sentinels; rendering them would
+                leak "__OWNER_INPUT_NEEDED__: program details TBD" to visitors.
+                Render-null pattern, consistent with the rest of the site. */}
+            {!translate('corporate.itinerary.item1.title').startsWith('__OWNER_INPUT') && (
+            <section className="w-full py-16 px-4 bg-background">
                 <div className="max-w-4xl mx-auto">
-                    <h2 className="text-3xl font-bold text-[#556B2F] mb-8 text-center">
+                    <h2 className="text-3xl font-bold text-primary mb-8 text-center">
                         {translate('corporate.itinerary.title')}
                     </h2>
                     <div className="space-y-6">
                         {(['item1', 'item2', 'item3', 'item4'] as const).map((item) => (
                             <div
                                 key={item}
-                                className="bg-white p-6 rounded-[16px] shadow-sm border border-[#F5F5DC] flex gap-4 items-start"
+                                className="bg-white p-6 rounded-[16px] shadow-sm border border-secondary flex gap-4 items-start"
                             >
-                                <div className="w-20 flex-shrink-0 text-sm font-bold text-[#556B2F] bg-[#F5F5DC]/50 rounded-[16px] px-3 py-2 text-center">
+                                <div className="w-20 flex-shrink-0 text-sm font-bold text-primary bg-secondary/50 rounded-[16px] px-3 py-2 text-center">
                                     {translate(`corporate.itinerary.${item}.time`)}
                                 </div>
                                 <div>
-                                    <h3 className="text-xl font-semibold text-[#556B2F] mb-1">
+                                    <h3 className="text-xl font-semibold text-primary mb-1">
                                         {translate(`corporate.itinerary.${item}.title`)}
                                     </h3>
-                                    <p className="text-[#708090]">
+                                    <p className="text-foreground/70">
                                         {translate(`corporate.itinerary.${item}.desc`)}
                                     </p>
                                 </div>
@@ -224,9 +228,10 @@ export default async function CorporatePage({ params }: { params: Promise<{ loca
                     </div>
                 </div>
             </section>
+            )}
 
             {/* CTA Banner */}
-            <section className="w-full py-16 px-4 bg-[#556B2F] text-white text-center">
+            <section className="w-full py-16 px-4 bg-primary text-white text-center">
                 <h2 className="text-3xl font-bold mb-4">{translate('corporate.planTitle')}</h2>
                 <p className="text-lg mb-8 max-w-2xl mx-auto opacity-90">
                     {translate('corporate.planText')}
@@ -234,14 +239,14 @@ export default async function CorporatePage({ params }: { params: Promise<{ loca
                 <Button
                     asChild
                     size="lg"
-                    className="bg-[#F5F5DC] text-[#556B2F] hover:bg-[#F5F5DC]/90 text-lg rounded-[16px] font-bold"
+                    className="bg-secondary text-primary hover:bg-secondary/90 text-lg rounded-[16px] font-bold"
                 >
                     <Link href={`/${locale}/contact`}>{translate('corporate.planCta')}</Link>
                 </Button>
             </section>
 
             {/* AEO-Optimized FAQ */}
-            <section className="w-full bg-[#F9F9F9]">
+            <section className="w-full bg-background">
                 <FAQ items={faqItems} />
             </section>
 

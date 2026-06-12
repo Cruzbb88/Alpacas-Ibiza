@@ -24,6 +24,7 @@ import { signNewsletterToken, signUnsubscribeToken } from '@/lib/newsletter-toke
 import { buildNewsletterConfirmEmail } from '@/lib/email-templates'
 import { SITE_BASE_URL } from '@/lib/config'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
+import { extractLocaleFromReferer } from '@/lib/route-helpers'
 
 export async function POST(request: Request) {
   const reqId = getRequestId(request)
@@ -89,9 +90,13 @@ export async function POST(request: Request) {
     const token = signNewsletterToken(normalizedEmail)
     const confirmUrl = `${SITE_BASE_URL}/api/newsletter/confirm?token=${encodeURIComponent(token)}`
 
-    // Build per-recipient unsubscribe URL (CAN-SPAM / EU PECR — included in email footer)
+    // Build per-recipient unsubscribe URL (CAN-SPAM / EU PECR — included in email footer).
+    // Locale is extracted from the Referer header so the unsubscribe redirect lands on
+    // the subscriber's language version (e.g. /de/newsletter/unsubscribed for a German
+    // subscriber). Falls back to 'en' when the Referer is absent or unparseable.
+    const subscriberLocale = extractLocaleFromReferer(request.headers.get('referer'))
     const unsubToken = signUnsubscribeToken(normalizedEmail)
-    const unsubscribeUrl = `${SITE_BASE_URL}/api/newsletter/unsubscribe?token=${encodeURIComponent(unsubToken)}`
+    const unsubscribeUrl = `${SITE_BASE_URL}/api/newsletter/unsubscribe?token=${encodeURIComponent(unsubToken)}&locale=${encodeURIComponent(subscriberLocale)}`
 
     // Send confirmation email to the subscriber
     try {

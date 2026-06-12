@@ -15,13 +15,14 @@
  * duplicate-send disasters if a transient email failure bubbled up as a 500.
  */
 
-import { welcomeAdoptionEmailHtml, welcomeAdoptionSubject, buildAdoptDiscountCodesEmail, donorPaymentFailedSubject, buildDunningRecoveredEmail } from './email-templates.ts'
+import { welcomeAdoptionEmailHtml, welcomeAdoptionSubject, buildAdoptDiscountCodesEmail, donorPaymentFailedSubject, buildDunningRecoveredEmail, buildReferrerRewardEmail } from './email-templates.ts'
 import { escapeHtml } from './html.ts'
 import { findAlpacaName } from './data/alpacas.ts'
 import { SITE_BASE_URL } from './config.ts'
 import { recordFailure, resetFailures, type FailureSeverity, type PriorFailureState } from './payment-failure-tracker.ts'
 import { notifyOwnerOnEscalation } from './owner-notify.ts'
 import { emit } from './events.ts'
+import { getContactEmail } from './validate-env.ts'
 
 /**
  * Convert Stripe minor units (cents) → EUR major (75.00) for event payloads.
@@ -62,6 +63,16 @@ export interface StripeCheckoutSessionLike {
     gift_sender_name?: string
     gift_message?: string
     gift_send_date?: string
+    /**
+     * Referral code of the donor who referred this new adopter.
+     * Written at checkout when a valid `?ref=` param is present.
+     */
+    referredBy?: string
+    /**
+     * Idempotency stamp: ISO timestamp set after the referrer-reward email
+     * is successfully sent. Prevents double-send on webhook re-delivery.
+     */
+    referrer_reward_sent_at?: string
   } | null
   customer_details?: {
     email?: string | null
@@ -93,6 +104,12 @@ export interface CheckoutCompletedDeps {
    * Stripe webhook retry (would duplicate-send to the donor).
    */
   ownerEmail?: string
+  /**
+   * When set, attempt to send a referrer-reward email if the session
+   * metadata contains a `referredBy` code. Fail-quiet — reward send failure
+   * NEVER affects welcome or webhook 200 response.
+   */
+  referrerRewardDeps?: Omit<ReferrerRewardDeps, 'sendEmail'>
 }
 
 export interface CheckoutCompletedResult {
@@ -107,6 +124,13 @@ export interface CheckoutCompletedResult {
    * - `false` = attempted but threw (fail-quiet; result still returns 200-shape).
    */
   ownerNotified: boolean | null
+  /**
+   * Referrer-reward send result:
+   * - `null`  = deps.referrerRewardDeps not provided, or no referredBy slug.
+   * - `true`  = reward email sent successfully.
+   * - `false` = reward send attempted but suppressed (unconfigured / not-found / error).
+   */
+  referrerRewardSent: boolean | null
   /** When skipped or failed, what's the reason? */
   reason?:
     | 'missing-email'
@@ -173,6 +197,7 @@ export async function handleStripeCheckoutCompleted(
       welcomeSent: false,
       codesScheduled: false,
       ownerNotified: deps.ownerEmail ? false : null,
+      referrerRewardSent: null,
       reason: 'missing-email',
       meta,
     }
@@ -183,6 +208,7 @@ export async function handleStripeCheckoutCompleted(
       welcomeSent: false,
       codesScheduled: false,
       ownerNotified: deps.ownerEmail ? false : null,
+      referrerRewardSent: null,
       reason: 'invalid-tier',
       meta,
     }
@@ -215,7 +241,11 @@ export async function handleStripeCheckoutCompleted(
   const giftSenderName = session.metadata?.gift_sender_name ?? null
   const giftMessage = session.metadata?.gift_message ?? null
   const giftSendDate = session.metadata?.gift_send_date ?? null
-  const isGiftPurchase = giftRecipientEmail !== null && giftMessage !== null
+  // Gift detection — the recipient email is the gift signal. The simplified
+  // gift form captures name+email+optional-message; older code required
+  // gift_message which made the simplified form route the welcome back to
+  // the BUYER. Found via /crystal-ball cb-005 2026-06-10.
+  const isGiftPurchase = giftRecipientEmail !== null
 
   const ownerSendPromise = deps.ownerEmail
     ? (async () =>
@@ -265,7 +295,7 @@ export async function handleStripeCheckoutCompleted(
   // Gmail/Yahoo 2026 bulk-sender rules require both List-Unsubscribe and
   // a working reply-to on transactional commercial mail like adoption welcomes.
   // Mollie path already sets these (line ~810); Stripe path was missing them.
-  const contactEmail = process.env.CONTACT_EMAIL ?? 'info@alpacasibiza.com'
+  const contactEmail = getContactEmail()
   const stripeListUnsubscribeUrl = `mailto:${contactEmail}?subject=unsubscribe`
 
   const [welcomeResult, codesResult, ownerResult] = await Promise.allSettled([
@@ -285,7 +315,7 @@ export async function handleStripeCheckoutCompleted(
             ? {
                 gift: {
                   fromName: giftSenderName ? escapeHtml(giftSenderName) : escapeHtml(name ?? ''),
-                  message: escapeHtml(giftMessage!),
+                  ...(giftMessage ? { message: escapeHtml(giftMessage) } : {}),
                 },
               }
             : {}),
@@ -348,15 +378,29 @@ export async function handleStripeCheckoutCompleted(
     // 200 contract must NEVER be compromised by event-bus wiring.
   }
 
+  // ── Referrer reward (parallel to discount-codes, same fail-quiet contract) ──
+  // Only fires on monthly + yearly first-time checkout (not recurring renewals,
+  // which are handled by invoice.paid). Tier check already passed above.
+  // Gift purchases: the referral belongs to the buyer (email), not the recipient.
+  let referrerRewardSent: boolean | null = null
+  const referredBySlug = session.metadata?.referredBy
+  if (deps.referrerRewardDeps && referredBySlug) {
+    const rewardResult = await sendReferrerRewardQuiet(
+      { referredBySlug, donorName: name, locale },
+      { sendEmail: deps.sendEmail, ...deps.referrerRewardDeps },
+    )
+    referrerRewardSent = rewardResult.sent
+  }
+
   // Welcome failure dominates — codes alone is not enough since welcome carries
   // the primary confirmation. Both branches collapse to welcome-send-failed.
   if (!welcomeSent) {
-    return { welcomeSent, codesScheduled, ownerNotified, reason: 'welcome-send-failed', codesScheduledAt, meta }
+    return { welcomeSent, codesScheduled, ownerNotified, referrerRewardSent, reason: 'welcome-send-failed', codesScheduledAt, meta }
   }
   if (!codesScheduled) {
-    return { welcomeSent, codesScheduled, ownerNotified, reason: 'codes-send-failed', codesScheduledAt, meta }
+    return { welcomeSent, codesScheduled, ownerNotified, referrerRewardSent, reason: 'codes-send-failed', codesScheduledAt, meta }
   }
-  return { welcomeSent, codesScheduled, ownerNotified, reason: 'ok', codesScheduledAt, meta }
+  return { welcomeSent, codesScheduled, ownerNotified, referrerRewardSent, reason: 'ok', codesScheduledAt, meta }
 }
 
 function buildOwnerAdoptionSubject(
@@ -461,7 +505,7 @@ export interface InvoicePaymentFailedResult {
   severity: FailureSeverity | null
   /** Consecutive-failure count for this customer (1, 2, 3+). */
   failureCount: number
-  reason: 'ok' | 'missing-donor-email' | 'missing-owner-email' | 'send-failed'
+  reason: 'ok' | 'missing-donor-email' | 'send-failed' | 'recovered-no-notify'
   meta: {
     invoiceId: string
     subscriptionId?: string | null
@@ -510,6 +554,12 @@ export async function handleStripeInvoicePaymentFailed(
   // invoice). Prevents the failure counter from inflating when Stripe re-
   // delivers the webhook for an existing invoice's next retry attempt.
   const { count: failureCount, severity } = recordFailure('stripe', trackKey, invoice.id)
+
+  // severity === 'none': dedup-hit on a counter already reset to 0. Donor
+  // recovered — suppressing re-delivery of "payment failed" email (item 4 fix).
+  if (severity === 'none') {
+    return { donorNotified: false, ownerNotified: false, severity: null, failureCount: 0, reason: 'recovered-no-notify', meta }
+  }
 
   if (!donorEmail) {
     return { donorNotified: false, ownerNotified: false, severity, failureCount, reason: 'missing-donor-email', meta }
@@ -769,6 +819,16 @@ export interface MolliePaymentLike {
     gift_message?: string
     /** ISO yyyy-mm-dd or absent (= send today). */
     gift_send_date?: string
+    /**
+     * Referral code of the donor who referred this new adopter.
+     * Written at checkout when a valid `?ref=` param is present.
+     */
+    referredBy?: string
+    /**
+     * Idempotency stamp: ISO timestamp set after the referrer-reward email
+     * is successfully sent. Prevents double-send on webhook re-delivery.
+     */
+    referrer_reward_sent_at?: string
   } | null
   /** Mollie one-off payments set billingEmail at create-time. */
   billingEmail?: string | null
@@ -804,17 +864,36 @@ export interface MolliePaidDeps {
   recurringDonorEmail?: string
   /** Donor display name for the dunning-recovery email copy. */
   recurringDonorName?: string | null
+  /** Override "now" for deterministic test assertions on discount-codes scheduledAt. */
+  now?: () => number
+  /** Override 5-minute discount-codes delay. Defaults to 5 * 60 * 1000 ms. */
+  discountCodesDelayMs?: number
+  /**
+   * When set, attempt to send a referrer-reward email on monthly-first +
+   * yearly-oneoff flows (not recurring renewals). Fail-quiet — reward send
+   * failure NEVER affects welcome or webhook 200 response.
+   */
+  referrerRewardDeps?: Omit<ReferrerRewardDeps, 'sendEmail'>
 }
 
 export interface MolliePaidResult {
   flow: 'monthly-first' | 'yearly-oneoff' | 'recurring-renewal' | 'unmatched'
   welcomeSent: boolean
+  /** Did we successfully schedule the discount-codes follow-up email (+5 min)? */
+  codesScheduled: boolean
   subscriptionCreated: boolean
   /**
    * Owner-notification tri-state. `null` when deps.ownerEmail was unset;
    * `true`/`false` reflects send success when it was set.
    */
   ownerNotified: boolean | null
+  /**
+   * Referrer-reward send tri-state:
+   * - `null`  = deps.referrerRewardDeps not provided, or flow is recurring-renewal / unmatched.
+   * - `true`  = reward email sent successfully.
+   * - `false` = reward send attempted but suppressed (unconfigured / not-found / error).
+   */
+  referrerRewardSent: boolean | null
   reason: 'ok' | 'missing-email' | 'welcome-send-failed' | 'subscription-failed' | 'unmatched'
   meta: { paymentId: string; tier?: string; email?: string | null }
 }
@@ -839,15 +918,19 @@ export async function handleMolliePaymentPaid(
   const tier = payment.metadata?.tier
   const isAdopt = payment.metadata?.product === 'adopt-a-paca'
 
-  // Reset failure counter on ANY successful Mollie payment.paid event. For
-  // recurring renewals (the dunning-recovery path) we pass an onReset callback
-  // that fires ONLY when there was a prior failure — sends the "back on track"
-  // email. For first/oneoff flows the donor already gets a welcome email so we
-  // use a plain reset (no callback).
+  // Reset failure counter on successful Mollie payment.paid for adopt-a-paca
+  // ONLY. Unconditional reset was a cross-product bug: a shop/one-off payment
+  // from the same Mollie customer ID would wipe the adopt-a-paca failure ladder
+  // mid-dunning (peer review 2026-05-29 item 3; fixed 2026-06-05).
+  //
+  // For recurring renewals we pass an onReset callback that fires ONLY when
+  // there was a prior failure — sends the "back on track" email.
+  // For first/oneoff flows the donor already gets a welcome email so we use a
+  // plain reset (no callback).
   //
   // IMPORTANT: resetFailures must be called BEFORE the branch checks below so
   // the counter is flushed regardless of which branch exits early.
-  if (payment.customerId) {
+  if (payment.customerId && isAdopt) {
     if (payment.sequenceType === 'recurring') {
       const donorEmailForRecovery = deps.recurringDonorEmail
       const donorNameForRecovery  = deps.recurringDonorName ?? undefined
@@ -893,23 +976,40 @@ export async function handleMolliePaymentPaid(
       return {
         flow: 'monthly-first',
         welcomeSent: false,
+        codesScheduled: false,
         subscriptionCreated: true,
         ownerNotified: deps.ownerEmail ? false : null,
+        referrerRewardSent: null,
         reason: 'missing-email',
         meta: { paymentId: payment.id, tier, email: null },
       }
     }
 
-    const [welcomeSent, ownerNotified] = await Promise.all([
+    const nowMs = (deps.now ?? Date.now)()
+    const delayMs = deps.discountCodesDelayMs ?? 5 * 60 * 1000
+    const [welcomeSent, codesScheduled, ownerNotified] = await Promise.all([
       sendMollieWelcomeQuiet(deps.sendEmail, payment, 'monthly', customer.email, customer.name),
+      sendMollieDiscountCodesQuiet(deps.sendEmail, customer.email, customer.name, delayMs, nowMs),
       sendMollieOwnerNotifyQuiet(deps.sendEmail, deps.ownerEmail, payment, 'monthly', customer.email, customer.name),
     ])
     emitMollieAdoptionEvents(payment, 'monthly', customer.email)
+    // ── Referrer reward (after welcome, parallel send done) ───────────────────
+    let referrerRewardSent_monthly: boolean | null = null
+    const referredBySlug_monthly = payment.metadata?.referredBy
+    if (deps.referrerRewardDeps && referredBySlug_monthly) {
+      const rr = await sendReferrerRewardQuiet(
+        { referredBySlug: referredBySlug_monthly, donorName: customer.name, locale: payment.metadata?.locale },
+        { sendEmail: deps.sendEmail, ...deps.referrerRewardDeps },
+      )
+      referrerRewardSent_monthly = rr.sent
+    }
     return {
       flow: 'monthly-first',
       welcomeSent,
+      codesScheduled,
       subscriptionCreated: true,
       ownerNotified,
+      referrerRewardSent: referrerRewardSent_monthly,
       reason: welcomeSent ? 'ok' : 'welcome-send-failed',
       meta: { paymentId: payment.id, tier, email: customer.email },
     }
@@ -924,8 +1024,10 @@ export async function handleMolliePaymentPaid(
       return {
         flow: 'unmatched',
         welcomeSent: false,
+        codesScheduled: false,
         subscriptionCreated: false,
         ownerNotified: null,
+        referrerRewardSent: null,
         reason: 'unmatched',
         meta: { paymentId: payment.id, tier, email: payment.billingEmail ?? null },
       }
@@ -934,22 +1036,39 @@ export async function handleMolliePaymentPaid(
       return {
         flow: 'yearly-oneoff',
         welcomeSent: false,
+        codesScheduled: false,
         subscriptionCreated: false,
         ownerNotified: deps.ownerEmail ? false : null,
+        referrerRewardSent: null,
         reason: 'missing-email',
         meta: { paymentId: payment.id, tier, email: null },
       }
     }
-    const [welcomeSent, ownerNotified] = await Promise.all([
+    const nowMs = (deps.now ?? Date.now)()
+    const delayMs = deps.discountCodesDelayMs ?? 5 * 60 * 1000
+    const [welcomeSent, codesScheduled, ownerNotified] = await Promise.all([
       sendMollieWelcomeQuiet(deps.sendEmail, payment, 'yearly', payment.billingEmail, null),
+      sendMollieDiscountCodesQuiet(deps.sendEmail, payment.billingEmail, null, delayMs, nowMs),
       sendMollieOwnerNotifyQuiet(deps.sendEmail, deps.ownerEmail, payment, 'yearly', payment.billingEmail, null),
     ])
     emitMollieAdoptionEvents(payment, 'yearly', payment.billingEmail)
+    // ── Referrer reward (after welcome, parallel send done) ───────────────────
+    let referrerRewardSent_yearly: boolean | null = null
+    const referredBySlug_yearly = payment.metadata?.referredBy
+    if (deps.referrerRewardDeps && referredBySlug_yearly) {
+      const rr = await sendReferrerRewardQuiet(
+        { referredBySlug: referredBySlug_yearly, donorName: null, locale: payment.metadata?.locale },
+        { sendEmail: deps.sendEmail, ...deps.referrerRewardDeps },
+      )
+      referrerRewardSent_yearly = rr.sent
+    }
     return {
       flow: 'yearly-oneoff',
       welcomeSent,
+      codesScheduled,
       subscriptionCreated: false,
       ownerNotified,
+      referrerRewardSent: referrerRewardSent_yearly,
       reason: welcomeSent ? 'ok' : 'welcome-send-failed',
       meta: { paymentId: payment.id, tier, email: payment.billingEmail },
     }
@@ -960,8 +1079,10 @@ export async function handleMolliePaymentPaid(
     return {
       flow: 'recurring-renewal',
       welcomeSent: false,
+      codesScheduled: false,
       subscriptionCreated: false,
       ownerNotified: null,
+      referrerRewardSent: null,
       reason: 'ok',
       meta: { paymentId: payment.id, tier },
     }
@@ -970,8 +1091,10 @@ export async function handleMolliePaymentPaid(
   return {
     flow: 'unmatched',
     welcomeSent: false,
+    codesScheduled: false,
     subscriptionCreated: false,
     ownerNotified: null,
+    referrerRewardSent: null,
     reason: 'unmatched',
     meta: { paymentId: payment.id, tier },
   }
@@ -996,7 +1119,8 @@ function emitMollieAdoptionEvents(
     const giftRecipientEmail = typeof meta?.gift_recipient_email === 'string' && meta.gift_recipient_email.length > 0
       ? meta.gift_recipient_email
       : null
-    const isGift = giftRecipientEmail !== null && typeof meta?.gift_message === 'string'
+    // Recipient email alone signals gift intent — message is optional.
+    const isGift = giftRecipientEmail !== null
     emit({
       type: 'adoption.completed',
       vendor: 'mollie',
@@ -1049,7 +1173,8 @@ async function sendMollieWelcomeQuiet(
     const giftMessage = meta?.gift_message ?? null
     const giftSendDate = meta?.gift_send_date ?? null
 
-    const isGiftWelcome = giftRecipientEmail !== null && giftMessage !== null
+    // Mirror Stripe path: recipient email alone is the gift signal.
+    const isGiftWelcome = giftRecipientEmail !== null
 
     // Scheduled send for future gift dates. See Stripe handler for the
     // morning-local-time UTC offset rationale (10:00 UTC = 11:00/12:00 CET/CEST).
@@ -1062,6 +1187,7 @@ async function sendMollieWelcomeQuiet(
       return morningLocalMs > now ? new Date(morningLocalMs).toISOString() : undefined
     })()
 
+    const contactEmail = getContactEmail()
     await sendEmail({
       to: isGiftWelcome ? giftRecipientEmail! : email,
       subject: welcomeAdoptionSubject(tier, isGiftWelcome, locale),
@@ -1077,13 +1203,43 @@ async function sendMollieWelcomeQuiet(
           ? {
               gift: {
                 fromName: giftSenderName ? escapeHtml(giftSenderName) : escapeHtml(name ?? ''),
-                message: escapeHtml(giftMessage!),
+                ...(giftMessage ? { message: escapeHtml(giftMessage) } : {}),
               },
             }
           : {}),
       }),
-      listUnsubscribeUrl: `mailto:${process.env.CONTACT_EMAIL ?? 'info@alpacasibiza.com'}?subject=unsubscribe`,
+      replyTo: contactEmail,
+      listUnsubscribeUrl: `mailto:${contactEmail}?subject=unsubscribe`,
       ...(welcomeScheduledAt ? { scheduledAt: welcomeScheduledAt } : {}),
+    })
+    return true
+  } catch {
+    return false
+  }
+}
+
+/**
+ * Schedule the discount-codes follow-up email for a Mollie adopter.
+ * Mirrors the Stripe path in handleStripeCheckoutCompleted — same builder,
+ * same +5-min default delay, same fail-quiet contract.
+ * Only called on monthly-first and yearly-oneoff flows (not recurring renewals).
+ */
+async function sendMollieDiscountCodesQuiet(
+  sendEmail: SendEmailFn,
+  email: string,
+  name: string | null,
+  delayMs: number = 5 * 60 * 1000,
+  nowMs: number = Date.now(),
+): Promise<boolean> {
+  try {
+    const contactEmail = getContactEmail()
+    const codesScheduledAt = new Date(nowMs + delayMs).toISOString()
+    await sendEmail({
+      to: email,
+      replyTo: contactEmail,
+      listUnsubscribeUrl: `mailto:${contactEmail}?subject=unsubscribe`,
+      scheduledAt: codesScheduledAt,
+      ...buildAdoptDiscountCodesEmail({ name: name ?? '' }),
     })
     return true
   } catch {
@@ -1157,6 +1313,143 @@ async function sendMollieOwnerNotifyQuiet(
   }
 }
 
+// ── Donor referral reward — additive export ──────────────────────────────────
+
+/**
+ * Callback type for stamping idempotency metadata on the new donor's
+ * Stripe subscription (or Mollie subscription) after the reward email sends.
+ * The caller (webhook route) provides this when SDK access is available;
+ * absent → idempotency stamp is skipped (warn-only, non-fatal).
+ *
+ * The key `referrer_reward_sent_at` is stamped with an ISO timestamp.
+ */
+export type StampRewardSentFn = () => Promise<void>
+
+export interface ReferrerRewardResult {
+  sent: boolean
+  reason: 'unconfigured' | 'referrer-not-found' | 'send-error' | 'already-sent' | 'ok'
+}
+
+/**
+ * Deps injected by the caller (webhook route) to avoid pulling SDK
+ * references into this pure-function module.
+ *
+ * `lookupReferrer`  — resolves `referredBySlug` to `{ email, name }`.
+ *                     Pass `lookupReferrer` from lib/referral-codes.ts with
+ *                     a bound Mollie client, OR a custom resolver.
+ * `stampMetadata`   — Optional. Called after successful email send to mark
+ *                     the new donor's subscription with `referrer_reward_sent_at`.
+ *                     Idempotency gate: if the stamp already exists on the
+ *                     new donor's metadata (checked before calling this fn),
+ *                     the send is skipped entirely. Absent → stamp step is
+ *                     skipped (non-fatal, possible duplicate on cold-start).
+ * `alreadySent`     — Optional pre-check provided by the caller: true when
+ *                     `metadata.referrer_reward_sent_at` is non-empty on the
+ *                     new donor record. Avoids a lookup API call on re-runs.
+ */
+export interface ReferrerRewardDeps {
+  sendEmail: SendEmailFn
+  lookupReferrer: (code: string) => Promise<{ email: string; name: string | null } | null>
+  /** Optional idempotency stamp — called after successful send. Fail-quiet if absent or throws. */
+  stampMetadata?: StampRewardSentFn
+  /** Optional pre-check: true = stamp already present on new donor → skip send. */
+  alreadySent?: boolean
+}
+
+/**
+ * Send a referrer-reward email when a new adoption checkout completes and
+ * `referredBySlug` is non-empty. Fail-quiet on every error path.
+ *
+ * Gate checks (in order):
+ *   1. `REFERRER_REWARD_LIVE !== 'true'` → no-op (`reason: 'unconfigured'`)
+ *   2. `REFERRER_REWARD_DISCOUNT_CODE` or `REFERRER_REWARD_DESCRIPTION` missing → no-op
+ *   3. `alreadySent` dep is true → no-op (`reason: 'already-sent'`)
+ *   4. `lookupReferrer(referredBySlug)` returns null → no-op (`reason: 'referrer-not-found'`)
+ *   5. Any throw from `sendEmail` or `buildReferrerRewardEmail` → swallowed (`reason: 'send-error'`)
+ *
+ * On successful send:
+ *   - Calls `deps.stampMetadata()` if provided (fail-quiet if it throws)
+ *   - Returns `{ sent: true, reason: 'ok' }`
+ *
+ * @param referredBySlug  Value of `metadata.referredBy` on the new donor's payment.
+ * @param donorName       NEW donor's display name (for the log line only — reward goes to referrer).
+ * @param locale          Locale slug from checkout (unused today; wired for future i18n).
+ * @param deps            Injected dependencies.
+ */
+export async function sendReferrerRewardQuiet(
+  {
+    referredBySlug,
+    donorName: _donorName,
+    locale: _locale,
+  }: {
+    referredBySlug: string | null | undefined
+    donorName?: string | null
+    locale?: string | null
+  },
+  deps: ReferrerRewardDeps,
+): Promise<ReferrerRewardResult> {
+  try {
+    // ── Gate 1 & 2: env vars ──────────────────────────────────────────────────
+    if (process.env.REFERRER_REWARD_LIVE !== 'true') {
+      return { sent: false, reason: 'unconfigured' }
+    }
+    const discountCode = process.env.REFERRER_REWARD_DISCOUNT_CODE
+    const description = process.env.REFERRER_REWARD_DESCRIPTION
+    if (!discountCode || !description) {
+      return { sent: false, reason: 'unconfigured' }
+    }
+
+    // ── Gate 3: idempotency pre-check ─────────────────────────────────────────
+    if (deps.alreadySent) {
+      return { sent: false, reason: 'already-sent' }
+    }
+
+    // ── Gate 4: referredBySlug must be a non-empty valid-format code ──────────
+    if (!referredBySlug || typeof referredBySlug !== 'string' || referredBySlug.trim().length === 0) {
+      return { sent: false, reason: 'referrer-not-found' }
+    }
+
+    // ── Gate 4 continued: resolve referrer ───────────────────────────────────
+    const referrer = await deps.lookupReferrer(referredBySlug)
+    if (!referrer || !referrer.email) {
+      return { sent: false, reason: 'referrer-not-found' }
+    }
+
+    // ── Send ──────────────────────────────────────────────────────────────────
+    const contactEmail = getContactEmail()
+    const { subject, html } = buildReferrerRewardEmail({
+      referrerName: referrer.name ?? '',
+      referrerEmail: referrer.email,
+      discountCode,
+      description,
+    })
+
+    await deps.sendEmail({
+      to: referrer.email,
+      subject,
+      html,
+      replyTo: contactEmail,
+      listUnsubscribeUrl: `mailto:${contactEmail}?subject=unsubscribe`,
+    })
+
+    // ── Idempotency stamp (non-fatal if absent or throws) ─────────────────────
+    if (deps.stampMetadata) {
+      try {
+        await deps.stampMetadata()
+      } catch {
+        // Stamp failure is warn-only: email already sent, metadata stamp is
+        // best-effort. Possible duplicate on cold-start, but preferable to
+        // blocking or rethrowing.
+        console.warn('[sendReferrerRewardQuiet] Failed to stamp referrer_reward_sent_at metadata — possible duplicate on cold-start')
+      }
+    }
+
+    return { sent: true, reason: 'ok' }
+  } catch {
+    return { sent: false, reason: 'send-error' }
+  }
+}
+
 // ── Mollie payment.failed handler ────────────────────────────────────────────
 
 export interface MollieFailedDeps {
@@ -1183,6 +1476,7 @@ export interface MollieFailedResult {
     | 'missing-donor-email'
     | 'donor-send-failed'
     | 'send-failed'
+    | 'recovered-no-notify'
   meta: {
     paymentId: string
     customerId?: string | null
@@ -1244,6 +1538,14 @@ export async function handleMolliePaymentFailed(
   // so recordFailure won't double-count if a Resend outage forces Mollie to
   // re-deliver the failed event.
   const { count: failureCount, severity } = recordFailure('mollie', trackKey, payment.id)
+
+  // severity === 'none' means this attempt key was already recorded AND the
+  // counter has since been reset to 0 (donor recovered via update-payment or
+  // a successful charge). Re-delivering a "payment failed" email post-recovery
+  // is strictly worse than no email. Suppress silently and return ok.
+  if (severity === 'none') {
+    return { donorNotified: false, ownerNotified: null, severity: null, failureCount: 0, reason: 'recovered-no-notify', meta }
+  }
 
   if (!donorEmail) {
     // Donor unreachable but owner still benefits from the escalated context.

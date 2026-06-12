@@ -163,6 +163,9 @@ const nextConfig = {
       // Weaving / Shop
       { source: '/informatie-weaving', destination: '/en/shop/woven', permanent: true },
       { source: '/informatie-weaving-1', destination: '/en/shop/woven', permanent: true },
+      // /weaving/collection merged into /shop/woven — they were the identical
+      // 6-card UNMAPPED placeholder grid (UFT consolidation 2026-06-09).
+      { source: '/:locale/weaving/collection', destination: '/:locale/shop/woven', permanent: true },
 
       // Legal
       { source: '/algemene-voorwaarden', destination: '/en/terms', permanent: true },

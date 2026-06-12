@@ -127,7 +127,7 @@ export function buildSearchIndex(): SearchItem[] {
         id: 'commission',
         title: 'Commission',
         snippet: 'Custom textile piece.',
-        url: `/${locale}/commission`,
+        url: `/${locale}/shop/commission`,
         kw: 'commission custom textile bespoke',
       },
       {

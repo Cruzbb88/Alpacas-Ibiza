@@ -13,6 +13,26 @@ interface CookieConsentBannerProps {
 type GtagFn = (cmd: string, action: string, params: Record<string, string>) => void
 
 function updateConsentMode(categories: string[]) {
+  // Persist the coarse analytics flag that the pre-hydration Consent Mode
+  // default (app/layout.tsx) and the custom trackEvent gate (lib/consent-gate.ts
+  // STORAGE_KEY) both read. vanilla-cookieconsent stores its own state in
+  // `cc_cookie`; this bridge key ('ai_cookie_consent_v1' = 'accepted' |
+  // 'rejected') is the contract those two readers expect, and it must be written
+  // on every consent event — even if gtag has not loaded yet (the readers do not
+  // depend on gtag, so the write must happen before the gtag guard below).
+  try {
+    window.localStorage.setItem(
+      'ai_cookie_consent_v1',
+      categories.includes('analytics') ? 'accepted' : 'rejected',
+    )
+    // Notify same-tab subscribers (e.g. VercelInstrumentation) that consent
+    // state has changed. 'storage' events only fire in OTHER tabs; this custom
+    // event covers the same-tab path.
+    window.dispatchEvent(new Event('cookieConsentUpdated'))
+  } catch {
+    /* localStorage unavailable (private mode) — Consent Mode update below still applies */
+  }
+
   const w = window as unknown as { gtag?: GtagFn }
   if (typeof w.gtag !== 'function') return
   w.gtag('consent', 'update', {

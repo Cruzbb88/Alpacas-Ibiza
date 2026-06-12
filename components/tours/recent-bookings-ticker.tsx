@@ -31,10 +31,9 @@ const ROTATE_MS = 4_000
 
 // Human-readable tour names keyed by slug.
 const TOUR_LABELS: Record<TourSlug, string> = {
-  'meet-herd': 'the Meet the Herd tour',
+  'alpaca-tour': 'the Alpaca Tour',
   'weaving-workshop': 'the Weaving Workshop',
-  'farm-experience': 'the Farm Experience',
-  'photo-session': 'the Photo Session',
+  'yoga': 'Alpaca Yoga',
 }
 
 // ── Helpers ──────────────────────────────────────────────────────────────────

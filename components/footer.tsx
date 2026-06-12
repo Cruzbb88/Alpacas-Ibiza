@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useTranslations, useLocale } from 'next-intl'
+import { MEMBERSHIP_LIVE, HERD_FAMILY_LIVE } from '@/lib/config'
 
 export interface FooterProps {
   legalName: string
@@ -26,6 +27,17 @@ export interface FooterProps {
     googleReviewUrl?: string | null
   }
   brandName: string
+  /**
+   * Build #4 — Spanish regulatory trust fields (WWF UK charity-number pattern).
+   * All optional — footer omits each section gracefully when unset.
+   */
+  touristRegistration?: string | null
+  foodHandlingCert?: string | null
+  trustBadges?: ReadonlyArray<{
+    label: string
+    certifier: string
+    logoSrc?: string
+  }>
 }
 
 /**
@@ -58,6 +70,9 @@ export function Footer({
   contactEmail,
   social,
   brandName,
+  touristRegistration,
+  foodHandlingCert,
+  trustBadges,
 }: FooterProps) {
   const tr = useTranslations()
   const locale = useLocale()
@@ -150,6 +165,38 @@ export function Footer({
               </li>
               <li>
                 <Link
+                  href={`/${locale}/experiences`}
+                  className="text-foreground/70 hover:text-foreground"
+                >
+                  {tr('nav.experiences') || 'Experiences'}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={`/${locale}/yoga`}
+                  className="text-foreground/70 hover:text-foreground"
+                >
+                  {tr('nav.yoga') || 'Alpaca Yoga'}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={`/${locale}/workshops`}
+                  className="text-foreground/70 hover:text-foreground"
+                >
+                  {tr('nav.workshops') || 'Weaving Workshops'}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={`/${locale}/weddings`}
+                  className="text-foreground/70 hover:text-foreground"
+                >
+                  {tr('nav.weddings') || 'Weddings & Events'}
+                </Link>
+              </li>
+              <li>
+                <Link
                   href={`/${locale}/alpacas`}
                   className="text-foreground/70 hover:text-foreground"
                 >
@@ -164,6 +211,26 @@ export function Footer({
                   {tr('footer.adopt') || 'Adopt an Alpaca'}
                 </Link>
               </li>
+              {HERD_FAMILY_LIVE && (
+                <li>
+                  <Link
+                    href={`/${locale}/herd-family`}
+                    className="text-foreground/70 hover:text-foreground"
+                  >
+                    {tr('footer.herdFamily') || 'Herd Family'}
+                  </Link>
+                </li>
+              )}
+              {MEMBERSHIP_LIVE && (
+                <li>
+                  <Link
+                    href={`/${locale}/membership`}
+                    className="text-foreground/70 hover:text-foreground"
+                  >
+                    {tr('footer.membership') || 'Annual Farm Pass'}
+                  </Link>
+                </li>
+              )}
               <li>
                 <Link
                   href={`/${locale}/sustainability`}
@@ -178,6 +245,14 @@ export function Footer({
                   className="text-foreground/70 hover:text-foreground"
                 >
                   {tr('footer.journal') || 'Journal'}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={`/${locale}/newsletter/archive`}
+                  className="text-foreground/70 hover:text-foreground"
+                >
+                  {tr('footer.newsletterArchive') || 'Newsletter Archive'}
                 </Link>
               </li>
               <li>
@@ -235,6 +310,30 @@ export function Footer({
                   {tr('nav.gifts')}
                 </Link>
               </li>
+              <li>
+                <Link
+                  href={`/${locale}/redeem-voucher`}
+                  className="text-foreground/70 hover:text-foreground"
+                >
+                  {tr('footer.redeemVoucher') || 'Redeem a Voucher'}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={`/${locale}/weaving`}
+                  className="text-foreground/70 hover:text-foreground"
+                >
+                  {tr('nav.weaving') || 'Weaving'}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={`/${locale}/skein`}
+                  className="text-foreground/70 hover:text-foreground"
+                >
+                  {tr('nav.skein') || 'Sponsor a Skein'}
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -287,6 +386,97 @@ export function Footer({
             </ul>
           </div>
         </div>
+
+        {/* Secondary utility links — donors, press, sitemap */}
+        <div className="mt-8 pt-6 border-t border-border grid grid-cols-2 md:grid-cols-4 gap-4 text-xs text-foreground/60">
+          <div>
+            <p className="font-semibold mb-2">{tr('footer.donors') || 'Donors'}</p>
+            <ul className="space-y-1">
+              <li>
+                <Link href={`/${locale}/my-adoption`} className="hover:text-foreground">
+                  {tr('footer.myAdoption') || 'My Adoption Portal'}
+                </Link>
+              </li>
+              <li>
+                <Link href={`/${locale}/preferences`} className="hover:text-foreground">
+                  {tr('footer.emailPreferences') || 'Email Preferences'}
+                </Link>
+              </li>
+              <li>
+                <Link href={`/${locale}/recover-certificate`} className="hover:text-foreground">
+                  {tr('footer.recoverCertificate') || 'Recover Certificate'}
+                </Link>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <p className="font-semibold mb-2">{tr('footer.press') || 'Press'}</p>
+            <ul className="space-y-1">
+              <li>
+                <Link href={`/${locale}/press`} className="hover:text-foreground">
+                  {tr('footer.pressRoom') || 'Press Room'}
+                </Link>
+              </li>
+              <li>
+                <Link href={`/${locale}/press-kit`} className="hover:text-foreground">
+                  {tr('footer.pressKit') || 'Press Kit'}
+                </Link>
+              </li>
+              <li>
+                <Link href={`/${locale}/media`} className="hover:text-foreground">
+                  {tr('footer.mediaGallery') || 'Media Gallery'}
+                </Link>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <p className="font-semibold mb-2">{tr('footer.info') || 'Info'}</p>
+            <ul className="space-y-1">
+              <li>
+                <Link href={`/${locale}/visit`} className="hover:text-foreground">
+                  {tr('nav.visit') || 'Plan your visit'}
+                </Link>
+              </li>
+              <li>
+                <Link href={`/${locale}/sitemap`} className="hover:text-foreground">
+                  {tr('footer.siteMap') || 'Site Map'}
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Build #4 — Regulatory trust section (WWF UK pattern, Spanish equivalents).
+             Renders only when the tenant has supplied at least one of the three fields.
+             Fail-quiet: each sub-block omits independently when unset. */}
+        {(touristRegistration || foodHandlingCert || (trustBadges && trustBadges.length > 0)) && (
+          <div className="mt-6 pt-6 border-t border-border text-xs text-foreground/50 space-y-1 text-center">
+            {touristRegistration && (
+              <p>Turismo Activo: {touristRegistration}</p>
+            )}
+            {foodHandlingCert && (
+              <p>Carnet manipulador alimentos: {foodHandlingCert}</p>
+            )}
+            {trustBadges && trustBadges.length > 0 && (
+              <ul className="flex flex-wrap justify-center gap-x-4 gap-y-1">
+                {trustBadges.map((badge, i) => (
+                  <li key={i} className="flex items-center gap-1">
+                    {badge.logoSrc && (
+                      /* eslint-disable-next-line @next/next/no-img-element */
+                      <img
+                        src={badge.logoSrc}
+                        alt={badge.certifier}
+                        className="h-4 w-auto"
+                        loading="lazy"
+                      />
+                    )}
+                    <span>{badge.label} · {badge.certifier}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
 
         {/* Spanish-law compliance strip */}
         <div className="mt-8 pt-8 border-t border-border text-center text-xs text-foreground/60 space-y-2">

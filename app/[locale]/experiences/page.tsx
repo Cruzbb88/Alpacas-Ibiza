@@ -62,11 +62,11 @@ const EXPERIENCES: ReadonlyArray<ExperienceRowSpec> = [
     titleKey: 'experiences.tour.title',
     oneLinerKey: 'experiences.tour.oneLiner',
     icon: '🦙',
-    duration: '90 min',
+    duration: '1 hour', // FareHarbor: "Alpaca Tour · 1 hour". Was '90 min' (invented).
     groupSize: 'Up to 6',
-    // €30 — verified live per lib/config.ts TOUR_BASE_PRICE_EUR. Was €45
-    // (invented) which contradicted /tours and broke trust on click-through.
-    priceFrom: 'From €30 / person',
+    // €21.19 — real FareHarbor booking-widget price ("Alpaca Tour · From €21.19").
+    // Was €30 (a third-party aggregator's reseller markup) → corrected 2026-06-06.
+    priceFrom: 'From €21.19 / person',
     vibe: 'classic',
     vibeLabelKey: 'experiences.vibe.classic',
     includes: [
@@ -82,7 +82,7 @@ const EXPERIENCES: ReadonlyArray<ExperienceRowSpec> = [
     titleKey: 'experiences.yoga.title',
     oneLinerKey: 'experiences.yoga.oneLiner',
     icon: '🧘',
-    duration: '75 min',
+    duration: '1.5 hr', // FareHarbor: "Alpaca Yoga · 1.5 hr · Ages 15+". Was '75 min'.
     groupSize: 'Up to 6',
     // €30 — verified live per lib/config.ts YOGA_PRICE_EUR. Was €55
     // (invented) which contradicted /yoga page.
@@ -129,10 +129,8 @@ const EXPERIENCES: ReadonlyArray<ExperienceRowSpec> = [
     vibe: 'romantic',
     vibeLabelKey: 'experiences.vibe.romantic',
     includes: [
-      'Private walk through the paddocks at golden hour',
-      'Glass of cava + tapas board',
-      'Professional photographer for 30 minutes',
-      'Digital photo download',
+      'Sunset timing arranged with weather check',
+      'Small-group experience',
     ],
     href: (locale) => `/${locale}/experiences/romantic-sunset`,
   },
@@ -232,6 +230,7 @@ export default async function ExperiencesIndexPage({
           translate('experiences.indexSubtitle') ||
           'Seven ways to spend time with the herd at Es Currals. Pick the one that fits your trip.'
         }
+        backgroundImage="/images/gallery/farm-07.jpg"
       />
 
       <PageSection width="wide" className="py-12 md:py-16">

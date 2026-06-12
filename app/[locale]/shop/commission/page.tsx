@@ -64,12 +64,15 @@ export default async function CommissionPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: toJsonLd(itemListSchema) }}
       />
-      <section className="w-full py-20 px-4 bg-gradient-to-br from-primary/10 to-accent/10">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
+      <section className="relative w-full py-20 px-4 overflow-hidden min-h-[300px] flex items-center">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/images/gallery/weaving-15.jpg" alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-black/45" aria-hidden="true" />
+        <div className="relative max-w-4xl mx-auto text-center">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
             {translate('commissionPage.title')}
           </h1>
-          <p className="text-lg text-foreground/70 mb-8">
+          <p className="text-lg text-white/85 mb-8">
             {translate('commissionPage.subtitle')}
           </p>
         </div>

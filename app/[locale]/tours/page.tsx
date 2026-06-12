@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import { Hero } from '@/components/hero'
-import { Features } from '@/components/features'
-import { Timeline } from '@/components/timeline'
 import { FAQ } from '@/components/faq'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -9,7 +8,7 @@ import { ReviewCard } from '@/components/review-card'
 import type { Review } from '@/components/review-card'
 import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
-import { FAREHARBOR_BOOKING_URL } from '@/lib/config'
+import { FAREHARBOR_BOOKING_URL, TOUR_BASE_PRICE_EUR } from '@/lib/config'
 import { FareHarborCalendar } from '@/components/booking/fareharbor-calendar'
 import { CancellationBadge } from '@/components/booking/cancellation-badge'
 import { AvailabilityUrgency } from '@/components/booking/availability-urgency'
@@ -19,11 +18,13 @@ import type { Locale } from '@/i18n.config'
 import { touristTripSchema, faqPageSchema, toJsonLd } from '@/lib/structured-data'
 import { buildLocaleAlternates } from '@/lib/i18n-metadata'
 import { getOgImage } from '@/lib/og-images'
-import { TourComparison } from '@/components/tour-comparison'
-import type { TourSpec } from '@/components/tour-comparison'
 import { WhatToBringChecklist } from '@/components/tours/what-to-bring-checklist'
 import { AdoptCrossSell } from '@/components/tours/adopt-cross-sell'
 import { RecentBookingsTicker } from '@/components/tours/recent-bookings-ticker'
+import { SocialProofStrip } from '@/components/social-proof-strip'
+import { CampaignBannerGeneric } from '@/components/campaign-banner-generic'
+import { BundleCta } from '@/components/tours/bundle-cta'
+import { WaitlistForm } from '@/components/booking/waitlist-form'
 
 export async function generateMetadata({
   params,
@@ -56,111 +57,9 @@ export default async function ToursPage({ params }: { params: Promise<{ locale: 
   const { locale } = await params
   const translate = await getTranslations()
 
-  const tourTypes = [
-    {
-      icon: '🦙',
-      title: translate('tours.tourTypes.meetHerd.title'),
-      description: translate('tours.tourTypes.meetHerd.description'),
-    },
-    {
-      icon: '🧵',
-      title: translate('tours.tourTypes.weaving.title'),
-      description: translate('tours.tourTypes.weaving.description'),
-    },
-    {
-      icon: '🌄',
-      title: translate('tours.tourTypes.farm.title'),
-      description: translate('tours.tourTypes.farm.description'),
-    },
-    {
-      icon: '📸',
-      title: translate('tours.tourTypes.photo.title'),
-      description: translate('tours.tourTypes.photo.description'),
-    },
-  ]
-
-  const tourCompareSpecs: TourSpec[] = [
-    {
-      product: 'meet-herd',
-      name: translate('tours.tourTypes.meetHerd.title'),
-      duration: translate('tours.compare.meetHerd.duration'),
-      price: translate('tours.compare.meetHerd.price'),
-      capacity: translate('tours.compare.meetHerd.capacity'),
-      includes: [
-        translate('tours.compare.meetHerd.include1'),
-        translate('tours.compare.meetHerd.include2'),
-        translate('tours.compare.meetHerd.include3'),
-      ],
-      bestFor: translate('tours.compare.meetHerd.bestFor'),
-    },
-    {
-      product: 'weaving-workshop',
-      name: translate('tours.tourTypes.weaving.title'),
-      duration: translate('tours.compare.weaving.duration'),
-      price: translate('tours.compare.weaving.price'),
-      capacity: translate('tours.compare.weaving.capacity'),
-      includes: [
-        translate('tours.compare.weaving.include1'),
-        translate('tours.compare.weaving.include2'),
-        translate('tours.compare.weaving.include3'),
-      ],
-      bestFor: translate('tours.compare.weaving.bestFor'),
-    },
-    {
-      product: 'farm-experience',
-      name: translate('tours.tourTypes.farm.title'),
-      duration: translate('tours.compare.farm.duration'),
-      price: translate('tours.compare.farm.price'),
-      capacity: translate('tours.compare.farm.capacity'),
-      includes: [
-        translate('tours.compare.farm.include1'),
-        translate('tours.compare.farm.include2'),
-        translate('tours.compare.farm.include3'),
-      ],
-      bestFor: translate('tours.compare.farm.bestFor'),
-    },
-    {
-      product: 'photo-session',
-      name: translate('tours.tourTypes.photo.title'),
-      duration: translate('tours.compare.photo.duration'),
-      price: translate('tours.compare.photo.price'),
-      capacity: translate('tours.compare.photo.capacity'),
-      includes: [
-        translate('tours.compare.photo.include1'),
-        translate('tours.compare.photo.include2'),
-        translate('tours.compare.photo.include3'),
-      ],
-      bestFor: translate('tours.compare.photo.bestFor'),
-    },
-  ]
-
-  const timelineItems = [
-    {
-      time: translate('tours.timeline.arrival.time'),
-      title: translate('tours.timeline.arrival.title'),
-      description: translate('tours.timeline.arrival.description'),
-    },
-    {
-      time: translate('tours.timeline.morning.time'),
-      title: translate('tours.timeline.morning.title'),
-      description: translate('tours.timeline.morning.description'),
-    },
-    {
-      time: translate('tours.timeline.midday.time'),
-      title: translate('tours.timeline.midday.title'),
-      description: translate('tours.timeline.midday.description'),
-    },
-    {
-      time: translate('tours.timeline.afternoon.time'),
-      title: translate('tours.timeline.afternoon.title'),
-      description: translate('tours.timeline.afternoon.description'),
-    },
-    {
-      time: translate('tours.timeline.closing.time'),
-      title: translate('tours.timeline.closing.title'),
-      description: translate('tours.timeline.closing.description'),
-    },
-  ]
+  // tourTypes, tourCompareSpecs and timelineItems removed 2026-06-06 —
+  // AI-fabricated (FareHarbor has ONE 1-hour Alpaca Tour, not 4 types or an
+  // all-day arc). See FABRICATED_INFO_2026-06-06.md.
 
   const faqItems = [
     {
@@ -210,7 +109,7 @@ export default async function ToursPage({ params }: { params: Promise<{ locale: 
       {/* JSON-LD Structured Data */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: toJsonLd(touristTripSchema()) }}
+        dangerouslySetInnerHTML={{ __html: toJsonLd(touristTripSchema({ locale })) }}
       />
       <script
         type="application/ld+json"
@@ -224,36 +123,17 @@ export default async function ToursPage({ params }: { params: Promise<{ locale: 
       <Hero
         title={translate('tours.heroTitle')}
         subtitle={translate('tours.heroSubtitle')}
+        eyebrow={`From €${TOUR_BASE_PRICE_EUR} per person`}
         cta={{
           label: translate('tours.heroCta'),
           href: FAREHARBOR_BOOKING_URL,
         }}
       />
 
-      {/* Tour Types */}
-      <section className="w-full py-16 md:py-24 px-4 bg-background">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              {translate('tours.tourOptionsTitle')}
-            </h2>
-            <p className="text-foreground/70 max-w-2xl mx-auto">
-              {translate('tours.tourOptionsSubtitle')}
-            </p>
-          </div>
-          <Features items={tourTypes} />
-        </div>
-      </section>
-
-      {/* Tour Comparison Table */}
-      <TourComparison
-        tours={tourCompareSpecs}
-        title={translate('tours.compare.title')}
-        subtitle={translate('tours.compare.subtitle')}
-      />
-
-      {/* What to Expect */}
-      <Timeline items={timelineItems} title={translate('tours.timelineTitle')} />
+      {/* Removed 2026-06-06 (owner-confirmed AI fabrication): the 4-way "Tour
+          Types" split, the comparison table, and the all-day "What to Expect"
+          timeline. FareHarbor has ONE Alpaca Tour (1 hour, all ages) — the
+          multi-tour taxonomy and the morning→closing day-arc were invented. */}
 
       {/* Plan Your Visit Info */}
       <section className="w-full py-16 md:py-24 px-4 bg-background">
@@ -326,6 +206,22 @@ export default async function ToursPage({ params }: { params: Promise<{ locale: 
         subtitle={translate('faq.sectionSubtitle')}
       />
 
+      {/* Social proof strip — full 3-up above the booking calendar */}
+      <section className="w-full py-6 px-4 bg-background">
+        <div className="max-w-4xl mx-auto">
+          <Suspense fallback={null}>
+            <SocialProofStrip variant="full" />
+          </Suspense>
+        </div>
+      </section>
+
+      {/* Build #4 — Campaign banner (tours slot) — env-gated; renders null unless CAMPAIGN_TOURS_LIVE=true */}
+      <section className="w-full px-4 pb-4 bg-background">
+        <div className="max-w-4xl mx-auto">
+          <CampaignBannerGeneric slot="tours" />
+        </div>
+      </section>
+
       {/* Booking Section */}
       <section
         id="booking"
@@ -336,8 +232,13 @@ export default async function ToursPage({ params }: { params: Promise<{ locale: 
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
               {translate('tours.bookingSection.title')}
             </h2>
-            <p className="text-foreground/70 max-w-2xl mx-auto mb-8">
+            <p className="text-foreground/70 max-w-2xl mx-auto mb-3">
               {translate('tours.bookingSection.subtitle')}
+            </p>
+            {/* Real FareHarbor price at the point of decision (competitor scan:
+                price-at-the-Book-CTA is the #1 drop-off fix). */}
+            <p className="text-2xl font-bold text-primary">
+              From €{TOUR_BASE_PRICE_EUR} per person
             </p>
           </div>
 
@@ -378,6 +279,27 @@ export default async function ToursPage({ params }: { params: Promise<{ locale: 
             <p className="text-sm text-foreground/70">
               <strong className="text-foreground">{translate('tours.bookingSection.questions')}</strong> {translate('tours.bookingSection.questionsText')}
             </p>
+          </div>
+
+          {/* Build #8 — Bundle CTA (tour+yoga slot) — env-gated; renders null unless BUNDLE_TOUR_PLUS_YOGA_DISCOUNT_EUR > 0 */}
+          <div className="mt-6">
+            <BundleCta slot="tour-yoga" />
+          </div>
+
+          {/* Build #10 — Waitlist form — below the calendar as fallback CTA */}
+          <div className="mt-6">
+            <WaitlistForm
+              tourSlug="tours"
+              locale={locale}
+              labels={{
+                heading: translate('waitlist.heading'),
+                subheading: translate('waitlist.subheading'),
+                emailPlaceholder: translate('waitlist.emailPlaceholder'),
+                datePlaceholder: translate('waitlist.datePlaceholder'),
+                submitLabel: translate('waitlist.submitLabel'),
+                successMessage: translate('waitlist.successMessage'),
+              }}
+            />
           </div>
         </div>
       </section>

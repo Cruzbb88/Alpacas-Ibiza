@@ -111,9 +111,10 @@ export function ChoicePaths({
   className,
 }: ChoicePathsProps) {
   const pathname = usePathname()
+  // Rules of Hooks: call unconditionally before the early return below.
+  const translate = useTranslations()
   if (!paths || paths.length === 0) return null
 
-  const translate = useTranslations()
   const defaultCta = translate('paths.explore')
 
   const normalized = paths.map(normalize)

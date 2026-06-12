@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { isSet, TIER1_KEYS } from '@/lib/validate-env'
+import { isSet, isTier1Ready, TIER1_KEYS } from '@/lib/validate-env'
 import { getRequestId, attachRequestId } from '@/lib/request-id'
 
 /**
@@ -17,7 +17,7 @@ export async function GET(request: Request) {
     const env = process.env.NODE_ENV === 'production' ? 'production' : 'development'
 
     const missingTier1 = TIER1_KEYS.filter((key) => !isSet(key))
-    const healthy = missingTier1.length === 0
+    const healthy = isTier1Ready()
 
     const body = {
         status: healthy ? 'ok' : 'degraded',

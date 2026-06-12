@@ -16,7 +16,7 @@
  */
 
 import { useSearchParams } from 'next/navigation'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { ShareButtons } from '@/components/share-buttons'
 import { trackEvent } from '@/lib/client-track'
@@ -85,6 +85,33 @@ export function AdoptThankYou({
 
   const tr = useTranslations()
 
+  // ── Personalised welcome params (hooks — must be unconditional) ─────────────
+  // alpaca_name is threaded into success_url at checkout creation.
+  // donor_name is fetched from /api/checkout-session/[id] after payment.
+  // Both hooks MUST run before any conditional return (Rules of Hooks).
+  const sanitiseParam = (raw: string | null): string | null => {
+    if (!raw) return null
+    const stripped = raw.replace(/<[^>]*>/g, '').trim().slice(0, 80)
+    return stripped.length > 0 ? stripped : null
+  }
+  const sessionId = params.get('session_id')
+  const donorNameFromParam = sanitiseParam(params.get('donor_name'))
+  const [fetchedDonorName, setFetchedDonorName] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (donorNameFromParam || !sessionId || !isSuccessLike) return
+    if (!/^cs_(test_|live_)[A-Za-z0-9]{20,}$/.test(sessionId)) return
+    const controller = new AbortController()
+    fetch(`/api/checkout-session/${encodeURIComponent(sessionId)}`, { signal: controller.signal })
+      .then(r => r.ok ? r.json() : null)
+      .then((data: { name?: string | null } | null) => {
+        if (data?.name) setFetchedDonorName(sanitiseParam(data.name))
+      })
+      .catch(() => { /* non-fatal */ })
+    return () => controller.abort()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sessionId, isSuccessLike, donorNameFromParam])
+
   // ── Cancelled full-page state ───────────────────────────────────────────────
   // Handles ?checkout=cancelled (Stripe) and ?checkout=mollie-return&status=canceled
   // (Mollie hosted checkout — donor closed before paying). Both: no charge taken.
@@ -130,23 +157,9 @@ export function AdoptThankYou({
       ? tr('adopt.thankYou.tierYearly')
       : tr('adopt.thankYou.tierMonthly')
 
-  /**
-   * Personalised welcome params.
-   *
-   * <!-- TODO: the checkout route must thread donor_name and alpaca_name into
-   * success_url for these to fire in production. e.g.:
-   *   success_url = `${SITE_BASE_URL}/${locale}/adopt?checkout=success&donor_name=…&alpaca_name=…`
-   * That change lives in the checkout / webhook territory (parallel AI's scope). -->
-   */
-  const sanitiseParam = (raw: string | null): string | null => {
-    if (!raw) return null
-    // Strip HTML tags, trim, cap at 80 chars
-    const stripped = raw.replace(/<[^>]*>/g, '').trim().slice(0, 80)
-    return stripped.length > 0 ? stripped : null
-  }
-
-  const donorName = sanitiseParam(params.get('donor_name'))
+  // Resolve personalised params from the hooks declared above (before early returns).
   const alpacaName = sanitiseParam(params.get('alpaca_name'))
+  const donorName = donorNameFromParam ?? fetchedDonorName
 
   const headingText = donorName
     ? tr('adopt.thankYou.welcomeNamed').replace('{name}', donorName)
@@ -156,9 +169,7 @@ export function AdoptThankYou({
     : null
 
   const waNumber = whatsappE164 ? whatsappE164.replace(/[^\d]/g, '') : null
-  // session_id is threaded from Stripe's {CHECKOUT_SESSION_ID} template in the
-  // success_url. Mollie and gift flows won't have it — hide the calendar button.
-  const sessionId = params.get('session_id')
+  // sessionId declared above (hooks section). Mollie and gift flows won't have it.
 
   return (
     <section className="w-full py-20 px-4 bg-gradient-to-br from-primary/10 to-accent/10">

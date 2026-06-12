@@ -2,6 +2,7 @@ import Image from 'next/image'
 import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { BRAND_THEME_COLOR_HEX } from '@/lib/brand'
+import { ReviewTranslateButton } from '@/components/review-translate-button'
 
 export interface TestimonialCardProps {
   author: string
@@ -10,6 +11,8 @@ export interface TestimonialCardProps {
   body: string
   source?: 'google' | 'tripadvisor' | 'facebook' | null
   avatarUrl?: string | null
+  /** BCP47 language code the review was written in (e.g. 'de'). Used as Google Translate source hint. */
+  lang?: string | null
 }
 
 const SAGE = BRAND_THEME_COLOR_HEX
@@ -123,6 +126,7 @@ export function TestimonialCard({
   body,
   source,
   avatarUrl,
+  lang,
 }: TestimonialCardProps) {
   const isUnmapped = body === '__UNMAPPED__'
 
@@ -138,9 +142,15 @@ export function TestimonialCard({
             <Skeleton className="h-3 w-4/6" />
           </div>
         ) : (
-          <blockquote className="text-foreground/70 italic leading-relaxed text-sm mb-3">
-            &ldquo;{body}&rdquo;
-          </blockquote>
+          <ReviewTranslateButton
+            text={body}
+            sourceLang={lang ?? undefined}
+            className="mb-3"
+          >
+            <blockquote className="text-foreground/70 italic leading-relaxed text-sm mb-2">
+              &ldquo;{body}&rdquo;
+            </blockquote>
+          </ReviewTranslateButton>
         )}
       </div>
 

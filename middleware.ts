@@ -47,6 +47,13 @@ export const config = {
   // og/healthz/manifest/robots/sitemap/pagefind.
   matcher: [
     '/admin/:path*',
-    '/((?!api|_next|admin|og|healthz|favicon\\.ico|apple-icon|icon|.*\\.webmanifest|robots\\.txt|sitemap.*\\.xml|_pagefind).*)',
+    // `.*\\..*` excludes ANY path containing a dot — i.e. every static asset
+    // with a file extension (/images/brand/logo.png, *.webp, *.svg, *.css …).
+    // Without it the intl middleware locale-prefixes asset requests
+    // (/images/brand/logo.png → 307 → /en/images/brand/logo.png → 404), which
+    // is why the header logo and other public images rendered broken. This is
+    // the standard next-intl matcher exclusion; the named-file entries below it
+    // (favicon.ico, robots.txt …) are now redundant but kept for intent.
+    '/((?!api|_next|admin|.*\\..*|og|healthz|favicon\\.ico|apple-icon|icon|.*\\.webmanifest|robots\\.txt|sitemap.*\\.xml|_pagefind).*)',
   ],
 }

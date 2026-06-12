@@ -59,7 +59,13 @@ function signToken(payload: NewsletterTokenPayload): string {
   return `${payloadB64}.${toBase64Url(sig)}`
 }
 
+// CPU-DoS guard: an oversized token forces a multi-megabyte HMAC computation.
+// Backported from lib/mollie-manage-token.ts 2026-06-05. 2048 bytes is generous
+// for our payloads (typically ~150 bytes) and well below memory-pressure territory.
+const MAX_TOKEN_BYTES = 2048
+
 function verifyToken(token: string, expectedScope: NewsletterTokenScope): NewsletterTokenPayload | null {
+  if (!token || token.length > MAX_TOKEN_BYTES) return null
   try {
     const dot = token.lastIndexOf('.')
     if (dot < 1) return null

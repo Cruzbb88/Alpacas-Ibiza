@@ -26,6 +26,7 @@ import { tenantMetadata } from '@/lib/tenants/metadata'
 import { localBusinessSchema, toJsonLd } from '@/lib/structured-data'
 import { press } from '@/lib/data/press'
 import { getOgImage } from '@/lib/og-images'
+import { PressLogos } from '@/components/press-logos'
 
 // ── Metadata ──────────────────────────────────────────────────────────────────
 
@@ -87,17 +88,28 @@ export default async function PressPage({ params }: { params: Promise<{ locale: 
             />
 
             {/* Hero */}
-            <section className="w-full py-20 px-4 bg-gradient-to-br from-primary/10 to-accent/10">
-                <div className="max-w-4xl mx-auto text-center">
-                    <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
+            <section className="relative w-full overflow-hidden min-h-[300px] flex items-center py-20 px-4">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                    src="/images/gallery/farm-wide.jpg"
+                    alt=""
+                    aria-hidden="true"
+                    className="absolute inset-0 w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-black/45" aria-hidden="true" />
+                <div className="relative max-w-4xl mx-auto text-center">
+                    <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
                         {translate('press.title') || 'Press & Media'}
                     </h1>
-                    <p className="text-lg text-foreground/70 max-w-2xl mx-auto">
+                    <p className="text-lg text-white/85 max-w-2xl mx-auto">
                         {translate('press.subtitle') ||
                             'Alpacas Ibiza has been featured in Belgian national press, regional Flemish media, Spanish local newspapers, and international travel outlets.'}
                     </p>
                 </div>
             </section>
+
+            {/* Press logos strip — horizontal band, fail-quiet until owner provides files */}
+            <PressLogos title={translate('press.featuredIn') || 'As Seen In'} />
 
             {/* "Featured in" section */}
             <section className="w-full py-16 md:py-24 px-4 bg-background">

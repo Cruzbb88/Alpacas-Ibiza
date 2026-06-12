@@ -2,8 +2,12 @@ import { NextResponse } from 'next/server'
 import {
   verifyEmailPreferenceToken,
   isExpiredEmailPreferenceToken,
+  EMAIL_PREFERENCE_TYPES,
   type EmailPreferenceType,
+  type EmailPreferenceTokenPayload,
 } from '@/lib/email-preferences-token'
+// Note: verifyEmailPreferenceToken + isExpiredEmailPreferenceToken are used
+// exclusively via the local verifyToken() helper below.
 import { getMollieClient } from '@/lib/integrations/payment-mollie'
 import { importStripe } from '@/lib/integrations/stripe-sdk'
 
@@ -30,8 +34,23 @@ import { importStripe } from '@/lib/integrations/stripe-sdk'
  * whether the email was found in any subscription.
  */
 
-const VALID_TYPES: EmailPreferenceType[] = ['birthday', 'quarterly', 'renewal']
 const VALID_ACTIONS = ['unsubscribe'] as const
+
+/**
+ * Verify a token and return the payload, or a NextResponse error.
+ * Centralises the verify → expired-check → invalid-check pattern used
+ * in three places within this route.
+ */
+function verifyToken(token: string): EmailPreferenceTokenPayload | NextResponse {
+  const payload = verifyEmailPreferenceToken(token)
+  if (!payload) {
+    if (isExpiredEmailPreferenceToken(token)) {
+      return NextResponse.json({ error: 'Token expired' }, { status: 410 })
+    }
+    return NextResponse.json({ error: 'Invalid token' }, { status: 400 })
+  }
+  return payload
+}
 
 function parseParams(token: string | null, action: string | null, type: string | null) {
   return {
@@ -39,7 +58,7 @@ function parseParams(token: string | null, action: string | null, type: string |
     action: typeof action === 'string' && (VALID_ACTIONS as readonly string[]).includes(action)
       ? (action as (typeof VALID_ACTIONS)[number])
       : null,
-    type: typeof type === 'string' && (VALID_TYPES as readonly string[]).includes(type)
+    type: typeof type === 'string' && (EMAIL_PREFERENCE_TYPES as readonly string[]).includes(type)
       ? (type as EmailPreferenceType)
       : null,
   }
@@ -59,19 +78,17 @@ async function handlePreferenceRequest(
     return NextResponse.json({ error: 'Invalid parameters' }, { status: 400 })
   }
 
-  const payload = verifyEmailPreferenceToken(safeToken)
-  if (!payload) {
-    if (isExpiredEmailPreferenceToken(safeToken)) {
-      return NextResponse.json({ error: 'Token expired' }, { status: 410 })
-    }
-    return NextResponse.json({ error: 'Invalid token' }, { status: 400 })
-  }
+  const verifyResult = verifyToken(safeToken)
+  if (verifyResult instanceof NextResponse) return verifyResult
+  const payload = verifyResult
 
-  // Verify token type matches the request type (prevents token reuse across types)
-  if (payload.type !== safeType) {
-    return NextResponse.json({ error: 'Token type mismatch' }, { status: 400 })
-  }
-
+  // Note: we intentionally do NOT check payload.type === safeType here.
+  // The HMAC signature already proves the token belongs to the email owner — that
+  // is the security invariant. Restricting a birthday token from opting out of
+  // quarterly emails provides no real security benefit (the attacker must already
+  // control the email account to obtain ANY valid token), but it DOES break the
+  // "Unsubscribe from all" flow in the preferences page which sends all 3 category
+  // POSTs using the single token obtained from the email link URL.
   const metaKey = `opt_out_${safeType}`
   const email = payload.email
 
@@ -142,6 +159,23 @@ export async function GET(request: Request): Promise<NextResponse> {
   const token = searchParams.get('token')
   const action = searchParams.get('action')
   const type = searchParams.get('type')
+  const validate = searchParams.get('validate')
+
+  // Fix 5: ?validate=1 path — token-only validation, no action/type required.
+  // Returns { valid: true, type: 'renewal' } so the preferences page can verify
+  // any token regardless of which type it was issued for, then show the correct
+  // highlighted category without needing to know the type beforehand.
+  if (validate === '1') {
+    const safeToken = typeof token === 'string' ? token : null
+    if (!safeToken) {
+      return NextResponse.json({ error: 'Missing token' }, { status: 400 })
+    }
+    const vr = verifyToken(safeToken)
+    if (vr instanceof NextResponse) return vr
+    // Return the token's type so the UI can highlight the correct category.
+    // No action is performed — safe to call from GET (link-prefetch safe).
+    return NextResponse.json({ valid: true, type: vr.type })
+  }
 
   // Validate params (shape only — no mutation)
   const { token: safeToken, action: safeAction, type: safeType } = parseParams(token, action, type)
@@ -150,13 +184,8 @@ export async function GET(request: Request): Promise<NextResponse> {
   }
 
   // Verify the token — report expired vs invalid
-  const payload = verifyEmailPreferenceToken(safeToken)
-  if (!payload) {
-    if (isExpiredEmailPreferenceToken(safeToken)) {
-      return NextResponse.json({ error: 'Token expired' }, { status: 410 })
-    }
-    return NextResponse.json({ error: 'Invalid token' }, { status: 400 })
-  }
+  const tokenResult = verifyToken(safeToken)
+  if (tokenResult instanceof NextResponse) return tokenResult
 
   // Return a minimal HTML interstitial with a POST confirmation form — NO mutation in GET.
   // This prevents link-prefetch scanners (Google, Slack, email clients) from silently

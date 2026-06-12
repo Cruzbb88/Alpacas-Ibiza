@@ -6,6 +6,9 @@ import { PageBreadcrumbs } from '@/components/page-breadcrumbs'
 import { buildLocaleAlternates } from '@/lib/i18n-metadata'
 import { getOgImage } from '@/lib/og-images'
 import { localBusinessSchema, toJsonLd } from '@/lib/structured-data'
+import { getTenant } from '@/lib/tenant'
+import { TenantMap } from '@/components/tenant-map'
+import { VirtualFarmTour } from '@/components/virtual-farm-tour'
 
 export async function generateMetadata({
   params,
@@ -45,7 +48,7 @@ function visitPlaceSchema() {
       addressLocality: 'Santa Eulària des Riu',
       addressRegion: 'Islas Baleares',
       addressCountry: 'ES',
-      postalCode: '07819',
+      postalCode: '07850',
     },
     geo: {
       '@type': 'GeoCoordinates',
@@ -61,6 +64,7 @@ function visitPlaceSchema() {
 export default async function VisitPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params
   const tr = await getTranslations()
+  const tenant = await getTenant()
 
   return (
     <main>
@@ -80,16 +84,22 @@ export default async function VisitPage({ params }: { params: Promise<{ locale: 
       />
 
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
-      <section className="w-full py-20 px-4 bg-gradient-to-br from-primary/10 to-accent/10">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
+      <section className="relative w-full overflow-hidden min-h-[300px] flex items-center py-20 px-4">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/images/gallery/farm-03.jpg" alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-black/45" aria-hidden="true" />
+        <div className="relative max-w-4xl mx-auto text-center">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
             {tr('visit.title')}
           </h1>
-          <p className="text-lg text-foreground/70 max-w-2xl mx-auto">
+          <p className="text-lg text-white/85 max-w-2xl mx-auto">
             {tr('visit.subhead')}
           </p>
         </div>
       </section>
+
+      {/* ── Virtual Farm Tour — scaffold, renders null until owner sets imageSrc + status: 'live' in lib/data/media.ts */}
+      <VirtualFarmTour />
 
       {/* ── Section A — Getting here ──────────────────────────────────────── */}
       <section className="w-full py-16 md:py-24 px-4 bg-background" aria-labelledby="getting-here-heading">
@@ -163,6 +173,16 @@ export default async function VisitPage({ params }: { params: Promise<{ locale: 
           </div>
         </div>
       </section>
+
+      {/* Map — TenantMap renders an OSM iframe with NO API key (fail-open via
+          lib/integrations/map.ts); auto-upgrades to Google Maps embed if
+          GOOGLE_MAPS_EMBED_API_KEY is ever set. Same component as /contact. */}
+      <TenantMap
+        tenant={tenant}
+        heading={tr('visit.mapHeading') || 'Find us on the map'}
+        iframeTitle={tr('visit.mapIframeTitle') || 'Map showing Alpacas Ibiza location'}
+        largerMapLabel={tr('visit.mapLargerLabel') || 'View larger map →'}
+      />
 
       {/* ── Section B — When you arrive ──────────────────────────────────── */}
       <section className="w-full py-16 md:py-24 px-4 bg-muted/40" aria-labelledby="on-arrival-heading">

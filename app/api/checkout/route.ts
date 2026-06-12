@@ -7,7 +7,7 @@ import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-
 import { findAlpacaName } from '@/lib/data/alpacas'
 import { parseGiftFields, type ParsedGiftFields } from '@/lib/gift-fields'
 import { rateLimit, getClientIp } from '@/lib/rate-limit'
-import { verifyReferralCode } from '@/lib/referral-codes'
+import { verifyReferralCode, REFERRAL_CODE_RE } from '@/lib/referral-codes'
 
 /** Stripe metadata shape — snake_case keys, expected by lib/payment-handlers Stripe path. */
 interface StripeGiftMetadata {
@@ -80,15 +80,12 @@ async function handleCheckout(request: Request, method: 'GET' | 'POST') {
   if (secretGate) return attachRequestId(secretGate, reqId)
   const secretKey = process.env.STRIPE_SECRET_KEY!
 
-  // Referral code format guard — must match ALPACA-[A-Z0-9]{6}
-  const REFERRAL_CODE_RE = /^ALPACA-[A-Z0-9]{6}$/
-
   let tier: AdoptTier | null = null
   let alpacaSlugRaw: string | null = null
   let giftFields: ParsedGiftFields | null = null
   let referralCode: string | null = null
   // Referrer-tracking code (?ref=XXXXXX, format /^[A-Z0-9]{6}$/) — distinct
-  // from the existing ?referral=ALPACA-XXXXXX coupon flow. This one only
+  // from the ?referral=XXXXXX Stripe-coupon flow (same 6-char base32 format). This one only
   // tags the *referred* subscription's metadata.referredBy for admin
   // attribution; no discount, no Stripe coupon lookup. Credit logic is a
   // follow-up round per the task scope.
@@ -193,12 +190,19 @@ async function handleCheckout(request: Request, method: 'GET' | 'POST') {
   // CLAUDE.md failsafe map "Stripe checkout success_url uses SITE_BASE_URL".
   const locale = extractLocaleFromReferer(request.headers.get('referer'))
   // Round-trip the alpaca slug on cancel so the picker stays selected if the
-  // donor abandons checkout and comes back. Success URL doesn't need it —
-  // the AdoptThankYou screen takes over and reads from Stripe's metadata via webhook.
+  // donor abandons checkout and comes back.
   const cancelAlpacaQuery = alpacaSlug ? `&alpaca=${encodeURIComponent(alpacaSlug)}` : ''
+  // Resolve alpaca display name at creation time (slug is validated above).
+  // Threaded into success_url so AdoptThankYou can personalise the certificate
+  // download without a second Stripe API call. The Stripe {CHECKOUT_SESSION_ID}
+  // template variable is filled at redirect time; AdoptThankYou uses session_id
+  // to fetch the donor name from /api/checkout-session/[id] (already built).
+  const alpacaDisplayName = findAlpacaName(alpacaSlug)
+  const alpacaNameQuery = alpacaDisplayName ? `&alpaca_name=${encodeURIComponent(alpacaDisplayName)}` : ''
   // {CHECKOUT_SESSION_ID} is a Stripe template variable substituted server-side
-  // when the donor completes payment. Used by AdoptThankYou to offer calendar download.
-  const successUrl = `${SITE_BASE_URL}/${locale}/adopt?checkout=success&tier=${tier}&session_id={CHECKOUT_SESSION_ID}`
+  // when the donor completes payment. Used by AdoptThankYou to offer calendar
+  // download and to fetch the donor name via /api/checkout-session/[id].
+  const successUrl = `${SITE_BASE_URL}/${locale}/adopt?checkout=success&tier=${tier}&session_id={CHECKOUT_SESSION_ID}${alpacaNameQuery}`
   const cancelUrl  = `${SITE_BASE_URL}/${locale}/adopt?checkout=cancelled${cancelAlpacaQuery}`
 
   const stripeFactory = await importStripe()
@@ -280,7 +284,7 @@ async function handleCheckout(request: Request, method: 'GET' | 'POST') {
     log.error('Stripe session creation failed', { message })
     return attachRequestId(
       NextResponse.json(
-        { error: 'Failed to create checkout session', detail: message },
+        { error: 'Failed to create checkout session', code: 'STRIPE_ERROR' },
         { status: 502 }
       ),
       reqId

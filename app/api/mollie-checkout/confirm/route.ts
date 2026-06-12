@@ -117,7 +117,7 @@ export async function POST(request: Request) {
     log.error('Mollie Payment retrieval failed', { message })
     return attachRequestId(
       NextResponse.json(
-        { error: 'Failed to verify Mollie Payment', detail: message },
+        { error: 'Failed to verify Mollie Payment', code: 'MOLLIE_ERROR' },
         { status: 502 },
       ),
       reqId,

@@ -13,6 +13,10 @@ export const metadata: Metadata = {
     capable: true,
     statusBarStyle: 'black-translucent',
     title: 'Alpacas Admin',
+    startupImage: '/images/brand/logo-512.png',
+  },
+  icons: {
+    apple: '/images/brand/apple-touch-icon.png',
   },
 }
 

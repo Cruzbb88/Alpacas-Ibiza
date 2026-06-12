@@ -5,6 +5,7 @@ import { requireEnvOrReturn503, extractLocaleFromReferer } from '@/lib/route-hel
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
 import { findAlpacaName } from '@/lib/data/alpacas'
 import { rateLimit, getClientIp } from '@/lib/rate-limit'
+import { isValidEmail } from '@/lib/validate-email'
 
 /**
  * GET /api/skein-checkout?alpaca=<slug>&locale=<locale>
@@ -67,6 +68,18 @@ export async function GET(request: Request) {
       ? rawLocale
       : refererLocale
 
+  // ── Gift params (optional) ───────────────────────────────────────────────
+  // Validated here; stored in Stripe metadata for webhook / fulfilment use.
+  const rawGiftName    = url.searchParams.get('gift_name')?.trim() ?? ''
+  const rawGiftEmail   = url.searchParams.get('gift_email')?.trim() ?? ''
+  const rawGiftMessage = url.searchParams.get('gift_message')?.trim() ?? ''
+
+  // Validate: name ≤80 chars, email valid-or-empty, message ≤500 chars.
+  const giftName    = rawGiftName.length > 0 && rawGiftName.length <= 80 ? rawGiftName : ''
+  const giftEmail   = rawGiftEmail.length > 0 && isValidEmail(rawGiftEmail) ? rawGiftEmail : ''
+  const giftMessage = rawGiftMessage.length > 0 && rawGiftMessage.length <= 500 ? rawGiftMessage : ''
+  const isGift      = giftName.length > 0
+
   // ── Stripe SDK ───────────────────────────────────────────────────────────
   const stripeFactory = await importStripe()
   if (!stripeFactory) {
@@ -83,10 +96,12 @@ export async function GET(request: Request) {
 
   // ── Build Checkout session ───────────────────────────────────────────────
   // success_url / cancel_url: SITE_BASE_URL only (ADR 017).
-  const alpacaQueryParam = alpacaDisplayName
-    ? `?alpaca=${encodeURIComponent(alpacaDisplayName)}`
-    : ''
-  const successUrl = `${SITE_BASE_URL}/${locale}/skein/thank-you${alpacaQueryParam}`
+  const successParams = new URLSearchParams()
+  if (alpacaDisplayName) successParams.set('alpaca', alpacaDisplayName)
+  if (isGift) successParams.set('gift', 'true')
+  if (giftName) successParams.set('gift_name', giftName)
+  const successQs = successParams.toString()
+  const successUrl = `${SITE_BASE_URL}/${locale}/skein/thank-you${successQs ? `?${successQs}` : ''}`
   const cancelUrl = `${SITE_BASE_URL}/${locale}/skein?cancelled=1`
 
   const currentYear = new Date().getFullYear()
@@ -115,6 +130,9 @@ export async function GET(request: Request) {
         alpaca: alpacaSlug ?? '',
         skein_year: String(currentYear),
         locale,
+        gift_recipient_name: giftName,
+        gift_recipient_email: giftEmail,
+        gift_message: giftMessage,
       },
       success_url: successUrl,
       cancel_url: cancelUrl,
@@ -137,15 +155,18 @@ export async function GET(request: Request) {
       sessionId: session.id,
       alpacaSlug,
       locale,
+      isGift,
     })
 
     return attachRequestId(NextResponse.redirect(session.url, 303), reqId)
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
     log.error('Stripe session creation failed', { message })
+    // Do NOT include raw Stripe error in the public response — would leak
+    // internal config (price IDs, test/prod key mismatches, account state).
     return attachRequestId(
       NextResponse.json(
-        { error: 'Failed to create checkout session', detail: message },
+        { error: 'Failed to create checkout session', code: 'STRIPE_ERROR' },
         { status: 502 },
       ),
       reqId,

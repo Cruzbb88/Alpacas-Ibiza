@@ -3,12 +3,9 @@ import { SITE_BASE_URL } from '@/lib/config'
 import { importStripe } from '@/lib/integrations/stripe-sdk'
 import { extractLocaleFromReferer, requireEnvOrReturn503 } from '@/lib/route-helpers'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
-import { verifyTurnstile } from '@/lib/turnstile'
-import { detectHoneypot } from '@/lib/honeypot'
-import { rateLimit, rateLimitByEmail, getClientIp } from '@/lib/rate-limit'
-import { isValidEmail } from '@/lib/validate-email'
 import { sendEmail } from '@/lib/mailer'
 import { buildBillingPortalEmail } from '@/lib/email-templates'
+import { withAlwaysOk200 } from '@/lib/oracle-form-guard'
 
 /**
  * POST /api/billing-portal
@@ -42,12 +39,12 @@ import { buildBillingPortalEmail } from '@/lib/email-templates'
  *   https://dashboard.stripe.com/settings/billing/portal
  */
 
-const GENERIC_OK = () => NextResponse.json({ ok: true }, { status: 200 })
-
 export async function POST(request: Request) {
   const reqId = getRequestId(request)
   const log = makeRequestLogger('billing-portal', reqId)
 
+  // Stripe key gate — fail-CLOSED. Must be outside oracle wrapper because
+  // this is the only non-200 path that is intentional and required.
   const secretGate = requireEnvOrReturn503('STRIPE_SECRET_KEY', 'Subscription portal is unavailable — contact info@alpacasibiza.com to manage your subscription.', { code: 'STRIPE_NOT_CONFIGURED' })
   if (secretGate) return attachRequestId(secretGate, reqId)
   const secretKey = process.env.STRIPE_SECRET_KEY!
@@ -57,94 +54,81 @@ export async function POST(request: Request) {
     body = await request.json()
   } catch {
     // Malformed body → silent 200 (don't help fuzzers).
-    return attachRequestId(GENERIC_OK(), reqId)
-  }
-  const { email, locale, 'cf-turnstile-response': captchaToken } = body
-
-  if (detectHoneypot(body, 'website')) {
-    log.warn('Bot submission blocked', { route: '/api/billing-portal' })
-    return attachRequestId(GENERIC_OK(), reqId)
+    return attachRequestId(NextResponse.json({ ok: true }, { status: 200 }), reqId)
   }
 
-  // Email length cap — RFC 5321 max 320 chars. Silent GENERIC_OK on oversized
-  // input (oracle-closure: same shape as all other invalid-email paths).
-  if (email && String(email).length > 320) {
-    return attachRequestId(GENERIC_OK(), reqId)
+  // Email length cap — RFC 5321 max 320 chars. Silent 200 on oversized input
+  // (oracle-closure: same shape as all other invalid-email paths).
+  if (body.email && String(body.email).length > 320) {
+    return attachRequestId(NextResponse.json({ ok: true }, { status: 200 }), reqId)
   }
 
-  const ip = getClientIp(request)
-  const ipResult = rateLimit({ key: `billing-portal:${ip}`, limit: 3, windowMs: 5 * 60 * 1000 })
-  if (!ipResult.allowed) {
-    log.warn('IP rate limit hit', { ip, retryAfterSec: Math.ceil(ipResult.resetMs / 1000) })
-    return attachRequestId(GENERIC_OK(), reqId)
-  }
+  const { locale } = body
 
-  if (!email || !isValidEmail(email)) {
-    return attachRequestId(GENERIC_OK(), reqId)
-  }
+  // Oracle guard: honeypot → IP rate-limit → email validation → per-email rate-limit
+  // → Turnstile → onAllowed. Always returns 200.
+  const response = await withAlwaysOk200(
+    request,
+    body as Record<string, unknown>,
+    {
+      routeName: 'billing-portal',
+      honeypotField: 'website',
+      rateLimitPerIp: { limit: 3, windowMs: 5 * 60_000 },
+      rateLimitPerEmail: { limit: 2, windowMs: 60 * 60_000 },
+    },
+    async () => {
+      // email is validated inside withAlwaysOk200 before onAllowed is called
+      const email = (body.email ?? '').trim()
 
-  const emailResult = rateLimitByEmail({ email, limit: 2, windowMs: 60 * 60 * 1000 })
-  if (!emailResult.allowed) {
-    log.warn('email rate limit hit', {
-      email_first4: email.slice(0, 4) + '…',
-      retryAfterSec: Math.ceil(emailResult.resetMs / 1000),
-    })
-    return attachRequestId(GENERIC_OK(), reqId)
-  }
+      const stripeFactory = await importStripe()
+      if (!stripeFactory) {
+        log.error('stripe SDK not installed. Run: pnpm add stripe (owner-controlled deploy step).')
+        return
+      }
+      const stripe = stripeFactory(secretKey, { apiVersion: '2024-06-20' })
 
-  const captcha = await verifyTurnstile(captchaToken, ip)
-  if (!captcha.ok) {
-    log.warn('Turnstile failed', { reason: captcha.reason })
-    return attachRequestId(GENERIC_OK(), reqId)
-  }
+      let customerId: string | undefined
+      try {
+        const customers = await stripe.customers.list({ email, limit: 1 })
+        customerId = customers.data[0]?.id
+      } catch (err) {
+        log.error('Stripe customers.list failed', { message: err instanceof Error ? err.message : String(err) })
+        return
+      }
 
-  const stripeFactory = await importStripe()
-  if (!stripeFactory) {
-    log.error('stripe SDK not installed. Run: pnpm add stripe (owner-controlled deploy step).')
-    return attachRequestId(GENERIC_OK(), reqId)
-  }
-  const stripe = stripeFactory(secretKey, { apiVersion: '2024-06-20' })
+      if (!customerId) {
+        // No subscription for this email — silent no-op (preserves oracle closure).
+        log.info('billing-portal: no customer for email', { email_first4: email.slice(0, 4) + '…' })
+        return
+      }
 
-  let customerId: string | undefined
-  try {
-    const customers = await stripe.customers.list({ email, limit: 1 })
-    customerId = customers.data[0]?.id
-  } catch (err) {
-    log.error('Stripe customers.list failed', { message: err instanceof Error ? err.message : String(err) })
-    return attachRequestId(GENERIC_OK(), reqId)
-  }
+      const allowed = ['en', 'nl', 'es', 'de', 'it', 'fr']
+      const safeLocale = locale && allowed.includes(locale)
+        ? locale
+        : extractLocaleFromReferer(request.headers.get('referer'))
+      const returnUrl = `${SITE_BASE_URL}/${safeLocale}/adopt?portal=return`
 
-  if (!customerId) {
-    // No subscription for this email — silent no-op (preserves oracle closure).
-    log.info('billing-portal: no customer for email', { email_first4: email.slice(0, 4) + '…' })
-    return attachRequestId(GENERIC_OK(), reqId)
-  }
+      let portalUrl: string
+      try {
+        const session = await stripe.billingPortal.sessions.create({
+          customer: customerId,
+          return_url: returnUrl,
+        })
+        portalUrl = session.url
+      } catch (err) {
+        log.error('billingPortal.sessions.create failed', { message: err instanceof Error ? err.message : String(err) })
+        return
+      }
 
-  const allowed = ['en', 'nl', 'es', 'de', 'it', 'fr']
-  const safeLocale = locale && allowed.includes(locale)
-    ? locale
-    : extractLocaleFromReferer(request.headers.get('referer'))
-  const returnUrl = `${SITE_BASE_URL}/${safeLocale}/adopt?portal=return`
+      try {
+        const { subject, html } = buildBillingPortalEmail(portalUrl)
+        await sendEmail({ to: email, subject, html })
+      } catch (err) {
+        log.error('sendEmail failed for billing-portal link', { message: err instanceof Error ? err.message : String(err) })
+        // Still return generic 200 — never reveal that customer existed but email failed.
+      }
+    },
+  )
 
-  let portalUrl: string
-  try {
-    const session = await stripe.billingPortal.sessions.create({
-      customer: customerId,
-      return_url: returnUrl,
-    })
-    portalUrl = session.url
-  } catch (err) {
-    log.error('billingPortal.sessions.create failed', { message: err instanceof Error ? err.message : String(err) })
-    return attachRequestId(GENERIC_OK(), reqId)
-  }
-
-  try {
-    const { subject, html } = buildBillingPortalEmail(portalUrl)
-    await sendEmail({ to: email, subject, html })
-  } catch (err) {
-    log.error('sendEmail failed for billing-portal link', { message: err instanceof Error ? err.message : String(err) })
-    // Still return generic 200 — never reveal that customer existed but email failed.
-  }
-
-  return attachRequestId(GENERIC_OK(), reqId)
+  return attachRequestId(response, reqId)
 }

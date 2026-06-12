@@ -32,7 +32,7 @@ export const SEARCH_PAGES: ReadonlyArray<SearchEntry> = [
 ]
 
 export function buildSearchIndex(): ReadonlyArray<SearchEntry> {
-  const journalEntries: SearchEntry[] = JOURNAL_POSTS.map((p) => ({
+  const journalEntries: SearchEntry[] = JOURNAL_POSTS.filter((p) => p.status === 'live').map((p) => ({
     path: `/journal/${p.slug}`,
     title: p.title,
     snippet: p.excerpt,

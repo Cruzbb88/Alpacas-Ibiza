@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import { Card } from '@/components/ui/card'
+import { ReviewTranslateButton } from '@/components/review-translate-button'
 
 export interface Review {
     name: string
@@ -22,75 +22,42 @@ function FacebookBadge({ label }: { label: string }) {
     )
 }
 
-function TranslateIcon() {
-    return (
-        <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="m5 8 6 6" />
-            <path d="m4 14 6-6 2-3" />
-            <path d="M2 5h12" />
-            <path d="M7 2h1" />
-            <path d="m22 22-5-10-5 10" />
-            <path d="M14 18h6" />
-        </svg>
-    )
-}
-
 interface ReviewCardProps {
     review: Review
-    translatedText: string
-    translateButtonLabel: string
-    showOriginalLabel: string
-    siteLocale: string
+    /**
+     * @deprecated No longer used. Kept for call-site backward compatibility.
+     * Translation is now handled in-place via ReviewTranslateButton wrapping pattern.
+     */
+    translatedText?: string
+    /** @deprecated No longer used. Kept for call-site backward compatibility. */
+    translateButtonLabel?: string
+    /** @deprecated No longer used. Kept for call-site backward compatibility. */
+    showOriginalLabel?: string
+    /** @deprecated No longer used. Kept for call-site backward compatibility. */
+    siteLocale?: string
     facebookBadgeLabel?: string
 }
 
 export function ReviewCard({
     review,
-    translatedText,
-    translateButtonLabel,
-    showOriginalLabel,
-    siteLocale,
     facebookBadgeLabel = 'Facebook Review',
 }: ReviewCardProps) {
-    // Determine if translation is needed:
-    // The review's original language differs from the site's current language
-    const needsTranslation = review.language !== siteLocale
-
-    // Always show the original review text by default
-    const [showTranslation, setShowTranslation] = useState(false)
-
-    // Reset translation state if the user changes the site language
-    useEffect(() => {
-        setShowTranslation(false)
-    }, [siteLocale])
-
-    const displayText = showTranslation ? translatedText : review.text
-
     return (
         <Card className="p-6 border-border/50 flex flex-col justify-between h-full">
-            {/* Stars */}
+            {/* No star rating: Facebook recommendations are binary (recommend / don't),
+                not star-scored. Source carries rating:null — rendering 5 stars would
+                fabricate a score the data never had. The Facebook badge signals provenance. */}
             <div>
-                <div className="flex gap-1 mb-3">
-                    {[...Array(5)].map((_, j) => (
-                        <span key={j} className="text-base">⭐</span>
-                    ))}
-                </div>
-
-                {/* Review text */}
-                <p className="text-foreground/70 italic leading-relaxed text-sm mb-3">
-                    &ldquo;{displayText}&rdquo;
-                </p>
-
-                {/* Translate toggle */}
-                {needsTranslation && (
-                    <button
-                        onClick={() => setShowTranslation(!showTranslation)}
-                        className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:text-primary/80 transition-colors mb-4 px-2.5 py-1 rounded-full border border-primary/20 hover:border-primary/40 hover:bg-primary/5"
-                    >
-                        <TranslateIcon />
-                        {showTranslation ? showOriginalLabel : translateButtonLabel}
-                    </button>
-                )}
+                {/* Review text with inline translate toggle */}
+                <ReviewTranslateButton
+                    text={review.text}
+                    sourceLang={review.language}
+                    className="mb-4"
+                >
+                    <p className="text-foreground/70 italic leading-relaxed text-sm mb-2">
+                        &ldquo;{review.text}&rdquo;
+                    </p>
+                </ReviewTranslateButton>
             </div>
 
             {/* Author info */}

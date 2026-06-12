@@ -24,6 +24,9 @@ import { safeEqual } from './secrets.ts'
 
 export type EmailPreferenceType = 'birthday' | 'quarterly' | 'renewal'
 
+/** Canonical list — used by both the token lib and the route for validation. */
+export const EMAIL_PREFERENCE_TYPES: EmailPreferenceType[] = ['birthday', 'quarterly', 'renewal']
+
 export interface EmailPreferenceTokenPayload {
   email: string
   type: EmailPreferenceType
@@ -103,8 +106,7 @@ export function verifyEmailPreferenceToken(token: string): EmailPreferenceTokenP
     const payload: EmailPreferenceTokenPayload = JSON.parse(rawBuf.toString('utf8'))
 
     // Type guard
-    const VALID_TYPES: EmailPreferenceType[] = ['birthday', 'quarterly', 'renewal']
-    if (!VALID_TYPES.includes(payload.type)) return null
+    if (!EMAIL_PREFERENCE_TYPES.includes(payload.type)) return null
 
     // Expiry check
     if (!payload.expiresAt || new Date(payload.expiresAt).getTime() < Date.now()) return null

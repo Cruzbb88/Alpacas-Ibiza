@@ -5,7 +5,7 @@ import { buildLocaleAlternates } from '@/lib/i18n-metadata'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
 import { StickyBookingBar } from '@/components/booking/sticky-booking-bar'
-import { CookieConsent } from '@/components/cookie-consent'
+import { CookieConsentBanner } from '@/components/cookie-consent-v3'
 import { ScrollTracker } from '@/components/scroll-tracker'
 import { OutboundLinkTracker } from '@/components/outbound-link-tracker'
 import { WebVitals } from '@/components/web-vitals'
@@ -19,10 +19,10 @@ import { ServiceWorkerRegister } from '@/components/sw-register'
 import { NavProgressBar } from '@/components/nav-progress-bar'
 import { MobileStickyBookingBar } from '@/components/mobile-sticky-booking-bar'
 import { VercelInstrumentation } from '@/components/vercel-instrumentation'
-import { NextIntlClientProvider } from 'next-intl'
 import { getMessages } from 'next-intl/server'
+import { IntlClientProvider } from '@/components/intl-client-provider'
 
-import { SITE_BASE_URL as BASE_URL } from '@/lib/config'
+import { SITE_BASE_URL as BASE_URL, SKEIN_CALLOUT_LIVE, MEMBERSHIP_LIVE, HERD_FAMILY_LIVE } from '@/lib/config'
 
 export async function generateStaticParams() {
     return i18nConfig.locales.map((locale) => ({ locale }))
@@ -46,7 +46,7 @@ export async function generateMetadata({
             siteName: 'Alpacas Ibiza',
             locale,
             type: 'website',
-            // DEFAULT_OG_IMAGE — points at public/images/og/default.webp
+            // DEFAULT_OG_IMAGE — points at public/images/heroes/home.jpg
             // Drop file there; no code change needed. See lib/og-images.ts.
             images: [
                 {
@@ -78,7 +78,7 @@ export default async function LocaleLayout({
     const messages = await getMessages()
 
     return (
-        <NextIntlClientProvider locale={locale} messages={messages}>
+        <IntlClientProvider locale={locale} messages={messages as Record<string, unknown>}>
         <div className="flex min-h-screen flex-col">
             {schemas.map((schema, i) => (
                 <script
@@ -94,7 +94,14 @@ export default async function LocaleLayout({
             >
                 Skip to main content
             </a>
-            <Header logoUrl="/images/brand/logo.png" />
+            <Header
+              logoUrl="/images/brand/logo.png"
+              adoptFlags={{
+                skeinLive: SKEIN_CALLOUT_LIVE,
+                membershipLive: MEMBERSHIP_LIVE,
+                herdFamilyLive: HERD_FAMILY_LIVE,
+              }}
+            />
             <main id="main-content" className="flex-1">{children}</main>
             <Footer
                 legalName={tenant.legalName}
@@ -105,11 +112,14 @@ export default async function LocaleLayout({
                 contactEmail={tenant.contactEmail}
                 social={tenant.social}
                 brandName={tenant.brandName}
+                touristRegistration={tenant.touristRegistration}
+                foodHandlingCert={tenant.foodHandlingCert}
+                trustBadges={tenant.trustBadges}
             />
             <StickyBookingBar />
             <FloatingWhatsApp e164={tenant.whatsappE164} brandName={tenant.brandName} />
             <BackToTop />
-            <CookieConsent />
+            <CookieConsentBanner locale={locale as Locale} />
             <ScrollTracker />
             <OutboundLinkTracker />
             <WebVitals />
@@ -121,6 +131,6 @@ export default async function LocaleLayout({
             </Suspense>
             <MobileStickyBookingBar locale={locale as Locale} />
         </div>
-        </NextIntlClientProvider>
+        </IntlClientProvider>
     )
 }

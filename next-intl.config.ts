@@ -24,6 +24,11 @@ function isAbsent(value: unknown): boolean {
  * the English copy. The result is a COMPLETE message tree for every locale, so a
  * non-EN visitor sees real translations where they exist and clean English
  * everywhere else — never a raw `namespace.key` or `__UNTRANSLATED__:` string.
+ *
+ * Arrays: when BOTH base and override carry an array for the same key, we merge
+ * element-by-element so individual sentinel strings inside array items are still
+ * replaced with their EN equivalents. If the arrays differ in length (locale has
+ * more or fewer items than EN), we fall back to the EN array for that key.
  */
 function mergeWithEnBase(base: Messages, override: Messages): Messages {
   const out: Messages = Array.isArray(base) ? ([...base] as unknown as Messages) : { ...base }
@@ -38,7 +43,28 @@ function mergeWithEnBase(base: Messages, override: Messages): Messages {
       typeof overVal === 'object' &&
       !Array.isArray(overVal)
     ) {
+      // Both are plain objects — recurse
       out[k] = mergeWithEnBase(baseVal as Messages, overVal as Messages)
+    } else if (
+      Array.isArray(baseVal) &&
+      Array.isArray(overVal) &&
+      baseVal.length === overVal.length
+    ) {
+      // Both are arrays of the same length — merge element-by-element so
+      // __UNTRANSLATED__ strings inside array items fall back to EN.
+      out[k] = baseVal.map((baseEl: unknown, i: number) => {
+        const overEl = (overVal as unknown[])[i]
+        if (baseEl !== null && typeof baseEl === 'object' && !Array.isArray(baseEl) &&
+            overEl !== null && typeof overEl === 'object' && !Array.isArray(overEl)) {
+          return mergeWithEnBase(baseEl as Messages, overEl as Messages)
+        }
+        return isAbsent(overEl) ? baseEl : overEl
+      }) as unknown as Messages
+    } else if (Array.isArray(baseVal) && Array.isArray(overVal)) {
+      // Arrays of DIFFERENT length → the locale translation is incomplete.
+      // Keep the EN base array (out[k] already holds it from the spread above)
+      // rather than render a truncated locale list. This is the fallback the
+      // doc-comment promises; the old code silently used the shorter array.
     } else if (!isAbsent(overVal)) {
       out[k] = overVal
     } // else keep the EN base value
@@ -55,6 +81,14 @@ function mergeWithEnBase(base: Messages, override: Messages): Messages {
  *
  * This is a separate pass from mergeWithEnBase so it can be applied to both
  * EN and all other locales after the merge is complete.
+ *
+ * Arrays: recurse into array elements so sentinels inside array-shaped
+ * translation values (FAQ items, benefit lists, cookie lists) are also stripped.
+ *
+ * Graceful null/0/false: these are valid translated values, not sentinels.
+ * - null  → skipped (not a string, not a plain object, not an array — left as-is)
+ * - 0     → typeof 'number' → left as-is
+ * - false → typeof 'boolean' → left as-is
  */
 function stripSentinels(messages: Messages): Messages {
   const out: Messages = Array.isArray(messages)
@@ -64,9 +98,26 @@ function stripSentinels(messages: Messages): Messages {
     const v = out[k]
     if (typeof v === 'string' && v.startsWith('__UNTRANSLATED__')) {
       out[k] = ''
-    } else if (v !== null && typeof v === 'object' && !Array.isArray(v)) {
+    } else if (typeof v === 'string' && v.includes('OWNER_REVIEW_TRANSLATION')) {
+      // Real text carrying a review marker (owner to confirm the copy). Strip
+      // the marker before render so it never leaks to visitors; the real text
+      // stays. The marker remains in translations/*.json for the owner.
+      out[k] = v.replace(/\s*OWNER_REVIEW_TRANSLATION\s*/g, ' ').trim()
+    } else if (Array.isArray(v)) {
+      // Recurse into array elements
+      out[k] = v.map((el: unknown) => {
+        if (typeof el === 'string' && el.startsWith('__UNTRANSLATED__')) return ''
+        if (typeof el === 'string' && el.includes('OWNER_REVIEW_TRANSLATION')) return el.replace(/\s*OWNER_REVIEW_TRANSLATION\s*/g, ' ').trim()
+        if (el !== null && typeof el === 'object' && !Array.isArray(el)) {
+          return stripSentinels(el as Messages)
+        }
+        if (Array.isArray(el)) return (stripSentinels(el as unknown as Messages) as unknown as unknown[])
+        return el
+      }) as unknown as Messages
+    } else if (v !== null && typeof v === 'object') {
       out[k] = stripSentinels(v as Messages)
     }
+    // null, number, boolean: left as-is (valid translated values, not sentinels)
   }
   return out
 }
@@ -90,6 +141,12 @@ export default getRequestConfig(async ({ requestLocale }) => {
   return {
     locale,
     messages,
+    // Pin the formatting time zone so server-rendered and client-rendered dates
+    // agree. Without this, next-intl warns "no timeZone configured" and any
+    // Intl date/time output can differ between the Vercel server (UTC) and the
+    // visitor's browser, producing a hydration markup mismatch. The business is
+    // in Santa Eulària, Ibiza → Europe/Madrid (documented tenant location).
+    timeZone: 'Europe/Madrid',
     getMessageFallback({ namespace, key, error }) {
       // Reached only when a key is absent from BOTH the locale AND the EN base —
       // a genuinely undefined key. Surface it loudly in dev; show the dot-key in

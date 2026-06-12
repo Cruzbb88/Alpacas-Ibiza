@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import { TurnstileWidget } from '@/components/turnstile-widget'
 
@@ -35,6 +35,7 @@ export function BillingPortalLink({ locale, vendor = 'mollie' }: BillingPortalLi
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState<'idle' | 'loading' | 'sent' | 'error'>('idle')
   const captchaTokenRef = useRef<string>('')
+  const handleCaptchaToken = useCallback((token: string) => { captchaTokenRef.current = token }, [])
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -83,7 +84,7 @@ export function BillingPortalLink({ locale, vendor = 'mollie' }: BillingPortalLi
           />
 
           <TurnstileWidget
-            onToken={(token) => { captchaTokenRef.current = token }}
+            onToken={handleCaptchaToken}
             className="self-start"
           />
 

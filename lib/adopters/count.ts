@@ -17,6 +17,7 @@
  */
 
 import { makeRequestLogger } from '../request-id.ts'
+import { createTtlValueStore } from '../in-process-ttl-store.ts'
 
 const log = makeRequestLogger('adopter-count', '')
 
@@ -27,31 +28,14 @@ export interface AdopterCountResult {
 }
 
 // --- in-memory 1-hour cache -------------------------------------------
+// Value-carrying shared TTL store handles expiry + globalThis-HMR survival
+// (uft-002 unification — was a hand-rolled Map<string,{value,at}>).
 const CACHE_TTL_MS = 60 * 60 * 1000 // 1 hour
 
-const globalForCache = globalThis as unknown as {
-  __adopterCountCache?: Map<string, { value: AdopterCountResult; at: number }>
-}
-const _cache: Map<string, { value: AdopterCountResult; at: number }> =
-  globalForCache.__adopterCountCache ?? new Map()
-// Dev-mode: share across Next.js hot-reload cycles (same pattern as webhook-idempotency.ts)
-if (process.env.NODE_ENV !== 'production') {
-  globalForCache.__adopterCountCache = _cache
-}
-
-function getCached(key: string): AdopterCountResult | null {
-  const entry = _cache.get(key)
-  if (!entry) return null
-  if (Date.now() - entry.at > CACHE_TTL_MS) {
-    _cache.delete(key)
-    return null
-  }
-  return entry.value
-}
-
-function setCached(key: string, value: AdopterCountResult): void {
-  _cache.set(key, { value, at: Date.now() })
-}
+const _cache = createTtlValueStore<AdopterCountResult>({
+  ttlMs: CACHE_TTL_MS,
+  globalKey: '__adopterCountCache',
+})
 
 // --- vendor helpers ---------------------------------------------------
 
@@ -136,8 +120,8 @@ export async function getActiveAdopterCount(): Promise<AdopterCountResult> {
   }
 
   const cacheKey = vendor
-  const cached = getCached(cacheKey)
-  if (cached) return cached
+  const cached = _cache.get(cacheKey)
+  if (cached !== undefined) return cached
 
   let result: AdopterCountResult
   try {
@@ -158,7 +142,7 @@ export async function getActiveAdopterCount(): Promise<AdopterCountResult> {
   // Only cache successful/configured results; unconfigured and errors are
   // cheap re-checks and shouldn't be locked in for an hour.
   if (result.source === 'stripe' || result.source === 'mollie') {
-    setCached(cacheKey, result)
+    _cache.set(cacheKey, result)
   }
 
   return result
@@ -168,3 +152,5 @@ export async function getActiveAdopterCount(): Promise<AdopterCountResult> {
 export function __resetAdopterCountCache(): void {
   _cache.clear()
 }
+
+// `_cache.clear()` is the TtlValueStore method — same contract as the old Map.clear().

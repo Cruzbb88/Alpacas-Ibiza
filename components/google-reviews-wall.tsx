@@ -1,10 +1,14 @@
 import { SITE_BASE_URL } from '@/lib/config'
+import { ReviewTranslateButton } from '@/components/review-translate-button'
 
 interface ReviewItem {
     author: string
     rating: number
     text: string
     relativeTime: string
+    /** BCP-47 language code for the review text (e.g. 'en', 'de'). Used by
+     *  ReviewTranslateButton to suppress the translate prompt for same-locale reviews. */
+    language?: string
 }
 
 type ReviewsResponse =
@@ -101,9 +105,15 @@ export async function GoogleReviewsWall({
                                     </p>
                                 </div>
                             </div>
-                            <p className="text-sm text-foreground/80 leading-relaxed line-clamp-4">
-                                &ldquo;{review.text}&rdquo;
-                            </p>
+                            <ReviewTranslateButton
+                                text={review.text}
+                                sourceLang={review.language}
+                                className="mt-2"
+                            >
+                                <p className="text-sm text-foreground/80 leading-relaxed line-clamp-4">
+                                    &ldquo;{review.text}&rdquo;
+                                </p>
+                            </ReviewTranslateButton>
                             <p
                                 className="text-xs text-yellow-500 mt-3"
                                 aria-label={`${review.rating} of 5 stars`}

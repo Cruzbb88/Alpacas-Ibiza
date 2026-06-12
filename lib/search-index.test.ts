@@ -4,6 +4,7 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert/strict'
 import { scoreEntry, searchAll, buildSearchIndex, type SearchEntry } from './data/search-index.ts'
+import { JOURNAL_POSTS } from './data/journal-posts.ts'
 
 // ── scoreEntry ────────────────────────────────────────────────────────────────
 
@@ -90,10 +91,11 @@ describe('searchAll — type routing', () => {
     assert.equal(toursPage?.type, 'page')
   })
 
-  it('returns journal entry for "spinning"', () => {
+  it('returns journal entry for "spinning" only when post is live', () => {
     const results = searchAll('spinning')
-    assert.ok(results.length > 0)
-    assert.equal(results[0].type, 'journal')
+    // All journal-posts.ts posts are draft — spinning entry should not appear in results
+    const journalResult = results.find((r) => r.type === 'journal' && r.path.includes('spinning'))
+    assert.equal(journalResult, undefined, 'draft journal post should not appear in search results')
   })
 })
 
@@ -119,12 +121,16 @@ describe('searchAll — limit', () => {
 // ── buildSearchIndex ──────────────────────────────────────────────────────────
 
 describe('buildSearchIndex', () => {
-  it('includes pages, journals, and alpacas', () => {
+  it('includes pages and alpacas; journals only when live posts exist', () => {
     const index = buildSearchIndex()
     const types = new Set(index.map((e) => e.type))
     assert.ok(types.has('page'), 'should include pages')
-    assert.ok(types.has('journal'), 'should include journals')
     assert.ok(types.has('alpaca'), 'should include alpacas')
+    // Journal entries only appear when there are live posts in journal-posts.ts
+    const liveJournalPosts = JOURNAL_POSTS.filter((p) => p.status === 'live')
+    if (liveJournalPosts.length > 0) {
+      assert.ok(types.has('journal'), 'should include journals when live posts exist')
+    }
   })
 
   it('includes 14 alpaca entries', () => {
@@ -133,10 +139,11 @@ describe('buildSearchIndex', () => {
     assert.equal(alpacaCount, 14)
   })
 
-  it('includes journal entries with correct paths', () => {
+  it('includes journal entries with correct paths (only live posts)', () => {
     const index = buildSearchIndex()
     const journals = index.filter((e) => e.type === 'journal')
-    assert.ok(journals.length >= 3, 'should have at least 3 journal entries')
+    const liveCount = JOURNAL_POSTS.filter((p) => p.status === 'live').length
+    assert.equal(journals.length, liveCount, `should have exactly ${liveCount} journal entries (live only)`)
     assert.ok(journals.every((j) => j.path.startsWith('/journal/')))
   })
 

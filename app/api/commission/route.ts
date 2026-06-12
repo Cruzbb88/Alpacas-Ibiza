@@ -1,11 +1,9 @@
 import { NextResponse } from 'next/server'
 import { sendEmail } from '@/lib/mailer'
-import { verifyTurnstile } from '@/lib/turnstile'
-import { detectHoneypot } from '@/lib/honeypot'
-import { rateLimit, getClientIp } from '@/lib/rate-limit'
 import { getRequestId, attachRequestId, makeRequestLogger } from '@/lib/request-id'
 import { escapeHtml, sanitizeHeader } from '@/lib/html'
 import { isValidEmail } from '@/lib/validate-email'
+import { checkPublicFormGuard } from '@/lib/public-form-guard'
 
 const TO_EMAIL = process.env.CONTACT_EMAIL ?? 'info@alpacasibiza.com'
 
@@ -14,39 +12,42 @@ export async function POST(request: Request) {
     const log = makeRequestLogger('commission', reqId)
     try {
         const body = await request.json()
-        const { name, email, description, 'cf-turnstile-response': captchaToken } = body
+        const { name, email, description } = body
 
-        if (detectHoneypot(body, 'phone_extension')) {
-            log.warn('Bot submission blocked', { route: '/api/commission' })
-            return attachRequestId(NextResponse.json({ success: true }, { status: 200 }), reqId)
+        // Guard: honeypot → IP rate-limit → Turnstile
+        // honeypot returns 200, rate-limit returns 429, Turnstile returns 400.
+        const guard = await checkPublicFormGuard(request, body, {
+            routeName: 'commission',
+            honeypotField: 'phone_extension',
+            rateLimitPerIp: { limit: 5, windowMs: 5 * 60_000 },
+        })
+
+        if (!guard.allowed) {
+            if (guard.reason === 'honeypot') {
+                log.warn('Bot submission blocked', { route: '/api/commission' })
+                return attachRequestId(NextResponse.json({ success: true }, { status: 200 }), reqId)
+            }
+            if (guard.reason === 'rate-limit-ip') {
+                return attachRequestId(
+                    NextResponse.json({ error: 'Too many requests' }, {
+                        status: 429,
+                        headers: { 'Retry-After': String(Math.ceil((guard.ipResetMs ?? 0) / 1000)) },
+                    }),
+                    reqId,
+                )
+            }
+            // turnstile-failed
+            return attachRequestId(
+                NextResponse.json(
+                    { error: 'Captcha verification failed', reason: guard.captchaReason },
+                    { status: 400 },
+                ),
+                reqId,
+            )
         }
 
         if (!name || !email || !description) {
             return attachRequestId(NextResponse.json({ error: 'Missing required fields' }, { status: 400 }), reqId)
-        }
-
-        // IP rate-limit — 5 req / 5 min (blocks burst from a single IP)
-        const ip = getClientIp(request)
-        const ipResult = rateLimit({ key: `commission:${ip}`, limit: 5, windowMs: 5 * 60 * 1000 })
-        if (!ipResult.allowed) {
-            return attachRequestId(
-                NextResponse.json({ error: 'Too many requests' }, {
-                    status: 429,
-                    headers: { 'Retry-After': String(Math.ceil(ipResult.resetMs / 1000)) },
-                }),
-                reqId
-            )
-        }
-
-        const captcha = await verifyTurnstile(captchaToken, ip)
-        if (!captcha.ok) {
-            return attachRequestId(
-                NextResponse.json(
-                    { error: 'Captcha verification failed', reason: captcha.reason },
-                    { status: 400 }
-                ),
-                reqId
-            )
         }
 
         const safeName = escapeHtml(name)
