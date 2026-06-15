@@ -1,0 +1,80 @@
+{
+  "page": "journal",
+  "path": "/en/journal",
+  "console": [
+    "%c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px"
+  ],
+  "failedReq": [],
+  "status": 200,
+  "title": "Journal | Alpacas Ibiza — Es Currals Farm",
+  "desc": "Stories from the farm — life with the alpaca herd, weaving rhythms, seasonal notes, and recipes from Es Currals Ibiza.",
+  "canonical": "https://alpacasibiza.com/en/journal",
+  "robots": "index, follow",
+  "hreflang": [
+    "en",
+    "de",
+    "it",
+    "es",
+    "nl",
+    "fr",
+    "x-default"
+  ],
+  "og": {
+    "title": "Journal | Alpacas Ibiza — Es Currals Farm",
+    "image": null,
+    "locale": "en"
+  },
+  "twitter": "summary_large_image",
+  "schemaTypes": [
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "Organization",
+    "WebSite",
+    "SiteNavigationElement",
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "BreadcrumbList"
+  ],
+  "jsonldCount": 6,
+  "h1count": 1,
+  "headings": [
+    "H1:Journal",
+    "H2:Stories coming soon",
+    "H2:Stay Connected",
+    "H3:Owner: add posts to activate",
+    "H3:Alpacas Ibiza",
+    "H3:Explore",
+    "H3:Shop",
+    "H3:Contact"
+  ],
+  "imgTotal": 2,
+  "imgMissingAlt": 1,
+  "imgBroken": [],
+  "linkTotal": 79,
+  "linkExternalNoRel": 0,
+  "formFields": 3,
+  "unlabeledFields": 0,
+  "wordCount": 242,
+  "overflowPx": 0,
+  "axe": {
+    "byImpact": {
+      "critical": 0,
+      "serious": 1,
+      "moderate": 0,
+      "minor": 0
+    },
+    "total": 1,
+    "rules": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "n": 20,
+        "help": "Elements must meet minimum color contrast ratio thresholds"
+      }
+    ]
+  }
+}

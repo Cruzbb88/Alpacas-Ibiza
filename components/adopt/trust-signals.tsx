@@ -34,7 +34,7 @@ export function TrustSignals({
     <section aria-labelledby="trust-signals-heading" className="w-full">
       <h2
         id="trust-signals-heading"
-        className="text-center text-xs uppercase tracking-[0.25em] font-semibold text-foreground/50 mb-8"
+        className="text-center text-xs uppercase tracking-[0.25em] font-semibold text-muted-foreground mb-8"
       >
         {heading}
       </h2>
@@ -48,7 +48,7 @@ export function TrustSignals({
 
       {/* Accepted payment methods — text wordmarks, no logos */}
       <div className="text-center">
-        <p className="text-xs uppercase tracking-wider text-foreground/50 mb-3">
+        <p className="text-xs uppercase tracking-wider text-muted-foreground mb-3">
           {acceptedLabel}
         </p>
         <ul className="flex flex-wrap justify-center items-center gap-2 list-none p-0">
@@ -85,7 +85,7 @@ function TrustTile({
 
 function PaymentWordmark({ children }: { children: string }) {
   return (
-    <li className="inline-flex items-center rounded-md border border-border bg-card px-3 py-1.5 text-xs font-semibold text-foreground/70 tracking-wide">
+    <li className="inline-flex items-center rounded-md border border-border bg-card px-3 py-1.5 text-xs font-semibold text-muted-foreground tracking-wide">
       {children}
     </li>
   )

@@ -1,0 +1,77 @@
+{
+  "page": "redeem-voucher",
+  "path": "/en/redeem-voucher",
+  "console": [],
+  "failedReq": [],
+  "status": 200,
+  "title": "Es Currals Alpacas Ibiza | First Alpaca Farm & Wishfulfilling Weaving Studio",
+  "desc": "Es Currals Alpacas Ibiza is the very first alpaca farm in Ibiza and is located in the rural north of the island, on an authentic finca in a beautiful natural setting. Here is also the beating heart of Wishfulfilling Weaving, the artisanal weaving studio where, using mainly alpaca wool exclusive scarves are woven by hand on a traditional wooden loom.",
+  "canonical": "https://alpacasibiza.com/en",
+  "robots": null,
+  "hreflang": [
+    "en",
+    "de",
+    "it",
+    "es",
+    "nl",
+    "fr",
+    "x-default"
+  ],
+  "og": {
+    "title": "Es Currals Alpacas Ibiza | First Alpaca Farm & Wishfulfilling Weaving Studio",
+    "image": "https://alpacasibiza.com/og",
+    "locale": "en"
+  },
+  "twitter": "summary_large_image",
+  "schemaTypes": [
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "Organization",
+    "WebSite",
+    "SiteNavigationElement"
+  ],
+  "jsonldCount": 4,
+  "h1count": 1,
+  "headings": [
+    "H1:Redeem your voucher",
+    "H3:Need help?",
+    "H3:Alpacas Ibiza",
+    "H3:Explore",
+    "H3:Shop",
+    "H3:Contact"
+  ],
+  "imgTotal": 1,
+  "imgMissingAlt": 0,
+  "imgBroken": [],
+  "linkTotal": 76,
+  "linkExternalNoRel": 0,
+  "formFields": 1,
+  "unlabeledFields": 0,
+  "wordCount": 214,
+  "overflowPx": 0,
+  "axe": {
+    "byImpact": {
+      "critical": 0,
+      "serious": 1,
+      "moderate": 1,
+      "minor": 0
+    },
+    "total": 2,
+    "rules": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "n": 19,
+        "help": "Elements must meet minimum color contrast ratio thresholds"
+      },
+      {
+        "id": "heading-order",
+        "impact": "moderate",
+        "n": 1,
+        "help": "Heading levels should only increase by one"
+      }
+    ]
+  }
+}

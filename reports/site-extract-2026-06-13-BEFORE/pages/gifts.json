@@ -1,0 +1,81 @@
+{
+  "page": "gifts",
+  "path": "/en/gifts",
+  "console": [],
+  "failedReq": [],
+  "status": 200,
+  "title": "Gift Voucher – Alpacas Ibiza | Give an Alpaca Experience",
+  "desc": "Give someone a memorable day with our alpaca herd. Gift vouchers valid for any of our tours.",
+  "canonical": "https://alpacasibiza.com/en/gifts",
+  "robots": null,
+  "hreflang": [
+    "en",
+    "de",
+    "it",
+    "es",
+    "nl",
+    "fr",
+    "x-default"
+  ],
+  "og": {
+    "title": "Gift Voucher – Alpacas Ibiza | Give an Alpaca Experience",
+    "image": "https://alpacasibiza.com/og?title=Meet+the+Herd&subtitle=Every+alpaca+has+a+name+and+a+story",
+    "locale": null
+  },
+  "twitter": "summary_large_image",
+  "schemaTypes": [
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "Organization",
+    "WebSite",
+    "SiteNavigationElement",
+    "Product",
+    "BreadcrumbList"
+  ],
+  "jsonldCount": 6,
+  "h1count": 1,
+  "headings": [
+    "H1:Give the gift of alpacas",
+    "H2:Why gift an Alpacas Ibiza visit?",
+    "H2:Send the gift of alpacas",
+    "H3:Buy a gift voucher",
+    "H3:Alpacas Ibiza",
+    "H3:Explore",
+    "H3:Shop",
+    "H3:Contact"
+  ],
+  "imgTotal": 2,
+  "imgMissingAlt": 0,
+  "imgBroken": [],
+  "linkTotal": 79,
+  "linkExternalNoRel": 0,
+  "formFields": 0,
+  "unlabeledFields": 0,
+  "wordCount": 371,
+  "overflowPx": 0,
+  "axe": {
+    "byImpact": {
+      "critical": 1,
+      "serious": 1,
+      "moderate": 0,
+      "minor": 0
+    },
+    "total": 2,
+    "rules": [
+      {
+        "id": "button-name",
+        "impact": "critical",
+        "n": 1,
+        "help": "Buttons must have discernible text"
+      },
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "n": 28,
+        "help": "Elements must meet minimum color contrast ratio thresholds"
+      }
+    ]
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "page": "alpacas",
+  "path": "/en/alpacas",
+  "console": [],
+  "failedReq": [],
+  "status": 200,
+  "title": "Meet Our Alpacas | Alpacas Ibiza – Es Currals Herd",
+  "desc": "Get to know the 14 alpacas of Es Currals. Barbarella, Avalon, Bardot, Chet, Dusty, Fela, Fonda, Lewis, Marron, Mojo, Moloko, Nelson, Suki, and Toots — Ibiza's beloved herd.",
+  "canonical": "https://alpacasibiza.com/en/alpacas",
+  "robots": "index, follow",
+  "hreflang": [
+    "en",
+    "de",
+    "it",
+    "es",
+    "nl",
+    "fr",
+    "x-default"
+  ],
+  "og": {
+    "title": "Meet Our Alpacas | Alpacas Ibiza – Es Currals Herd",
+    "image": "https://alpacasibiza.com/og?title=Meet+the+Herd&subtitle=Every+alpaca+has+a+name+and+a+story",
+    "locale": "en"
+  },
+  "twitter": "summary_large_image",
+  "schemaTypes": [
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "Organization",
+    "WebSite",
+    "SiteNavigationElement",
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "TouristAttraction",
+    "BreadcrumbList"
+  ],
+  "jsonldCount": 7,
+  "h1count": 1,
+  "headings": [
+    "H1:Meet Our Alpacas",
+    "H2:Did you know?",
+    "H3:Barbarella",
+    "H3:Avalon",
+    "H3:Bardot",
+    "H3:Chet",
+    "H3:Dusty",
+    "H3:Fela",
+    "H3:Fonda",
+    "H3:Lewis",
+    "H3:Marron",
+    "H3:Mojo",
+    "H3:Moloko",
+    "H3:Nelson",
+    "H3:Suki",
+    "H3:Toots",
+    "H3:Alpacas Ibiza",
+    "H3:Explore",
+    "H3:Shop",
+    "H3:Contact"
+  ],
+  "imgTotal": 16,
+  "imgMissingAlt": 0,
+  "imgBroken": [],
+  "linkTotal": 106,
+  "linkExternalNoRel": 0,
+  "formFields": 0,
+  "unlabeledFields": 0,
+  "wordCount": 1434,
+  "overflowPx": 0,
+  "axe": {
+    "byImpact": {
+      "critical": 1,
+      "serious": 1,
+      "moderate": 3,
+      "minor": 0
+    },
+    "total": 5,
+    "rules": [
+      {
+        "id": "button-name",
+        "impact": "critical",
+        "n": 1,
+        "help": "Buttons must have discernible text"
+      },
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "n": 51,
+        "help": "Elements must meet minimum color contrast ratio thresholds"
+      },
+      {
+        "id": "landmark-main-is-top-level",
+        "impact": "moderate",
+        "n": 1,
+        "help": "Main landmark should not be contained in another landmark"
+      },
+      {
+        "id": "landmark-no-duplicate-main",
+        "impact": "moderate",
+        "n": 1,
+        "help": "Document should not have more than one main landmark"
+      },
+      {
+        "id": "landmark-unique",
+        "impact": "moderate",
+        "n": 1,
+        "help": "Landmarks should have a unique role or role/label/title (i.e. accessib"
+      }
+    ]
+  }
+}

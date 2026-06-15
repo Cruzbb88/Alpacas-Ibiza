@@ -114,7 +114,7 @@ export function WhatToBringChecklist() {
         {tr('tours.checklist.title')}
       </h2>
       {mounted && (
-        <p className="text-sm text-foreground/60 mb-5" aria-live="polite">
+        <p className="text-sm text-muted-foreground mb-5" aria-live="polite">
           {checkedCount}/{ITEM_KEYS.length} packed
         </p>
       )}

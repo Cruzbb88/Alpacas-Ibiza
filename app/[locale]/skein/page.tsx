@@ -102,7 +102,7 @@ export default async function SkeinPage({
           <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
             {translate('skein.heroTitle')}
           </h1>
-          <p className="text-lg text-foreground/70 max-w-2xl mx-auto">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             {translate('skein.heroSubtitle')}
           </p>
         </div>
@@ -135,7 +135,7 @@ export default async function SkeinPage({
                   Step {step}
                 </div>
                 <h3 className="text-lg font-bold text-foreground mb-2">{title}</h3>
-                <p className="text-sm text-foreground/70">{body}</p>
+                <p className="text-sm text-muted-foreground">{body}</p>
               </div>
             ))}
           </div>
@@ -177,7 +177,7 @@ export default async function SkeinPage({
             <p className="text-3xl font-bold text-primary mb-1">
               {`€${SKEIN_SPONSORSHIP_PRICE_EUR}`}
             </p>
-            <p className="text-sm text-foreground/60 mb-6">
+            <p className="text-sm text-muted-foreground mb-6">
               {translate('skein.tierSub')}
             </p>
 
@@ -203,7 +203,7 @@ export default async function SkeinPage({
           </div>
 
           {/* Trust line */}
-          <p className="mt-4 text-sm text-foreground/60 text-center">
+          <p className="mt-4 text-sm text-muted-foreground text-center">
             {translate('skein.trustLine')}
           </p>
         </div>
@@ -215,7 +215,7 @@ export default async function SkeinPage({
           <h3 className="text-xl font-bold text-foreground mb-2">
             {translate('skein.onlyTitle')}
           </h3>
-          <p className="text-foreground/70">
+          <p className="text-muted-foreground">
             {translate('skein.onlyBody')}
           </p>
         </div>

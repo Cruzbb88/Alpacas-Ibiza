@@ -21,7 +21,7 @@ export function CancellationBadge({ variant = 'compact', className = '' }: Props
 
     if (variant === 'full') {
         return (
-            <p className={`inline-flex items-center gap-1.5 text-sm text-foreground/70 ${className}`}>
+            <p className={`inline-flex items-center gap-1.5 text-sm text-muted-foreground ${className}`}>
                 <span aria-hidden="true">✓</span>
                 <span>{label}</span>
             </p>
@@ -29,7 +29,7 @@ export function CancellationBadge({ variant = 'compact', className = '' }: Props
     }
 
     return (
-        <span className={`inline-flex items-center gap-1 text-xs text-foreground/60 ${className}`}>
+        <span className={`inline-flex items-center gap-1 text-xs text-muted-foreground ${className}`}>
             <span aria-hidden="true">✓</span>
             <span>{label}</span>
         </span>

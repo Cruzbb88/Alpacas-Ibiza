@@ -24,7 +24,7 @@ export async function CampaignBanner({ locale: _locale, className }: { locale: L
     >
       <div>
         <p className="text-sm sm:text-base font-bold text-primary">{CAMPAIGN_HEADLINE}</p>
-        {CAMPAIGN_SUBLINE ? <p className="text-xs sm:text-sm text-foreground/70 mt-1">{CAMPAIGN_SUBLINE}</p> : null}
+        {CAMPAIGN_SUBLINE ? <p className="text-xs sm:text-sm text-muted-foreground mt-1">{CAMPAIGN_SUBLINE}</p> : null}
       </div>
       <span
         className="shrink-0 inline-flex items-center rounded-full bg-primary text-primary-foreground px-3 py-1 text-xs font-semibold"

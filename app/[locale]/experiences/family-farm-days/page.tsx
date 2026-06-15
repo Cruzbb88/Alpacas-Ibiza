@@ -66,7 +66,7 @@ export default async function FamilyPage({ params }: { params: Promise<{ locale:
     ]
 
     return (
-        <main>
+        <>
             {/* JSON-LD: LocalBusiness + FAQPage */}
             {schemas.map((schema, i) => (
                 <script
@@ -95,10 +95,10 @@ export default async function FamilyPage({ params }: { params: Promise<{ locale:
             {/* FairHarbor Booking Calendar - Above the Fold */}
             <section className="w-full py-12 md:py-16 px-4 bg-background">
                 <div className="max-w-4xl mx-auto text-center">
-                    <h2 className="text-2xl md:text-3xl font-bold text-foreground/70 mb-4">
+                    <h2 className="text-2xl md:text-3xl font-bold text-muted-foreground mb-4">
                         {translate('tours.bookingSection.title')}
                     </h2>
-                    <p className="text-foreground/60 mb-8 max-w-2xl mx-auto">
+                    <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
                         {translate('tours.bookingSection.subtitle')}
                     </p>
                     <div className="bg-white rounded-[16px] p-6 md:p-8 shadow-sm border border-secondary">
@@ -115,7 +115,7 @@ export default async function FamilyPage({ params }: { params: Promise<{ locale:
                             <h2 className="text-3xl font-bold text-primary mb-6">
                                 {translate('family.educationTitle')}
                             </h2>
-                            <p className="text-lg text-foreground/70 mb-6">
+                            <p className="text-lg text-muted-foreground mb-6">
                                 {translate('family.educationText')}
                             </p>
                             <ul className="space-y-3">
@@ -123,7 +123,7 @@ export default async function FamilyPage({ params }: { params: Promise<{ locale:
                                     <span className="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center text-sm flex-shrink-0">
                                         &#10003;
                                     </span>
-                                    <span className="text-foreground/70">
+                                    <span className="text-muted-foreground">
                                         <strong>{translate('family.points.respect')}</strong>
                                     </span>
                                 </li>
@@ -131,7 +131,7 @@ export default async function FamilyPage({ params }: { params: Promise<{ locale:
                                     <span className="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center text-sm flex-shrink-0">
                                         &#10003;
                                     </span>
-                                    <span className="text-foreground/70">
+                                    <span className="text-muted-foreground">
                                         <strong>{translate('family.points.biology')}</strong>
                                     </span>
                                 </li>
@@ -139,7 +139,7 @@ export default async function FamilyPage({ params }: { params: Promise<{ locale:
                                     <span className="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center text-sm flex-shrink-0">
                                         &#10003;
                                     </span>
-                                    <span className="text-foreground/70">
+                                    <span className="text-muted-foreground">
                                         <strong>{translate('family.points.sustainability')}</strong>
                                     </span>
                                 </li>
@@ -179,7 +179,7 @@ export default async function FamilyPage({ params }: { params: Promise<{ locale:
                                 <h3 className="font-semibold text-primary mb-1">
                                     {translate(`family.safety.${item.key}.title`)}
                                 </h3>
-                                <p className="text-xs text-foreground/70">
+                                <p className="text-xs text-muted-foreground">
                                     {translate(`family.safety.${item.key}.desc`)}
                                 </p>
                             </div>
@@ -219,6 +219,6 @@ export default async function FamilyPage({ params }: { params: Promise<{ locale:
 
             {/* Adopt cross-sell */}
             <AdoptCrossSell locale={locale} />
-        </main>
+        </>
     )
 }

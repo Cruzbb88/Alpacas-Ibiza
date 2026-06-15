@@ -25,6 +25,7 @@
 import type { Tenant } from '@/lib/tenants/_types'
 import type { BookingEngine } from './_types'
 import { FareHarborAdapter } from './fareharbor-adapter'
+import { InHouseAdapter } from './inhouse-adapter'
 import { NullAdapter } from './null-adapter'
 
 export type { BookingEngine, BookingEngineKind, AvailabilitySlot } from './_types'
@@ -33,9 +34,15 @@ export type { BookingEngine, BookingEngineKind, AvailabilitySlot } from './_type
  * Returns the appropriate BookingEngine for a tenant.
  *
  * Today: FareHarbor if the tenant has a shortname, NullAdapter otherwise.
+ * Flagged: BOOKING_ENGINE=inhouse routes the read/availability path to the
+ * in-house store (Strategy B seam). Defaults OFF — existing behavior unchanged.
  * Future: swap adapter here (one line) when a tripwire fires — no call-site changes.
  */
 export function getBookingEngine(tenant: Tenant): BookingEngine {
+  // Read the flag directly, the same way this factory already branches on env.
+  if (process.env.BOOKING_ENGINE === 'inhouse') {
+    return new InHouseAdapter()
+  }
   if (tenant.fareHarbor.shortname) {
     return new FareHarborAdapter(tenant)
   }

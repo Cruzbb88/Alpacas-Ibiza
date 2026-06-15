@@ -24,7 +24,7 @@ interface FormFieldProps {
 }
 
 const INPUT_BASE =
-  'w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary'
+  'w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary'
 
 export function FormField({
   id,
@@ -76,7 +76,7 @@ export function FormField({
         {label}
       </label>
       {hint && (
-        <p id={hintId} className="text-xs text-foreground/60 mb-1">
+        <p id={hintId} className="text-xs text-muted-foreground mb-1">
           {hint}
         </p>
       )}

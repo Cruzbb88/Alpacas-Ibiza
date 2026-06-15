@@ -110,7 +110,7 @@ export default async function ShopPage({ params }: { params: Promise<{ locale: L
                 <h2 className="text-2xl font-bold text-foreground mb-2 group-hover:text-accent transition-colors">
                   {category.title}
                 </h2>
-                <p className="text-foreground/70">{category.description}</p>
+                <p className="text-muted-foreground">{category.description}</p>
                 <div className="mt-6 inline-flex items-center text-accent font-medium">
                   {translate('footer.explore')}
                   {' →'}

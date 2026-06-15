@@ -116,7 +116,7 @@ export default async function YogaPage({ params }: { params: Promise<{ locale: s
     const bookingUrl = getFareHarborItemUrl(FAREHARBOR_ITEM_YOGA)
 
     return (
-        <main>
+        <>
             {/* JSON-LD: LocalBusiness + SportsActivityLocation + Event */}
             {schemas.map((schema, i) => (
                 <script
@@ -154,7 +154,7 @@ export default async function YogaPage({ params }: { params: Promise<{ locale: s
                 <h2 className="text-2xl font-bold text-foreground mb-4">
                     {translate('yoga.whatTitle')}
                 </h2>
-                <p className="text-foreground/70 text-base leading-relaxed">
+                <p className="text-muted-foreground text-base leading-relaxed">
                     {translate('yoga.whatBody')}
                 </p>
             </PageSection>
@@ -164,7 +164,7 @@ export default async function YogaPage({ params }: { params: Promise<{ locale: s
                 <h2 className="text-2xl font-bold text-foreground mb-4">
                     {translate('yoga.whyTitle')}
                 </h2>
-                <p className="text-foreground/70 text-base leading-relaxed">
+                <p className="text-muted-foreground text-base leading-relaxed">
                     {translate('yoga.whyBody')}
                 </p>
             </PageSection>
@@ -174,7 +174,7 @@ export default async function YogaPage({ params }: { params: Promise<{ locale: s
                 <h2 className="text-2xl font-bold text-foreground mb-4">
                     {translate('yoga.whenTitle')}
                 </h2>
-                <p className="text-foreground/70 text-base leading-relaxed">
+                <p className="text-muted-foreground text-base leading-relaxed">
                     {translate('yoga.whenBody')}
                 </p>
             </PageSection>
@@ -188,7 +188,7 @@ export default async function YogaPage({ params }: { params: Promise<{ locale: s
                 <h2 className="text-2xl font-bold text-foreground mb-4">
                     {translate('yoga.priceTitle')}
                 </h2>
-                <p className="text-foreground/70 text-base leading-relaxed mb-6">
+                <p className="text-muted-foreground text-base leading-relaxed mb-6">
                     {translate('yoga.priceBody')}
                 </p>
                 {/* Quick-glance fact grid — 3-up verified facts */}
@@ -199,7 +199,7 @@ export default async function YogaPage({ params }: { params: Promise<{ locale: s
                         <p className="font-semibold text-foreground text-sm">
                             {translate('yoga.details.price.title')}
                         </p>
-                        <p className="text-xs text-foreground/60 mt-1">
+                        <p className="text-xs text-muted-foreground mt-1">
                             {translate('yoga.details.price.desc')}
                         </p>
                     </div>
@@ -209,7 +209,7 @@ export default async function YogaPage({ params }: { params: Promise<{ locale: s
                         <p className="font-semibold text-foreground text-sm">
                             {translate('yoga.details.duration.title')}
                         </p>
-                        <p className="text-xs text-foreground/60 mt-1">
+                        <p className="text-xs text-muted-foreground mt-1">
                             {translate('yoga.details.duration.desc')}
                         </p>
                     </div>
@@ -219,7 +219,7 @@ export default async function YogaPage({ params }: { params: Promise<{ locale: s
                         <p className="font-semibold text-foreground text-sm">
                             {translate('yoga.details.groupSize.title')}
                         </p>
-                        <p className="text-xs text-foreground/60 mt-1">
+                        <p className="text-xs text-muted-foreground mt-1">
                             {translate('yoga.details.groupSize.desc')}
                         </p>
                     </div>
@@ -244,7 +244,7 @@ export default async function YogaPage({ params }: { params: Promise<{ locale: s
                 <h2 className="text-2xl font-bold text-foreground mb-3">
                     {translate('yoga.cta')}
                 </h2>
-                <p className="text-foreground/70 mb-8 max-w-xl mx-auto text-sm">
+                <p className="text-muted-foreground mb-8 max-w-xl mx-auto text-sm">
                     {translate('yoga.scheduleNote')}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -291,6 +291,6 @@ export default async function YogaPage({ params }: { params: Promise<{ locale: s
                     '[UNMAPPED] FareHarbor yoga item ID — set FAREHARBOR_ITEM_YOGA in .env.local',
                 ]}
             />
-        </main>
+        </>
     )
 }

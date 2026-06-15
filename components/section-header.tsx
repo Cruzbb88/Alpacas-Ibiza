@@ -24,7 +24,7 @@ export function SectionHeader({
         {title}
       </Tag>
       {subtitle && (
-        <p className="text-foreground/70 max-w-2xl mx-auto">
+        <p className="text-muted-foreground max-w-2xl mx-auto">
           {subtitle}
         </p>
       )}

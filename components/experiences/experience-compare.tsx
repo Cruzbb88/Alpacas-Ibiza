@@ -104,7 +104,7 @@ export function ExperienceCompare({ heading, subheading, rows, seasonalWindows }
     `px-4 py-1.5 rounded-full text-sm font-medium border transition-colors ${
       active
         ? 'bg-primary text-primary-foreground border-primary'
-        : 'bg-card text-foreground/70 border-border hover:border-primary/40'
+        : 'bg-card text-muted-foreground border-border hover:border-primary/40'
     }`
 
   return (
@@ -117,7 +117,7 @@ export function ExperienceCompare({ heading, subheading, rows, seasonalWindows }
           {heading}
         </h2>
         {subheading && (
-          <p className="text-foreground/70 max-w-2xl mx-auto">{subheading}</p>
+          <p className="text-muted-foreground max-w-2xl mx-auto">{subheading}</p>
         )}
       </div>
 
@@ -162,7 +162,7 @@ function ExperienceCard({ row, seasonalWindows }: { row: ExperienceRow; seasonal
           </span>
           <div>
             <h3 className="text-xl font-bold text-foreground leading-tight">{row.title}</h3>
-            <p className="text-sm text-foreground/70 mt-1">{row.oneLiner}</p>
+            <p className="text-sm text-muted-foreground mt-1">{row.oneLiner}</p>
           </div>
         </div>
 
@@ -210,10 +210,10 @@ function Fact({
   return (
     <div>
       <Icon
-        className="h-4 w-4 mx-auto mb-1 text-foreground/50"
+        className="h-4 w-4 mx-auto mb-1 text-muted-foreground"
         aria-hidden="true"
       />
-      <dt className="text-[10px] uppercase tracking-wider text-foreground/50">{label}</dt>
+      <dt className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</dt>
       <dd className="text-xs font-semibold text-foreground/85 mt-0.5">{value}</dd>
     </div>
   )

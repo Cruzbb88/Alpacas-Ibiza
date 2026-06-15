@@ -1,0 +1,107 @@
+{
+  "page": "contact",
+  "path": "/en/contact",
+  "console": [],
+  "failedReq": [],
+  "status": 200,
+  "title": "Contact Alpacas Ibiza | San Carlos Farm – Get in Touch",
+  "desc": "Get in touch with Alpacas Ibiza. Visit our farm in San Carlos, Ibiza — contact us by phone, email, or through the form.",
+  "canonical": "https://alpacasibiza.com/en/contact",
+  "robots": null,
+  "hreflang": [
+    "en",
+    "de",
+    "it",
+    "es",
+    "nl",
+    "fr",
+    "x-default"
+  ],
+  "og": {
+    "title": "Contact Alpacas Ibiza | San Carlos Farm – Get in Touch",
+    "image": "https://alpacasibiza.com/og?title=Our+Story&subtitle=Alpacas+Ibiza+%C2%B7+Es+Currals",
+    "locale": null
+  },
+  "twitter": "summary_large_image",
+  "schemaTypes": [
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "Organization",
+    "WebSite",
+    "SiteNavigationElement",
+    "BreadcrumbList"
+  ],
+  "jsonldCount": 5,
+  "h1count": 1,
+  "headings": [
+    "H1:Get in Touch",
+    "H2:Send us a Message",
+    "H2:Contact Information",
+    "H3:Location",
+    "H3:Phone",
+    "H3:Email",
+    "H3:Hours",
+    "H2:How to find us",
+    "H2:Getting here",
+    "H3:By car",
+    "H3:From the airport",
+    "H3:Public transit",
+    "H3:Coordinates & backup nav",
+    "H3:Alpacas Ibiza",
+    "H3:Explore",
+    "H3:Shop",
+    "H3:Contact"
+  ],
+  "imgTotal": 2,
+  "imgMissingAlt": 1,
+  "imgBroken": [],
+  "linkTotal": 81,
+  "linkExternalNoRel": 0,
+  "formFields": 7,
+  "unlabeledFields": 0,
+  "wordCount": 346,
+  "overflowPx": 0,
+  "axe": {
+    "byImpact": {
+      "critical": 1,
+      "serious": 1,
+      "moderate": 3,
+      "minor": 0
+    },
+    "total": 5,
+    "rules": [
+      {
+        "id": "button-name",
+        "impact": "critical",
+        "n": 1,
+        "help": "Buttons must have discernible text"
+      },
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "n": 22,
+        "help": "Elements must meet minimum color contrast ratio thresholds"
+      },
+      {
+        "id": "landmark-main-is-top-level",
+        "impact": "moderate",
+        "n": 1,
+        "help": "Main landmark should not be contained in another landmark"
+      },
+      {
+        "id": "landmark-no-duplicate-main",
+        "impact": "moderate",
+        "n": 1,
+        "help": "Document should not have more than one main landmark"
+      },
+      {
+        "id": "landmark-unique",
+        "impact": "moderate",
+        "n": 1,
+        "help": "Landmarks should have a unique role or role/label/title (i.e. accessib"
+      }
+    ]
+  }
+}

@@ -355,7 +355,7 @@ export function EmbeddedMollieCheckout(props: EmbeddedMollieCheckoutProps) {
       />
 
       {!intent || !sdkReady || !mounted ? (
-        <div className="rounded-lg border border-border bg-card p-4 text-sm text-foreground/70">
+        <div className="rounded-lg border border-border bg-card p-4 text-sm text-muted-foreground">
           Preparing secure payment field…
         </div>
       ) : null}
@@ -431,7 +431,7 @@ export function EmbeddedMollieCheckout(props: EmbeddedMollieCheckoutProps) {
             `Confirm payment — ${formatPriceForLocale(props.tier === 'monthly' ? ADOPT_PRICE_MONTHLY_EUR : ADOPT_PRICE_YEARLY_EUR, props.locale)}${props.tier === 'monthly' ? ' / month' : ' / year'}`
           )}
         </button>
-        <p className="text-xs text-foreground/60">
+        <p className="text-xs text-muted-foreground">
           Secured by Mollie. You will not be charged until payment is confirmed.
         </p>
       </form>

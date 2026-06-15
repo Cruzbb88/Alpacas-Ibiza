@@ -29,7 +29,7 @@ export function LanguageSwitcher() {
 
   return (
     <Select value={currentLocale} onValueChange={handleChangeLanguage}>
-      <SelectTrigger className="w-[140px] border-border bg-background">
+      <SelectTrigger className="w-[140px] border-border bg-background" aria-label="Select language">
         <SelectValue />
       </SelectTrigger>
       <SelectContent>

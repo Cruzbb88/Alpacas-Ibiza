@@ -100,7 +100,7 @@ export default async function TourConfirmationPage({
     : null
 
   return (
-    <main className="min-h-[60vh] py-12 px-4">
+    <div className="min-h-[60vh] py-12 px-4">
       <div className="max-w-2xl mx-auto space-y-8">
 
         {/* Confirmation header */}
@@ -109,7 +109,7 @@ export default async function TourConfirmationPage({
           <h1 className="text-3xl font-bold text-primary">
             You&apos;re all set!
           </h1>
-          <p className="text-base text-foreground/70">
+          <p className="text-base text-muted-foreground">
             Your alpaca farm experience at Es Currals is confirmed.
             {humanDate && (
               <> We look forward to seeing you on <strong className="text-foreground">{humanDate}</strong>.</>
@@ -146,7 +146,7 @@ export default async function TourConfirmationPage({
                 </a>
               )}
             </div>
-            <p className="text-xs text-foreground/50">
+            <p className="text-xs text-muted-foreground">
               .ics works with Apple Calendar, Outlook, and most calendar apps.
             </p>
           </section>
@@ -157,7 +157,7 @@ export default async function TourConfirmationPage({
           <h2 className="text-base font-semibold text-foreground">
             What to bring
           </h2>
-          <ul className="list-disc pl-5 space-y-1 text-sm text-foreground/70 leading-relaxed">
+          <ul className="list-disc pl-5 space-y-1 text-sm text-muted-foreground leading-relaxed">
             <li>Comfortable walking shoes (light trail surface)</li>
             <li>Weather-appropriate clothing — the farm is outdoors</li>
             <li>Sunscreen and a hat (summer visits)</li>
@@ -171,7 +171,7 @@ export default async function TourConfirmationPage({
           <h2 className="text-base font-semibold text-foreground">
             Getting to the farm
           </h2>
-          <p className="text-sm text-foreground/70">
+          <p className="text-sm text-muted-foreground">
             We&apos;re at Es Currals, San Carlos, Ibiza. Find parking, directions, and accessibility info on our visit page.
           </p>
           <Link
@@ -190,7 +190,7 @@ export default async function TourConfirmationPage({
             {/* Card 1: Adopt */}
             <div className="rounded-2xl border border-border bg-card p-6 space-y-3 flex flex-col">
               <h3 className="text-base font-semibold text-foreground">{t('adoptHeading')}</h3>
-              <p className="text-sm text-foreground/70 flex-1">{t('adoptBody')}</p>
+              <p className="text-sm text-muted-foreground flex-1">{t('adoptBody')}</p>
               <p className="text-xs font-medium text-primary">
                 €{ADOPT_PRICE_MONTHLY_EUR}/month or €{ADOPT_PRICE_YEARLY_EUR}/year
               </p>
@@ -205,7 +205,7 @@ export default async function TourConfirmationPage({
             {/* Card 2: Meet the herd */}
             <div className="rounded-2xl border border-border bg-card p-6 space-y-3 flex flex-col">
               <h3 className="text-base font-semibold text-foreground">{t('herdHeading')}</h3>
-              <p className="text-sm text-foreground/70 flex-1">{t('herdBody')}</p>
+              <p className="text-sm text-muted-foreground flex-1">{t('herdBody')}</p>
               <Link
                 href={`/${locale}/alpacas`}
                 className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card text-foreground px-5 py-2.5 text-sm font-semibold hover:bg-muted transition-colors self-start"
@@ -228,6 +228,6 @@ export default async function TourConfirmationPage({
         </div>
 
       </div>
-    </main>
+    </div>
   )
 }

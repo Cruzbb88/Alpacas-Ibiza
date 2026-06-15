@@ -1,0 +1,101 @@
+{
+  "page": "press",
+  "path": "/en/press",
+  "console": [],
+  "failedReq": [],
+  "status": 200,
+  "title": "Press & Media | Alpacas Ibiza",
+  "desc": "Alpacas Ibiza as seen in Belgian and Spanish press. Coverage from Gazet van Antwerpen, Het Laatste Nieuws, Diario de Ibiza, Tribes & Nomads and more.",
+  "canonical": "https://alpacasibiza.com/en/press",
+  "robots": "noindex, follow",
+  "hreflang": [
+    "en",
+    "de",
+    "it",
+    "es",
+    "nl",
+    "fr",
+    "x-default"
+  ],
+  "og": {
+    "title": "Press & Media | Alpacas Ibiza",
+    "image": "https://alpacasibiza.com/og?title=Press&subtitle=In+the+news+%C2%B7+Alpacas+Ibiza",
+    "locale": "en"
+  },
+  "twitter": "summary_large_image",
+  "schemaTypes": [
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "Organization",
+    "WebSite",
+    "SiteNavigationElement",
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "BreadcrumbList"
+  ],
+  "jsonldCount": 6,
+  "h1count": 1,
+  "headings": [
+    "H1:Press & Media",
+    "H2:As Seen In",
+    "H2:Press Inquiries",
+    "H3:Alpacas Ibiza",
+    "H3:Explore",
+    "H3:Shop",
+    "H3:Contact"
+  ],
+  "imgTotal": 2,
+  "imgMissingAlt": 1,
+  "imgBroken": [],
+  "linkTotal": 78,
+  "linkExternalNoRel": 0,
+  "formFields": 0,
+  "unlabeledFields": 0,
+  "wordCount": 278,
+  "overflowPx": 0,
+  "axe": {
+    "byImpact": {
+      "critical": 1,
+      "serious": 1,
+      "moderate": 3,
+      "minor": 0
+    },
+    "total": 5,
+    "rules": [
+      {
+        "id": "button-name",
+        "impact": "critical",
+        "n": 1,
+        "help": "Buttons must have discernible text"
+      },
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "n": 24,
+        "help": "Elements must meet minimum color contrast ratio thresholds"
+      },
+      {
+        "id": "landmark-main-is-top-level",
+        "impact": "moderate",
+        "n": 1,
+        "help": "Main landmark should not be contained in another landmark"
+      },
+      {
+        "id": "landmark-no-duplicate-main",
+        "impact": "moderate",
+        "n": 1,
+        "help": "Document should not have more than one main landmark"
+      },
+      {
+        "id": "landmark-unique",
+        "impact": "moderate",
+        "n": 1,
+        "help": "Landmarks should have a unique role or role/label/title (i.e. accessib"
+      }
+    ]
+  }
+}

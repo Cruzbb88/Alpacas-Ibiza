@@ -1,23 +1,51 @@
-import { redirect } from 'next/navigation'
-import { headers } from 'next/headers'
-
 /**
  * Root-level 404 handler.
- * Redirects to the locale-specific not-found page so users see
- * the full site shell (Header, Footer, structured data).
  *
- * For SEO: the [locale]/not-found.tsx returns a proper 404 status
- * while keeping all navigation and internal links intact, preserving
- * crawlability and link equity.
+ * Next.js App Router sets HTTP 404 status automatically when this boundary
+ * renders (triggered by notFound() or an unmatched route).
+ *
+ * The previous implementation called redirect(`/${locale}`) which returned a
+ * 307 → 200 chain — Playwright and crawlers followed the redirect and recorded
+ * HTTP 200, masking the 404 (axe SITE_DATA_EXTRACT soft-404 finding).
+ *
+ * Locale-prefixed unknowns (/en/foo) hit app/[locale]/not-found.tsx first.
+ * This file handles bare unknowns (/foo) that bypass the intl middleware.
  */
-export default async function RootNotFound() {
-    const headersList = await headers()
-    const acceptLanguage = headersList.get('accept-language') || ''
-    const locales = ['en', 'de', 'it', 'es', 'nl', 'fr']
-
-    // Detect preferred locale from Accept-Language header
-    const preferred = acceptLanguage.split(',')[0]?.split('-')[0]?.toLowerCase()
-    const locale = locales.includes(preferred ?? '') ? preferred : 'en'
-
-    redirect(`/${locale}`)
+export default function RootNotFound() {
+  return (
+    <div
+      style={{
+        minHeight: '60vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '64px 16px',
+        textAlign: 'center',
+        fontFamily: 'system-ui, sans-serif',
+      }}
+    >
+      <p style={{ fontSize: 72, margin: 0 }} aria-hidden="true">🦙</p>
+      <h1 style={{ fontSize: 36, fontWeight: 700, margin: '16px 0 8px' }}>
+        Page not found
+      </h1>
+      <p style={{ color: '#71717a', marginBottom: 32 }}>
+        This page doesn&apos;t exist or has moved.
+      </p>
+      <a
+        href="/en"
+        style={{
+          display: 'inline-block',
+          padding: '12px 24px',
+          background: 'hsl(var(--accent, 30 80% 40%))',
+          color: '#fff',
+          borderRadius: 8,
+          textDecoration: 'none',
+          fontWeight: 600,
+        }}
+      >
+        Go home
+      </a>
+    </div>
+  )
 }

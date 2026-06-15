@@ -158,7 +158,7 @@ export default async function JournalPostPage({
   const { blocks, tocItems } = parseBody(post.body)
 
   return (
-    <main>
+    <>
       <ReadingProgress />
 
       {/* JSON-LD: Article */}
@@ -316,7 +316,7 @@ export default async function JournalPostPage({
             <h2 className="text-xl font-semibold text-foreground mb-2">
               {translate('newsletter.title')}
             </h2>
-            <p className="text-sm text-foreground/70">
+            <p className="text-sm text-muted-foreground">
               {translate('newsletter.subtitle')}
             </p>
           </div>
@@ -324,6 +324,6 @@ export default async function JournalPostPage({
         </div>
       </section>
 
-    </main>
+    </>
   )
 }

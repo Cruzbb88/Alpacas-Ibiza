@@ -402,7 +402,7 @@ export function FloatingWhatsApp({
           </div>
 
           {/* Footer */}
-          <div className="px-4 py-2.5 border-t border-border bg-card/50 text-[11px] text-foreground/60 text-center">
+          <div className="px-4 py-2.5 border-t border-border bg-card/50 text-[11px] text-muted-foreground text-center">
             {footerLabel}
           </div>
         </div>

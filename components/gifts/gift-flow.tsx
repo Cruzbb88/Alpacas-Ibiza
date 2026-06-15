@@ -145,7 +145,7 @@ export function GiftFlow({
         <h2 id="gift-flow-heading" className="text-3xl md:text-4xl font-bold text-foreground mb-2">
           {copy.heading}
         </h2>
-        <p className="text-foreground/70">{copy.subheading}</p>
+        <p className="text-muted-foreground">{copy.subheading}</p>
       </div>
 
       {/* Stepper indicator */}
@@ -171,7 +171,7 @@ export function GiftFlow({
               <span
                 className={
                   'hidden sm:inline text-xs font-medium ' +
-                  (isCurrent ? 'text-foreground' : 'text-foreground/50')
+                  (isCurrent ? 'text-foreground' : 'text-muted-foreground')
                 }
               >
                 {label}
@@ -203,11 +203,11 @@ export function GiftFlow({
                     : 'border-border bg-card hover:border-primary/40')
                 }
               >
-                <p className="text-xs uppercase tracking-wider text-foreground/50 mb-1">
+                <p className="text-xs uppercase tracking-wider text-muted-foreground mb-1">
                   {data.price}
                 </p>
                 <p className="text-base font-bold text-foreground mb-1">{data.title}</p>
-                <p className="text-sm text-foreground/70">{data.description}</p>
+                <p className="text-sm text-muted-foreground">{data.description}</p>
               </button>
             )
           })}
@@ -262,7 +262,7 @@ export function GiftFlow({
               maxLength={500}
               className="block w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 placeholder:text-muted-foreground"
             />
-            <p className="mt-1 text-xs text-foreground/50 text-right tabular-nums">
+            <p className="mt-1 text-xs text-muted-foreground text-right tabular-nums">
               {message.length} / 500
             </p>
           </div>
@@ -314,7 +314,7 @@ export function GiftFlow({
       {step === 3 && (
         <>
           <div className="rounded-2xl border border-border bg-card p-6 mb-4">
-            <p className="text-xs uppercase tracking-wider text-foreground/50 mb-1">
+            <p className="text-xs uppercase tracking-wider text-muted-foreground mb-1">
               {copy.reviewTitle}
             </p>
             <p className="text-xl font-bold text-foreground mb-4">
@@ -354,7 +354,7 @@ export function GiftFlow({
           type="button"
           onClick={() => setStep((s) => (s > 0 ? ((s - 1) as Step) : s))}
           disabled={step === 0}
-          className="rounded-lg border border-border px-5 py-2.5 text-sm font-semibold text-foreground/70 hover:bg-secondary disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+          className="rounded-lg border border-border px-5 py-2.5 text-sm font-semibold text-muted-foreground hover:bg-secondary disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
         >
           {copy.backLabel}
         </button>
@@ -418,7 +418,7 @@ function Field({
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="grid grid-cols-[120px_1fr] gap-3">
-      <dt className="text-foreground/50 text-xs uppercase tracking-wider mt-0.5">{label}</dt>
+      <dt className="text-muted-foreground text-xs uppercase tracking-wider mt-0.5">{label}</dt>
       <dd className="text-foreground/85">{children}</dd>
     </div>
   )

@@ -98,7 +98,7 @@ export function AdoptShareCard({
       <h2 id="adopt-share-heading" className="text-lg font-semibold text-foreground mb-1">
         {heading}
       </h2>
-      <p className="text-sm text-foreground/70 mb-5">{sub}</p>
+      <p className="text-sm text-muted-foreground mb-5">{sub}</p>
 
       <div className="flex flex-wrap gap-2">
         {/* Native share — only rendered post-hydration on supported devices */}

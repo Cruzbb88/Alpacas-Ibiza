@@ -243,7 +243,7 @@ function CarouselLayout({
                 <h3 className="text-xl font-bold text-foreground leading-tight">
                   {piece.title}
                 </h3>
-                <p className="text-sm text-foreground/70 line-clamp-3">
+                <p className="text-sm text-muted-foreground line-clamp-3">
                   {piece.description}
                 </p>
                 {piece.craftDetails && piece.craftDetails.length > 0 && (
@@ -346,7 +346,7 @@ function WeavingShowcaseLegacy({
                 <div className="relative z-10 text-7xl md:text-8xl transform group-hover:scale-110 transition-transform duration-500">
                   🧶
                 </div>
-                <p className="relative z-10 text-sm font-medium text-foreground/50 tracking-widest uppercase">
+                <p className="relative z-10 text-sm font-medium text-muted-foreground tracking-widest uppercase">
                   {badgeText}
                 </p>
               </div>
@@ -363,7 +363,7 @@ function WeavingShowcaseLegacy({
                 {title}
               </h2>
             </div>
-            <p className="text-foreground/70 text-lg leading-relaxed">{description}</p>
+            <p className="text-muted-foreground text-lg leading-relaxed">{description}</p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Button
                 asChild

@@ -104,7 +104,7 @@ export function AlpacaSearchFilter({ locale, matchCount, totalCount }: AlpacaSea
       />
 
       <div className="flex items-center justify-between text-sm" role="status" aria-live="polite">
-        <span className="text-foreground/70">
+        <span className="text-muted-foreground">
           {translate('alpacas.filter.showing',{ match: matchCount, total: totalCount })
             .replace('{match}', String(matchCount))
             .replace('{total}', String(totalCount))}
@@ -135,7 +135,7 @@ interface FilterFieldsetProps {
 function FilterFieldset({ legend, options, active, translate, labelPrefix, onToggle }: FilterFieldsetProps) {
   return (
     <fieldset>
-      <legend className="text-xs font-semibold uppercase tracking-wide text-foreground/60 mb-2">
+      <legend className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">
         {legend}
       </legend>
       <div className="flex flex-wrap gap-2">

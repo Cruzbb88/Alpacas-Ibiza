@@ -142,7 +142,7 @@ export default async function AlcacaPage({ params }: { params: Promise<{ locale:
           <h2 className="text-2xl font-bold text-foreground mb-4">
             {translate('alcacaPage.storyTitle')}
           </h2>
-          <p className="text-foreground/70 leading-relaxed">
+          <p className="text-muted-foreground leading-relaxed">
             {translate('alcacaPage.storyBody')}
           </p>
         </div>
@@ -173,7 +173,7 @@ export default async function AlcacaPage({ params }: { params: Promise<{ locale:
             <h2 className="text-2xl font-bold text-foreground mb-6">
               {translate('alcacaPage.whyTitle')}
             </h2>
-            <ul className="space-y-4 text-foreground/70">
+            <ul className="space-y-4 text-muted-foreground">
               <li className="flex gap-3">
                 <span className="text-accent">✓</span>
                 <span>{translate('alcacaPage.benefit1')}</span>

@@ -59,7 +59,7 @@ export default async function PrivacyPage({ params }: { params: Promise<{ locale
             />
 
             <section className="w-full py-16 md:py-24 px-4 bg-background">
-                <div className="max-w-4xl mx-auto prose prose-lg max-w-none text-foreground/70">
+                <div className="max-w-4xl mx-auto prose prose-lg max-w-none text-muted-foreground">
                     <h2 className="text-2xl font-bold text-foreground mt-8 mb-4">
                         {translate('privacy.section1Title')}
                     </h2>
@@ -120,7 +120,7 @@ export default async function PrivacyPage({ params }: { params: Promise<{ locale
                         </a>
                     </p>
 
-                    <p className="text-sm text-foreground/60 mt-8">
+                    <p className="text-sm text-muted-foreground mt-8">
                         {translate('privacy.lastUpdated')}
                     </p>
                 </div>

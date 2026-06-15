@@ -107,7 +107,7 @@ export function AdoptionCertificatePreview({
         >
           {title}
         </h2>
-        <p className="text-foreground/70 max-w-2xl mx-auto">{subtitle}</p>
+        <p className="text-muted-foreground max-w-2xl mx-auto">{subtitle}</p>
       </div>
 
       <div className="max-w-2xl mx-auto">
@@ -136,21 +136,21 @@ export function AdoptionCertificatePreview({
             {certificateLabel}
           </p>
 
-          <p className="text-xs md:text-sm text-foreground/70 italic mb-1">
+          <p className="text-xs md:text-sm text-muted-foreground italic mb-1">
             {presentedToLabel}
           </p>
           <p className="text-xl md:text-2xl font-serif font-semibold text-foreground/90 mb-4 border-b border-primary/20 pb-1 min-w-[60%]">
             {donorLabel}
           </p>
 
-          <p className="text-xs md:text-sm text-foreground/70 italic mb-1">
+          <p className="text-xs md:text-sm text-muted-foreground italic mb-1">
             {sponsorOfLabel}
           </p>
           <p className="text-2xl md:text-4xl font-serif font-bold text-primary mb-6">
             {displayAlpaca}
           </p>
 
-          <p className="text-[9px] md:text-[10px] uppercase tracking-[0.25em] text-foreground/50">
+          <p className="text-[9px] md:text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
             {certificateFooter}
           </p>
         </div>
@@ -164,7 +164,7 @@ export function AdoptionCertificatePreview({
         <div className="mt-5 flex flex-col items-center gap-1.5">
           <label
             htmlFor="cert-preview-name"
-            className="text-xs font-semibold text-foreground/60 uppercase tracking-wide"
+            className="text-xs font-semibold text-muted-foreground uppercase tracking-wide"
           >
             {translate('adopt.certPreview.namePromptLabel')}
           </label>

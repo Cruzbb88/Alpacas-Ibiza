@@ -102,7 +102,7 @@ export default async function SitemapPage({ params }: { params: Promise<{ locale
     // Total link count: Visit(7) + Shop(5) + Adopt(1) + About(3) + Media(3) + Contact(1) + Legal(5) = 25
 
     return (
-        <main>
+        <>
             <PageBreadcrumbs
                 locale={locale}
                 homeLabel={tr('nav.home') || 'Home'}
@@ -120,7 +120,7 @@ export default async function SitemapPage({ params }: { params: Promise<{ locale
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
                             {categories.map((cat) => (
                                 <div key={cat.heading}>
-                                    <h2 className="text-xs font-bold uppercase tracking-widest text-foreground/50 mb-4 pb-2 border-b border-border">
+                                    <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4 pb-2 border-b border-border">
                                         {cat.heading}
                                     </h2>
                                     <ul className="space-y-2" role="list">
@@ -141,6 +141,6 @@ export default async function SitemapPage({ params }: { params: Promise<{ locale
                     </nav>
                 </div>
             </PageSection>
-        </main>
+        </>
     )
 }

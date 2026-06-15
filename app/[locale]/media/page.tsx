@@ -55,7 +55,7 @@ export default async function MediaPage({ params }: { params: Promise<{ locale: 
     const livePhotosExist = hasLiveMedia()
 
     return (
-        <main>
+        <>
             {/* JSON-LD: LocalBusiness */}
             <script
                 type="application/ld+json"
@@ -125,7 +125,7 @@ export default async function MediaPage({ params }: { params: Promise<{ locale: 
                 /* ── Empty state — redirects visitors to real content instead of a dead grid ── */
                 <PageSection>
                     <div className="py-16 text-center max-w-lg mx-auto">
-                        <p className="text-foreground/70 mb-8">
+                        <p className="text-muted-foreground mb-8">
                             {translate('media.emptyBody') ||
                                 'See the alpacas, the farm, and Wishfulfilling Weaving in our photo gallery.'}
                         </p>
@@ -156,6 +156,6 @@ export default async function MediaPage({ params }: { params: Promise<{ locale: 
                     "Add files to public/images/gallery/ and entries to lib/data/media.ts with status: 'live'. Empty state shows publicly until then."}
                 variant="banner"
             />
-        </main>
+        </>
     )
 }

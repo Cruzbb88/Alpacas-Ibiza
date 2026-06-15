@@ -90,7 +90,7 @@ export async function AdoptionTimeline({ locale, heading, subheading }: Adoption
         <h2 id="adoption-timeline-heading" className="text-2xl font-bold text-foreground mb-2">
           {headingText}
         </h2>
-        <p className="text-sm text-foreground/70">{subheadingText}</p>
+        <p className="text-sm text-muted-foreground">{subheadingText}</p>
       </header>
 
       {/* Mobile (≤md): vertical timeline with connecting line on the left */}
@@ -109,7 +109,7 @@ export async function AdoptionTimeline({ locale, heading, subheading }: Adoption
               </span>
               <h3 className="font-semibold text-foreground text-base leading-tight">{title}</h3>
               <p className="text-xs font-medium text-primary mt-0.5">{when}</p>
-              <p className="text-sm text-foreground/70 mt-1">{desc}</p>
+              <p className="text-sm text-muted-foreground mt-1">{desc}</p>
             </li>
           )
         })}
@@ -138,7 +138,7 @@ export async function AdoptionTimeline({ locale, heading, subheading }: Adoption
               </span>
               <h3 className="font-semibold text-foreground text-sm leading-tight">{title}</h3>
               <p className="text-xs font-medium text-primary mt-1">{when}</p>
-              <p className="text-xs text-foreground/70 mt-2 leading-relaxed">{desc}</p>
+              <p className="text-xs text-muted-foreground mt-2 leading-relaxed">{desc}</p>
             </li>
           )
         })}

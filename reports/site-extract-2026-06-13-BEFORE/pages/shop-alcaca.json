@@ -1,0 +1,83 @@
+{
+  "page": "shop-alcaca",
+  "path": "/en/shop/alcaca",
+  "console": [],
+  "failedReq": [],
+  "status": 200,
+  "title": "Alcaca Oro Negro | Alpaca Manure Fertilizer – Alpacas Ibiza",
+  "desc": "Alcaca Oro Negro is natural alpaca-manure fertilizer from Es Currals, Ibiza. Called \"black gold\" in the Andes — odorless, ready-to-use, available from 125 g mini-bags to bulk orders.",
+  "canonical": "https://alpacasibiza.com/en/shop/alcaca",
+  "robots": null,
+  "hreflang": [
+    "en",
+    "de",
+    "it",
+    "es",
+    "nl",
+    "fr",
+    "x-default"
+  ],
+  "og": {
+    "title": "Alcaca Oro Negro | Alpaca Manure Fertilizer – Alpacas Ibiza",
+    "image": "https://alpacasibiza.com/og?title=Meet+the+Herd&subtitle=Every+alpaca+has+a+name+and+a+story",
+    "locale": null
+  },
+  "twitter": "summary_large_image",
+  "schemaTypes": [
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "Organization",
+    "WebSite",
+    "SiteNavigationElement",
+    "ItemList",
+    "Product"
+  ],
+  "jsonldCount": 6,
+  "h1count": 1,
+  "headings": [
+    "H1:Alcaca Oro Negro",
+    "H2:Zwart Goud — Black Gold",
+    "H3:Mini Bag — 125 g",
+    "H3:Standard Bags — various sizes",
+    "H3:Bulk Order — hundreds of kg",
+    "H2:Why Alcaca Oro Negro?",
+    "H3:Alpacas Ibiza",
+    "H3:Explore",
+    "H3:Shop",
+    "H3:Contact"
+  ],
+  "imgTotal": 4,
+  "imgMissingAlt": 1,
+  "imgBroken": [],
+  "linkTotal": 79,
+  "linkExternalNoRel": 0,
+  "formFields": 0,
+  "unlabeledFields": 0,
+  "wordCount": 400,
+  "overflowPx": 0,
+  "axe": {
+    "byImpact": {
+      "critical": 1,
+      "serious": 1,
+      "moderate": 0,
+      "minor": 0
+    },
+    "total": 2,
+    "rules": [
+      {
+        "id": "button-name",
+        "impact": "critical",
+        "n": 1,
+        "help": "Buttons must have discernible text"
+      },
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "n": 19,
+        "help": "Elements must meet minimum color contrast ratio thresholds"
+      }
+    ]
+  }
+}

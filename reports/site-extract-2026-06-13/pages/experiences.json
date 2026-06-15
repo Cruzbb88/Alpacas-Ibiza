@@ -1,0 +1,79 @@
+{
+  "page": "experiences",
+  "path": "/en/experiences",
+  "console": [],
+  "failedReq": [],
+  "status": 200,
+  "title": "Experiences | Alpacas Ibiza — Tours, Yoga, Workshops, Weddings",
+  "desc": "Compare every Alpacas Ibiza experience: 90-minute farm tours, alpaca yoga, weaving workshops, weddings, romantic sunsets, family days, and corporate team building.",
+  "canonical": "https://alpacasibiza.com/en/experiences",
+  "robots": null,
+  "hreflang": [
+    "en",
+    "de",
+    "it",
+    "es",
+    "nl",
+    "fr",
+    "x-default"
+  ],
+  "og": {
+    "title": "Experiences — Alpacas Ibiza",
+    "image": "https://alpacasibiza.com/og?title=Meet+the+Herd&subtitle=Every+alpaca+has+a+name+and+a+story",
+    "locale": null
+  },
+  "twitter": "summary_large_image",
+  "schemaTypes": [
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "Organization",
+    "WebSite",
+    "SiteNavigationElement",
+    "BreadcrumbList"
+  ],
+  "jsonldCount": 5,
+  "h1count": 1,
+  "headings": [
+    "H1:Experiences at Alpacas Ibiza",
+    "H2:Compare every experience",
+    "H3:Alpaca Farm Tour",
+    "H3:Alpaca Yoga",
+    "H3:Workshops",
+    "H3:Romantic Sunset",
+    "H3:Family Farm Day",
+    "H3:Weddings & Photoshoots",
+    "H3:Corporate Team Building",
+    "H3:Alpacas Ibiza",
+    "H3:Explore",
+    "H3:Shop",
+    "H3:Contact"
+  ],
+  "imgTotal": 2,
+  "imgMissingAlt": 1,
+  "imgBroken": [],
+  "linkTotal": 84,
+  "linkExternalNoRel": 0,
+  "formFields": 0,
+  "unlabeledFields": 0,
+  "wordCount": 521,
+  "overflowPx": 0,
+  "axe": {
+    "byImpact": {
+      "critical": 0,
+      "serious": 1,
+      "moderate": 0,
+      "minor": 0
+    },
+    "total": 1,
+    "rules": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "n": 42,
+        "help": "Elements must meet minimum color contrast ratio thresholds"
+      }
+    ]
+  }
+}

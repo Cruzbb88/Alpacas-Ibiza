@@ -45,7 +45,7 @@ export function VirtualFarmTour() {
         <h2 className="text-3xl md:text-4xl font-bold text-foreground text-center mb-4">
           Virtual Farm Tour
         </h2>
-        <p className="text-center text-foreground/70 mb-10 max-w-xl mx-auto">
+        <p className="text-center text-muted-foreground mb-10 max-w-xl mx-auto">
           Explore Es Currals before you arrive — scroll through the key spots on the farm.
         </p>
 
@@ -77,7 +77,7 @@ export function VirtualFarmTour() {
                   <h3 className="font-semibold text-foreground text-lg leading-snug">
                     {stop.label}
                   </h3>
-                  <p className="text-sm text-foreground/70 leading-relaxed">
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     {stop.description}
                   </p>
                 </figcaption>

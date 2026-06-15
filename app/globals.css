@@ -7,6 +7,18 @@ body {
   font-family: var(--font-sans), Cabin, Arial, sans-serif;
 }
 
+/* NOTE — mobile drawer horizontal-scroll-leak (measured 332px on every page at
+   390px viewport, scripts/site-extract.mjs 2026-06-13): the closed mobile menu
+   drawer (components/header.tsx — `fixed right-0 translate-x-full`) transforms
+   off-screen-right and extends the document's scrollWidth. `overflow-x: clip`
+   on body AND html was tried and MEASURED ineffective — a `position: fixed`
+   element escapes ancestor/root clipping in Chrome. The correct fix restructures
+   the drawer: wrap the sliding panel in a viewport-fixed `overflow-x-hidden`
+   container and make the panel `absolute` inside it (so the wrapper, as the
+   panel's containing block, clips the off-canvas transform). That touches the
+   nav's focus-trap + slide animation, so it's left as a focused, mobile-tested
+   change rather than a blind site-wide edit. */
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
@@ -48,7 +60,7 @@ body {
     --muted-foreground: 96 10% 35%;
 
     /* Accent: olive-leaf green for CTAs + highlights (AA on white, distinct from primary) */
-    --accent: 78 42% 33%;
+    --accent: 78 42% 29%;
     --accent-foreground: 42 45% 97%;
 
     --destructive: 0 84.2% 60.2%;

@@ -364,7 +364,7 @@ export function ContactForm({ labels, defaultSubject }: ContactFormProps) {
                 >
                     {labels.successTitle || labels.success || 'Message sent!'}
                 </h3>
-                <p className="mt-2 text-foreground/70">
+                <p className="mt-2 text-muted-foreground">
                     {labels.successBody || "We'll reply within 48 hours."}
                 </p>
 
@@ -567,7 +567,7 @@ export function ContactForm({ labels, defaultSubject }: ContactFormProps) {
                     <p
                         id="contact-message-count"
                         className={`text-xs mt-1 ${
-                            messageCountInvalid ? 'text-red-600' : 'text-foreground/60'
+                            messageCountInvalid ? 'text-red-600' : 'text-muted-foreground'
                         }`}
                         aria-live="polite"
                     >

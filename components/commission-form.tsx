@@ -363,9 +363,9 @@ export function CommissionForm({ labels, locale = 'en', defaultProductInterest }
 
     const bucket = bucketFor(draft.budget)
     const inputClass =
-        'w-full px-4 py-2.5 rounded-lg border border-input bg-background text-foreground placeholder:text-foreground/50 focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent transition-colors aria-[invalid=true]:border-red-500 aria-[invalid=true]:focus:ring-red-500/30'
+        'w-full px-4 py-2.5 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent transition-colors aria-[invalid=true]:border-red-500 aria-[invalid=true]:focus:ring-red-500/30'
     const labelClass = 'block text-sm font-semibold text-foreground mb-1.5'
-    const helperClass = 'text-xs text-foreground/60 mt-1'
+    const helperClass = 'text-xs text-muted-foreground mt-1'
     const errorClass = 'text-xs text-red-600 mt-1.5'
 
     /* ----- form ----- */
@@ -433,7 +433,7 @@ export function CommissionForm({ labels, locale = 'en', defaultProductInterest }
                 <div>
                     <label htmlFor={`${inputId}-phone`} className={labelClass}>
                         {text('commission.form.phone', 'Phone')}
-                        <span className="ml-1 text-xs font-normal text-foreground/50">
+                        <span className="ml-1 text-xs font-normal text-muted-foreground">
                             ({text('commission.form.optional', 'optional')})
                         </span>
                     </label>
@@ -508,7 +508,7 @@ export function CommissionForm({ labels, locale = 'en', defaultProductInterest }
             <div>
                 <label htmlFor={`${inputId}-size`} className={labelClass}>
                     {text('commission.form.size', 'Approximate size')}
-                    <span className="ml-1 text-xs font-normal text-foreground/50">
+                    <span className="ml-1 text-xs font-normal text-muted-foreground">
                         ({text('commission.form.optional', 'optional')})
                     </span>
                 </label>
@@ -527,7 +527,7 @@ export function CommissionForm({ labels, locale = 'en', defaultProductInterest }
             <div>
                 <label htmlFor={`${inputId}-notes`} className={labelClass}>
                     {text('commission.form.notes', 'Color & material notes')}
-                    <span className="ml-1 text-xs font-normal text-foreground/50">
+                    <span className="ml-1 text-xs font-normal text-muted-foreground">
                         ({text('commission.form.optional', 'optional')})
                     </span>
                 </label>
@@ -554,7 +554,7 @@ export function CommissionForm({ labels, locale = 'en', defaultProductInterest }
                     ) : (
                         <span />
                     )}
-                    <p id={`${inputId}-notes-count`} className="text-xs text-foreground/50 mt-1">
+                    <p id={`${inputId}-notes-count`} className="text-xs text-muted-foreground mt-1">
                         {draft.notes.length}/{MAX_NOTES}
                     </p>
                 </div>
@@ -573,7 +573,7 @@ export function CommissionForm({ labels, locale = 'en', defaultProductInterest }
                 </p>
                 <div className="mt-3 flex items-baseline gap-3" aria-live="polite">
                     <strong className="text-2xl text-accent">{formatPriceForLocale(draft.budget, locale)}</strong>
-                    <span className="text-sm text-foreground/70">
+                    <span className="text-sm text-muted-foreground">
                         {text(bucket.labelKey, bucket.fallback)}
                     </span>
                 </div>
@@ -592,7 +592,7 @@ export function CommissionForm({ labels, locale = 'en', defaultProductInterest }
                     aria-valuetext={`${formatPriceForLocale(draft.budget, locale)}, ${text(bucket.labelKey, bucket.fallback)}`}
                     className="mt-3 w-full accent-accent cursor-pointer"
                 />
-                <div className="mt-1 flex justify-between text-[11px] text-foreground/50">
+                <div className="mt-1 flex justify-between text-[11px] text-muted-foreground">
                     <span>{formatPriceForLocale(100, locale)}</span>
                     <span>{formatPriceForLocale(1500, locale)}</span>
                     <span>{formatPriceForLocale(3000, locale)}</span>
@@ -679,7 +679,7 @@ export function CommissionForm({ labels, locale = 'en', defaultProductInterest }
             <div>
                 <label className={labelClass}>
                     {text('commission.form.references.label', 'Reference images')}
-                    <span className="ml-1 text-xs font-normal text-foreground/50">
+                    <span className="ml-1 text-xs font-normal text-muted-foreground">
                         ({text('commission.form.optional', 'optional')})
                     </span>
                 </label>
@@ -707,7 +707,7 @@ export function CommissionForm({ labels, locale = 'en', defaultProductInterest }
                                     type="button"
                                     onClick={() => removeReference(i)}
                                     aria-label={text('commission.form.references.remove', 'Remove reference')}
-                                    className="shrink-0 inline-flex h-10 w-10 items-center justify-center rounded-lg border border-input bg-background text-foreground/70 hover:border-red-400 hover:text-red-600 transition-colors"
+                                    className="shrink-0 inline-flex h-10 w-10 items-center justify-center rounded-lg border border-input bg-background text-muted-foreground hover:border-red-400 hover:text-red-600 transition-colors"
                                 >
                                     <span aria-hidden="true" className="text-lg leading-none">×</span>
                                 </button>
@@ -763,7 +763,7 @@ export function CommissionForm({ labels, locale = 'en', defaultProductInterest }
                     ) : (
                         <span />
                     )}
-                    <p id={`${inputId}-message-count`} className="text-xs text-foreground/50 mt-1">
+                    <p id={`${inputId}-message-count`} className="text-xs text-muted-foreground mt-1">
                         {draft.message.length}/{MAX_MESSAGE}
                     </p>
                 </div>

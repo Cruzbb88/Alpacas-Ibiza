@@ -1266,7 +1266,11 @@ async function sendMollieOwnerNotifyQuiet(
     const giftSenderName = meta?.gift_sender_name ?? null
     const giftMessage = meta?.gift_message ?? null
     const giftSendDate = meta?.gift_send_date ?? null
-    const isGift = giftRecipientEmail !== null && giftMessage !== null
+    // Recipient email alone signals gift intent — message is optional (the
+    // simplified gift form omits it). Mirrors the Stripe owner-notify path and
+    // the welcome-routing fix. Was `&& giftMessage !== null` — a straggler that
+    // mis-labelled message-less Mollie gifts to the owner (cb-006 2026-06-13).
+    const isGift = giftRecipientEmail !== null
 
     const tierLabel = tier === 'yearly' ? 'yearly €900' : 'monthly €75/mo'
     const prefix = isGift ? '[Adopt-a-Paca] 🎁 GIFT' : '[Adopt-a-Paca]'

@@ -76,7 +76,7 @@ export default async function CorporatePage({ params }: { params: Promise<{ loca
     ]
 
     return (
-        <main>
+        <>
             {/* JSON-LD: LocalBusiness + FAQPage */}
             {schemas.map((schema, i) => (
                 <script
@@ -105,10 +105,10 @@ export default async function CorporatePage({ params }: { params: Promise<{ loca
             {/* FairHarbor Booking Calendar - Above the Fold */}
             <section className="w-full py-12 md:py-16 px-4 bg-background">
                 <div className="max-w-4xl mx-auto text-center">
-                    <h2 className="text-2xl md:text-3xl font-bold text-foreground/70 mb-4">
+                    <h2 className="text-2xl md:text-3xl font-bold text-muted-foreground mb-4">
                         {translate('tours.bookingSection.title')}
                     </h2>
-                    <p className="text-foreground/60 mb-8 max-w-2xl mx-auto">
+                    <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
                         {translate('tours.bookingSection.subtitle')}
                     </p>
                     <div className="bg-white rounded-[16px] p-6 md:p-8 shadow-sm border border-secondary">
@@ -124,7 +124,7 @@ export default async function CorporatePage({ params }: { params: Promise<{ loca
                         <h2 id="corporate-quote-heading" className="text-3xl font-bold text-primary mb-3">
                             Get a custom quote
                         </h2>
-                        <p className="text-foreground/70">
+                        <p className="text-muted-foreground">
                             Every corporate retreat is bespoke. Share your details and we&apos;ll send a
                             tailored proposal within 48 hours.
                         </p>
@@ -139,7 +139,7 @@ export default async function CorporatePage({ params }: { params: Promise<{ loca
                     <h2 className="text-3xl font-bold text-primary mb-6">
                         {translate('corporate.whyTitle')}
                     </h2>
-                    <p className="text-lg text-foreground/70 mb-12">
+                    <p className="text-lg text-muted-foreground mb-12">
                         {translate('corporate.whyText')}
                     </p>
                 </div>
@@ -219,7 +219,7 @@ export default async function CorporatePage({ params }: { params: Promise<{ loca
                                     <h3 className="text-xl font-semibold text-primary mb-1">
                                         {translate(`corporate.itinerary.${item}.title`)}
                                     </h3>
-                                    <p className="text-foreground/70">
+                                    <p className="text-muted-foreground">
                                         {translate(`corporate.itinerary.${item}.desc`)}
                                     </p>
                                 </div>
@@ -252,6 +252,6 @@ export default async function CorporatePage({ params }: { params: Promise<{ loca
 
             {/* Adopt cross-sell */}
             <AdoptCrossSell locale={locale} />
-        </main>
+        </>
     )
 }

@@ -100,7 +100,7 @@ function AssetCard({ title, body, cta, asset, comingSoonLabel }: AssetCardProps)
           </span>
         )}
       </div>
-      <p className="text-sm text-foreground/70 flex-1">{body}</p>
+      <p className="text-sm text-muted-foreground flex-1">{body}</p>
       {asset.enabled && asset.url !== null ? (
         <span className="text-sm font-semibold text-primary">{cta} →</span>
       ) : (
@@ -179,7 +179,7 @@ export default async function PressKitPage({
   ] as const
 
   return (
-    <main>
+    <>
       {/* BreadcrumbList JSON-LD */}
       <PageBreadcrumbs
         locale={locale}
@@ -223,7 +223,7 @@ export default async function PressKitPage({
           <h2 className="text-2xl font-bold text-foreground mb-4">
             {translate('pressKit.inquiriesTitle') || 'Press Inquiries'}
           </h2>
-          <p className="text-foreground/70 mb-6">
+          <p className="text-muted-foreground mb-6">
             {translate('pressKit.inquiriesBody') ||
               'Journalists and media professionals are welcome to reach out for interviews, photography access, or editorial information.'}
           </p>
@@ -247,7 +247,7 @@ export default async function PressKitPage({
 
       {/* As featured in */}
       <PageSection bg="default" padding="sm" ariaLabel="As featured in">
-        <p className="text-center text-sm uppercase tracking-wider text-foreground/60 mb-4">
+        <p className="text-center text-sm uppercase tracking-wider text-muted-foreground mb-4">
           {translate('pressKit.featuredTitle') || 'As featured in'}
         </p>
         <PressLogos />
@@ -268,6 +268,6 @@ export default async function PressKitPage({
           'UNMAPPED: confirm press@ email alias (currently falling back to info@alpacasibiza.com)',
         ]}
       />
-    </main>
+    </>
   )
 }

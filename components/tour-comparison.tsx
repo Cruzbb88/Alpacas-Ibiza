@@ -46,7 +46,7 @@ export function TourComparison({ tours, title, subtitle }: TourComparisonProps) 
           </div>
         )}
         {subtitle && (
-          <p className="text-center text-foreground/70 mb-10 max-w-2xl mx-auto">{subtitle}</p>
+          <p className="text-center text-muted-foreground mb-10 max-w-2xl mx-auto">{subtitle}</p>
         )}
 
         {/* ── Mobile: stacked cards ─────────────────────────────────────── */}
@@ -61,25 +61,25 @@ export function TourComparison({ tours, title, subtitle }: TourComparisonProps) 
               <dl className="space-y-2 text-sm mb-4">
                 <div>
                   <dt className="font-semibold text-foreground inline">Duration: </dt>
-                  <dd className="inline text-foreground/70">{tour.duration}</dd>
+                  <dd className="inline text-muted-foreground">{tour.duration}</dd>
                 </div>
                 <div>
                   <dt className="font-semibold text-foreground inline">Price: </dt>
-                  <dd className="inline text-foreground/70">{tour.price}</dd>
+                  <dd className="inline text-muted-foreground">{tour.price}</dd>
                 </div>
                 <div>
                   <dt className="font-semibold text-foreground inline">Capacity: </dt>
-                  <dd className="inline text-foreground/70">{tour.capacity}</dd>
+                  <dd className="inline text-muted-foreground">{tour.capacity}</dd>
                 </div>
                 <div>
                   <dt className="font-semibold text-foreground inline">Best for: </dt>
-                  <dd className="inline text-foreground/70">{tour.bestFor}</dd>
+                  <dd className="inline text-muted-foreground">{tour.bestFor}</dd>
                 </div>
               </dl>
 
               <div className="text-sm mb-5">
                 <span className="font-semibold text-foreground">Includes:</span>
-                <ul className="list-disc list-inside mt-1 text-foreground/70 space-y-0.5">
+                <ul className="list-disc list-inside mt-1 text-muted-foreground space-y-0.5">
                   {tour.includes.map((item, idx) => (
                     <li key={idx}>{item}</li>
                   ))}
@@ -130,7 +130,7 @@ export function TourComparison({ tours, title, subtitle }: TourComparisonProps) 
                 {tours.map((tour) => (
                   <td
                     key={tour.product}
-                    className="p-4 border-b border-border text-foreground/70 text-sm"
+                    className="p-4 border-b border-border text-muted-foreground text-sm"
                   >
                     {tour.duration}
                   </td>
@@ -148,7 +148,7 @@ export function TourComparison({ tours, title, subtitle }: TourComparisonProps) 
                 {tours.map((tour) => (
                   <td
                     key={tour.product}
-                    className="p-4 border-b border-border text-foreground/70 text-sm"
+                    className="p-4 border-b border-border text-muted-foreground text-sm"
                   >
                     {tour.price}
                   </td>
@@ -166,7 +166,7 @@ export function TourComparison({ tours, title, subtitle }: TourComparisonProps) 
                 {tours.map((tour) => (
                   <td
                     key={tour.product}
-                    className="p-4 border-b border-border text-foreground/70 text-sm"
+                    className="p-4 border-b border-border text-muted-foreground text-sm"
                   >
                     {tour.capacity}
                   </td>
@@ -184,7 +184,7 @@ export function TourComparison({ tours, title, subtitle }: TourComparisonProps) 
                 {tours.map((tour) => (
                   <td
                     key={tour.product}
-                    className="p-4 border-b border-border text-foreground/70 text-sm"
+                    className="p-4 border-b border-border text-muted-foreground text-sm"
                   >
                     {tour.bestFor}
                   </td>
@@ -202,7 +202,7 @@ export function TourComparison({ tours, title, subtitle }: TourComparisonProps) 
                 {tours.map((tour) => (
                   <td
                     key={tour.product}
-                    className="p-4 border-b border-border text-foreground/70 align-top text-sm"
+                    className="p-4 border-b border-border text-muted-foreground align-top text-sm"
                   >
                     <ul className="list-disc list-inside space-y-0.5">
                       {tour.includes.map((item, idx) => (

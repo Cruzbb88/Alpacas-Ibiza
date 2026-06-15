@@ -44,7 +44,7 @@ export async function AdoptersWall({ heading, className }: AdoptersWallProps = {
       className={`w-full overflow-hidden ${className ?? ''}`}
     >
       {heading !== null && (
-        <p className="text-xs font-semibold uppercase tracking-wide text-foreground/50 mb-3 px-1">
+        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-3 px-1">
           {heading ?? 'Recent adopters'}
         </p>
       )}

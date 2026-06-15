@@ -41,7 +41,7 @@ export default async function MembershipPage({
           <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
             Annual Farm Pass
           </h1>
-          <p className="text-lg text-foreground/70 max-w-2xl mx-auto">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             One pass. Every visit. Unlimited access to the alpacas for an entire year.
           </p>
         </div>
@@ -76,7 +76,7 @@ export default async function MembershipPage({
               <div key={title} className="bg-card rounded-lg border border-border p-6 text-center">
                 <div className="text-4xl mb-3">{icon}</div>
                 <h3 className="text-lg font-bold text-foreground mb-2">{title}</h3>
-                <p className="text-sm text-foreground/70">{body}</p>
+                <p className="text-sm text-muted-foreground">{body}</p>
               </div>
             ))}
           </div>
@@ -92,7 +92,7 @@ export default async function MembershipPage({
             <p className="text-3xl font-bold text-primary mb-1">
               {`€${MEMBERSHIP_PRICE_EUR}`}
             </p>
-            <p className="text-sm text-foreground/60 mb-6">
+            <p className="text-sm text-muted-foreground mb-6">
               for a year of unlimited visits
             </p>
             {/* POST form (not a GET <Link>): /api/membership-checkout is POST-only
@@ -106,7 +106,7 @@ export default async function MembershipPage({
               </button>
             </form>
           </div>
-          <p className="mt-4 text-sm text-foreground/60 text-center">
+          <p className="mt-4 text-sm text-muted-foreground text-center">
             Secure checkout via Stripe. Pass activates immediately on purchase.
           </p>
         </div>
@@ -137,7 +137,7 @@ export default async function MembershipPage({
             ).map(({ q, a }) => (
               <div key={q} className="bg-card rounded-lg border border-border p-5">
                 <p className="font-semibold text-foreground mb-1">{q}</p>
-                <p className="text-sm text-foreground/70">{a}</p>
+                <p className="text-sm text-muted-foreground">{a}</p>
               </div>
             ))}
           </div>

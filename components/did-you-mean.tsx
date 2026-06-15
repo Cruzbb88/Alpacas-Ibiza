@@ -43,7 +43,7 @@ export function DidYouMean() {
 
   return (
     <div className="w-full max-w-4xl">
-      <h2 className="text-sm font-semibold text-foreground/50 uppercase tracking-wider mb-6 text-center">
+      <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-6 text-center">
         {tr('notFound.suggestionsTitle')}
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -61,7 +61,7 @@ export function DidYouMean() {
                 {page.title}
                 <ArrowRight className="w-3.5 h-3.5 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
               </h3>
-              <p className="text-sm text-foreground/60 mt-1">{page.description}</p>
+              <p className="text-sm text-muted-foreground mt-1">{page.description}</p>
             </div>
           </Link>
         ))}

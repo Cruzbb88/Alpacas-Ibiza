@@ -106,7 +106,7 @@ export default async function ImpressumPage({ params }: { params: Promise<{ loca
             <Hero title={translate('impressum.title')} subtitle={translate('impressum.intro')} />
 
             <section className="w-full py-16 md:py-24 px-4 bg-background">
-                <div className="max-w-4xl mx-auto prose prose-lg max-w-none text-foreground/70">
+                <div className="max-w-4xl mx-auto prose prose-lg max-w-none text-muted-foreground">
                     <p>{translate('impressum.intro')}</p>
 
                     <dl className="not-prose grid grid-cols-1 sm:grid-cols-3 gap-x-6 gap-y-4 my-8">
@@ -166,7 +166,7 @@ export default async function ImpressumPage({ params }: { params: Promise<{ loca
                         </a>
                     </p>
 
-                    <p className="text-sm text-foreground/60 mt-8">
+                    <p className="text-sm text-muted-foreground mt-8">
                         {translate('impressum.lastUpdated')}
                     </p>
                 </div>

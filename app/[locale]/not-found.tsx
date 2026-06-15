@@ -28,7 +28,7 @@ export default async function LocaleNotFound() {
         <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4 font-display">
           {tr('notFound.title')}
         </h1>
-        <p className="text-lg text-foreground/70 max-w-md mx-auto">
+        <p className="text-lg text-muted-foreground max-w-md mx-auto">
           {tr('notFound.subtitle')}
         </p>
       </div>
@@ -38,7 +38,7 @@ export default async function LocaleNotFound() {
 
       {/* CTA */}
       <div className="mt-12 text-center">
-        <p className="text-sm text-foreground/50 mb-4">{tr('notFound.ctaText')}</p>
+        <p className="text-sm text-muted-foreground mb-4">{tr('notFound.ctaText')}</p>
         <a
           href="https://fareharbor.com/embeds/book/alpacasibiza/?full-items=yes"
           target="_blank"

@@ -54,7 +54,7 @@ export default function RootError({
       <h1 className="text-3xl font-bold text-foreground mb-3 font-display">
         {tr('error.title')}
       </h1>
-      <p className="text-foreground/70 max-w-md mb-8 leading-relaxed">
+      <p className="text-muted-foreground max-w-md mb-8 leading-relaxed">
         {tr('error.subtitle')}
       </p>
       <div className="flex gap-3 flex-wrap justify-center">

@@ -72,7 +72,7 @@ export default async function AdminIndex() {
       <div className="flex items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-bold mb-1">Admin</h1>
-          <p className="text-sm text-foreground/60">
+          <p className="text-sm text-muted-foreground">
             Signed in as <span className="font-medium">{session.user?.name ?? 'admin'}</span> — 8-hour session.
           </p>
         </div>
@@ -81,7 +81,7 @@ export default async function AdminIndex() {
 
       {/* Today card — primary entry point for daily ops on mobile */}
       <section className="mb-10">
-        <h2 className="text-xs font-semibold uppercase tracking-wider text-foreground/50 mb-4">
+        <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">
           Daily
         </h2>
         <Link
@@ -89,7 +89,7 @@ export default async function AdminIndex() {
           className="block rounded-xl border-2 border-primary bg-primary/5 p-5 hover:bg-primary/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 min-h-[56px]"
         >
           <div className="font-bold text-lg text-primary">Today&apos;s ops digest</div>
-          <div className="text-sm text-foreground/60 mt-1">
+          <div className="text-sm text-muted-foreground mt-1">
             Tours, adopters, at-risk donors, quick actions — tap here first every morning.
           </div>
         </Link>
@@ -98,7 +98,7 @@ export default async function AdminIndex() {
       <nav className="space-y-10">
         {grouped.map((group) => (
           <section key={group.category}>
-            <h2 className="text-xs font-semibold uppercase tracking-wider text-foreground/50 mb-4">
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">
               {CATEGORY_LABELS[group.category]}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -109,7 +109,7 @@ export default async function AdminIndex() {
                   className="block rounded-lg border border-border bg-card p-4 hover:border-primary/40 hover:bg-primary/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
                 >
                   <div className="font-semibold text-foreground">{link.title}</div>
-                  <div className="text-xs text-foreground/60 mt-1">{link.description}</div>
+                  <div className="text-xs text-muted-foreground mt-1">{link.description}</div>
                 </Link>
               ))}
             </div>

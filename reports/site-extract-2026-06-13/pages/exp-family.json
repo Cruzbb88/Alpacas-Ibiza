@@ -1,0 +1,89 @@
+{
+  "page": "exp-family",
+  "path": "/en/experiences/family-farm-days",
+  "console": [
+    "pageerror: Cannot read properties of null (reading 'style')",
+    "pageerror: Cannot read properties of null (reading 'style')"
+  ],
+  "failedReq": [],
+  "status": 200,
+  "title": "Family Farm Days | Alpacas Ibiza - Kid-Friendly Alpaca Experience",
+  "desc": "Safe, educational family fun at Ibiza's first alpaca farm. Kids feed alpacas, learn about sustainability, and enjoy nature in Santa Eularia. Ages 0+. Book now!",
+  "canonical": "https://alpacasibiza.com/en/experiences/family-farm-days",
+  "robots": null,
+  "hreflang": [
+    "en",
+    "de",
+    "it",
+    "es",
+    "nl",
+    "fr",
+    "x-default"
+  ],
+  "og": {
+    "title": "Family Farm Days | Alpacas Ibiza",
+    "image": "https://alpacasibiza.com/images/gallery/herd-chicas.jpg",
+    "locale": null
+  },
+  "twitter": "summary_large_image",
+  "schemaTypes": [
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "Organization",
+    "WebSite",
+    "SiteNavigationElement",
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "FAQPage"
+  ],
+  "jsonldCount": 6,
+  "h1count": 1,
+  "headings": [
+    "H1:Family Farm Days",
+    "H2:Book Your Visit",
+    "H2:Education Meets Cuddliness",
+    "H2:Safety First",
+    "H3:Gentle Animals",
+    "H3:Stroller Friendly",
+    "H3:Hygiene",
+    "H3:Refreshments",
+    "H3:What is the minimum age?",
+    "H3:Are the alpacas safe?",
+    "H3:How long is the visit?",
+    "H2:Coming back often?",
+    "H3:Alpacas Ibiza",
+    "H3:Explore",
+    "H3:Shop",
+    "H3:Contact"
+  ],
+  "imgTotal": 7,
+  "imgMissingAlt": 0,
+  "imgBroken": [],
+  "linkTotal": 78,
+  "linkExternalNoRel": 0,
+  "formFields": 0,
+  "unlabeledFields": 0,
+  "wordCount": 329,
+  "overflowPx": 0,
+  "axe": {
+    "byImpact": {
+      "critical": 0,
+      "serious": 1,
+      "moderate": 0,
+      "minor": 0
+    },
+    "total": 1,
+    "rules": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "n": 22,
+        "help": "Elements must meet minimum color contrast ratio thresholds"
+      }
+    ]
+  }
+}

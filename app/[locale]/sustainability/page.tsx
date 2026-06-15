@@ -99,7 +99,7 @@ export default async function SustainabilityPage({ params }: { params: Promise<{
     ]
 
     return (
-        <main>
+        <>
             {/* JSON-LD: LocalBusiness */}
             <script
                 type="application/ld+json"
@@ -125,7 +125,7 @@ export default async function SustainabilityPage({ params }: { params: Promise<{
                     {cards.map((card) => (
                         <div key={card.key} className="bg-card rounded-lg border border-border p-6">
                             <h2 className="text-xl font-bold text-foreground mb-3">{card.title}</h2>
-                            <p className="text-sm text-foreground/70">{card.body}</p>
+                            <p className="text-sm text-muted-foreground">{card.body}</p>
                             {/* Dev/staging only: show UNMAPPED sentinel so owner knows what needs verification */}
                             {process.env.NODE_ENV !== 'production' && card.unmapped && (
                                 <p className="mt-3 text-xs font-mono text-amber-700 bg-amber-50 border border-amber-200 rounded px-2 py-1">
@@ -142,7 +142,7 @@ export default async function SustainabilityPage({ params }: { params: Promise<{
                 <h2 className="text-2xl font-bold text-foreground mb-2 text-center">
                     {translate('sustainability.welfareTitle')}
                 </h2>
-                <p className="text-center text-foreground/70 mb-8 max-w-2xl mx-auto text-sm">
+                <p className="text-center text-muted-foreground mb-8 max-w-2xl mx-auto text-sm">
                     Each of our {ALPACAS.length} alpacas has a name and a personality. They are individuals, not livestock.
                 </p>
                 <div className="flex flex-wrap justify-center gap-2">
@@ -198,6 +198,6 @@ export default async function SustainabilityPage({ params }: { params: Promise<{
                     </Link>
                 </div>
             </PageSection>
-        </main>
+        </>
     )
 }

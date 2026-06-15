@@ -86,7 +86,7 @@ export function SkeinGiftToggle({ locale }: SkeinGiftToggleProps) {
             <p className="font-semibold text-foreground text-sm sm:text-base">
               {translate('skein.gift.toggle')}
             </p>
-            <p className="text-xs text-foreground/60 mt-0.5">
+            <p className="text-xs text-muted-foreground mt-0.5">
               {isGift
                 ? translate('skein.gift.activeBadge', { name: giftName || 'recipient' })
                 : translate('skein.gift.expandHint')}
@@ -102,14 +102,14 @@ export function SkeinGiftToggle({ locale }: SkeinGiftToggleProps) {
       </summary>
 
       <div className="px-5 pb-5 pt-1 space-y-4">
-        <p className="text-sm text-foreground/70">
+        <p className="text-sm text-muted-foreground">
           {translate('skein.gift.subheading')}
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* Recipient name — required */}
           <label className="block">
-            <span className="block text-xs font-semibold uppercase tracking-wide text-foreground/60 mb-1">
+            <span className="block text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">
               {translate('skein.gift.recipientName')}
               <span aria-hidden="true" className="text-primary"> *</span>
             </span>
@@ -125,7 +125,7 @@ export function SkeinGiftToggle({ locale }: SkeinGiftToggleProps) {
 
           {/* Recipient email — optional */}
           <label className="block">
-            <span className="block text-xs font-semibold uppercase tracking-wide text-foreground/60 mb-1">
+            <span className="block text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">
               {translate('skein.gift.recipientEmail')}
             </span>
             <input
@@ -139,7 +139,7 @@ export function SkeinGiftToggle({ locale }: SkeinGiftToggleProps) {
 
           {/* Personal message — optional, full width */}
           <label className="block sm:col-span-2">
-            <span className="block text-xs font-semibold uppercase tracking-wide text-foreground/60 mb-1">
+            <span className="block text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">
               {translate('skein.gift.message')}
             </span>
             <textarea
@@ -154,13 +154,13 @@ export function SkeinGiftToggle({ locale }: SkeinGiftToggleProps) {
 
         {isGift && (
           <div className="flex items-center justify-between pt-2">
-            <p className="text-xs text-foreground/60" role="status" aria-live="polite">
+            <p className="text-xs text-muted-foreground" role="status" aria-live="polite">
               {translate('skein.gift.confirmation')}
             </p>
             <button
               type="button"
               onClick={resetGift}
-              className="text-xs text-foreground/60 hover:text-foreground underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 rounded"
+              className="text-xs text-muted-foreground hover:text-foreground underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 rounded"
             >
               {translate('skein.gift.reset')}
             </button>

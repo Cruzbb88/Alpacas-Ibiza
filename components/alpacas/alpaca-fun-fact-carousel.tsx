@@ -99,7 +99,7 @@ export function AlpacaFunFactCarousel({
       <header className="text-center mb-4">
         <h2
           id="alpaca-fun-fact-heading"
-          className="text-xs font-semibold uppercase tracking-widest text-foreground/60"
+          className="text-xs font-semibold uppercase tracking-widest text-muted-foreground"
         >
           {headingText}
         </h2>

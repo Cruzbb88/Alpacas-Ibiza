@@ -43,7 +43,7 @@ function EnvVar({ name, hint }: { name: string; hint?: string }) {
   return (
     <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 mt-1">
       <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">{name}</code>
-      {hint && <span className="text-xs text-foreground/60">{hint}</span>}
+      {hint && <span className="text-xs text-muted-foreground">{hint}</span>}
     </div>
   )
 }
@@ -78,7 +78,7 @@ function PhaseHeading({ number, title, description }: { number: string; title: s
         </span>
         <h2 className="text-lg font-bold text-foreground">{title}</h2>
       </div>
-      <p className="text-sm text-foreground/60">{description}</p>
+      <p className="text-sm text-muted-foreground">{description}</p>
       <hr className="mt-3 border-border" />
     </div>
   )
@@ -107,7 +107,7 @@ export default async function AdminSetupPage() {
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-foreground">Launch setup wizard</h1>
-        <p className="mt-2 text-sm text-foreground/60">
+        <p className="mt-2 text-sm text-muted-foreground">
           Work top-to-bottom. Complete every step in Phase 1 before going live.
           Phases 4–5 are optional.
         </p>
@@ -264,7 +264,7 @@ export default async function AdminSetupPage() {
           </ol>
         }
         whereToPaste={
-          <p className="text-sm text-foreground/60">
+          <p className="text-sm text-muted-foreground">
             DNS changes only — no env var needed. Verify via Resend dashboard (all 3 records green).
           </p>
         }
@@ -533,7 +533,7 @@ export default async function AdminSetupPage() {
         <a href="/admin/launch-readiness" className="text-primary underline hover:opacity-80">
           Launch readiness checklist →
         </a>
-        <a href="/admin" className="text-foreground/60 hover:text-foreground">
+        <a href="/admin" className="text-muted-foreground hover:text-foreground">
           ← Back to admin
         </a>
       </div>

@@ -32,11 +32,11 @@ export default async function MembershipThankYouPage({
         <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
           Welcome to the farm
         </h1>
-        <p className="text-lg text-foreground/70 mb-3">
+        <p className="text-lg text-muted-foreground mb-3">
           Your Annual Farm Pass is confirmed. A receipt and your pass details are
           on their way to your inbox.
         </p>
-        <p className="text-sm text-foreground/60 mb-8">
+        <p className="text-sm text-muted-foreground mb-8">
           Show your confirmation email at the gate on arrival — no booking needed.
           Your year of unlimited visits starts today.
         </p>

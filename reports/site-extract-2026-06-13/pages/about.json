@@ -1,0 +1,80 @@
+{
+  "page": "about",
+  "path": "/en/about",
+  "console": [],
+  "failedReq": [],
+  "status": 200,
+  "title": "About Alpacas Ibiza | Es Currals Farm – Bart & San",
+  "desc": "Meet the team and story behind Es Currals, Ibiza's first alpaca farm. Belgian founders Bart & San, the Wishfulfilling Weaving studio, and 14 alpacas.",
+  "canonical": "https://alpacasibiza.com/en/about",
+  "robots": null,
+  "hreflang": [
+    "en",
+    "de",
+    "it",
+    "es",
+    "nl",
+    "fr",
+    "x-default"
+  ],
+  "og": {
+    "title": "About Alpacas Ibiza | Es Currals Farm – Bart & San",
+    "image": "https://alpacasibiza.com/og?title=Our+Story&subtitle=Alpacas+Ibiza+%C2%B7+Es+Currals",
+    "locale": null
+  },
+  "twitter": "summary_large_image",
+  "schemaTypes": [
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "Organization",
+    "WebSite",
+    "SiteNavigationElement",
+    "Person",
+    "Person",
+    "BreadcrumbList"
+  ],
+  "jsonldCount": 6,
+  "h1count": 1,
+  "headings": [
+    "H1:About Alpacas Ibiza",
+    "H2:Our Story",
+    "H2:Our Values",
+    "H3:Animal Welfare",
+    "H3:Sustainability",
+    "H3:Artisanal Quality",
+    "H3:Community",
+    "H2:Wishfulfilling Weaving",
+    "H3:Alpacas Ibiza",
+    "H3:Explore",
+    "H3:Shop",
+    "H3:Contact"
+  ],
+  "imgTotal": 2,
+  "imgMissingAlt": 1,
+  "imgBroken": [],
+  "linkTotal": 77,
+  "linkExternalNoRel": 0,
+  "formFields": 0,
+  "unlabeledFields": 0,
+  "wordCount": 521,
+  "overflowPx": 0,
+  "axe": {
+    "byImpact": {
+      "critical": 0,
+      "serious": 1,
+      "moderate": 0,
+      "minor": 0
+    },
+    "total": 1,
+    "rules": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "n": 20,
+        "help": "Elements must meet minimum color contrast ratio thresholds"
+      }
+    ]
+  }
+}

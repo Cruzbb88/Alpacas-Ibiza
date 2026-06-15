@@ -1,0 +1,83 @@
+{
+  "page": "alpaca-detail",
+  "path": "/en/alpacas/lewis",
+  "console": [
+    "%c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px",
+    "%c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px"
+  ],
+  "failedReq": [],
+  "status": 200,
+  "title": "alpacas.detailTitle",
+  "desc": "alpacas.detailDescriptionWithPersonality",
+  "canonical": "https://alpacasibiza.com/en/alpacas/lewis",
+  "robots": "index, follow",
+  "hreflang": [
+    "en",
+    "de",
+    "it",
+    "es",
+    "nl",
+    "fr",
+    "x-default"
+  ],
+  "og": {
+    "title": "alpacas.detailTitle",
+    "image": "http://localhost:3000/en/alpacas/lewis/opengraph-image?e154acefadb4189c",
+    "locale": "en"
+  },
+  "twitter": "summary_large_image",
+  "schemaTypes": [
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "Organization",
+    "WebSite",
+    "SiteNavigationElement",
+    "AboutPage",
+    "Animal",
+    "BreadcrumbList"
+  ],
+  "jsonldCount": 7,
+  "h1count": 1,
+  "headings": [
+    "H1:Lewis",
+    "H2:Meet the rest of the herd",
+    "H3:Barbarella",
+    "H3:Avalon",
+    "H3:Bardot",
+    "H3:Chet",
+    "H3:Dusty",
+    "H3:Fela",
+    "H3:Alpacas Ibiza",
+    "H3:Explore",
+    "H3:Shop",
+    "H3:Contact"
+  ],
+  "imgTotal": 8,
+  "imgMissingAlt": 0,
+  "imgBroken": [],
+  "linkTotal": 86,
+  "linkExternalNoRel": 0,
+  "formFields": 0,
+  "unlabeledFields": 0,
+  "wordCount": 767,
+  "overflowPx": 0,
+  "axe": {
+    "byImpact": {
+      "critical": 0,
+      "serious": 1,
+      "moderate": 0,
+      "minor": 0
+    },
+    "total": 1,
+    "rules": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "n": 32,
+        "help": "Elements must meet minimum color contrast ratio thresholds"
+      }
+    ]
+  }
+}

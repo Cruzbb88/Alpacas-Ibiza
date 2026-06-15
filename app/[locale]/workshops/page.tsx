@@ -152,7 +152,7 @@ export default async function WorkshopsPage({
     ]
 
     return (
-        <main>
+        <>
             {/* JSON-LD: LocalBusiness + FAQPage + Course */}
             {schemas.map((schema, i) => (
                 <script
@@ -255,7 +255,7 @@ export default async function WorkshopsPage({
                     <h2 className="text-2xl font-bold mb-4 text-primary">
                         {translate('workshops.san.title')}
                     </h2>
-                    <p className="text-foreground/70 leading-relaxed">
+                    <p className="text-muted-foreground leading-relaxed">
                         {translate('workshops.san.body')}
                     </p>
                 </div>
@@ -267,7 +267,7 @@ export default async function WorkshopsPage({
                     <h2 className="text-2xl font-bold mb-4 text-primary">
                         {translate('workshops.booking.title')}
                     </h2>
-                    <p className="text-foreground/70 mb-6 leading-relaxed">
+                    <p className="text-muted-foreground mb-6 leading-relaxed">
                         {translate('workshops.booking.body')}
                     </p>
                     <Link
@@ -286,6 +286,6 @@ export default async function WorkshopsPage({
 
             {/* Adopt cross-sell */}
             <AdoptCrossSell locale={locale} />
-        </main>
+        </>
     )
 }

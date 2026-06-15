@@ -1,0 +1,96 @@
+{
+  "page": "adopt-nl",
+  "path": "/nl/adopt",
+  "console": [
+    "%c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px"
+  ],
+  "failedReq": [],
+  "status": 200,
+  "title": "Adopt an Alpaca | Alpacas Ibiza – Es Currals",
+  "desc": "Support Ibiza's first alpaca farm with a monthly or yearly adoption. €75/month or €900/year — includes farm tours, certificate, fertilizer, photoshoot, and more.",
+  "canonical": "https://alpacasibiza.com/nl/adopt",
+  "robots": null,
+  "hreflang": [
+    "en",
+    "de",
+    "it",
+    "es",
+    "nl",
+    "fr",
+    "x-default"
+  ],
+  "og": {
+    "title": "Adopt an Alpaca | Alpacas Ibiza",
+    "image": "https://alpacasibiza.com/og?title=Adopt+an+Alpaca&subtitle=Support+the+herd+%C2%B7+Alpacas+Ibiza",
+    "locale": null
+  },
+  "twitter": "summary_large_image",
+  "schemaTypes": [
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "Organization",
+    "WebSite",
+    "SiteNavigationElement",
+    "Product",
+    "Service",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "jsonldCount": 8,
+  "h1count": 1,
+  "headings": [
+    "H1:Adopteer een Alpaca",
+    "H2:De kudde in cijfers",
+    "H2:Vind jouw alpacamatch",
+    "H3:How would you describe your ideal evenin",
+    "H2:Kies jouw alpaca",
+    "H2:Vergelijk plannen",
+    "H2:Kies je adoptieplan",
+    "H2:Wat je ontvangt",
+    "H3:Adoptiecertificaat",
+    "H3:Boerderijbezoeken",
+    "H3:Welkomstpakket",
+    "H3:Professionele fotosessie",
+    "H3:Alcaca mestverzending",
+    "H3:Adoptiecertificaat",
+    "H3:Boerderijbezoeken",
+    "H3:Welkomstpakket",
+    "H3:Professionele fotosessie",
+    "H3:Alcaca mestverzending",
+    "H2:Wat is inbegrepen",
+    "H2:Jouw adoptiecertificaat",
+    "H2:Adopteer nu",
+    "H2:Een veilige, eenvoudige adoptie",
+    "H2:What adopters say",
+    "H2:Vragen over adoptie",
+    "H3:Hoe lang duurt de adoptie?"
+  ],
+  "imgTotal": 16,
+  "imgMissingAlt": 1,
+  "imgBroken": [],
+  "linkTotal": 95,
+  "linkExternalNoRel": 0,
+  "formFields": 6,
+  "unlabeledFields": 0,
+  "wordCount": 1259,
+  "overflowPx": 35,
+  "axe": {
+    "byImpact": {
+      "critical": 0,
+      "serious": 1,
+      "moderate": 0,
+      "minor": 0
+    },
+    "total": 1,
+    "rules": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "n": 49,
+        "help": "Elements must meet minimum color contrast ratio thresholds"
+      }
+    ]
+  }
+}

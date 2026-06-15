@@ -1,0 +1,88 @@
+{
+  "page": "cookies",
+  "path": "/en/cookies",
+  "console": [],
+  "failedReq": [],
+  "status": 200,
+  "title": "Cookie Policy",
+  "desc": "Es Currals Alpacas Ibiza is the very first alpaca farm in Ibiza and is located in the rural north of the island, on an authentic finca in a beautiful natural setting. Here is also the beating heart of Wishfulfilling Weaving, the artisanal weaving studio where, using mainly alpaca wool exclusive scarves are woven by hand on a traditional wooden loom.",
+  "canonical": "https://alpacasibiza.com/en/cookies",
+  "robots": null,
+  "hreflang": [
+    "en",
+    "de",
+    "it",
+    "es",
+    "nl",
+    "fr",
+    "x-default"
+  ],
+  "og": {
+    "title": "Cookie Policy",
+    "image": "https://alpacasibiza.com/og",
+    "locale": "en"
+  },
+  "twitter": "summary_large_image",
+  "schemaTypes": [
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "Organization",
+    "WebSite",
+    "SiteNavigationElement"
+  ],
+  "jsonldCount": 4,
+  "h1count": 2,
+  "headings": [
+    "H1:Cookie Policy",
+    "H1:Cookie Policy",
+    "H2:1. About this document",
+    "H2:2. What are cookies?",
+    "H2:3. Categories of cookies on this site",
+    "H3:Strictly necessary",
+    "H3:Functionality",
+    "H3:Analytics (only with consent)",
+    "H3:Marketing",
+    "H2:4. Third-party cookies",
+    "H2:5. How to manage your cookie preferences",
+    "H2:6. Changes to this policy",
+    "H2:7. Contact",
+    "H3:Alpacas Ibiza",
+    "H3:Explore",
+    "H3:Shop",
+    "H3:Contact"
+  ],
+  "imgTotal": 1,
+  "imgMissingAlt": 0,
+  "imgBroken": [],
+  "linkTotal": 84,
+  "linkExternalNoRel": 0,
+  "formFields": 0,
+  "unlabeledFields": 0,
+  "wordCount": 812,
+  "overflowPx": 0,
+  "axe": {
+    "byImpact": {
+      "critical": 1,
+      "serious": 1,
+      "moderate": 0,
+      "minor": 0
+    },
+    "total": 2,
+    "rules": [
+      {
+        "id": "button-name",
+        "impact": "critical",
+        "n": 1,
+        "help": "Buttons must have discernible text"
+      },
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "n": 18,
+        "help": "Elements must meet minimum color contrast ratio thresholds"
+      }
+    ]
+  }
+}

@@ -222,7 +222,7 @@ export default async function Home({
   ]
 
   return (
-    <main>
+    <>
       {/* ── JSON-LD structured data ── */}
       <script
         type="application/ld+json"
@@ -303,7 +303,7 @@ export default async function Home({
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
               {translate('features.sectionTitle')}
             </h2>
-            <p className="text-foreground/70 max-w-2xl mx-auto">
+            <p className="text-muted-foreground max-w-2xl mx-auto">
               {translate('features.sectionSubtitle')}
             </p>
           </div>
@@ -331,7 +331,7 @@ export default async function Home({
             <h2 className="text-xl font-bold text-foreground mb-2">
               {translate('homepage.skeinCallout.headline')}
             </h2>
-            <p className="text-sm text-foreground/70 mb-4">
+            <p className="text-sm text-muted-foreground mb-4">
               {translate('homepage.skeinCallout.body')}
             </p>
             <a
@@ -354,7 +354,7 @@ export default async function Home({
             <h2 className="text-xl font-bold text-foreground mb-2">
               Annual Farm Pass — Unlimited Visits
             </h2>
-            <p className="text-sm text-foreground/70 mb-4">
+            <p className="text-sm text-muted-foreground mb-4">
               {`Visit as often as you like for a full year. One pass, every visit — €${MEMBERSHIP_PRICE_EUR}.`}
             </p>
             <a
@@ -376,7 +376,7 @@ export default async function Home({
             <h2 className="text-xl font-bold text-foreground mb-2">
               Become a Herd Family Member
             </h2>
-            <p className="text-sm text-foreground/70 mb-4">
+            <p className="text-sm text-muted-foreground mb-4">
               {`Monthly alpaca adoption — €${ADOPT_PRICE_MONTHLY_EUR}/month, cancel any time.`}
             </p>
             <a
@@ -404,7 +404,7 @@ export default async function Home({
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
               {translate('guestStories.title')}
             </h2>
-            <p className="text-foreground/70 max-w-2xl mx-auto">
+            <p className="text-muted-foreground max-w-2xl mx-auto">
               {translate('guestStories.subtitle')}
             </p>
           </div>
@@ -445,7 +445,7 @@ export default async function Home({
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
             {translate('cta.title')}
           </h2>
-          <p className="text-lg text-foreground/70 mb-8 max-w-2xl mx-auto">
+          <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
             {translate('cta.subtitle')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -474,7 +474,7 @@ export default async function Home({
             <h3 className="text-xl font-semibold text-foreground mb-2">
               {translate('newsletter.title')}
             </h3>
-            <p className="text-sm text-foreground/70">
+            <p className="text-sm text-muted-foreground">
               {translate('newsletter.subtitle')}
             </p>
           </div>
@@ -483,6 +483,6 @@ export default async function Home({
           <NewsletterForm locale={locale} />
         </div>
       </section>
-    </main>
+    </>
   )
 }

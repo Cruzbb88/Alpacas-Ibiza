@@ -1,0 +1,102 @@
+{
+  "page": "adopt",
+  "path": "/en/adopt",
+  "console": [
+    "%c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px"
+  ],
+  "failedReq": [],
+  "status": 200,
+  "title": "Adopt an Alpaca | Alpacas Ibiza – Es Currals",
+  "desc": "Support Ibiza's first alpaca farm with a monthly or yearly adoption. €75/month or €900/year — includes farm tours, certificate, fertilizer, photoshoot, and more.",
+  "canonical": "https://alpacasibiza.com/en/adopt",
+  "robots": null,
+  "hreflang": [
+    "en",
+    "de",
+    "it",
+    "es",
+    "nl",
+    "fr",
+    "x-default"
+  ],
+  "og": {
+    "title": "Adopt an Alpaca | Alpacas Ibiza",
+    "image": "https://alpacasibiza.com/og?title=Adopt+an+Alpaca&subtitle=Support+the+herd+%C2%B7+Alpacas+Ibiza",
+    "locale": null
+  },
+  "twitter": "summary_large_image",
+  "schemaTypes": [
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "Organization",
+    "WebSite",
+    "SiteNavigationElement",
+    "Product",
+    "Service",
+    "BreadcrumbList",
+    "FAQPage"
+  ],
+  "jsonldCount": 8,
+  "h1count": 1,
+  "headings": [
+    "H1:Adopt an Alpaca",
+    "H2:The herd, by the numbers",
+    "H2:Find your alpaca match",
+    "H3:How would you describe your ideal evenin",
+    "H2:Pick your alpaca",
+    "H2:Compare plans",
+    "H2:Choose your adoption plan",
+    "H2:What you'll receive",
+    "H3:Adoption certificate",
+    "H3:Farm tours",
+    "H3:Welcome gift bundle",
+    "H3:Professional photoshoot",
+    "H3:Alcaca fibre shipping",
+    "H3:Adoption certificate",
+    "H3:Farm tours",
+    "H3:Welcome gift bundle",
+    "H3:Professional photoshoot",
+    "H3:Alcaca fibre shipping",
+    "H2:What's included",
+    "H2:Your adoption certificate",
+    "H2:Adopt now",
+    "H2:A safe, simple adoption",
+    "H2:What adopters say",
+    "H2:Adoption questions",
+    "H3:How long does the adoption last?"
+  ],
+  "imgTotal": 16,
+  "imgMissingAlt": 1,
+  "imgBroken": [],
+  "linkTotal": 95,
+  "linkExternalNoRel": 0,
+  "formFields": 6,
+  "unlabeledFields": 0,
+  "wordCount": 1286,
+  "overflowPx": 0,
+  "axe": {
+    "byImpact": {
+      "critical": 1,
+      "serious": 1,
+      "moderate": 0,
+      "minor": 0
+    },
+    "total": 2,
+    "rules": [
+      {
+        "id": "button-name",
+        "impact": "critical",
+        "n": 1,
+        "help": "Buttons must have discernible text"
+      },
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "n": 46,
+        "help": "Elements must meet minimum color contrast ratio thresholds"
+      }
+    ]
+  }
+}

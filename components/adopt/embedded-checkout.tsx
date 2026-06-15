@@ -180,7 +180,7 @@ export function EmbeddedCheckout(props: EmbeddedCheckoutProps) {
 
   if (!clientSecret) {
     return (
-      <div className="rounded-lg border border-border bg-card p-4 text-sm text-foreground/70">
+      <div className="rounded-lg border border-border bg-card p-4 text-sm text-muted-foreground">
         Preparing secure payment field…
       </div>
     )
@@ -292,7 +292,7 @@ function PaymentForm({ tier, locale, paymentIntentId }: PaymentFormProps) {
           `Confirm payment — ${formatPriceForLocale(tier === 'monthly' ? ADOPT_PRICE_MONTHLY_EUR : ADOPT_PRICE_YEARLY_EUR, locale)}${tier === 'monthly' ? ' / month' : ' / year'}`
         )}
       </button>
-      <p className="text-xs text-foreground/60">
+      <p className="text-xs text-muted-foreground">
         Secured by Stripe. You will not be charged until payment is confirmed.
       </p>
     </form>

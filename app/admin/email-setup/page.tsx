@@ -45,7 +45,7 @@ export default async function EmailSetupPage() {
   return (
     <main className="max-w-3xl mx-auto px-6 py-12">
       <h1 className="text-3xl font-bold text-foreground mb-6">Email DNS setup</h1>
-      <p className="text-foreground/70 mb-6">
+      <p className="text-muted-foreground mb-6">
         Status: <strong>{status.status}</strong> — {status.message}
       </p>
       {status.records.length > 0 && (
@@ -70,7 +70,7 @@ export default async function EmailSetupPage() {
           </tbody>
         </table>
       )}
-      <p className="text-xs text-foreground/50 mt-6">
+      <p className="text-xs text-muted-foreground mt-6">
         After adding records, wait ~5 min for DNS propagation, then refresh this page.
       </p>
       <SendTestEmailButton defaultRecipient={contactEmail} />

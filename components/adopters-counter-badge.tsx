@@ -45,7 +45,7 @@ export async function AdoptersCounterBadge({ locale, className }: AdoptersCounte
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 text-sm text-foreground/70 ${className ?? ''}`}
+      className={`inline-flex items-center gap-1.5 text-sm text-muted-foreground ${className ?? ''}`}
     >
       {/* Heart icon — purely decorative */}
       <svg

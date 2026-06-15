@@ -100,7 +100,7 @@ export default async function ShareAdoptionPage({
     : `/${locale}/adopt`
 
   return (
-    <main
+    <div
       style={{
         fontFamily: 'system-ui, sans-serif',
         minHeight: 'calc(100vh - 120px)',
@@ -177,6 +177,6 @@ export default async function ShareAdoptionPage({
           Alpacas Ibiza · Es Currals · alpacasibiza.com
         </p>
       </section>
-    </main>
+    </div>
   )
 }

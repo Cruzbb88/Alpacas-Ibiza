@@ -28,6 +28,14 @@
     {
       "path": "/api/alpaca-birthday-cards",
       "schedule": "0 9 * * *"
+    },
+    {
+      "path": "/api/booking-cleanup",
+      "schedule": "*/15 * * * *"
+    },
+    {
+      "path": "/api/booking-reminders",
+      "schedule": "0 * * * *"
     }
   ]
 }

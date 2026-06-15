@@ -54,7 +54,7 @@ export function CampaignBannerGeneric({ slot, className }: CampaignBannerGeneric
           {cfg.headline}
         </p>
         {cfg.body ? (
-          <p className="text-xs sm:text-sm text-foreground/70 mt-1">{cfg.body}</p>
+          <p className="text-xs sm:text-sm text-muted-foreground mt-1">{cfg.body}</p>
         ) : null}
       </div>
       {cfg.ctaHref && cfg.ctaLabel ? (

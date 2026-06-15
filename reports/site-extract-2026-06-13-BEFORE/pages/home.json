@@ -1,0 +1,125 @@
+{
+  "page": "home",
+  "path": "/en",
+  "console": [],
+  "failedReq": [],
+  "status": 200,
+  "title": "Es Currals Alpacas Ibiza | First Alpaca Farm & Weaving Studio",
+  "desc": "The very first alpaca farm in Ibiza. Home to Wishfulfilling Weaving — hand-woven scarves on traditional wooden looms using alpaca wool.",
+  "canonical": "https://alpacasibiza.com/en",
+  "robots": null,
+  "hreflang": [
+    "en",
+    "de",
+    "it",
+    "es",
+    "nl",
+    "fr",
+    "x-default"
+  ],
+  "og": {
+    "title": "Es Currals Alpacas Ibiza | First Alpaca Farm & Weaving Studio",
+    "image": "https://alpacasibiza.com/og?title=Alpacas+Ibiza&subtitle=Ibiza%27s+first+alpaca+farm+%C2%B7+Es+Currals",
+    "locale": null
+  },
+  "twitter": "summary_large_image",
+  "schemaTypes": [
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "Organization",
+    "WebSite",
+    "SiteNavigationElement",
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "WebSite"
+  ],
+  "jsonldCount": 6,
+  "h1count": 1,
+  "headings": [
+    "H1:Es Currals Alpacas Ibiza",
+    "H2:Choose Your Experience",
+    "H3:Book a Tour",
+    "H3:Shop Woven",
+    "H3:Commission",
+    "H3:Buy Alcaca",
+    "H2:Wishfulfilling Weaving",
+    "H2:Mojo",
+    "H2:Why Choose Es Currals Alpacas Ibiza",
+    "H3:Authentic Finca",
+    "H3:Traditional Weaving",
+    "H3:Made in Ibiza",
+    "H3:By Appointment",
+    "H3:Premium Quality",
+    "H3:Animal Welfare First",
+    "H2:Special Experiences",
+    "H3:Weddings & Celebrations",
+    "H3:Adopt an Alpaca",
+    "H3:Alpaca Yoga",
+    "H3:Weaving Workshops",
+    "H3:Business Incentives",
+    "H2:Guest Stories",
+    "H2:Ready to Experience Alpacas Ibiza?",
+    "H3:Stay Connected",
+    "H3:Alpacas Ibiza"
+  ],
+  "imgTotal": 3,
+  "imgMissingAlt": 0,
+  "imgBroken": [],
+  "linkTotal": 103,
+  "linkExternalNoRel": 0,
+  "formFields": 3,
+  "unlabeledFields": 0,
+  "wordCount": 993,
+  "overflowPx": 0,
+  "axe": {
+    "byImpact": {
+      "critical": 1,
+      "serious": 1,
+      "moderate": 3,
+      "minor": 1
+    },
+    "total": 6,
+    "rules": [
+      {
+        "id": "aria-allowed-role",
+        "impact": "minor",
+        "n": 4,
+        "help": "ARIA role should be appropriate for the element"
+      },
+      {
+        "id": "button-name",
+        "impact": "critical",
+        "n": 1,
+        "help": "Buttons must have discernible text"
+      },
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "n": 43,
+        "help": "Elements must meet minimum color contrast ratio thresholds"
+      },
+      {
+        "id": "landmark-main-is-top-level",
+        "impact": "moderate",
+        "n": 1,
+        "help": "Main landmark should not be contained in another landmark"
+      },
+      {
+        "id": "landmark-no-duplicate-main",
+        "impact": "moderate",
+        "n": 1,
+        "help": "Document should not have more than one main landmark"
+      },
+      {
+        "id": "landmark-unique",
+        "impact": "moderate",
+        "n": 1,
+        "help": "Landmarks should have a unique role or role/label/title (i.e. accessib"
+      }
+    ]
+  }
+}

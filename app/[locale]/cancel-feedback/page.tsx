@@ -43,10 +43,10 @@ export default async function CancelFeedbackPage({
   const reAdoptLabel = tr('cancelFeedback.reAdoptLink')
 
   return (
-    <main className="min-h-[60vh] py-20 px-4">
+    <div className="min-h-[60vh] py-20 px-4">
       <div className="max-w-xl mx-auto">
         <h1 className="text-3xl font-bold text-foreground mb-3">{title}</h1>
-        <p className="text-foreground/70 mb-8">{subhead}</p>
+        <p className="text-muted-foreground mb-8">{subhead}</p>
 
         <CancelFeedbackForm
           locale={locale}
@@ -63,6 +63,6 @@ export default async function CancelFeedbackPage({
           reAdoptLabel={reAdoptLabel}
         />
       </div>
-    </main>
+    </div>
   )
 }

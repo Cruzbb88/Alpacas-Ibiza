@@ -144,7 +144,7 @@ export default async function MyAdoptionPage({
     : '#f4f4f5'
 
   return (
-    <main style={{ fontFamily: 'system-ui, sans-serif', maxWidth: 720, margin: '0 auto', padding: '32px 16px', color: '#27272a' }}>
+    <div style={{ fontFamily: 'system-ui, sans-serif', maxWidth: 720, margin: '0 auto', padding: '32px 16px', color: '#27272a' }}>
       <header style={{ marginBottom: 24 }}>
         <h1 style={{ fontSize: 32, fontWeight: 700, margin: 0, color: 'hsl(var(--primary))' }}>
           {translate('portal.title')}
@@ -460,6 +460,6 @@ export default async function MyAdoptionPage({
         {translate('portal.footerHelpPrefix')}{' '}
         <a href="mailto:info@alpacasibiza.com" style={{ color: 'hsl(var(--primary))' }}>info@alpacasibiza.com</a>.
       </footer>
-    </main>
+    </div>
   )
 }

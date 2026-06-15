@@ -454,7 +454,7 @@ export function Features({
               </h2>
             )}
             {subtitle && (
-              <p className="text-lg text-foreground/70 text-center max-w-2xl mx-auto">
+              <p className="text-lg text-muted-foreground text-center max-w-2xl mx-auto">
                 {subtitle}
               </p>
             )}

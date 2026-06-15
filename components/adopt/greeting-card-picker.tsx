@@ -57,7 +57,7 @@ function GreetingCardPickerInner({
 
   return (
     <fieldset className="space-y-3">
-      <legend className="block text-xs font-semibold uppercase tracking-wide text-foreground/60 mb-2">
+      <legend className="block text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">
         Choose a greeting card design
         <span className="ml-1 text-foreground/40 normal-case font-normal tracking-normal">
           (optional)
@@ -100,7 +100,7 @@ function GreetingCardPickerInner({
                   🖼️
                 </div>
               )}
-              <span className="text-xs text-center text-foreground/70 leading-tight line-clamp-2">
+              <span className="text-xs text-center text-muted-foreground leading-tight line-clamp-2">
                 {card.label}
               </span>
               {isSelected && (
@@ -123,7 +123,7 @@ function GreetingCardPickerInner({
             setSelected(null)
             onSelect?.(null)
           }}
-          className="text-xs text-foreground/50 hover:text-foreground underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 rounded"
+          className="text-xs text-muted-foreground hover:text-foreground underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 rounded"
         >
           Remove card selection
         </button>

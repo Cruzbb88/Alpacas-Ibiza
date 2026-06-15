@@ -54,7 +54,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
   ]
 
   return (
-    <main>
+    <>
       {/* Founder structured data */}
       <script
         type="application/ld+json"
@@ -83,7 +83,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             <h2 className="text-2xl font-bold text-foreground mb-4">
               {translate('about.storyTitle')}
             </h2>
-            <p className="text-foreground/70 mb-4">
+            <p className="text-muted-foreground mb-4">
               {translate('about.storyText')}
             </p>
           </div>
@@ -101,7 +101,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
               ].map((value, idx) => (
                 <div key={idx} className="bg-card rounded-lg border border-border p-6">
                   <h3 className="font-bold text-foreground mb-2">{value.title}</h3>
-                  <p className="text-sm text-foreground/70">{value.description}</p>
+                  <p className="text-sm text-muted-foreground">{value.description}</p>
                 </div>
               ))}
             </div>
@@ -114,7 +114,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             <p className="text-lg text-primary/80 mb-4 italic">
               {translate('about.weavingSubtitle')}
             </p>
-            <p className="text-foreground/70 mb-4">
+            <p className="text-muted-foreground mb-4">
               {translate('about.weavingDescription')}
             </p>
           </div>
@@ -122,6 +122,6 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
       </section>
       {/* Awards & Recognition band — all categories, renders null until owner adds entries */}
       <AwardsBadges title={translate('awards.awardsAndRecognition')} />
-    </main>
+    </>
   )
 }

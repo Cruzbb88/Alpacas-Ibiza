@@ -53,7 +53,7 @@ export default async function HerdDiaryPage({
   const events = liveHerdEvents()
 
   return (
-    <main>
+    <>
       <PageBreadcrumbs
         locale={locale}
         homeLabel={translate('nav.home') || 'Home'}
@@ -79,7 +79,7 @@ export default async function HerdDiaryPage({
         {events.length === 0 ? (
           /* ── Empty state — shown until owner supplies events ── */
           <div className="py-16 text-center">
-            <p className="text-foreground/70 max-w-md mx-auto">
+            <p className="text-muted-foreground max-w-md mx-auto">
               {translate('herdDiary.emptyState') ||
                 'The herd diary is just getting started — check back soon.'}
             </p>
@@ -161,6 +161,6 @@ export default async function HerdDiaryPage({
           </ol>
         )}
       </PageSection>
-    </main>
+    </>
   )
 }

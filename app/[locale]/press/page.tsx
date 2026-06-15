@@ -65,7 +65,7 @@ export default async function PressPage({ params }: { params: Promise<{ locale: 
     const schemas = [localBusinessSchema()]
 
     return (
-        <main>
+        <>
             {/* JSON-LD: LocalBusiness */}
             {schemas.map((schema, i) => (
                 <script
@@ -201,7 +201,7 @@ export default async function PressPage({ params }: { params: Promise<{ locale: 
                     <h2 className="text-2xl font-bold text-foreground mb-4">
                         {translate('press.inquiriesTitle') || 'Press Inquiries'}
                     </h2>
-                    <p className="text-foreground/70 mb-6">
+                    <p className="text-muted-foreground mb-6">
                         {translate('press.inquiriesBody') ||
                             'Journalists and media professionals are welcome to reach out for interviews, photography access, or editorial information.'}
                     </p>
@@ -213,6 +213,6 @@ export default async function PressPage({ params }: { params: Promise<{ locale: 
                     </a>
                 </div>
             </section>
-        </main>
+        </>
     )
 }

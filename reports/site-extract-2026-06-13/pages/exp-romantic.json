@@ -1,0 +1,76 @@
+{
+  "page": "exp-romantic",
+  "path": "/en/experiences/romantic-sunset",
+  "console": [],
+  "failedReq": [],
+  "status": 200,
+  "title": "Romantic Sunset Walk with Alpacas | Couples – Alpacas Ibiza",
+  "desc": "A private sunset walk with alpacas at Es Currals, Ibiza. Perfect for couples — advance reservation required.",
+  "canonical": "https://alpacasibiza.com/en/experiences/romantic-sunset",
+  "robots": null,
+  "hreflang": [
+    "en",
+    "de",
+    "it",
+    "es",
+    "nl",
+    "fr",
+    "x-default"
+  ],
+  "og": {
+    "title": "Romantic Sunset Walk with Alpacas | Couples – Alpacas Ibiza",
+    "image": "https://alpacasibiza.com/og?title=Meet+the+Herd&subtitle=Every+alpaca+has+a+name+and+a+story",
+    "locale": null
+  },
+  "twitter": "summary_large_image",
+  "schemaTypes": [
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "Organization",
+    "WebSite",
+    "SiteNavigationElement"
+  ],
+  "jsonldCount": 4,
+  "h1count": 1,
+  "headings": [
+    "H1:Romantic Sunset Walks",
+    "H2:\"The most magical date we've ever had.\"",
+    "H3:Champagne",
+    "H3:Photos",
+    "H3:Privacy",
+    "H2:Perfect for Proposals",
+    "H2:Coming back often?",
+    "H3:Alpacas Ibiza",
+    "H3:Explore",
+    "H3:Shop",
+    "H3:Contact"
+  ],
+  "imgTotal": 3,
+  "imgMissingAlt": 1,
+  "imgBroken": [],
+  "linkTotal": 79,
+  "linkExternalNoRel": 0,
+  "formFields": 0,
+  "unlabeledFields": 0,
+  "wordCount": 305,
+  "overflowPx": 0,
+  "axe": {
+    "byImpact": {
+      "critical": 0,
+      "serious": 1,
+      "moderate": 0,
+      "minor": 0
+    },
+    "total": 1,
+    "rules": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "n": 24,
+        "help": "Elements must meet minimum color contrast ratio thresholds"
+      }
+    ]
+  }
+}

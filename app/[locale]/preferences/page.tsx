@@ -178,20 +178,20 @@ function PreferencesPageInner() {
   // Loading state — token validation in flight
   if (tokenValid === null) {
     return (
-      <main className="min-h-[60vh] flex items-center justify-center px-4">
-        <p className="text-foreground/60 text-sm">Validating your access link…</p>
-      </main>
+      <div className="min-h-[60vh] flex items-center justify-center px-4">
+        <p className="text-muted-foreground text-sm">Validating your access link…</p>
+      </div>
     )
   }
 
   // Invalid / expired token
   if (!tokenValid) {
     return (
-      <main className="min-h-[60vh] flex items-center justify-center px-4">
+      <div className="min-h-[60vh] flex items-center justify-center px-4">
         <div className="max-w-md w-full text-center space-y-4">
           <h1 className="text-2xl font-bold text-foreground">Link not valid</h1>
-          <p className="text-foreground/70 text-sm">{tokenError}</p>
-          <p className="text-foreground/60 text-xs">
+          <p className="text-muted-foreground text-sm">{tokenError}</p>
+          <p className="text-muted-foreground text-xs">
             Links expire after 30 days. Check your most recent email from us for a
             fresh link, or{' '}
             <Link
@@ -203,16 +203,16 @@ function PreferencesPageInner() {
             if you need help.
           </p>
         </div>
-      </main>
+      </div>
     )
   }
 
   return (
-    <main className="min-h-[60vh] py-16 px-4">
+    <div className="min-h-[60vh] py-16 px-4">
       <div className="max-w-lg mx-auto space-y-8">
         <div className="text-center space-y-2">
           <h1 className="text-3xl font-bold text-foreground">Email Preferences</h1>
-          <p className="text-foreground/70 text-sm">
+          <p className="text-muted-foreground text-sm">
             Choose which emails you'd like to stop receiving. Each change takes
             effect immediately.
           </p>
@@ -235,7 +235,7 @@ function PreferencesPageInner() {
                 <div className="flex items-start justify-between gap-4">
                   <div className="space-y-1 flex-1">
                     <h2 className="font-semibold text-foreground">{cat.label}</h2>
-                    <p className="text-xs text-foreground/60 leading-relaxed">
+                    <p className="text-xs text-muted-foreground leading-relaxed">
                       {cat.description}
                     </p>
                   </div>
@@ -285,7 +285,7 @@ function PreferencesPageInner() {
         </div>
 
         <div className="pt-2 border-t border-border text-center space-y-2">
-          <p className="text-xs text-foreground/50">
+          <p className="text-xs text-muted-foreground">
             Want to stop all emails?
           </p>
           <UnsubscribeAllButton token={token} locale={locale} />
@@ -300,7 +300,7 @@ function PreferencesPageInner() {
           </Link>
         </div>
       </div>
-    </main>
+    </div>
   )
 }
 
@@ -314,9 +314,9 @@ export default function PreferencesPage() {
   return (
     <Suspense
       fallback={
-        <main className="min-h-[60vh] flex items-center justify-center px-4">
-          <p className="text-foreground/60 text-sm">Loading preferences…</p>
-        </main>
+        <div className="min-h-[60vh] flex items-center justify-center px-4">
+          <p className="text-muted-foreground text-sm">Loading preferences…</p>
+        </div>
       }
     >
       <PreferencesPageInner />

@@ -1,0 +1,78 @@
+{
+  "page": "shop-commission",
+  "path": "/en/shop/commission",
+  "console": [],
+  "failedReq": [],
+  "status": 200,
+  "title": "Custom Commission | Wishfulfilling Weaving – Alpacas Ibiza",
+  "desc": "Commission a bespoke hand-woven piece from San at Es Currals, Ibiza. Choose your colours, pattern, and dimensions — made to order on a traditional wooden loom.",
+  "canonical": "https://alpacasibiza.com/en/shop/commission",
+  "robots": null,
+  "hreflang": [
+    "en",
+    "de",
+    "it",
+    "es",
+    "nl",
+    "fr",
+    "x-default"
+  ],
+  "og": {
+    "title": "Custom Commission | Wishfulfilling Weaving – Alpacas Ibiza",
+    "image": "https://alpacasibiza.com/og?title=Meet+the+Herd&subtitle=Every+alpaca+has+a+name+and+a+story",
+    "locale": null
+  },
+  "twitter": "summary_large_image",
+  "schemaTypes": [
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "Organization",
+    "WebSite",
+    "SiteNavigationElement",
+    "ItemList"
+  ],
+  "jsonldCount": 5,
+  "h1count": 1,
+  "headings": [
+    "H1:Custom Commission",
+    "H2:Tell Us About Your Vision",
+    "H3:Alpacas Ibiza",
+    "H3:Explore",
+    "H3:Shop",
+    "H3:Contact"
+  ],
+  "imgTotal": 2,
+  "imgMissingAlt": 1,
+  "imgBroken": [],
+  "linkTotal": 76,
+  "linkExternalNoRel": 0,
+  "formFields": 21,
+  "unlabeledFields": 0,
+  "wordCount": 318,
+  "overflowPx": 0,
+  "axe": {
+    "byImpact": {
+      "critical": 1,
+      "serious": 1,
+      "moderate": 0,
+      "minor": 0
+    },
+    "total": 2,
+    "rules": [
+      {
+        "id": "button-name",
+        "impact": "critical",
+        "n": 1,
+        "help": "Buttons must have discernible text"
+      },
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "n": 33,
+        "help": "Elements must meet minimum color contrast ratio thresholds"
+      }
+    ]
+  }
+}

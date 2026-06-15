@@ -1,0 +1,101 @@
+{
+  "page": "home-nl",
+  "path": "/nl",
+  "console": [],
+  "failedReq": [],
+  "status": 200,
+  "title": "Es Currals Alpacas Ibiza | First Alpaca Farm & Weaving Studio",
+  "desc": "The very first alpaca farm in Ibiza. Home to Wishfulfilling Weaving — hand-woven scarves on traditional wooden looms using alpaca wool.",
+  "canonical": "https://alpacasibiza.com/nl",
+  "robots": null,
+  "hreflang": [
+    "en",
+    "de",
+    "it",
+    "es",
+    "nl",
+    "fr",
+    "x-default"
+  ],
+  "og": {
+    "title": "Es Currals Alpacas Ibiza | First Alpaca Farm & Weaving Studio",
+    "image": "https://alpacasibiza.com/og?title=Alpacas+Ibiza&subtitle=Ibiza%27s+first+alpaca+farm+%C2%B7+Es+Currals",
+    "locale": null
+  },
+  "twitter": "summary_large_image",
+  "schemaTypes": [
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "Organization",
+    "WebSite",
+    "SiteNavigationElement",
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "WebSite"
+  ],
+  "jsonldCount": 6,
+  "h1count": 1,
+  "headings": [
+    "H1:Es Currals Alpacas Ibiza",
+    "H2:Kies Je Ervaring",
+    "H3:Boek een Tour",
+    "H3:Geweven Kopen",
+    "H3:Op Maat",
+    "H3:Koop Alcaca",
+    "H2:Wishfulfilling Weaving",
+    "H2:Mojo",
+    "H2:Waarom Kiezen voor Es Currals Alpacas Ib",
+    "H3:Authentieke Finca",
+    "H3:Traditioneel Weven",
+    "H3:Made in Ibiza",
+    "H3:Alleen op Afspraak",
+    "H3:Premium Kwaliteit",
+    "H3:Dierenwelzijn Voorop",
+    "H2:Bijzondere Ervaringen",
+    "H3:Bruiloften & Feesten",
+    "H3:Adopteer een Alpaca",
+    "H3:Alpaca Yoga",
+    "H3:Weefworkshops",
+    "H3:Zakelijke Incentives",
+    "H2:Ervaringen van Gasten",
+    "H2:Klaar om Alpacas Ibiza te Beleven?",
+    "H3:Blijf Verbonden",
+    "H3:Alpacas Ibiza"
+  ],
+  "imgTotal": 3,
+  "imgMissingAlt": 0,
+  "imgBroken": [],
+  "linkTotal": 103,
+  "linkExternalNoRel": 0,
+  "formFields": 3,
+  "unlabeledFields": 0,
+  "wordCount": 973,
+  "overflowPx": 35,
+  "axe": {
+    "byImpact": {
+      "critical": 0,
+      "serious": 1,
+      "moderate": 0,
+      "minor": 1
+    },
+    "total": 2,
+    "rules": [
+      {
+        "id": "aria-allowed-role",
+        "impact": "minor",
+        "n": 4,
+        "help": "ARIA role should be appropriate for the element"
+      },
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "n": 45,
+        "help": "Elements must meet minimum color contrast ratio thresholds"
+      }
+    ]
+  }
+}

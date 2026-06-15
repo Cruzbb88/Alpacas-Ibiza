@@ -35,3 +35,30 @@ Nothing that *commits* the swap (it needs the decision + a superseding ADR). But
 - **Best long-term:** in-house adapter on the seam you already have — but that's a real build and an owner decision, not something to start unprompted.
 
 Full vendor context: [VENDOR_COST_REDUCTION_2026-06-11.md](VENDOR_COST_REDUCTION_2026-06-11.md). FareHarbor decommission timeline for *adoption*: [docs/adr/021-fareharbor-replaced-by-stripe-mollie.md](docs/adr/021-fareharbor-replaced-by-stripe-mollie.md).
+
+---
+
+## Appendix — "Could we build it in-house?" Concrete architecture (researched 2026-06-15)
+
+**Verdict: technically yes, ~5–7 dev-days — but it needs a persistent DB the project deliberately does NOT have** (ADR-001: in-memory only). So in-house booking is a *DB-introducing* change, not just an adapter. Recommendation stands: **Bookeo now; build in-house only if the site is being actively developed AND tour volume grows past ~€1,500/mo** (where Stripe's ~2.9% undercuts FareHarbor's 7–9%).
+
+**The missing piece is a slot store + atomic reserve.** Minimal Postgres/Supabase shape:
+```sql
+tour_slots ( id uuid pk, tour_id uuid, starts_at timestamptz, capacity int, booked_count int default 0 )
+bookings   ( id uuid pk, slot_id uuid, guest_name text, guest_email text, party_size int,
+             payment_intent_id text, status text default 'pending', created_at timestamptz default now() )
+```
+**Double-booking prevention** = one atomic statement (Postgres MVCC, serverless-safe, no explicit lock):
+```sql
+UPDATE tour_slots SET booked_count = booked_count + $party
+ WHERE id = $slot AND booked_count + $party <= capacity
+ RETURNING id;   -- 0 rows → slot full → reject
+```
+**Front-end:** shadcn/ui "Calendar Booking Slots" block (MIT) fed by the `BookingEngine` seam → on confirm, the existing Stripe/Mollie checkout. **Email confirmations** reuse `lib/mailer.ts`.
+
+**The 3 real risks (budget for these, not the happy path):**
+1. **Overselling in the pay window** — decrement `booked_count` on checkout-start, restore via webhook on failure/expiry; a cleanup cron releases stale `pending` rows. *(This is the hard one.)*
+2. **Timezone/DST** — store `timestamptz` UTC, render in `Europe/Madrid`; test the Oct/Mar transitions (looks fine in dev, breaks confirmation times in prod).
+3. **Refund/cancellation policy** — FareHarbor gives you this free; in-house you build the windows + guest comms. Decide the policy before building.
+
+**Build path when you decide:** new ADR-022 (supersede 021's "tours stay FareHarbor") → add `InHouseAdapter implements BookingEngine` behind `BOOKING_ENGINE=inhouse` (defaults off, zero runtime change) → Supabase slot store + atomic RPC → shadcn slot UI → wire existing checkout + mailer. Sources: shadcn.io booking block, Supabase/Postgres MVCC + GiST exclusion-constraint docs, automate.travel FareHarbor pricing 2026 (all retrieved 2026-06-15).

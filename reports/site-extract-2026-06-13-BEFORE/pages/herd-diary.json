@@ -1,0 +1,101 @@
+{
+  "page": "herd-diary",
+  "path": "/en/herd-diary",
+  "console": [],
+  "failedReq": [],
+  "status": 200,
+  "title": "Herd Diary | Alpacas Ibiza — Life with the Es Currals Alpacas",
+  "desc": "Follow the day-to-day life of the 14 named alpacas at Es Currals — shearing days, health checks, milestones, and farm moments, straight from the herd.",
+  "canonical": "https://alpacasibiza.com/en/herd-diary",
+  "robots": null,
+  "hreflang": [
+    "en",
+    "de",
+    "it",
+    "es",
+    "nl",
+    "fr",
+    "x-default"
+  ],
+  "og": {
+    "title": "Herd Diary | Alpacas Ibiza — Life with the Es Currals Alpacas",
+    "image": null,
+    "locale": null
+  },
+  "twitter": "summary_large_image",
+  "schemaTypes": [
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "Organization",
+    "WebSite",
+    "SiteNavigationElement",
+    "BreadcrumbList"
+  ],
+  "jsonldCount": 5,
+  "h1count": 1,
+  "headings": [
+    "H1:Herd Diary",
+    "H3:Alpacas Ibiza",
+    "H3:Explore",
+    "H3:Shop",
+    "H3:Contact"
+  ],
+  "imgTotal": 2,
+  "imgMissingAlt": 1,
+  "imgBroken": [],
+  "linkTotal": 78,
+  "linkExternalNoRel": 0,
+  "formFields": 0,
+  "unlabeledFields": 0,
+  "wordCount": 206,
+  "overflowPx": 0,
+  "axe": {
+    "byImpact": {
+      "critical": 1,
+      "serious": 1,
+      "moderate": 4,
+      "minor": 0
+    },
+    "total": 6,
+    "rules": [
+      {
+        "id": "button-name",
+        "impact": "critical",
+        "n": 1,
+        "help": "Buttons must have discernible text"
+      },
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "n": 18,
+        "help": "Elements must meet minimum color contrast ratio thresholds"
+      },
+      {
+        "id": "heading-order",
+        "impact": "moderate",
+        "n": 1,
+        "help": "Heading levels should only increase by one"
+      },
+      {
+        "id": "landmark-main-is-top-level",
+        "impact": "moderate",
+        "n": 1,
+        "help": "Main landmark should not be contained in another landmark"
+      },
+      {
+        "id": "landmark-no-duplicate-main",
+        "impact": "moderate",
+        "n": 1,
+        "help": "Document should not have more than one main landmark"
+      },
+      {
+        "id": "landmark-unique",
+        "impact": "moderate",
+        "n": 1,
+        "help": "Landmarks should have a unique role or role/label/title (i.e. accessib"
+      }
+    ]
+  }
+}

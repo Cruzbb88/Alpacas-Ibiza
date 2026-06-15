@@ -134,7 +134,7 @@ export default async function AlpacaDetailPage({ params }: PageProps) {
   const diaryEvents = liveHerdEventsByAlpaca(animal.id)
 
   return (
-    <main>
+    <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: toJsonLd(aboutPageSchema) }}
@@ -217,6 +217,6 @@ export default async function AlpacaDetailPage({ params }: PageProps) {
       <PageSection bg="muted" width="wide" className="py-12 border-t border-border">
         <AlpacaPeerGrid locale={locale} animals={animals} currentSlug={animal.id} />
       </PageSection>
-    </main>
+    </>
   )
 }

@@ -35,15 +35,15 @@ export function JuniorTierCard({ locale, className, alpacaSlug }: JuniorTierCard
         (className ?? '')
       }
     >
-      <p className="text-xs font-semibold uppercase tracking-wide mb-2 text-foreground/50">
+      <p className="text-xs font-semibold uppercase tracking-wide mb-2 text-muted-foreground">
         Junior adopter
       </p>
 
       <p className="text-4xl font-bold text-foreground mb-1 tabular-nums">{priceLabel}</p>
 
-      <p className="text-sm text-foreground/60 mb-6">For young alpaca lovers</p>
+      <p className="text-sm text-muted-foreground mb-6">For young alpaca lovers</p>
 
-      <ul className="text-sm text-foreground/70 mb-6 space-y-1 text-left list-none">
+      <ul className="text-sm text-muted-foreground mb-6 space-y-1 text-left list-none">
         <li className="flex items-start gap-2">
           <span className="mt-0.5 text-primary" aria-hidden="true">✓</span>
           Digital adoption certificate

@@ -93,6 +93,58 @@ export async function POST(request: Request) {
   // Construct one Mollie client for any post-verify SDK calls. Cached factory.
   const mollie = await getMollieClient(apiKey)
 
+  // ── In-house tour booking (metadata.booking_id) ─────────────────────────────
+  // Intercept BEFORE the adopt-subscription logic: a booking payment is a one-off,
+  // not a donation, so the dunning/subscription handlers must not see it. Mirrors
+  // the Stripe webhook booking branch (spec-011 §D). Handles every Mollie status:
+  //   paid                       → settle the held seat (confirm + email, or refund)
+  //   failed/expired/canceled    → release the hold (capacity restored once)
+  //   open/pending/authorized    → async SEPA/bank-transfer: extend the hold so the
+  //                                cleanup cron can't reap the seat before it clears
+  const bookingMeta = payment.metadata as Record<string, string> | null | undefined
+  const bookingId = bookingMeta?.booking_id
+  if (bookingId) {
+    const bookingLocale = typeof bookingMeta?.locale === 'string' ? bookingMeta.locale : null
+    if (payment.status === 'paid') {
+      const { handleBookingPaid } = await import('@/lib/booking/handle-booking-paid')
+      await handleBookingPaid({
+        bookingId,
+        paymentRef: payment.id,
+        locale: bookingLocale,
+        refund: async (ref) => {
+          // Refund-exactly-once across all paths (Mollie has no native idem key).
+          const { claimRefund } = await import('@/lib/booking/store')
+          if (!(await claimRefund(bookingId))) return true // already refunded elsewhere
+          try {
+            // Omitting `amount` = full refund (Mollie SDK).
+            await (mollie as unknown as {
+              payments: { refunds: { create: (a: unknown) => Promise<unknown> } }
+            }).payments.refunds.create({ paymentId: ref })
+            return true
+          } catch (e) {
+            log.error('[booking] Mollie refund FAILED — manual refund needed', {
+              bookingId, paymentId: ref, error: e instanceof Error ? e.message : String(e),
+            })
+            return false
+          }
+        },
+      })
+    } else if (payment.status === 'failed' || payment.status === 'expired' || payment.status === 'canceled') {
+      const { cancelBooking } = await import('@/lib/booking/store')
+      const r = await cancelBooking(bookingId)
+      log.warn('[booking] Mollie payment not completed — hold released', {
+        bookingId, status: payment.status, restored: r.restored,
+      })
+    } else {
+      // open / pending / authorized — async method still settling. Keep the seat.
+      const { extendHoldForAsyncPayment } = await import('@/lib/booking/store')
+      await extendHoldForAsyncPayment(bookingId, new Date(Date.now() + 7 * 24 * 60 * 60 * 1000))
+      log.info('[booking] Mollie payment pending — hold extended', { bookingId, status: payment.status })
+    }
+    markProcessed(dedupKey)
+    return attachRequestId(NextResponse.json({ received: true }), reqId)
+  }
+
   // payment.failed → recoverable for SEPA; notify donor + owner via handler.
   //
   // CRITICAL fail-quiet contract: we ALWAYS markProcessed + return 200 here,

@@ -68,7 +68,7 @@ export async function AdoptBenefitsList({
       >
         {headingText}
       </h2>
-      <p className="text-sm text-foreground/70 mb-10">{introText}</p>
+      <p className="text-sm text-muted-foreground mb-10">{introText}</p>
 
       <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 list-none p-0">
         {benefits.map((key) => {

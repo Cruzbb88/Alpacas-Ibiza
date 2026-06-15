@@ -227,7 +227,7 @@ export function ChoicePaths({
           {title}
         </h2>
         {subtitle ? (
-          <p className="mx-auto mb-12 max-w-2xl text-center text-lg text-foreground/70">
+          <p className="mx-auto mb-12 max-w-2xl text-center text-lg text-muted-foreground">
             {subtitle}
           </p>
         ) : (

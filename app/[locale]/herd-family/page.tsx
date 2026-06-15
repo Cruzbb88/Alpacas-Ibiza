@@ -78,13 +78,13 @@ export default async function HerdFamilyPage({
           <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
             Become a Herd Family Member
           </h1>
-          <p className="text-lg text-foreground/70 max-w-2xl mx-auto mb-4">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-4">
             A simple monthly contribution that keeps Ibiza&apos;s first alpaca farm
             thriving — and brings you closer to the herd every month.
           </p>
           <p className="text-3xl font-bold text-primary mb-8">
             {`€${ADOPT_PRICE_MONTHLY_EUR}`}
-            <span className="text-lg font-normal text-foreground/60"> / month</span>
+            <span className="text-lg font-normal text-muted-foreground"> / month</span>
           </p>
           <a
             href={monthlyUrl}
@@ -92,7 +92,7 @@ export default async function HerdFamilyPage({
           >
             Join the herd monthly
           </a>
-          <p className="mt-3 text-sm text-foreground/50">Cancel any time — no minimum commitment.</p>
+          <p className="mt-3 text-sm text-muted-foreground">Cancel any time — no minimum commitment.</p>
         </div>
       </section>
 
@@ -128,9 +128,9 @@ export default async function HerdFamilyPage({
             </h2>
             <p className="text-3xl font-bold text-primary mb-1">
               {`€${ADOPT_PRICE_MONTHLY_EUR}`}
-              <span className="text-lg font-normal text-foreground/60"> / month</span>
+              <span className="text-lg font-normal text-muted-foreground"> / month</span>
             </p>
-            <p className="text-sm text-foreground/60 mb-6">
+            <p className="text-sm text-muted-foreground mb-6">
               Flexible monthly support — cancel any time.
             </p>
             <a
@@ -140,7 +140,7 @@ export default async function HerdFamilyPage({
               Adopt monthly
             </a>
           </div>
-          <p className="mt-4 text-sm text-foreground/60 text-center">
+          <p className="mt-4 text-sm text-muted-foreground text-center">
             Secure checkout. Your adoption begins immediately after payment.
           </p>
           <div className="mt-4 text-center">

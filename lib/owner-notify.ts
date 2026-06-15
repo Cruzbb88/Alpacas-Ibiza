@@ -275,3 +275,39 @@ export async function notifyOwnerOnEscalation(
       : Promise.resolve(),
   ])
 }
+
+/**
+ * Generic plain-text owner alert to every configured channel — for ops events
+ * that aren't dunning escalations (e.g. a failed booking auto-refund, spec-011 §I)
+ * where the EscalationNotification shape would mislabel the message. Reuses the
+ * same env vars + timeout + fail-quiet contract. Never throws; call as
+ * `void notifyOwnerAlert(...)`.
+ */
+export async function notifyOwnerAlert(title: string, lines: string[]): Promise<void> {
+  const text = [`🦙 ${title}`, ...lines].join('\n')
+  const slackUrl = process.env.OWNER_SLACK_WEBHOOK_URL
+  const telegramToken = process.env.OWNER_TELEGRAM_BOT_TOKEN
+  const telegramChatId = process.env.OWNER_TELEGRAM_CHAT_ID
+  const genericUrl = process.env.OWNER_GENERIC_WEBHOOK_URL
+  const discordUrl = process.env.OWNER_NOTIFY_DISCORD_URL
+
+  const post = (url: string, body: unknown, label: string) =>
+    fetchWithTimeout(
+      url,
+      { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) },
+      NOTIFY_TIMEOUT_MS,
+    )
+      .then((res) => { if (!res.ok) throw new Error(`${label} HTTP ${res.status}`) })
+      .catch((err: unknown) => {
+        console.error(`[owner-notify] ${label} alert failed`, { err: sanitizeErrorForLog(err) })
+      })
+
+  await Promise.all([
+    slackUrl ? post(slackUrl, { text }, 'Slack') : Promise.resolve(),
+    telegramToken && telegramChatId
+      ? post(`https://api.telegram.org/bot${telegramToken}/sendMessage`, { chat_id: telegramChatId, text }, 'Telegram')
+      : Promise.resolve(),
+    discordUrl ? post(discordUrl, { content: text }, 'Discord') : Promise.resolve(),
+    genericUrl ? post(genericUrl, { title, lines }, 'Generic') : Promise.resolve(),
+  ])
+}

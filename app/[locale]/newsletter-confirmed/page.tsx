@@ -35,7 +35,7 @@ export default async function NewsletterConfirmedPage({
   const { locale } = await params
 
   return (
-    <main>
+    <>
       <GradientPageHero
         title="You're subscribed! 🎉"
         subtitle="Look for our next field notes from the herd."
@@ -43,7 +43,7 @@ export default async function NewsletterConfirmedPage({
 
       <PageSection>
         <div className="max-w-lg mx-auto text-center py-8">
-          <p className="text-foreground/70 mb-8">
+          <p className="text-muted-foreground mb-8">
             Thanks for confirming your email. We'll send occasional updates from the farm —
             new arrivals, weaving seasons, and stories from Es Currals.
           </p>
@@ -55,6 +55,6 @@ export default async function NewsletterConfirmedPage({
           </a>
         </div>
       </PageSection>
-    </main>
+    </>
   )
 }

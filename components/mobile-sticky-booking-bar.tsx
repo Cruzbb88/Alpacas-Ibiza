@@ -236,7 +236,7 @@ export function MobileStickyBookingBar({
           className={[
             'shrink-0 inline-flex items-center justify-center',
             'h-8 w-8 rounded-full',
-            'text-foreground/60 hover:text-foreground hover:bg-foreground/5',
+            'text-muted-foreground hover:text-foreground hover:bg-foreground/5',
             'focus:outline-none focus:ring-2 focus:ring-accent/40',
             'transition-colors',
           ].join(' ')}

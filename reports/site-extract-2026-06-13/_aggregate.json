@@ -1,0 +1,3324 @@
+[
+  {
+    "page": "home",
+    "path": "/en",
+    "console": [],
+    "failedReq": [],
+    "status": 200,
+    "title": "Es Currals Alpacas Ibiza | First Alpaca Farm & Weaving Studio",
+    "desc": "The very first alpaca farm in Ibiza. Home to Wishfulfilling Weaving — hand-woven scarves on traditional wooden looms using alpaca wool.",
+    "canonical": "https://alpacasibiza.com/en",
+    "robots": null,
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "Es Currals Alpacas Ibiza | First Alpaca Farm & Weaving Studio",
+      "image": "https://alpacasibiza.com/og?title=Alpacas+Ibiza&subtitle=Ibiza%27s+first+alpaca+farm+%C2%B7+Es+Currals",
+      "locale": null
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement",
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "WebSite"
+    ],
+    "jsonldCount": 6,
+    "h1count": 1,
+    "headings": [
+      "H1:Es Currals Alpacas Ibiza",
+      "H2:Choose Your Experience",
+      "H3:Book a Tour",
+      "H3:Shop Woven",
+      "H3:Commission",
+      "H3:Buy Alcaca",
+      "H2:Wishfulfilling Weaving",
+      "H2:Mojo",
+      "H2:Why Choose Es Currals Alpacas Ibiza",
+      "H3:Authentic Finca",
+      "H3:Traditional Weaving",
+      "H3:Made in Ibiza",
+      "H3:By Appointment",
+      "H3:Premium Quality",
+      "H3:Animal Welfare First",
+      "H2:Special Experiences",
+      "H3:Weddings & Celebrations",
+      "H3:Adopt an Alpaca",
+      "H3:Alpaca Yoga",
+      "H3:Weaving Workshops",
+      "H3:Business Incentives",
+      "H2:Guest Stories",
+      "H2:Ready to Experience Alpacas Ibiza?",
+      "H3:Stay Connected",
+      "H3:Alpacas Ibiza"
+    ],
+    "imgTotal": 3,
+    "imgMissingAlt": 0,
+    "imgBroken": [],
+    "linkTotal": 103,
+    "linkExternalNoRel": 0,
+    "formFields": 3,
+    "unlabeledFields": 0,
+    "wordCount": 993,
+    "overflowPx": 0,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 0,
+        "minor": 1
+      },
+      "total": 2,
+      "rules": [
+        {
+          "id": "aria-allowed-role",
+          "impact": "minor",
+          "n": 4,
+          "help": "ARIA role should be appropriate for the element"
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 43,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        }
+      ]
+    },
+    "mobileOverflowPx": 332
+  },
+  {
+    "page": "tours",
+    "path": "/en/tours",
+    "console": [
+      "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+    ],
+    "failedReq": [
+      "500 http://localhost:3000/api/availability"
+    ],
+    "status": 200,
+    "title": "Alpaca Trekking Tours | Alpacas Ibiza – Es Currals",
+    "desc": "Book an alpaca trekking experience at Es Currals, Ibiza's first alpaca farm. Meet the herd, weave on a traditional loom, or enjoy a full farm experience.",
+    "canonical": "https://alpacasibiza.com/en/tours",
+    "robots": null,
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "Alpaca Trekking Tours | Alpacas Ibiza – Es Currals",
+      "image": "https://alpacasibiza.com/og?title=Book+a+Tour&subtitle=Walk+with+alpacas+on+Ibiza+%C2%B7+Es+Currals",
+      "locale": null
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement",
+      "TouristTrip",
+      "FAQPage",
+      "BreadcrumbList"
+    ],
+    "jsonldCount": 7,
+    "h1count": 1,
+    "headings": [
+      "H1:Visit Alpacas Ibiza",
+      "H3:Operating Hours",
+      "H3:Location",
+      "H3:Pricing",
+      "H3:Special Events & Private Bookings",
+      "H2:Frequently Asked Questions",
+      "H3:How long is a typical tour?",
+      "H3:What languages do you offer?",
+      "H3:Are visits suitable for children?",
+      "H3:What should I wear?",
+      "H3:Is the farm accessible for people with d",
+      "H3:Can we bring food or drinks?",
+      "H3:How do I book a tour?",
+      "H3:What if I need to cancel or reschedule?",
+      "H3:Do you offer private tours or group even",
+      "H3:Is there parking available?",
+      "H2:Book Your Visit",
+      "H3:Reserve Your Visit",
+      "H3:Sold out? Join the waitlist",
+      "H2:What to bring",
+      "H2:Guest Stories",
+      "H2:Coming back often?",
+      "H3:Alpacas Ibiza",
+      "H3:Explore",
+      "H3:Shop"
+    ],
+    "imgTotal": 1,
+    "imgMissingAlt": 0,
+    "imgBroken": [],
+    "linkTotal": 81,
+    "linkExternalNoRel": 0,
+    "formFields": 11,
+    "unlabeledFields": 1,
+    "wordCount": 878,
+    "overflowPx": 0,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 1,
+        "minor": 0
+      },
+      "total": 2,
+      "rules": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 41,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "n": 1,
+          "help": "Heading levels should only increase by one"
+        }
+      ]
+    },
+    "mobileOverflowPx": 332
+  },
+  {
+    "page": "visit",
+    "path": "/en/visit",
+    "console": [],
+    "failedReq": [],
+    "status": 200,
+    "title": "Plan Your Visit | Alpacas Ibiza – Es Currals Farm Ibiza",
+    "desc": "Everything you need before arriving at Es Currals alpaca farm in northern Ibiza — directions, parking, accessibility, what to bring, and cancellation policy.",
+    "canonical": "https://alpacasibiza.com/en/visit",
+    "robots": null,
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "Plan Your Visit | Alpacas Ibiza – Es Currals Farm Ibiza",
+      "image": "https://alpacasibiza.com/og?title=Our+Story&subtitle=Alpacas+Ibiza+%C2%B7+Es+Currals",
+      "locale": null
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement",
+      "Place",
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "BreadcrumbList"
+    ],
+    "jsonldCount": 7,
+    "h1count": 1,
+    "headings": [
+      "H1:Planning your visit",
+      "H2:Getting here",
+      "H3:By car",
+      "H3:From the airport",
+      "H3:By bus",
+      "H3:GPS & maps",
+      "H2:Find us on the map",
+      "H2:When you arrive",
+      "H3:Where to park",
+      "H3:Meeting point",
+      "H3:Tour duration",
+      "H3:What to bring",
+      "H2:Accessibility & guests",
+      "H3:Mobility",
+      "H3:Children",
+      "H3:Pets",
+      "H3:Service animals",
+      "H2:Cancellation policy",
+      "H3:Free cancellation",
+      "H3:Bad weather",
+      "H3:Late cancellations",
+      "H2:Photos & filming",
+      "H3:Personal photography",
+      "H3:Commercial use",
+      "H2:Ready to visit?"
+    ],
+    "imgTotal": 2,
+    "imgMissingAlt": 1,
+    "imgBroken": [],
+    "linkTotal": 86,
+    "linkExternalNoRel": 0,
+    "formFields": 0,
+    "unlabeledFields": 0,
+    "wordCount": 600,
+    "overflowPx": 0,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 0,
+        "minor": 0
+      },
+      "total": 1,
+      "rules": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 20,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        }
+      ]
+    },
+    "mobileOverflowPx": 332
+  },
+  {
+    "page": "about",
+    "path": "/en/about",
+    "console": [],
+    "failedReq": [],
+    "status": 200,
+    "title": "About Alpacas Ibiza | Es Currals Farm – Bart & San",
+    "desc": "Meet the team and story behind Es Currals, Ibiza's first alpaca farm. Belgian founders Bart & San, the Wishfulfilling Weaving studio, and 14 alpacas.",
+    "canonical": "https://alpacasibiza.com/en/about",
+    "robots": null,
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "About Alpacas Ibiza | Es Currals Farm – Bart & San",
+      "image": "https://alpacasibiza.com/og?title=Our+Story&subtitle=Alpacas+Ibiza+%C2%B7+Es+Currals",
+      "locale": null
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement",
+      "Person",
+      "Person",
+      "BreadcrumbList"
+    ],
+    "jsonldCount": 6,
+    "h1count": 1,
+    "headings": [
+      "H1:About Alpacas Ibiza",
+      "H2:Our Story",
+      "H2:Our Values",
+      "H3:Animal Welfare",
+      "H3:Sustainability",
+      "H3:Artisanal Quality",
+      "H3:Community",
+      "H2:Wishfulfilling Weaving",
+      "H3:Alpacas Ibiza",
+      "H3:Explore",
+      "H3:Shop",
+      "H3:Contact"
+    ],
+    "imgTotal": 2,
+    "imgMissingAlt": 1,
+    "imgBroken": [],
+    "linkTotal": 77,
+    "linkExternalNoRel": 0,
+    "formFields": 0,
+    "unlabeledFields": 0,
+    "wordCount": 521,
+    "overflowPx": 0,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 0,
+        "minor": 0
+      },
+      "total": 1,
+      "rules": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 20,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        }
+      ]
+    },
+    "mobileOverflowPx": 332
+  },
+  {
+    "page": "adopt",
+    "path": "/en/adopt",
+    "console": [
+      "%c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px"
+    ],
+    "failedReq": [],
+    "status": 200,
+    "title": "Adopt an Alpaca | Alpacas Ibiza – Es Currals",
+    "desc": "Support Ibiza's first alpaca farm with a monthly or yearly adoption. €75/month or €900/year — includes farm tours, certificate, fertilizer, photoshoot, and more.",
+    "canonical": "https://alpacasibiza.com/en/adopt",
+    "robots": null,
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "Adopt an Alpaca | Alpacas Ibiza",
+      "image": "https://alpacasibiza.com/og?title=Adopt+an+Alpaca&subtitle=Support+the+herd+%C2%B7+Alpacas+Ibiza",
+      "locale": null
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement",
+      "Product",
+      "Service",
+      "BreadcrumbList",
+      "FAQPage"
+    ],
+    "jsonldCount": 8,
+    "h1count": 1,
+    "headings": [
+      "H1:Adopt an Alpaca",
+      "H2:The herd, by the numbers",
+      "H2:Find your alpaca match",
+      "H3:How would you describe your ideal evenin",
+      "H2:Pick your alpaca",
+      "H2:Compare plans",
+      "H2:Choose your adoption plan",
+      "H2:What you'll receive",
+      "H3:Adoption certificate",
+      "H3:Farm tours",
+      "H3:Welcome gift bundle",
+      "H3:Professional photoshoot",
+      "H3:Alcaca fibre shipping",
+      "H3:Adoption certificate",
+      "H3:Farm tours",
+      "H3:Welcome gift bundle",
+      "H3:Professional photoshoot",
+      "H3:Alcaca fibre shipping",
+      "H2:What's included",
+      "H2:Your adoption certificate",
+      "H2:Adopt now",
+      "H2:A safe, simple adoption",
+      "H2:What adopters say",
+      "H2:Adoption questions",
+      "H3:How long does the adoption last?"
+    ],
+    "imgTotal": 16,
+    "imgMissingAlt": 1,
+    "imgBroken": [],
+    "linkTotal": 95,
+    "linkExternalNoRel": 0,
+    "formFields": 6,
+    "unlabeledFields": 0,
+    "wordCount": 1286,
+    "overflowPx": 0,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 0,
+        "minor": 0
+      },
+      "total": 1,
+      "rules": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 46,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        }
+      ]
+    },
+    "mobileOverflowPx": 332
+  },
+  {
+    "page": "contact",
+    "path": "/en/contact",
+    "console": [],
+    "failedReq": [],
+    "status": 200,
+    "title": "Contact Alpacas Ibiza | San Carlos Farm – Get in Touch",
+    "desc": "Get in touch with Alpacas Ibiza. Visit our farm in San Carlos, Ibiza — contact us by phone, email, or through the form.",
+    "canonical": "https://alpacasibiza.com/en/contact",
+    "robots": null,
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "Contact Alpacas Ibiza | San Carlos Farm – Get in Touch",
+      "image": "https://alpacasibiza.com/og?title=Our+Story&subtitle=Alpacas+Ibiza+%C2%B7+Es+Currals",
+      "locale": null
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement",
+      "BreadcrumbList"
+    ],
+    "jsonldCount": 5,
+    "h1count": 1,
+    "headings": [
+      "H1:Get in Touch",
+      "H2:Send us a Message",
+      "H2:Contact Information",
+      "H3:Location",
+      "H3:Phone",
+      "H3:Email",
+      "H3:Hours",
+      "H2:How to find us",
+      "H2:Getting here",
+      "H3:By car",
+      "H3:From the airport",
+      "H3:Public transit",
+      "H3:Coordinates & backup nav",
+      "H3:Alpacas Ibiza",
+      "H3:Explore",
+      "H3:Shop",
+      "H3:Contact"
+    ],
+    "imgTotal": 2,
+    "imgMissingAlt": 1,
+    "imgBroken": [],
+    "linkTotal": 81,
+    "linkExternalNoRel": 0,
+    "formFields": 7,
+    "unlabeledFields": 0,
+    "wordCount": 346,
+    "overflowPx": 0,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 0,
+        "minor": 0
+      },
+      "total": 1,
+      "rules": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 22,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        }
+      ]
+    },
+    "mobileOverflowPx": 332
+  },
+  {
+    "page": "shop",
+    "path": "/en/shop",
+    "console": [],
+    "failedReq": [],
+    "status": 200,
+    "title": "Shop | Wishfulfilling Weaving & Alcaca – Alpacas Ibiza",
+    "desc": "Hand-woven scarves on traditional wooden looms, custom commissions, and Alcaca organic fertilizer — all from Es Currals, Ibiza's first alpaca farm.",
+    "canonical": "https://alpacasibiza.com/en/shop",
+    "robots": null,
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "Shop | Wishfulfilling Weaving & Alcaca – Alpacas Ibiza",
+      "image": "https://alpacasibiza.com/og?title=Meet+the+Herd&subtitle=Every+alpaca+has+a+name+and+a+story",
+      "locale": null
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement",
+      "ItemList"
+    ],
+    "jsonldCount": 5,
+    "h1count": 1,
+    "headings": [
+      "H1:Wishfulfilling Weaving Collection",
+      "H2:Woven Collection",
+      "H2:Custom Commission",
+      "H2:Alpaca Manure",
+      "H2:Name your skein",
+      "H3:Alpacas Ibiza",
+      "H3:Explore",
+      "H3:Shop",
+      "H3:Contact"
+    ],
+    "imgTotal": 2,
+    "imgMissingAlt": 1,
+    "imgBroken": [],
+    "linkTotal": 80,
+    "linkExternalNoRel": 0,
+    "formFields": 0,
+    "unlabeledFields": 0,
+    "wordCount": 229,
+    "overflowPx": 0,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 0,
+        "minor": 0
+      },
+      "total": 1,
+      "rules": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 19,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        }
+      ]
+    },
+    "mobileOverflowPx": 332
+  },
+  {
+    "page": "shop-woven",
+    "path": "/en/shop/woven",
+    "console": [],
+    "failedReq": [],
+    "status": 200,
+    "title": "Woven Collection | Wishfulfilling Weaving – Alpacas Ibiza",
+    "desc": "Handwoven alpaca-wool scarves, blankets, and textiles made on a traditional wooden loom at Es Currals, Ibiza. Each piece is unique — enquire for availability.",
+    "canonical": "https://alpacasibiza.com/en/shop/woven",
+    "robots": null,
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "Woven Collection | Wishfulfilling Weaving – Alpacas Ibiza",
+      "image": "https://alpacasibiza.com/og?title=Meet+the+Herd&subtitle=Every+alpaca+has+a+name+and+a+story",
+      "locale": null
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement",
+      "ItemList",
+      "Product"
+    ],
+    "jsonldCount": 6,
+    "h1count": 1,
+    "headings": [
+      "H1:Woven Collection",
+      "H3:[UNMAPPED — product name 1]",
+      "H3:[UNMAPPED — product name 2]",
+      "H3:[UNMAPPED — product name 3]",
+      "H3:[UNMAPPED — product name 4]",
+      "H3:[UNMAPPED — product name 5]",
+      "H3:[UNMAPPED — product name 6]",
+      "H3:Woven shop — owner data needed",
+      "H3:Alpacas Ibiza",
+      "H3:Explore",
+      "H3:Shop",
+      "H3:Contact"
+    ],
+    "imgTotal": 8,
+    "imgMissingAlt": 7,
+    "imgBroken": [],
+    "linkTotal": 82,
+    "linkExternalNoRel": 0,
+    "formFields": 0,
+    "unlabeledFields": 0,
+    "wordCount": 334,
+    "overflowPx": 0,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 1,
+        "minor": 0
+      },
+      "total": 2,
+      "rules": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 19,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "n": 1,
+          "help": "Heading levels should only increase by one"
+        }
+      ]
+    },
+    "mobileOverflowPx": 332
+  },
+  {
+    "page": "shop-commission",
+    "path": "/en/shop/commission",
+    "console": [],
+    "failedReq": [],
+    "status": 200,
+    "title": "Custom Commission | Wishfulfilling Weaving – Alpacas Ibiza",
+    "desc": "Commission a bespoke hand-woven piece from San at Es Currals, Ibiza. Choose your colours, pattern, and dimensions — made to order on a traditional wooden loom.",
+    "canonical": "https://alpacasibiza.com/en/shop/commission",
+    "robots": null,
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "Custom Commission | Wishfulfilling Weaving – Alpacas Ibiza",
+      "image": "https://alpacasibiza.com/og?title=Meet+the+Herd&subtitle=Every+alpaca+has+a+name+and+a+story",
+      "locale": null
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement",
+      "ItemList"
+    ],
+    "jsonldCount": 5,
+    "h1count": 1,
+    "headings": [
+      "H1:Custom Commission",
+      "H2:Tell Us About Your Vision",
+      "H3:Alpacas Ibiza",
+      "H3:Explore",
+      "H3:Shop",
+      "H3:Contact"
+    ],
+    "imgTotal": 2,
+    "imgMissingAlt": 1,
+    "imgBroken": [],
+    "linkTotal": 76,
+    "linkExternalNoRel": 0,
+    "formFields": 21,
+    "unlabeledFields": 0,
+    "wordCount": 318,
+    "overflowPx": 0,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 0,
+        "minor": 0
+      },
+      "total": 1,
+      "rules": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 33,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        }
+      ]
+    },
+    "mobileOverflowPx": 332
+  },
+  {
+    "page": "shop-alcaca",
+    "path": "/en/shop/alcaca",
+    "console": [],
+    "failedReq": [],
+    "status": 200,
+    "title": "Alcaca Oro Negro | Alpaca Manure Fertilizer – Alpacas Ibiza",
+    "desc": "Alcaca Oro Negro is natural alpaca-manure fertilizer from Es Currals, Ibiza. Called \"black gold\" in the Andes — odorless, ready-to-use, available from 125 g mini-bags to bulk orders.",
+    "canonical": "https://alpacasibiza.com/en/shop/alcaca",
+    "robots": null,
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "Alcaca Oro Negro | Alpaca Manure Fertilizer – Alpacas Ibiza",
+      "image": "https://alpacasibiza.com/og?title=Meet+the+Herd&subtitle=Every+alpaca+has+a+name+and+a+story",
+      "locale": null
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement",
+      "ItemList",
+      "Product"
+    ],
+    "jsonldCount": 6,
+    "h1count": 1,
+    "headings": [
+      "H1:Alcaca Oro Negro",
+      "H2:Zwart Goud — Black Gold",
+      "H3:Mini Bag — 125 g",
+      "H3:Standard Bags — various sizes",
+      "H3:Bulk Order — hundreds of kg",
+      "H2:Why Alcaca Oro Negro?",
+      "H3:Alpacas Ibiza",
+      "H3:Explore",
+      "H3:Shop",
+      "H3:Contact"
+    ],
+    "imgTotal": 4,
+    "imgMissingAlt": 1,
+    "imgBroken": [],
+    "linkTotal": 79,
+    "linkExternalNoRel": 0,
+    "formFields": 0,
+    "unlabeledFields": 0,
+    "wordCount": 400,
+    "overflowPx": 0,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 0,
+        "minor": 0
+      },
+      "total": 1,
+      "rules": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 19,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        }
+      ]
+    },
+    "mobileOverflowPx": 332
+  },
+  {
+    "page": "alpacas",
+    "path": "/en/alpacas",
+    "console": [],
+    "failedReq": [],
+    "status": 200,
+    "title": "Meet Our Alpacas | Alpacas Ibiza – Es Currals Herd",
+    "desc": "Get to know the 14 alpacas of Es Currals. Barbarella, Avalon, Bardot, Chet, Dusty, Fela, Fonda, Lewis, Marron, Mojo, Moloko, Nelson, Suki, and Toots — Ibiza's beloved herd.",
+    "canonical": "https://alpacasibiza.com/en/alpacas",
+    "robots": "index, follow",
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "Meet Our Alpacas | Alpacas Ibiza – Es Currals Herd",
+      "image": "https://alpacasibiza.com/og?title=Meet+the+Herd&subtitle=Every+alpaca+has+a+name+and+a+story",
+      "locale": "en"
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement",
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "TouristAttraction",
+      "BreadcrumbList"
+    ],
+    "jsonldCount": 7,
+    "h1count": 1,
+    "headings": [
+      "H1:Meet Our Alpacas",
+      "H2:Did you know?",
+      "H3:Barbarella",
+      "H3:Avalon",
+      "H3:Bardot",
+      "H3:Chet",
+      "H3:Dusty",
+      "H3:Fela",
+      "H3:Fonda",
+      "H3:Lewis",
+      "H3:Marron",
+      "H3:Mojo",
+      "H3:Moloko",
+      "H3:Nelson",
+      "H3:Suki",
+      "H3:Toots",
+      "H3:Alpacas Ibiza",
+      "H3:Explore",
+      "H3:Shop",
+      "H3:Contact"
+    ],
+    "imgTotal": 16,
+    "imgMissingAlt": 0,
+    "imgBroken": [],
+    "linkTotal": 106,
+    "linkExternalNoRel": 0,
+    "formFields": 0,
+    "unlabeledFields": 0,
+    "wordCount": 1434,
+    "overflowPx": 0,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 0,
+        "minor": 0
+      },
+      "total": 1,
+      "rules": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 51,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        }
+      ]
+    },
+    "mobileOverflowPx": 332
+  },
+  {
+    "page": "experiences",
+    "path": "/en/experiences",
+    "console": [],
+    "failedReq": [],
+    "status": 200,
+    "title": "Experiences | Alpacas Ibiza — Tours, Yoga, Workshops, Weddings",
+    "desc": "Compare every Alpacas Ibiza experience: 90-minute farm tours, alpaca yoga, weaving workshops, weddings, romantic sunsets, family days, and corporate team building.",
+    "canonical": "https://alpacasibiza.com/en/experiences",
+    "robots": null,
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "Experiences — Alpacas Ibiza",
+      "image": "https://alpacasibiza.com/og?title=Meet+the+Herd&subtitle=Every+alpaca+has+a+name+and+a+story",
+      "locale": null
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement",
+      "BreadcrumbList"
+    ],
+    "jsonldCount": 5,
+    "h1count": 1,
+    "headings": [
+      "H1:Experiences at Alpacas Ibiza",
+      "H2:Compare every experience",
+      "H3:Alpaca Farm Tour",
+      "H3:Alpaca Yoga",
+      "H3:Workshops",
+      "H3:Romantic Sunset",
+      "H3:Family Farm Day",
+      "H3:Weddings & Photoshoots",
+      "H3:Corporate Team Building",
+      "H3:Alpacas Ibiza",
+      "H3:Explore",
+      "H3:Shop",
+      "H3:Contact"
+    ],
+    "imgTotal": 2,
+    "imgMissingAlt": 1,
+    "imgBroken": [],
+    "linkTotal": 84,
+    "linkExternalNoRel": 0,
+    "formFields": 0,
+    "unlabeledFields": 0,
+    "wordCount": 521,
+    "overflowPx": 0,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 0,
+        "minor": 0
+      },
+      "total": 1,
+      "rules": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 42,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        }
+      ]
+    },
+    "mobileOverflowPx": 332
+  },
+  {
+    "page": "exp-corporate",
+    "path": "/en/experiences/corporate-team-building",
+    "console": [
+      "pageerror: Cannot read properties of null (reading 'style')",
+      "pageerror: Cannot read properties of null (reading 'style')"
+    ],
+    "failedReq": [],
+    "status": 200,
+    "title": "Corporate Alpaca Retreats | Team Building – Alpacas Ibiza",
+    "desc": "Unique corporate retreats and team building experiences with alpacas in Ibiza. Stress reduction, communication workshops, and nature connection. Book your corporate event!",
+    "canonical": "https://alpacasibiza.com/en/experiences/corporate-team-building",
+    "robots": null,
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "Corporate Alpaca Retreats | Team Building – Alpacas Ibiza",
+      "image": "https://alpacasibiza.com/og?title=Meet+the+Herd&subtitle=Every+alpaca+has+a+name+and+a+story",
+      "locale": null
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement",
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "FAQPage"
+    ],
+    "jsonldCount": 6,
+    "h1count": 1,
+    "headings": [
+      "H1:Corporate Retreats & Team Building",
+      "H2:Book Your Visit",
+      "H2:Get a custom quote",
+      "H2:Why Alpacas for Team Building?",
+      "H3:Stress Reduction",
+      "H3:Communication",
+      "H3:Creativity",
+      "H3:Nature Connection",
+      "H2:Ready to Plan Your Event?",
+      "H3:How many people can attend a corporate e",
+      "H3:What is included in a corporate package?",
+      "H3:How far in advance should we book?",
+      "H3:Is transport to the farm included?",
+      "H3:Can we customize the itinerary?",
+      "H2:Coming back often?",
+      "H3:Alpacas Ibiza",
+      "H3:Explore",
+      "H3:Shop",
+      "H3:Contact"
+    ],
+    "imgTotal": 4,
+    "imgMissingAlt": 0,
+    "imgBroken": [],
+    "linkTotal": 79,
+    "linkExternalNoRel": 0,
+    "formFields": 7,
+    "unlabeledFields": 0,
+    "wordCount": 412,
+    "overflowPx": 0,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 0,
+        "minor": 0
+      },
+      "total": 1,
+      "rules": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 26,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        }
+      ]
+    },
+    "mobileOverflowPx": 332
+  },
+  {
+    "page": "exp-romantic",
+    "path": "/en/experiences/romantic-sunset",
+    "console": [],
+    "failedReq": [],
+    "status": 200,
+    "title": "Romantic Sunset Walk with Alpacas | Couples – Alpacas Ibiza",
+    "desc": "A private sunset walk with alpacas at Es Currals, Ibiza. Perfect for couples — advance reservation required.",
+    "canonical": "https://alpacasibiza.com/en/experiences/romantic-sunset",
+    "robots": null,
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "Romantic Sunset Walk with Alpacas | Couples – Alpacas Ibiza",
+      "image": "https://alpacasibiza.com/og?title=Meet+the+Herd&subtitle=Every+alpaca+has+a+name+and+a+story",
+      "locale": null
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement"
+    ],
+    "jsonldCount": 4,
+    "h1count": 1,
+    "headings": [
+      "H1:Romantic Sunset Walks",
+      "H2:\"The most magical date we've ever had.\"",
+      "H3:Champagne",
+      "H3:Photos",
+      "H3:Privacy",
+      "H2:Perfect for Proposals",
+      "H2:Coming back often?",
+      "H3:Alpacas Ibiza",
+      "H3:Explore",
+      "H3:Shop",
+      "H3:Contact"
+    ],
+    "imgTotal": 3,
+    "imgMissingAlt": 1,
+    "imgBroken": [],
+    "linkTotal": 79,
+    "linkExternalNoRel": 0,
+    "formFields": 0,
+    "unlabeledFields": 0,
+    "wordCount": 305,
+    "overflowPx": 0,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 0,
+        "minor": 0
+      },
+      "total": 1,
+      "rules": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 24,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        }
+      ]
+    },
+    "mobileOverflowPx": 332
+  },
+  {
+    "page": "exp-family",
+    "path": "/en/experiences/family-farm-days",
+    "console": [
+      "pageerror: Cannot read properties of null (reading 'style')",
+      "pageerror: Cannot read properties of null (reading 'style')"
+    ],
+    "failedReq": [],
+    "status": 200,
+    "title": "Family Farm Days | Alpacas Ibiza - Kid-Friendly Alpaca Experience",
+    "desc": "Safe, educational family fun at Ibiza's first alpaca farm. Kids feed alpacas, learn about sustainability, and enjoy nature in Santa Eularia. Ages 0+. Book now!",
+    "canonical": "https://alpacasibiza.com/en/experiences/family-farm-days",
+    "robots": null,
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "Family Farm Days | Alpacas Ibiza",
+      "image": "https://alpacasibiza.com/images/gallery/herd-chicas.jpg",
+      "locale": null
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement",
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "FAQPage"
+    ],
+    "jsonldCount": 6,
+    "h1count": 1,
+    "headings": [
+      "H1:Family Farm Days",
+      "H2:Book Your Visit",
+      "H2:Education Meets Cuddliness",
+      "H2:Safety First",
+      "H3:Gentle Animals",
+      "H3:Stroller Friendly",
+      "H3:Hygiene",
+      "H3:Refreshments",
+      "H3:What is the minimum age?",
+      "H3:Are the alpacas safe?",
+      "H3:How long is the visit?",
+      "H2:Coming back often?",
+      "H3:Alpacas Ibiza",
+      "H3:Explore",
+      "H3:Shop",
+      "H3:Contact"
+    ],
+    "imgTotal": 7,
+    "imgMissingAlt": 0,
+    "imgBroken": [],
+    "linkTotal": 78,
+    "linkExternalNoRel": 0,
+    "formFields": 0,
+    "unlabeledFields": 0,
+    "wordCount": 329,
+    "overflowPx": 0,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 0,
+        "minor": 0
+      },
+      "total": 1,
+      "rules": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 22,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        }
+      ]
+    },
+    "mobileOverflowPx": 332
+  },
+  {
+    "page": "gifts",
+    "path": "/en/gifts",
+    "console": [],
+    "failedReq": [],
+    "status": 200,
+    "title": "Gift Voucher – Alpacas Ibiza | Give an Alpaca Experience",
+    "desc": "Give someone a memorable day with our alpaca herd. Gift vouchers valid for any of our tours.",
+    "canonical": "https://alpacasibiza.com/en/gifts",
+    "robots": null,
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "Gift Voucher – Alpacas Ibiza | Give an Alpaca Experience",
+      "image": "https://alpacasibiza.com/og?title=Meet+the+Herd&subtitle=Every+alpaca+has+a+name+and+a+story",
+      "locale": null
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement",
+      "Product",
+      "BreadcrumbList"
+    ],
+    "jsonldCount": 6,
+    "h1count": 1,
+    "headings": [
+      "H1:Give the gift of alpacas",
+      "H2:Why gift an Alpacas Ibiza visit?",
+      "H2:Send the gift of alpacas",
+      "H3:Buy a gift voucher",
+      "H3:Alpacas Ibiza",
+      "H3:Explore",
+      "H3:Shop",
+      "H3:Contact"
+    ],
+    "imgTotal": 2,
+    "imgMissingAlt": 0,
+    "imgBroken": [],
+    "linkTotal": 79,
+    "linkExternalNoRel": 0,
+    "formFields": 0,
+    "unlabeledFields": 0,
+    "wordCount": 371,
+    "overflowPx": 0,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 0,
+        "minor": 0
+      },
+      "total": 1,
+      "rules": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 28,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        }
+      ]
+    },
+    "mobileOverflowPx": 332
+  },
+  {
+    "page": "redeem-voucher",
+    "path": "/en/redeem-voucher",
+    "console": [],
+    "failedReq": [],
+    "status": 200,
+    "title": "Es Currals Alpacas Ibiza | First Alpaca Farm & Wishfulfilling Weaving Studio",
+    "desc": "Es Currals Alpacas Ibiza is the very first alpaca farm in Ibiza and is located in the rural north of the island, on an authentic finca in a beautiful natural setting. Here is also the beating heart of Wishfulfilling Weaving, the artisanal weaving studio where, using mainly alpaca wool exclusive scarves are woven by hand on a traditional wooden loom.",
+    "canonical": "https://alpacasibiza.com/en",
+    "robots": null,
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "Es Currals Alpacas Ibiza | First Alpaca Farm & Wishfulfilling Weaving Studio",
+      "image": "https://alpacasibiza.com/og",
+      "locale": "en"
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement"
+    ],
+    "jsonldCount": 4,
+    "h1count": 1,
+    "headings": [
+      "H1:Redeem your voucher",
+      "H3:Need help?",
+      "H3:Alpacas Ibiza",
+      "H3:Explore",
+      "H3:Shop",
+      "H3:Contact"
+    ],
+    "imgTotal": 1,
+    "imgMissingAlt": 0,
+    "imgBroken": [],
+    "linkTotal": 76,
+    "linkExternalNoRel": 0,
+    "formFields": 1,
+    "unlabeledFields": 0,
+    "wordCount": 214,
+    "overflowPx": 0,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 1,
+        "minor": 0
+      },
+      "total": 2,
+      "rules": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 19,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "n": 1,
+          "help": "Heading levels should only increase by one"
+        }
+      ]
+    },
+    "mobileOverflowPx": 332
+  },
+  {
+    "page": "weaving",
+    "path": "/en/weaving",
+    "console": [],
+    "failedReq": [],
+    "status": 200,
+    "title": "Wishfulfilling Weaving | Alpacas Ibiza — Handwoven Scarves from Es Currals",
+    "desc": "Handwoven scarves made from our alpaca herd's fleece on a traditional wooden loom at Es Currals, Ibiza. Studio by San of Wishfulfilling Weaving.",
+    "canonical": "https://alpacasibiza.com/en/weaving",
+    "robots": "index, follow",
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "Wishfulfilling Weaving | Alpacas Ibiza — Handwoven Scarves from Es Currals",
+      "image": "https://alpacasibiza.com/og?title=Wishfulfilling+Weaving&subtitle=Handwoven+scarves+from+our+herd%27s+fleece+%C2%B7+Es+Currals",
+      "locale": "en"
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement",
+      "BreadcrumbList"
+    ],
+    "jsonldCount": 5,
+    "h1count": 1,
+    "headings": [
+      "H1:Wishfulfilling Weaving — Studio at Es Cu",
+      "H2:The studio",
+      "H2:From fleece to finished cloth",
+      "H3:Shearing",
+      "H3:Washing",
+      "H3:Spinning",
+      "H3:Weaving",
+      "H3:Alpaca Yoga",
+      "H3:Weaving Workshops",
+      "H3:Owner action required before launch",
+      "H3:Alpacas Ibiza",
+      "H3:Explore",
+      "H3:Shop",
+      "H3:Contact"
+    ],
+    "imgTotal": 5,
+    "imgMissingAlt": 1,
+    "imgBroken": [],
+    "linkTotal": 81,
+    "linkExternalNoRel": 0,
+    "formFields": 0,
+    "unlabeledFields": 0,
+    "wordCount": 395,
+    "overflowPx": 0,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 0,
+        "minor": 0
+      },
+      "total": 1,
+      "rules": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 19,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        }
+      ]
+    },
+    "mobileOverflowPx": 332
+  },
+  {
+    "page": "skein",
+    "path": "/en/skein",
+    "console": [],
+    "failedReq": [],
+    "status": 200,
+    "title": "Name Your Skein | Spring Shearing Sponsorship – Alpacas Ibiza",
+    "desc": "Sponsor an alpaca's spring shearing for €200 and receive their spun wool in autumn. 14 slots per year — one per alpaca.",
+    "canonical": "https://alpacasibiza.com/en/skein",
+    "robots": null,
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "Name Your Skein | Spring Shearing Sponsorship – Alpacas Ibiza",
+      "image": null,
+      "locale": null
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement",
+      "Product",
+      "FAQPage"
+    ],
+    "jsonldCount": 6,
+    "h1count": 1,
+    "headings": [
+      "H1:Name your skein",
+      "H2:How it works",
+      "H3:Pick your alpaca",
+      "H3:Spring shearing",
+      "H3:Receive your skein",
+      "H2:Pick your alpaca",
+      "H2:Skein sponsorship",
+      "H3:Only 14 slots — one per alpaca",
+      "H2:Questions",
+      "H3:When does the wool ship?",
+      "H3:How much wool will I receive?",
+      "H3:Is the wool dyed?",
+      "H3:Can I give this as a gift?",
+      "H3:Alpacas Ibiza",
+      "H3:Explore",
+      "H3:Shop",
+      "H3:Contact"
+    ],
+    "imgTotal": 15,
+    "imgMissingAlt": 0,
+    "imgBroken": [],
+    "linkTotal": 78,
+    "linkExternalNoRel": 0,
+    "formFields": 3,
+    "unlabeledFields": 0,
+    "wordCount": 371,
+    "overflowPx": 0,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 0,
+        "minor": 0
+      },
+      "total": 1,
+      "rules": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 24,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        }
+      ]
+    },
+    "mobileOverflowPx": 332
+  },
+  {
+    "page": "sustainability",
+    "path": "/en/sustainability",
+    "console": [],
+    "failedReq": [],
+    "status": 200,
+    "title": "Sustainability | Alpacas Ibiza – Living Lightly on the Land",
+    "desc": "How Es Currals alpaca farm works: animal welfare, natural dyes, traditional Ibiza weaving, and zero-waste practices.",
+    "canonical": "https://alpacasibiza.com/en/sustainability",
+    "robots": "index, follow",
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "Sustainability | Alpacas Ibiza – Living Lightly on the Land",
+      "image": "https://alpacasibiza.com/og?title=Sustainability&subtitle=Eco-conscious+alpaca+farming+on+Ibiza",
+      "locale": "en"
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement",
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "BreadcrumbList"
+    ],
+    "jsonldCount": 6,
+    "h1count": 1,
+    "headings": [
+      "H1:Sustainability",
+      "H2:Animal Welfare",
+      "H2:Traditional Weaving",
+      "H2:Natural Dyes",
+      "H2:Zero-Waste Approach",
+      "H2:The Land",
+      "H2:Responsible Sourcing",
+      "H2:Animal Welfare",
+      "H3:Owner action required before launch",
+      "H2:Learn more about Es Currals",
+      "H3:Alpacas Ibiza",
+      "H3:Explore",
+      "H3:Shop",
+      "H3:Contact"
+    ],
+    "imgTotal": 2,
+    "imgMissingAlt": 1,
+    "imgBroken": [],
+    "linkTotal": 80,
+    "linkExternalNoRel": 0,
+    "formFields": 0,
+    "unlabeledFields": 0,
+    "wordCount": 729,
+    "overflowPx": 0,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 0,
+        "minor": 0
+      },
+      "total": 1,
+      "rules": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 18,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        }
+      ]
+    },
+    "mobileOverflowPx": 332
+  },
+  {
+    "page": "weddings",
+    "path": "/en/weddings",
+    "console": [],
+    "failedReq": [],
+    "status": 200,
+    "title": "Alpacas at Your Wedding | Alpacas Ibiza – Bridal Photoshoots & Ceremonies",
+    "desc": "Make your wedding or photoshoot unforgettable with our gentle alpacas. Bridal shoots, ring-bearer ceremonies, engagement portraits, and social events. Contact us for a bespoke quote.",
+    "canonical": "https://alpacasibiza.com/en/weddings",
+    "robots": "index, follow",
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "Alpacas at Your Wedding | Alpacas Ibiza – Bridal Photoshoots & Ceremonies",
+      "image": "http://localhost:3000/en/weddings/opengraph-image?2b61b6b9253b54f2",
+      "locale": "en"
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement",
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "FAQPage",
+      "Service",
+      "BreadcrumbList"
+    ],
+    "jsonldCount": 8,
+    "h1count": 1,
+    "headings": [
+      "H1:Alpacas at Your Wedding",
+      "H2:What's Included",
+      "H2:Perfect for Every Occasion",
+      "H2:Welfare Comes First",
+      "H2:Plan Your Wedding with Alpacas",
+      "H2:Frequently Asked Questions",
+      "H2:Coming back often?",
+      "H3:[OWNER_INPUT_NEEDED] — Wedding page — co",
+      "H3:Alpacas Ibiza",
+      "H3:Explore",
+      "H3:Shop",
+      "H3:Contact"
+    ],
+    "imgTotal": 2,
+    "imgMissingAlt": 1,
+    "imgBroken": [],
+    "linkTotal": 80,
+    "linkExternalNoRel": 0,
+    "formFields": 0,
+    "unlabeledFields": 0,
+    "wordCount": 518,
+    "overflowPx": 0,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 0,
+        "minor": 0
+      },
+      "total": 1,
+      "rules": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 28,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        }
+      ]
+    },
+    "mobileOverflowPx": 332
+  },
+  {
+    "page": "workshops",
+    "path": "/en/workshops",
+    "console": [],
+    "failedReq": [],
+    "status": 200,
+    "title": "Weaving + Spinning Workshops with San | Alpacas Ibiza",
+    "desc": "A 2-day hands-on weaving and spinning workshop with San at our Ibiza alpaca farm. Off-season only, on request. You spin the yarn, weave the cloth, and take home the scarf you made.",
+    "canonical": "https://alpacasibiza.com/en/workshops",
+    "robots": "index, follow",
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "Weaving + Spinning Workshops with San | Alpacas Ibiza",
+      "image": "http://localhost:3000/en/workshops/opengraph-image?d03e2714fc6ce06e",
+      "locale": "en"
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement",
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Course",
+      "HowTo",
+      "BreadcrumbList"
+    ],
+    "jsonldCount": 8,
+    "h1count": 1,
+    "headings": [
+      "H1:Weaving + Spinning Workshops with San",
+      "H2:What You'll Learn",
+      "H2:Workshop at a Glance",
+      "H3:Duration",
+      "H3:Instructor",
+      "H3:Group Size",
+      "H3:Schedule",
+      "H3:Price",
+      "H3:Takeaway",
+      "H2:About San",
+      "H2:How to Book",
+      "H3:Do I need weaving experience?",
+      "H3:What should I bring?",
+      "H3:What is the cancellation policy?",
+      "H3:Is the wool from your own alpacas?",
+      "H2:Coming back often?",
+      "H3:Alpacas Ibiza",
+      "H3:Explore",
+      "H3:Shop",
+      "H3:Contact"
+    ],
+    "imgTotal": 2,
+    "imgMissingAlt": 0,
+    "imgBroken": [],
+    "linkTotal": 80,
+    "linkExternalNoRel": 0,
+    "formFields": 0,
+    "unlabeledFields": 0,
+    "wordCount": 455,
+    "overflowPx": 0,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 0,
+        "minor": 0
+      },
+      "total": 1,
+      "rules": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 20,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        }
+      ]
+    },
+    "mobileOverflowPx": 332
+  },
+  {
+    "page": "yoga",
+    "path": "/en/yoga",
+    "console": [],
+    "failedReq": [],
+    "status": 200,
+    "title": "Alpaca Yoga Ibiza | Hatha Yoga with Alpacas – €30 per person",
+    "desc": "Join our 1h 15min Hatha yoga sessions surrounded by gentle alpacas at our Ibiza farm. Max 6 guests. Every Wednesday & Saturday. €30 per person. Book now!",
+    "canonical": "https://alpacasibiza.com/en/yoga",
+    "robots": "index, follow",
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "Alpaca Yoga Ibiza | Hatha Yoga with Alpacas – €30 per person",
+      "image": "http://localhost:3000/en/yoga/opengraph-image?fdacefcd31416a63",
+      "locale": "en"
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement",
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "SportsActivityLocation",
+      "Event",
+      "BreadcrumbList"
+    ],
+    "jsonldCount": 8,
+    "h1count": 1,
+    "headings": [
+      "H1:Alpaca Yoga",
+      "H2:What is Alpaca Yoga?",
+      "H2:Why Yoga with Alpacas?",
+      "H2:When & Where",
+      "H2:Price & Capacity",
+      "H2:Book Your Yoga Session",
+      "H3:Do I need yoga experience?",
+      "H3:What should I bring?",
+      "H3:What happens if it rains?",
+      "H3:What is the cancellation policy?",
+      "H2:Coming back often?",
+      "H3:Owner action required before launch",
+      "H3:Alpacas Ibiza",
+      "H3:Explore",
+      "H3:Shop",
+      "H3:Contact"
+    ],
+    "imgTotal": 2,
+    "imgMissingAlt": 1,
+    "imgBroken": [],
+    "linkTotal": 81,
+    "linkExternalNoRel": 0,
+    "formFields": 0,
+    "unlabeledFields": 0,
+    "wordCount": 518,
+    "overflowPx": 0,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 0,
+        "minor": 0
+      },
+      "total": 1,
+      "rules": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 23,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        }
+      ]
+    },
+    "mobileOverflowPx": 332
+  },
+  {
+    "page": "privacy",
+    "path": "/en/privacy",
+    "console": [],
+    "failedReq": [],
+    "status": 200,
+    "title": "Privacy Policy",
+    "desc": "Es Currals Alpacas Ibiza is the very first alpaca farm in Ibiza and is located in the rural north of the island, on an authentic finca in a beautiful natural setting. Here is also the beating heart of Wishfulfilling Weaving, the artisanal weaving studio where, using mainly alpaca wool exclusive scarves are woven by hand on a traditional wooden loom.",
+    "canonical": "https://alpacasibiza.com/en/privacy",
+    "robots": null,
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "Privacy Policy",
+      "image": "https://alpacasibiza.com/og",
+      "locale": "en"
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement"
+    ],
+    "jsonldCount": 4,
+    "h1count": 2,
+    "headings": [
+      "H1:Privacy Policy",
+      "H1:Privacy Policy",
+      "H2:1. About this document",
+      "H2:2. Who we are",
+      "H2:3. What data we collect",
+      "H3:Contact and enquiry forms",
+      "H3:Tour and experience bookings (FareHarbor",
+      "H3:Adopt-a-Paca and skein sponsorship (Stri",
+      "H3:Analytics (only with your consent)",
+      "H3:Technical data",
+      "H2:4. Lawful basis (GDPR Article 6)",
+      "H2:5. Sub-processors",
+      "H2:6. Data retention",
+      "H2:7. Your rights (GDPR Articles 15–22)",
+      "H2:8. Cookies",
+      "H2:9. Contact for privacy matters",
+      "H3:Alpacas Ibiza",
+      "H3:Explore",
+      "H3:Shop",
+      "H3:Contact"
+    ],
+    "imgTotal": 1,
+    "imgMissingAlt": 0,
+    "imgBroken": [],
+    "linkTotal": 92,
+    "linkExternalNoRel": 0,
+    "formFields": 0,
+    "unlabeledFields": 0,
+    "wordCount": 1059,
+    "overflowPx": 0,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 0,
+        "minor": 0
+      },
+      "total": 1,
+      "rules": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 18,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        }
+      ]
+    },
+    "mobileOverflowPx": 332
+  },
+  {
+    "page": "terms",
+    "path": "/en/terms",
+    "console": [],
+    "failedReq": [],
+    "status": 200,
+    "title": "General Terms and Conditions",
+    "desc": "Es Currals Alpacas Ibiza is the very first alpaca farm in Ibiza and is located in the rural north of the island, on an authentic finca in a beautiful natural setting. Here is also the beating heart of Wishfulfilling Weaving, the artisanal weaving studio where, using mainly alpaca wool exclusive scarves are woven by hand on a traditional wooden loom.",
+    "canonical": "https://alpacasibiza.com/en/terms",
+    "robots": null,
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "General Terms and Conditions",
+      "image": "https://alpacasibiza.com/og",
+      "locale": "en"
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement"
+    ],
+    "jsonldCount": 4,
+    "h1count": 1,
+    "headings": [
+      "H1:General Terms and Conditions",
+      "H2:Terms of Service — content pending",
+      "H3:Alpacas Ibiza",
+      "H3:Explore",
+      "H3:Shop",
+      "H3:Contact"
+    ],
+    "imgTotal": 1,
+    "imgMissingAlt": 0,
+    "imgBroken": [],
+    "linkTotal": 77,
+    "linkExternalNoRel": 0,
+    "formFields": 0,
+    "unlabeledFields": 0,
+    "wordCount": 227,
+    "overflowPx": 0,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 0,
+        "minor": 0
+      },
+      "total": 1,
+      "rules": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 18,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        }
+      ]
+    },
+    "mobileOverflowPx": 332
+  },
+  {
+    "page": "cookies",
+    "path": "/en/cookies",
+    "console": [],
+    "failedReq": [],
+    "status": 200,
+    "title": "Cookie Policy",
+    "desc": "Es Currals Alpacas Ibiza is the very first alpaca farm in Ibiza and is located in the rural north of the island, on an authentic finca in a beautiful natural setting. Here is also the beating heart of Wishfulfilling Weaving, the artisanal weaving studio where, using mainly alpaca wool exclusive scarves are woven by hand on a traditional wooden loom.",
+    "canonical": "https://alpacasibiza.com/en/cookies",
+    "robots": null,
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "Cookie Policy",
+      "image": "https://alpacasibiza.com/og",
+      "locale": "en"
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement"
+    ],
+    "jsonldCount": 4,
+    "h1count": 2,
+    "headings": [
+      "H1:Cookie Policy",
+      "H1:Cookie Policy",
+      "H2:1. About this document",
+      "H2:2. What are cookies?",
+      "H2:3. Categories of cookies on this site",
+      "H3:Strictly necessary",
+      "H3:Functionality",
+      "H3:Analytics (only with consent)",
+      "H3:Marketing",
+      "H2:4. Third-party cookies",
+      "H2:5. How to manage your cookie preferences",
+      "H2:6. Changes to this policy",
+      "H2:7. Contact",
+      "H3:Alpacas Ibiza",
+      "H3:Explore",
+      "H3:Shop",
+      "H3:Contact"
+    ],
+    "imgTotal": 1,
+    "imgMissingAlt": 0,
+    "imgBroken": [],
+    "linkTotal": 84,
+    "linkExternalNoRel": 0,
+    "formFields": 0,
+    "unlabeledFields": 0,
+    "wordCount": 812,
+    "overflowPx": 0,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 0,
+        "minor": 0
+      },
+      "total": 1,
+      "rules": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 18,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        }
+      ]
+    },
+    "mobileOverflowPx": 332
+  },
+  {
+    "page": "impressum",
+    "path": "/en/impressum",
+    "console": [],
+    "failedReq": [],
+    "status": 200,
+    "title": "Legal notice — Alpacas Ibiza",
+    "desc": "In compliance with Spanish Law 34/2002 on Information Society Services and Electronic Commerce (LSSI-CE) Article 10 and equivalent European disclosure obligations, the following identification information is provided about the operator of this website.",
+    "canonical": "https://alpacasibiza.com/en/impressum",
+    "robots": "index, follow",
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "Legal notice — Alpacas Ibiza",
+      "image": "https://alpacasibiza.com/og",
+      "locale": "en"
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement",
+      "BreadcrumbList"
+    ],
+    "jsonldCount": 5,
+    "h1count": 1,
+    "headings": [
+      "H1:Legal notice — Alpacas Ibiza",
+      "H2:Legal notice — content pending",
+      "H3:Alpacas Ibiza",
+      "H3:Explore",
+      "H3:Shop",
+      "H3:Contact"
+    ],
+    "imgTotal": 1,
+    "imgMissingAlt": 0,
+    "imgBroken": [],
+    "linkTotal": 78,
+    "linkExternalNoRel": 0,
+    "formFields": 0,
+    "unlabeledFields": 0,
+    "wordCount": 255,
+    "overflowPx": 0,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 0,
+        "minor": 0
+      },
+      "total": 1,
+      "rules": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 18,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        }
+      ]
+    },
+    "mobileOverflowPx": 332
+  },
+  {
+    "page": "press",
+    "path": "/en/press",
+    "console": [],
+    "failedReq": [],
+    "status": 200,
+    "title": "Press & Media | Alpacas Ibiza",
+    "desc": "Alpacas Ibiza as seen in Belgian and Spanish press. Coverage from Gazet van Antwerpen, Het Laatste Nieuws, Diario de Ibiza, Tribes & Nomads and more.",
+    "canonical": "https://alpacasibiza.com/en/press",
+    "robots": "noindex, follow",
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "Press & Media | Alpacas Ibiza",
+      "image": "https://alpacasibiza.com/og?title=Press&subtitle=In+the+news+%C2%B7+Alpacas+Ibiza",
+      "locale": "en"
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement",
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "BreadcrumbList"
+    ],
+    "jsonldCount": 6,
+    "h1count": 1,
+    "headings": [
+      "H1:Press & Media",
+      "H2:As Seen In",
+      "H2:Press Inquiries",
+      "H3:Alpacas Ibiza",
+      "H3:Explore",
+      "H3:Shop",
+      "H3:Contact"
+    ],
+    "imgTotal": 2,
+    "imgMissingAlt": 1,
+    "imgBroken": [],
+    "linkTotal": 78,
+    "linkExternalNoRel": 0,
+    "formFields": 0,
+    "unlabeledFields": 0,
+    "wordCount": 278,
+    "overflowPx": 0,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 0,
+        "minor": 0
+      },
+      "total": 1,
+      "rules": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 24,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        }
+      ]
+    },
+    "mobileOverflowPx": 332
+  },
+  {
+    "page": "sitemap",
+    "path": "/en/sitemap",
+    "console": [
+      "%c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px"
+    ],
+    "failedReq": [],
+    "status": 200,
+    "title": "Site Map | Alpacas Ibiza",
+    "desc": "Every page on alpacasibiza.com — tours, shop, experiences, and more.",
+    "canonical": "https://alpacasibiza.com/en/sitemap",
+    "robots": "index, follow",
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "Site Map | Alpacas Ibiza",
+      "image": "https://alpacasibiza.com/og",
+      "locale": "en"
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement",
+      "BreadcrumbList"
+    ],
+    "jsonldCount": 5,
+    "h1count": 1,
+    "headings": [
+      "H1:Site Map",
+      "H2:Visit & Experiences",
+      "H2:Shop",
+      "H2:Adopt",
+      "H2:About",
+      "H2:Media & Stories",
+      "H2:Contact",
+      "H2:Legal",
+      "H3:Alpacas Ibiza",
+      "H3:Explore",
+      "H3:Shop",
+      "H3:Contact"
+    ],
+    "imgTotal": 1,
+    "imgMissingAlt": 0,
+    "imgBroken": [],
+    "linkTotal": 102,
+    "linkExternalNoRel": 0,
+    "formFields": 0,
+    "unlabeledFields": 0,
+    "wordCount": 244,
+    "overflowPx": 0,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 0,
+        "minor": 0
+      },
+      "total": 1,
+      "rules": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 25,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        }
+      ]
+    },
+    "mobileOverflowPx": 332
+  },
+  {
+    "page": "journal",
+    "path": "/en/journal",
+    "console": [
+      "%c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px"
+    ],
+    "failedReq": [],
+    "status": 200,
+    "title": "Journal | Alpacas Ibiza — Es Currals Farm",
+    "desc": "Stories from the farm — life with the alpaca herd, weaving rhythms, seasonal notes, and recipes from Es Currals Ibiza.",
+    "canonical": "https://alpacasibiza.com/en/journal",
+    "robots": "index, follow",
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "Journal | Alpacas Ibiza — Es Currals Farm",
+      "image": null,
+      "locale": "en"
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement",
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "BreadcrumbList"
+    ],
+    "jsonldCount": 6,
+    "h1count": 1,
+    "headings": [
+      "H1:Journal",
+      "H2:Stories coming soon",
+      "H2:Stay Connected",
+      "H3:Owner: add posts to activate",
+      "H3:Alpacas Ibiza",
+      "H3:Explore",
+      "H3:Shop",
+      "H3:Contact"
+    ],
+    "imgTotal": 2,
+    "imgMissingAlt": 1,
+    "imgBroken": [],
+    "linkTotal": 79,
+    "linkExternalNoRel": 0,
+    "formFields": 3,
+    "unlabeledFields": 0,
+    "wordCount": 242,
+    "overflowPx": 0,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 0,
+        "minor": 0
+      },
+      "total": 1,
+      "rules": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 20,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        }
+      ]
+    },
+    "mobileOverflowPx": 332
+  },
+  {
+    "page": "herd-diary",
+    "path": "/en/herd-diary",
+    "console": [],
+    "failedReq": [],
+    "status": 200,
+    "title": "Herd Diary | Alpacas Ibiza — Life with the Es Currals Alpacas",
+    "desc": "Follow the day-to-day life of the 14 named alpacas at Es Currals — shearing days, health checks, milestones, and farm moments, straight from the herd.",
+    "canonical": "https://alpacasibiza.com/en/herd-diary",
+    "robots": null,
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "Herd Diary | Alpacas Ibiza — Life with the Es Currals Alpacas",
+      "image": null,
+      "locale": null
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement",
+      "BreadcrumbList"
+    ],
+    "jsonldCount": 5,
+    "h1count": 1,
+    "headings": [
+      "H1:Herd Diary",
+      "H3:Alpacas Ibiza",
+      "H3:Explore",
+      "H3:Shop",
+      "H3:Contact"
+    ],
+    "imgTotal": 2,
+    "imgMissingAlt": 1,
+    "imgBroken": [],
+    "linkTotal": 78,
+    "linkExternalNoRel": 0,
+    "formFields": 0,
+    "unlabeledFields": 0,
+    "wordCount": 206,
+    "overflowPx": 0,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 1,
+        "minor": 0
+      },
+      "total": 2,
+      "rules": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 18,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "n": 1,
+          "help": "Heading levels should only increase by one"
+        }
+      ]
+    },
+    "mobileOverflowPx": 332
+  },
+  {
+    "page": "newsletter-archive",
+    "path": "/en/newsletter/archive",
+    "console": [],
+    "failedReq": [],
+    "status": 200,
+    "title": "Newsletter Archive | Alpacas Ibiza",
+    "desc": "Browse past issues of the Alpacas Ibiza newsletter — farm updates, seasonal stories, and news from Es Currals.",
+    "canonical": "https://alpacasibiza.com/en/newsletter/archive",
+    "robots": "index, follow",
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "Newsletter Archive | Alpacas Ibiza",
+      "image": null,
+      "locale": null
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement"
+    ],
+    "jsonldCount": 4,
+    "h1count": 1,
+    "headings": [
+      "H1:Newsletter Archive",
+      "H3:Alpacas Ibiza",
+      "H3:Explore",
+      "H3:Shop",
+      "H3:Contact"
+    ],
+    "imgTotal": 1,
+    "imgMissingAlt": 0,
+    "imgBroken": [],
+    "linkTotal": 76,
+    "linkExternalNoRel": 0,
+    "formFields": 0,
+    "unlabeledFields": 0,
+    "wordCount": 202,
+    "overflowPx": 0,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 1,
+        "minor": 0
+      },
+      "total": 2,
+      "rules": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 18,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "n": 1,
+          "help": "Heading levels should only increase by one"
+        }
+      ]
+    },
+    "mobileOverflowPx": 332
+  },
+  {
+    "page": "alpaca-detail",
+    "path": "/en/alpacas/lewis",
+    "console": [
+      "%c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px",
+      "%c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px"
+    ],
+    "failedReq": [],
+    "status": 200,
+    "title": "alpacas.detailTitle",
+    "desc": "alpacas.detailDescriptionWithPersonality",
+    "canonical": "https://alpacasibiza.com/en/alpacas/lewis",
+    "robots": "index, follow",
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "alpacas.detailTitle",
+      "image": "http://localhost:3000/en/alpacas/lewis/opengraph-image?e154acefadb4189c",
+      "locale": "en"
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement",
+      "AboutPage",
+      "Animal",
+      "BreadcrumbList"
+    ],
+    "jsonldCount": 7,
+    "h1count": 1,
+    "headings": [
+      "H1:Lewis",
+      "H2:Meet the rest of the herd",
+      "H3:Barbarella",
+      "H3:Avalon",
+      "H3:Bardot",
+      "H3:Chet",
+      "H3:Dusty",
+      "H3:Fela",
+      "H3:Alpacas Ibiza",
+      "H3:Explore",
+      "H3:Shop",
+      "H3:Contact"
+    ],
+    "imgTotal": 8,
+    "imgMissingAlt": 0,
+    "imgBroken": [],
+    "linkTotal": 86,
+    "linkExternalNoRel": 0,
+    "formFields": 0,
+    "unlabeledFields": 0,
+    "wordCount": 767,
+    "overflowPx": 0,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 0,
+        "minor": 0
+      },
+      "total": 1,
+      "rules": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 32,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        }
+      ]
+    },
+    "mobileOverflowPx": 332
+  },
+  {
+    "page": "my-adoption",
+    "path": "/en/my-adoption",
+    "console": [
+      "%c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px"
+    ],
+    "failedReq": [],
+    "status": 200,
+    "title": "Adopt an Alpaca | Alpacas Ibiza – Es Currals",
+    "desc": "Support Ibiza's first alpaca farm with a monthly or yearly adoption. €75/month or €900/year — includes farm tours, certificate, fertilizer, photoshoot, and more.",
+    "canonical": "https://alpacasibiza.com/en/adopt",
+    "robots": null,
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "Adopt an Alpaca | Alpacas Ibiza",
+      "image": "https://alpacasibiza.com/og?title=Adopt+an+Alpaca&subtitle=Support+the+herd+%C2%B7+Alpacas+Ibiza",
+      "locale": null
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement",
+      "Product",
+      "Service",
+      "BreadcrumbList",
+      "FAQPage"
+    ],
+    "jsonldCount": 8,
+    "h1count": 1,
+    "headings": [
+      "H1:Adopt an Alpaca",
+      "H2:The herd, by the numbers",
+      "H2:Find your alpaca match",
+      "H3:How would you describe your ideal evenin",
+      "H2:Pick your alpaca",
+      "H2:Compare plans",
+      "H2:Choose your adoption plan",
+      "H2:What you'll receive",
+      "H3:Adoption certificate",
+      "H3:Farm tours",
+      "H3:Welcome gift bundle",
+      "H3:Professional photoshoot",
+      "H3:Alcaca fibre shipping",
+      "H3:Adoption certificate",
+      "H3:Farm tours",
+      "H3:Welcome gift bundle",
+      "H3:Professional photoshoot",
+      "H3:Alcaca fibre shipping",
+      "H2:What's included",
+      "H2:Your adoption certificate",
+      "H2:Adopt now",
+      "H2:A safe, simple adoption",
+      "H2:What adopters say",
+      "H2:Adoption questions",
+      "H3:How long does the adoption last?"
+    ],
+    "imgTotal": 16,
+    "imgMissingAlt": 1,
+    "imgBroken": [],
+    "linkTotal": 95,
+    "linkExternalNoRel": 0,
+    "formFields": 6,
+    "unlabeledFields": 0,
+    "wordCount": 1286,
+    "overflowPx": 0,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 0,
+        "minor": 0
+      },
+      "total": 1,
+      "rules": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 46,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        }
+      ]
+    },
+    "mobileOverflowPx": -1
+  },
+  {
+    "page": "preferences",
+    "path": "/en/preferences",
+    "console": [],
+    "failedReq": [],
+    "status": 200,
+    "title": "Es Currals Alpacas Ibiza | First Alpaca Farm & Wishfulfilling Weaving Studio",
+    "desc": "Es Currals Alpacas Ibiza is the very first alpaca farm in Ibiza and is located in the rural north of the island, on an authentic finca in a beautiful natural setting. Here is also the beating heart of Wishfulfilling Weaving, the artisanal weaving studio where, using mainly alpaca wool exclusive scarves are woven by hand on a traditional wooden loom.",
+    "canonical": "https://alpacasibiza.com/en",
+    "robots": null,
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "Es Currals Alpacas Ibiza | First Alpaca Farm & Wishfulfilling Weaving Studio",
+      "image": "https://alpacasibiza.com/og",
+      "locale": "en"
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement"
+    ],
+    "jsonldCount": 4,
+    "h1count": 1,
+    "headings": [
+      "H1:Link not valid",
+      "H3:Alpacas Ibiza",
+      "H3:Explore",
+      "H3:Shop",
+      "H3:Contact"
+    ],
+    "imgTotal": 1,
+    "imgMissingAlt": 0,
+    "imgBroken": [],
+    "linkTotal": 76,
+    "linkExternalNoRel": 0,
+    "formFields": 0,
+    "unlabeledFields": 0,
+    "wordCount": 206,
+    "overflowPx": 0,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 1,
+        "minor": 0
+      },
+      "total": 2,
+      "rules": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 19,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "n": 1,
+          "help": "Heading levels should only increase by one"
+        }
+      ]
+    },
+    "mobileOverflowPx": 332
+  },
+  {
+    "page": "home-nl",
+    "path": "/nl",
+    "console": [],
+    "failedReq": [],
+    "status": 200,
+    "title": "Es Currals Alpacas Ibiza | First Alpaca Farm & Weaving Studio",
+    "desc": "The very first alpaca farm in Ibiza. Home to Wishfulfilling Weaving — hand-woven scarves on traditional wooden looms using alpaca wool.",
+    "canonical": "https://alpacasibiza.com/nl",
+    "robots": null,
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "Es Currals Alpacas Ibiza | First Alpaca Farm & Weaving Studio",
+      "image": "https://alpacasibiza.com/og?title=Alpacas+Ibiza&subtitle=Ibiza%27s+first+alpaca+farm+%C2%B7+Es+Currals",
+      "locale": null
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement",
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "WebSite"
+    ],
+    "jsonldCount": 6,
+    "h1count": 1,
+    "headings": [
+      "H1:Es Currals Alpacas Ibiza",
+      "H2:Kies Je Ervaring",
+      "H3:Boek een Tour",
+      "H3:Geweven Kopen",
+      "H3:Op Maat",
+      "H3:Koop Alcaca",
+      "H2:Wishfulfilling Weaving",
+      "H2:Mojo",
+      "H2:Waarom Kiezen voor Es Currals Alpacas Ib",
+      "H3:Authentieke Finca",
+      "H3:Traditioneel Weven",
+      "H3:Made in Ibiza",
+      "H3:Alleen op Afspraak",
+      "H3:Premium Kwaliteit",
+      "H3:Dierenwelzijn Voorop",
+      "H2:Bijzondere Ervaringen",
+      "H3:Bruiloften & Feesten",
+      "H3:Adopteer een Alpaca",
+      "H3:Alpaca Yoga",
+      "H3:Weefworkshops",
+      "H3:Zakelijke Incentives",
+      "H2:Ervaringen van Gasten",
+      "H2:Klaar om Alpacas Ibiza te Beleven?",
+      "H3:Blijf Verbonden",
+      "H3:Alpacas Ibiza"
+    ],
+    "imgTotal": 3,
+    "imgMissingAlt": 0,
+    "imgBroken": [],
+    "linkTotal": 103,
+    "linkExternalNoRel": 0,
+    "formFields": 3,
+    "unlabeledFields": 0,
+    "wordCount": 973,
+    "overflowPx": 35,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 0,
+        "minor": 1
+      },
+      "total": 2,
+      "rules": [
+        {
+          "id": "aria-allowed-role",
+          "impact": "minor",
+          "n": 4,
+          "help": "ARIA role should be appropriate for the element"
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 45,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        }
+      ]
+    },
+    "mobileOverflowPx": 332
+  },
+  {
+    "page": "adopt-nl",
+    "path": "/nl/adopt",
+    "console": [
+      "%c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px"
+    ],
+    "failedReq": [],
+    "status": 200,
+    "title": "Adopt an Alpaca | Alpacas Ibiza – Es Currals",
+    "desc": "Support Ibiza's first alpaca farm with a monthly or yearly adoption. €75/month or €900/year — includes farm tours, certificate, fertilizer, photoshoot, and more.",
+    "canonical": "https://alpacasibiza.com/nl/adopt",
+    "robots": null,
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "Adopt an Alpaca | Alpacas Ibiza",
+      "image": "https://alpacasibiza.com/og?title=Adopt+an+Alpaca&subtitle=Support+the+herd+%C2%B7+Alpacas+Ibiza",
+      "locale": null
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement",
+      "Product",
+      "Service",
+      "BreadcrumbList",
+      "FAQPage"
+    ],
+    "jsonldCount": 8,
+    "h1count": 1,
+    "headings": [
+      "H1:Adopteer een Alpaca",
+      "H2:De kudde in cijfers",
+      "H2:Vind jouw alpacamatch",
+      "H3:How would you describe your ideal evenin",
+      "H2:Kies jouw alpaca",
+      "H2:Vergelijk plannen",
+      "H2:Kies je adoptieplan",
+      "H2:Wat je ontvangt",
+      "H3:Adoptiecertificaat",
+      "H3:Boerderijbezoeken",
+      "H3:Welkomstpakket",
+      "H3:Professionele fotosessie",
+      "H3:Alcaca mestverzending",
+      "H3:Adoptiecertificaat",
+      "H3:Boerderijbezoeken",
+      "H3:Welkomstpakket",
+      "H3:Professionele fotosessie",
+      "H3:Alcaca mestverzending",
+      "H2:Wat is inbegrepen",
+      "H2:Jouw adoptiecertificaat",
+      "H2:Adopteer nu",
+      "H2:Een veilige, eenvoudige adoptie",
+      "H2:What adopters say",
+      "H2:Vragen over adoptie",
+      "H3:Hoe lang duurt de adoptie?"
+    ],
+    "imgTotal": 16,
+    "imgMissingAlt": 1,
+    "imgBroken": [],
+    "linkTotal": 95,
+    "linkExternalNoRel": 0,
+    "formFields": 6,
+    "unlabeledFields": 0,
+    "wordCount": 1259,
+    "overflowPx": 35,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 0,
+        "minor": 0
+      },
+      "total": 1,
+      "rules": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 49,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        }
+      ]
+    },
+    "mobileOverflowPx": 332
+  },
+  {
+    "page": "adopt-de",
+    "path": "/de/adopt",
+    "console": [
+      "%c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px"
+    ],
+    "failedReq": [],
+    "status": 200,
+    "title": "Adopt an Alpaca | Alpacas Ibiza – Es Currals",
+    "desc": "Support Ibiza's first alpaca farm with a monthly or yearly adoption. €75/month or €900/year — includes farm tours, certificate, fertilizer, photoshoot, and more.",
+    "canonical": "https://alpacasibiza.com/de/adopt",
+    "robots": null,
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "Adopt an Alpaca | Alpacas Ibiza",
+      "image": "https://alpacasibiza.com/og?title=Adopt+an+Alpaca&subtitle=Support+the+herd+%C2%B7+Alpacas+Ibiza",
+      "locale": null
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement",
+      "Product",
+      "Service",
+      "BreadcrumbList",
+      "FAQPage"
+    ],
+    "jsonldCount": 8,
+    "h1count": 1,
+    "headings": [
+      "H1:Adopt an Alpaca",
+      "H2:Die Herde in Zahlen",
+      "H2:Find your alpaca match",
+      "H3:How would you describe your ideal evenin",
+      "H2:Pick your alpaca",
+      "H2:Compare plans",
+      "H2:Choose your adoption plan",
+      "H2:What you'll receive",
+      "H3:Adoption certificate",
+      "H3:Farm tours",
+      "H3:Welcome gift bundle",
+      "H3:Professional photoshoot",
+      "H3:Alcaca fibre shipping",
+      "H3:Adoption certificate",
+      "H3:Farm tours",
+      "H3:Welcome gift bundle",
+      "H3:Professional photoshoot",
+      "H3:Alcaca fibre shipping",
+      "H2:What's included",
+      "H2:Your adoption certificate",
+      "H2:Adopt now",
+      "H2:A safe, simple adoption",
+      "H2:What adopters say",
+      "H2:Adoption questions",
+      "H3:How long does the adoption last?"
+    ],
+    "imgTotal": 16,
+    "imgMissingAlt": 1,
+    "imgBroken": [],
+    "linkTotal": 95,
+    "linkExternalNoRel": 0,
+    "formFields": 6,
+    "unlabeledFields": 0,
+    "wordCount": 1281,
+    "overflowPx": 0,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 0,
+        "minor": 0
+      },
+      "total": 1,
+      "rules": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 49,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        }
+      ]
+    },
+    "mobileOverflowPx": 332
+  },
+  {
+    "page": "notfound",
+    "path": "/en/this-page-does-not-exist",
+    "console": [],
+    "failedReq": [],
+    "status": 200,
+    "title": "Es Currals Alpacas Ibiza | First Alpaca Farm & Wishfulfilling Weaving Studio",
+    "desc": "Es Currals Alpacas Ibiza is the very first alpaca farm in Ibiza and is located in the rural north of the island, on an authentic finca in a beautiful natural setting. Here is also the beating heart of Wishfulfilling Weaving, the artisanal weaving studio where, using mainly alpaca wool exclusive scarves are woven by hand on a traditional wooden loom.",
+    "canonical": "https://alpacasibiza.com/en",
+    "robots": "noindex",
+    "hreflang": [
+      "en",
+      "de",
+      "it",
+      "es",
+      "nl",
+      "fr",
+      "x-default"
+    ],
+    "og": {
+      "title": "Es Currals Alpacas Ibiza | First Alpaca Farm & Wishfulfilling Weaving Studio",
+      "image": "https://alpacasibiza.com/og",
+      "locale": "en"
+    },
+    "twitter": "summary_large_image",
+    "schemaTypes": [
+      [
+        "LocalBusiness",
+        "TouristAttraction"
+      ],
+      "Organization",
+      "WebSite",
+      "SiteNavigationElement"
+    ],
+    "jsonldCount": 4,
+    "h1count": 1,
+    "headings": [
+      "H1:Page Not Found",
+      "H2:Try one of these instead",
+      "H3:Home",
+      "H3:Tours & Visits",
+      "H3:Shop",
+      "H3:About Us",
+      "H3:Contact",
+      "H3:Alpacas Ibiza",
+      "H3:Explore",
+      "H3:Shop",
+      "H3:Contact"
+    ],
+    "imgTotal": 1,
+    "imgMissingAlt": 0,
+    "imgBroken": [],
+    "linkTotal": 82,
+    "linkExternalNoRel": 0,
+    "formFields": 0,
+    "unlabeledFields": 0,
+    "wordCount": 244,
+    "overflowPx": 0,
+    "axe": {
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 0,
+        "minor": 0
+      },
+      "total": 1,
+      "rules": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "n": 25,
+          "help": "Elements must meet minimum color contrast ratio thresholds"
+        }
+      ]
+    },
+    "mobileOverflowPx": 332
+  }
+]

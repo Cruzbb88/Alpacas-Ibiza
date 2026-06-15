@@ -80,7 +80,7 @@ export async function SocialProofStrip({ variant = 'full', className = '' }: Soc
   if (data.source === 'unconfigured' || data.source === 'fallback') {
     return (
       <div
-        className={`w-full text-center py-3 px-4 bg-card border border-border rounded-lg text-sm text-foreground/70 ${className}`}
+        className={`w-full text-center py-3 px-4 bg-card border border-border rounded-lg text-sm text-muted-foreground ${className}`}
         aria-label="Social proof"
       >
         {translate('socialProof.fallback')}
@@ -93,7 +93,7 @@ export async function SocialProofStrip({ variant = 'full', className = '' }: Soc
     const adoptersText = translate('socialProof.adoptersCount', { count: data.totalAdopters })
     return (
       <div
-        className={`w-full text-center py-2 px-4 bg-card border border-border rounded-lg text-sm text-foreground/70 ${className}`}
+        className={`w-full text-center py-2 px-4 bg-card border border-border rounded-lg text-sm text-muted-foreground ${className}`}
         aria-label="Social proof"
       >
         🌿 {visitsText} · {adoptersText}
@@ -112,7 +112,7 @@ export async function SocialProofStrip({ variant = 'full', className = '' }: Soc
         <div className="flex flex-col items-center gap-1">
           <span className="text-2xl" aria-hidden="true">🌿</span>
           <span className="text-2xl font-bold text-foreground">{data.lastWeekBookings}</span>
-          <span className="text-xs text-foreground/60 max-w-[120px]">
+          <span className="text-xs text-muted-foreground max-w-[120px]">
             {translate('socialProof.visitsThisWeek', { count: data.lastWeekBookings })}
           </span>
         </div>
@@ -123,7 +123,7 @@ export async function SocialProofStrip({ variant = 'full', className = '' }: Soc
         <div className="flex flex-col items-center gap-1">
           <span className="text-2xl" aria-hidden="true">📅</span>
           <span className="text-2xl font-bold text-foreground">{data.thisWeekBookings}</span>
-          <span className="text-xs text-foreground/60 max-w-[120px]">
+          <span className="text-xs text-muted-foreground max-w-[120px]">
             {translate('socialProof.toursUpcoming', { count: data.thisWeekBookings })}
           </span>
         </div>
@@ -134,7 +134,7 @@ export async function SocialProofStrip({ variant = 'full', className = '' }: Soc
         <div className="flex flex-col items-center gap-1">
           <span className="text-2xl" aria-hidden="true">🦙</span>
           <span className="text-2xl font-bold text-foreground">{data.totalAdopters}</span>
-          <span className="text-xs text-foreground/60 max-w-[120px]">
+          <span className="text-xs text-muted-foreground max-w-[120px]">
             {translate('socialProof.adoptersCount', { count: data.totalAdopters })}
           </span>
         </div>

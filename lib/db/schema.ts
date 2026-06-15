@@ -170,11 +170,109 @@ export const paymentEvents = pgTable(
   }),
 )
 
+// ── tour_slots ───────────────────────────────────────────────────────────────
+//
+// One bookable occurrence of a tour (a specific date+time of a tour type).
+// In-house booking engine (BOOKING_ENGINE=inhouse) reads/writes these instead of
+// FareHarbor. See docs/adr/028 + reports/crystal-ball/cb-006 (pre-mortem).
+//
+//   capacity     — max guests for this occurrence.
+//   bookedCount  — guests currently HELD or CONFIRMED. reserveSlot() decrements
+//                  (increments bookedCount) atomically; cancel restores. So
+//                  `capacity - bookedCount` already nets out active holds — the
+//                  availability read path must NOT separately exclude pending
+//                  rows (cb-006 F7).
+//   startsAt     — timestamptz UTC. Always format via Europe/Madrid (cb-006 F4).
+//
+// The conditional capacity decrement is a single atomic UPDATE … WHERE
+// bookedCount+party<=capacity (cb-006 F1/F6) — see lib/booking/store.ts.
+
+export const tourSlots = pgTable(
+  'tour_slots',
+  {
+    id: text('id').primaryKey(),
+    tourSlug: text('tour_slug').notNull(),
+    startsAt: timestamp('starts_at', { withTimezone: true }).notNull(),
+    durationMin: integer('duration_min').notNull(),
+    capacity: integer('capacity').notNull(),
+    bookedCount: integer('booked_count').notNull().default(0),
+    priceEurMinor: integer('price_eur_minor').notNull(),
+    status: text('status').notNull().default('open'), // 'open' | 'closed'
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => ({
+    tourStartsIdx: index('tour_slots_tour_starts_idx').on(t.tourSlug, t.startsAt),
+    statusIdx: index('tour_slots_status_idx').on(t.status),
+  }),
+)
+
+// ── bookings ─────────────────────────────────────────────────────────────────
+//
+// One reservation against a tour_slot.
+//   status        — 'pending' (held, awaiting payment) | 'confirmed' (paid) |
+//                   'cancelled' (capacity restored).
+//   holdExpiresAt — a pending hold past this is released by the cleanup cron and
+//                   re-validated at confirm (cb-006 F1).
+//   paymentRef    — vendor payment/session id, set at confirm. The UNIQUE index
+//                   makes confirm idempotent: a duplicate webhook with the same
+//                   paymentRef collides instead of double-confirming (cb-006 F2/F5).
+//                   NULL for pending rows (Postgres allows many NULLs in a unique
+//                   index, so un-paid holds never collide).
+
+export const bookings = pgTable(
+  'bookings',
+  {
+    id: text('id').primaryKey(),
+    slotId: text('slot_id')
+      .notNull()
+      .references(() => tourSlots.id),
+    partySize: integer('party_size').notNull(),
+    guestName: text('guest_name'),
+    guestEmail: text('guest_email'),
+    status: text('status').notNull().default('pending'),
+    holdExpiresAt: timestamp('hold_expires_at', { withTimezone: true }),
+    paymentRef: text('payment_ref'),
+    amountEurMinor: integer('amount_eur_minor').notNull(),
+    // Client-supplied dedupe key: a retried reserve POST with the same key returns
+    // the SAME booking instead of creating a second hold (spec-011 §I). UNIQUE on
+    // a nullable column — many NULLs allowed (legacy/no-key holds never collide).
+    idempotencyKey: text('idempotency_key'),
+    // Guest's locale (2-letter) — language of confirmation / reminder / review
+    // emails. NULL → 'en' fallback.
+    locale: text('locale'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    confirmedAt: timestamp('confirmed_at', { withTimezone: true }),
+    cancelledAt: timestamp('cancelled_at', { withTimezone: true }),
+    // Refund-exactly-once claim: stamped before a refund is issued, guarded so no
+    // path (self-service cancel, webhook un-honorable refund, double-click, late
+    // duplicate webhook) can ever refund the same booking twice — Mollie has no
+    // idempotency key, so this is the cross-vendor guard (code-review 2026-06-15).
+    refundedAt: timestamp('refunded_at', { withTimezone: true }),
+    // Post-booking lifecycle stamps — idempotency for the reminders/review cron so
+    // a re-run never double-sends (competitor-standard: Rezdy/Xola/FareHarbor).
+    reminderSentAt: timestamp('reminder_sent_at', { withTimezone: true }),
+    reviewRequestedAt: timestamp('review_requested_at', { withTimezone: true }),
+    // GDPR Article 17: erasure nulls guest_name/guest_email and stamps this; the
+    // row stays for capacity/accounting (mirrors customers.deleted_at).
+    deletedAt: timestamp('deleted_at', { withTimezone: true }),
+  },
+  (t) => ({
+    slotIdx: index('bookings_slot_id_idx').on(t.slotId),
+    statusIdx: index('bookings_status_idx').on(t.status),
+    paymentRefUnique: uniqueIndex('bookings_payment_ref_unique').on(t.paymentRef),
+    idempotencyKeyUnique: uniqueIndex('bookings_idempotency_key_unique').on(t.idempotencyKey),
+  }),
+)
+
 // ── Type exports ─────────────────────────────────────────────────────────────
 //
 // Inferred row types — use these in handler signatures so callers don't import
 // drizzle directly.
 
+export type TourSlot = typeof tourSlots.$inferSelect
+export type NewTourSlot = typeof tourSlots.$inferInsert
+export type Booking = typeof bookings.$inferSelect
+export type NewBooking = typeof bookings.$inferInsert
 export type Customer = typeof customers.$inferSelect
 export type NewCustomer = typeof customers.$inferInsert
 export type Subscription = typeof subscriptions.$inferSelect

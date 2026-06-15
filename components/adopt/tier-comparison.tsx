@@ -68,7 +68,7 @@ export function TierComparison({
           {title}
         </h2>
         {subtitle && (
-          <p className="text-foreground/70 max-w-2xl mx-auto">{subtitle}</p>
+          <p className="text-muted-foreground max-w-2xl mx-auto">{subtitle}</p>
         )}
       </div>
 
@@ -77,11 +77,11 @@ export function TierComparison({
         <table className="w-full max-w-4xl mx-auto border-collapse bg-card rounded-2xl overflow-hidden border border-border shadow-sm">
           <thead>
             <tr>
-              <th className="text-left px-6 py-5 bg-card font-semibold text-foreground/70 text-sm uppercase tracking-wide">
+              <th className="text-left px-6 py-5 bg-card font-semibold text-muted-foreground text-sm uppercase tracking-wide">
                 {whatYouGetLabel}
               </th>
               <th className="text-center px-6 py-5 bg-card font-semibold text-foreground border-l border-border">
-                <div className="text-xs uppercase tracking-wide text-foreground/50 mb-1">
+                <div className="text-xs uppercase tracking-wide text-muted-foreground mb-1">
                   {monthlyLabel}
                 </div>
                 <div className="text-2xl font-bold">{monthlyPrice}</div>
@@ -217,7 +217,7 @@ function MobileTierCard({
       )}
       <p
         className={`text-xs uppercase tracking-wide mb-2 font-semibold ${
-          accent ? 'text-primary' : 'text-foreground/50'
+          accent ? 'text-primary' : 'text-muted-foreground'
         }`}
       >
         {tierLabel}

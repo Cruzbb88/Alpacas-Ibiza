@@ -68,7 +68,7 @@ export function TenantMap({
             referrerPolicy="no-referrer-when-downgrade"
             className="w-full h-[360px] block"
           />
-          <p className="text-xs text-foreground/60 p-3 bg-background">
+          <p className="text-xs text-muted-foreground p-3 bg-background">
             <a
               href={href}
               target="_blank"

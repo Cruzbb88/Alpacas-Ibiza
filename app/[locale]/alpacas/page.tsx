@@ -64,7 +64,7 @@ export default async function AlpacasPage({
     const attractionSchema = herdAttractionSchema()
 
     return (
-        <main>
+        <>
             {/* JSON-LD: LocalBusiness */}
             <script
                 type="application/ld+json"
@@ -109,7 +109,7 @@ export default async function AlpacasPage({
             {/* Alpaca grid — filtered server-side; empty state when no matches */}
             <PageSection>
                 {filtered.length === 0 ? (
-                    <p className="text-center text-foreground/60 py-12">
+                    <p className="text-center text-muted-foreground py-12">
                         {translate('alpacas.filter.noMatches')}
                     </p>
                 ) : (
@@ -120,6 +120,6 @@ export default async function AlpacasPage({
                     </div>
                 )}
             </PageSection>
-        </main>
+        </>
     )
 }

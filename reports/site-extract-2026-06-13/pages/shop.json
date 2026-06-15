@@ -1,0 +1,75 @@
+{
+  "page": "shop",
+  "path": "/en/shop",
+  "console": [],
+  "failedReq": [],
+  "status": 200,
+  "title": "Shop | Wishfulfilling Weaving & Alcaca – Alpacas Ibiza",
+  "desc": "Hand-woven scarves on traditional wooden looms, custom commissions, and Alcaca organic fertilizer — all from Es Currals, Ibiza's first alpaca farm.",
+  "canonical": "https://alpacasibiza.com/en/shop",
+  "robots": null,
+  "hreflang": [
+    "en",
+    "de",
+    "it",
+    "es",
+    "nl",
+    "fr",
+    "x-default"
+  ],
+  "og": {
+    "title": "Shop | Wishfulfilling Weaving & Alcaca – Alpacas Ibiza",
+    "image": "https://alpacasibiza.com/og?title=Meet+the+Herd&subtitle=Every+alpaca+has+a+name+and+a+story",
+    "locale": null
+  },
+  "twitter": "summary_large_image",
+  "schemaTypes": [
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "Organization",
+    "WebSite",
+    "SiteNavigationElement",
+    "ItemList"
+  ],
+  "jsonldCount": 5,
+  "h1count": 1,
+  "headings": [
+    "H1:Wishfulfilling Weaving Collection",
+    "H2:Woven Collection",
+    "H2:Custom Commission",
+    "H2:Alpaca Manure",
+    "H2:Name your skein",
+    "H3:Alpacas Ibiza",
+    "H3:Explore",
+    "H3:Shop",
+    "H3:Contact"
+  ],
+  "imgTotal": 2,
+  "imgMissingAlt": 1,
+  "imgBroken": [],
+  "linkTotal": 80,
+  "linkExternalNoRel": 0,
+  "formFields": 0,
+  "unlabeledFields": 0,
+  "wordCount": 229,
+  "overflowPx": 0,
+  "axe": {
+    "byImpact": {
+      "critical": 0,
+      "serious": 1,
+      "moderate": 0,
+      "minor": 0
+    },
+    "total": 1,
+    "rules": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "n": 19,
+        "help": "Elements must meet minimum color contrast ratio thresholds"
+      }
+    ]
+  }
+}

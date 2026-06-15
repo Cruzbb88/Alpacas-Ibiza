@@ -73,10 +73,10 @@ export function SeasonalPriceList({
     return (
       <p
         aria-label="Seasonal pricing list"
-        className={`text-sm text-foreground/70 ${className ?? ''}`}
+        className={`text-sm text-muted-foreground ${className ?? ''}`}
       >
         {caption && (
-          <span className="mr-1 font-medium text-foreground/60">{caption}</span>
+          <span className="mr-1 font-medium text-muted-foreground">{caption}</span>
         )}
         {sorted.map((w, i) => (
           <span key={`${w.startDate}-${w.endDate}`}>
@@ -105,7 +105,7 @@ export function SeasonalPriceList({
       className={`w-full ${className ?? ''}`}
     >
       {caption && (
-        <p className="mb-2 text-xs font-medium uppercase tracking-wider text-foreground/50">
+        <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
           {caption}
         </p>
       )}
@@ -119,7 +119,7 @@ export function SeasonalPriceList({
               {w.label && (
                 <span className="font-medium text-foreground">{w.label}</span>
               )}
-              <span className="text-foreground/60">
+              <span className="text-muted-foreground">
                 {formatDateRange(w.startDate, w.endDate)}
               </span>
             </dt>

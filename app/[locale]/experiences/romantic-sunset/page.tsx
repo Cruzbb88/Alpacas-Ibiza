@@ -41,7 +41,7 @@ export default async function RomanticPage({ params }: { params: Promise<{ local
     const translate = await getTranslations()
 
     return (
-        <main>
+        <>
             <Hero
                 title={translate('romantic.title')}
                 subtitle={translate('romantic.subtitle')}
@@ -64,24 +64,24 @@ export default async function RomanticPage({ params }: { params: Promise<{ local
                     <h2 className="text-3xl font-serif text-foreground mb-6 italic">
                         {translate('romantic.quote')}
                     </h2>
-                    <p className="text-lg text-foreground/70 leading-relaxed mb-8">
+                    <p className="text-lg text-muted-foreground leading-relaxed mb-8">
                         {translate('romantic.description')}
                     </p>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
                         <div className="text-center">
                             <span className="text-4xl mb-3 block">🥂</span>
                             <h3 className="text-lg font-semibold mb-2">{translate('romantic.champagne.title')}</h3>
-                            <p className="text-sm text-foreground/60">{translate('romantic.champagne.desc')}</p>
+                            <p className="text-sm text-muted-foreground">{translate('romantic.champagne.desc')}</p>
                         </div>
                         <div className="text-center">
                             <span className="text-4xl mb-3 block">📸</span>
                             <h3 className="text-lg font-semibold mb-2">{translate('romantic.photos.title')}</h3>
-                            <p className="text-sm text-foreground/60">{translate('romantic.photos.desc')}</p>
+                            <p className="text-sm text-muted-foreground">{translate('romantic.photos.desc')}</p>
                         </div>
                         <div className="text-center">
                             <span className="text-4xl mb-3 block">🤫</span>
                             <h3 className="text-lg font-semibold mb-2">{translate('romantic.privacy.title')}</h3>
-                            <p className="text-sm text-foreground/60">{translate('romantic.privacy.desc')}</p>
+                            <p className="text-sm text-muted-foreground">{translate('romantic.privacy.desc')}</p>
                         </div>
                     </div>
                 </div>
@@ -91,7 +91,7 @@ export default async function RomanticPage({ params }: { params: Promise<{ local
                 <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-8">
                     <div className="flex-1">
                         <h2 className="text-3xl font-bold text-foreground mb-4">{translate('romantic.proposalTitle')}</h2>
-                        <p className="text-foreground/70 mb-6">
+                        <p className="text-muted-foreground mb-6">
                             {translate('romantic.proposalText')}
                         </p>
                         <Button asChild className="bg-accent text-accent-foreground hover:bg-accent/90">
@@ -109,6 +109,6 @@ export default async function RomanticPage({ params }: { params: Promise<{ local
 
             {/* Adopt cross-sell */}
             <AdoptCrossSell locale={locale} />
-        </main>
+        </>
     )
 }

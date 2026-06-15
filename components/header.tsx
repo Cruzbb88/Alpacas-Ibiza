@@ -471,7 +471,7 @@ export function Header({ logoUrl = null, brandName = 'Alpacas Ibiza', adoptFlags
                               'block rounded px-3 py-2 text-sm transition-colors',
                               isSubActive
                                 ? 'bg-accent/10 text-accent font-medium'
-                                : 'text-foreground/70 hover:bg-muted hover:text-accent',
+                                : 'text-muted-foreground hover:bg-muted hover:text-accent',
                             ].join(' ')}
                           >
                             {subLabel}
@@ -612,7 +612,7 @@ export function Header({ logoUrl = null, brandName = 'Alpacas Ibiza', adoptFlags
                           aria-expanded={isExpanded ? 'true' : 'false'}
                           aria-label={`${isExpanded ? 'Collapse' : 'Expand'} ${label} sub-pages`}
                           onClick={() => toggleMobileExpand(item.slug)}
-                          className="flex-shrink-0 rounded-md p-3 text-foreground/60 hover:text-accent transition-colors"
+                          className="flex-shrink-0 rounded-md p-3 text-muted-foreground hover:text-accent transition-colors"
                         >
                           <ChevronDown
                             className={[
@@ -641,7 +641,7 @@ export function Header({ logoUrl = null, brandName = 'Alpacas Ibiza', adoptFlags
                                     'block rounded-md px-3 py-2 text-sm font-normal transition-colors',
                                     isSubActive
                                       ? 'bg-accent/10 text-accent'
-                                      : 'text-foreground/70 hover:bg-muted hover:text-accent',
+                                      : 'text-muted-foreground hover:bg-muted hover:text-accent',
                                   ].join(' ')}
                                 >
                                   {subLabel}
@@ -702,7 +702,7 @@ export function Header({ logoUrl = null, brandName = 'Alpacas Ibiza', adoptFlags
 
           {/* Language switcher */}
           <div className="mt-6 border-t border-border pt-4 px-1">
-            <p className="text-xs font-semibold uppercase tracking-wide text-foreground/60 mb-2">
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">
               {languageLabel}
             </p>
             <LanguageSwitcher />

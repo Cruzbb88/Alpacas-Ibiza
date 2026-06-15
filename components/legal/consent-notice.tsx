@@ -60,7 +60,7 @@ export function ConsentNotice({ locale, actionLabel }: ConsentNoticeProps) {
 
   return (
     <p
-      className="text-xs text-foreground/60 mt-3 text-center leading-relaxed"
+      className="text-xs text-muted-foreground mt-3 text-center leading-relaxed"
       data-testid="consent-notice"
     >
       {before}

@@ -262,7 +262,7 @@ function CardItem({ item, locale, bookCtaLabel, learnMoreLabel }: CardItemProps)
         </p>
 
         {(item.duration || item.partySize || item.accessibility) && (
-          <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-foreground/70 mb-5">
+          <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-muted-foreground mb-5">
             {item.duration ? (
               <span className="inline-flex items-center gap-1.5">
                 <ClockIcon className="w-3.5 h-3.5" />
@@ -294,7 +294,7 @@ function CardItem({ item, locale, bookCtaLabel, learnMoreLabel }: CardItemProps)
           {item.detailHref ? (
             <Link
               href={item.detailHref}
-              className="text-sm text-foreground/60 hover:text-accent transition-colors text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
+              className="text-sm text-muted-foreground hover:text-accent transition-colors text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
               aria-label={`${learnMoreLabel}: ${item.title}`}
             >
               {learnMoreLabel} →
@@ -361,7 +361,7 @@ export function ExperienceCards({
           {title}
         </h2>
         {subtitle ? (
-          <p className="text-lg text-foreground/70 text-center mb-12 max-w-2xl mx-auto">
+          <p className="text-lg text-muted-foreground text-center mb-12 max-w-2xl mx-auto">
             {subtitle}
           </p>
         ) : (

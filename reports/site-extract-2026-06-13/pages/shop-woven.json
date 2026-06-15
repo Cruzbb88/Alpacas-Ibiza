@@ -1,0 +1,85 @@
+{
+  "page": "shop-woven",
+  "path": "/en/shop/woven",
+  "console": [],
+  "failedReq": [],
+  "status": 200,
+  "title": "Woven Collection | Wishfulfilling Weaving – Alpacas Ibiza",
+  "desc": "Handwoven alpaca-wool scarves, blankets, and textiles made on a traditional wooden loom at Es Currals, Ibiza. Each piece is unique — enquire for availability.",
+  "canonical": "https://alpacasibiza.com/en/shop/woven",
+  "robots": null,
+  "hreflang": [
+    "en",
+    "de",
+    "it",
+    "es",
+    "nl",
+    "fr",
+    "x-default"
+  ],
+  "og": {
+    "title": "Woven Collection | Wishfulfilling Weaving – Alpacas Ibiza",
+    "image": "https://alpacasibiza.com/og?title=Meet+the+Herd&subtitle=Every+alpaca+has+a+name+and+a+story",
+    "locale": null
+  },
+  "twitter": "summary_large_image",
+  "schemaTypes": [
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "Organization",
+    "WebSite",
+    "SiteNavigationElement",
+    "ItemList",
+    "Product"
+  ],
+  "jsonldCount": 6,
+  "h1count": 1,
+  "headings": [
+    "H1:Woven Collection",
+    "H3:[UNMAPPED — product name 1]",
+    "H3:[UNMAPPED — product name 2]",
+    "H3:[UNMAPPED — product name 3]",
+    "H3:[UNMAPPED — product name 4]",
+    "H3:[UNMAPPED — product name 5]",
+    "H3:[UNMAPPED — product name 6]",
+    "H3:Woven shop — owner data needed",
+    "H3:Alpacas Ibiza",
+    "H3:Explore",
+    "H3:Shop",
+    "H3:Contact"
+  ],
+  "imgTotal": 8,
+  "imgMissingAlt": 7,
+  "imgBroken": [],
+  "linkTotal": 82,
+  "linkExternalNoRel": 0,
+  "formFields": 0,
+  "unlabeledFields": 0,
+  "wordCount": 334,
+  "overflowPx": 0,
+  "axe": {
+    "byImpact": {
+      "critical": 0,
+      "serious": 1,
+      "moderate": 1,
+      "minor": 0
+    },
+    "total": 2,
+    "rules": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "n": 19,
+        "help": "Elements must meet minimum color contrast ratio thresholds"
+      },
+      {
+        "id": "heading-order",
+        "impact": "moderate",
+        "n": 1,
+        "help": "Heading levels should only increase by one"
+      }
+    ]
+  }
+}

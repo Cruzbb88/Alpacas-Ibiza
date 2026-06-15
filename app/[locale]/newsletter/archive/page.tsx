@@ -55,7 +55,7 @@ export default async function NewsletterArchivePage({
   const issues = liveNewsletterIssues()
 
   return (
-    <main>
+    <>
       <GradientPageHero
         title="Newsletter Archive"
         subtitle="Past issues from Es Currals — farm stories, seasonal updates, and alpaca news."
@@ -65,7 +65,7 @@ export default async function NewsletterArchivePage({
         {issues.length === 0 ? (
           /* Empty state — first issue not yet published */
           <div className="max-w-lg mx-auto text-center py-12">
-            <p className="text-foreground/70 text-lg mb-6">
+            <p className="text-muted-foreground text-lg mb-6">
               First issue coming soon — subscribe to be the first to read it.
             </p>
             <Link
@@ -89,12 +89,12 @@ export default async function NewsletterArchivePage({
                   </h2>
                   <time
                     dateTime={issue.publishedAt}
-                    className="text-xs text-foreground/50 whitespace-nowrap pt-0.5"
+                    className="text-xs text-muted-foreground whitespace-nowrap pt-0.5"
                   >
                     {formatDate(issue.publishedAt)}
                   </time>
                 </div>
-                <p className="text-sm text-foreground/70 leading-relaxed">
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   {issue.summary}
                 </p>
               </article>
@@ -112,6 +112,6 @@ export default async function NewsletterArchivePage({
           </div>
         )}
       </PageSection>
-    </main>
+    </>
   )
 }

@@ -183,7 +183,7 @@ export function CorporateEnquiryForm() {
                     </svg>
                 </div>
                 <h3 className="text-xl font-bold text-foreground mb-2">Message sent!</h3>
-                <p className="text-foreground/70">
+                <p className="text-muted-foreground">
                     {"We'll get back to you within 48 hours with a tailored corporate package."}
                 </p>
             </div>
@@ -322,7 +322,7 @@ export function CorporateEnquiryForm() {
                         className="block text-sm font-semibold text-foreground"
                     >
                         Group size
-                        <span className="ml-1 text-xs font-normal text-foreground/50">(optional)</span>
+                        <span className="ml-1 text-xs font-normal text-muted-foreground">(optional)</span>
                     </label>
                     <input
                         id="corp-group-size"
@@ -353,7 +353,7 @@ export function CorporateEnquiryForm() {
                         className="block text-sm font-semibold text-foreground"
                     >
                         Preferred month
-                        <span className="ml-1 text-xs font-normal text-foreground/50">(optional)</span>
+                        <span className="ml-1 text-xs font-normal text-muted-foreground">(optional)</span>
                     </label>
                     <input
                         id="corp-preferred-month"
@@ -374,7 +374,7 @@ export function CorporateEnquiryForm() {
                     className="block text-sm font-semibold text-foreground"
                 >
                     Message
-                    <span className="ml-1 text-xs font-normal text-foreground/50">(optional)</span>
+                    <span className="ml-1 text-xs font-normal text-muted-foreground">(optional)</span>
                 </label>
                 <textarea
                     id="corp-message"
@@ -405,7 +405,7 @@ export function CorporateEnquiryForm() {
                     )}
                     <p
                         id="corp-message-count"
-                        className="text-xs text-foreground/60 mt-1"
+                        className="text-xs text-muted-foreground mt-1"
                         aria-live="polite"
                     >
                         {message.length}/{MESSAGE_MAX}

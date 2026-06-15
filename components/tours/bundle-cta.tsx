@@ -54,7 +54,7 @@ export function BundleCta({ slot, className, seasonalWindows }: BundleCtaProps) 
     >
       <div className="flex-1 min-w-0 text-center sm:text-left">
         <p className="text-sm font-bold text-foreground">{offerLabel}</p>
-        <p className="text-xs text-foreground/60 mt-0.5">
+        <p className="text-xs text-muted-foreground mt-0.5">
           Limited-availability combo — book both in one step.
         </p>
         {/* Seasonal pricing — additive only; current offer label unchanged when absent */}

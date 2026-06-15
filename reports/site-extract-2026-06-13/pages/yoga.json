@@ -1,0 +1,88 @@
+{
+  "page": "yoga",
+  "path": "/en/yoga",
+  "console": [],
+  "failedReq": [],
+  "status": 200,
+  "title": "Alpaca Yoga Ibiza | Hatha Yoga with Alpacas – €30 per person",
+  "desc": "Join our 1h 15min Hatha yoga sessions surrounded by gentle alpacas at our Ibiza farm. Max 6 guests. Every Wednesday & Saturday. €30 per person. Book now!",
+  "canonical": "https://alpacasibiza.com/en/yoga",
+  "robots": "index, follow",
+  "hreflang": [
+    "en",
+    "de",
+    "it",
+    "es",
+    "nl",
+    "fr",
+    "x-default"
+  ],
+  "og": {
+    "title": "Alpaca Yoga Ibiza | Hatha Yoga with Alpacas – €30 per person",
+    "image": "http://localhost:3000/en/yoga/opengraph-image?fdacefcd31416a63",
+    "locale": "en"
+  },
+  "twitter": "summary_large_image",
+  "schemaTypes": [
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "Organization",
+    "WebSite",
+    "SiteNavigationElement",
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "SportsActivityLocation",
+    "Event",
+    "BreadcrumbList"
+  ],
+  "jsonldCount": 8,
+  "h1count": 1,
+  "headings": [
+    "H1:Alpaca Yoga",
+    "H2:What is Alpaca Yoga?",
+    "H2:Why Yoga with Alpacas?",
+    "H2:When & Where",
+    "H2:Price & Capacity",
+    "H2:Book Your Yoga Session",
+    "H3:Do I need yoga experience?",
+    "H3:What should I bring?",
+    "H3:What happens if it rains?",
+    "H3:What is the cancellation policy?",
+    "H2:Coming back often?",
+    "H3:Owner action required before launch",
+    "H3:Alpacas Ibiza",
+    "H3:Explore",
+    "H3:Shop",
+    "H3:Contact"
+  ],
+  "imgTotal": 2,
+  "imgMissingAlt": 1,
+  "imgBroken": [],
+  "linkTotal": 81,
+  "linkExternalNoRel": 0,
+  "formFields": 0,
+  "unlabeledFields": 0,
+  "wordCount": 518,
+  "overflowPx": 0,
+  "axe": {
+    "byImpact": {
+      "critical": 0,
+      "serious": 1,
+      "moderate": 0,
+      "minor": 0
+    },
+    "total": 1,
+    "rules": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "n": 23,
+        "help": "Elements must meet minimum color contrast ratio thresholds"
+      }
+    ]
+  }
+}

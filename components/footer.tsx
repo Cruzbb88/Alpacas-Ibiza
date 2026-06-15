@@ -105,7 +105,7 @@ export function Footer({
           {/* Col 1 — Brand */}
           <div>
             <h3 className="font-bold text-foreground mb-4">{brandName}</h3>
-            <p className="text-sm text-foreground/70 mb-4">
+            <p className="text-sm text-muted-foreground mb-4">
               {tr('footer.tagline')}
             </p>
             <ul className="flex flex-wrap gap-x-4 gap-y-2 text-sm">
@@ -116,7 +116,7 @@ export function Footer({
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`${brandName} on Instagram`}
-                    className="text-foreground/70 hover:text-foreground"
+                    className="text-muted-foreground hover:text-foreground"
                   >
                     Instagram
                   </a>
@@ -129,7 +129,7 @@ export function Footer({
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`${brandName} on Facebook`}
-                    className="text-foreground/70 hover:text-foreground"
+                    className="text-muted-foreground hover:text-foreground"
                   >
                     Facebook
                   </a>
@@ -142,7 +142,7 @@ export function Footer({
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`Leave a Google review for ${brandName}`}
-                    className="text-foreground/70 hover:text-foreground"
+                    className="text-muted-foreground hover:text-foreground"
                   >
                     {tr('footer.googleReview') || 'Review us on Google'}
                   </a>
@@ -158,7 +158,7 @@ export function Footer({
               <li>
                 <Link
                   href={`/${locale}/tours`}
-                  className="text-foreground/70 hover:text-foreground"
+                  className="text-muted-foreground hover:text-foreground"
                 >
                   {tr('nav.tours')}
                 </Link>
@@ -166,7 +166,7 @@ export function Footer({
               <li>
                 <Link
                   href={`/${locale}/experiences`}
-                  className="text-foreground/70 hover:text-foreground"
+                  className="text-muted-foreground hover:text-foreground"
                 >
                   {tr('nav.experiences') || 'Experiences'}
                 </Link>
@@ -174,7 +174,7 @@ export function Footer({
               <li>
                 <Link
                   href={`/${locale}/yoga`}
-                  className="text-foreground/70 hover:text-foreground"
+                  className="text-muted-foreground hover:text-foreground"
                 >
                   {tr('nav.yoga') || 'Alpaca Yoga'}
                 </Link>
@@ -182,7 +182,7 @@ export function Footer({
               <li>
                 <Link
                   href={`/${locale}/workshops`}
-                  className="text-foreground/70 hover:text-foreground"
+                  className="text-muted-foreground hover:text-foreground"
                 >
                   {tr('nav.workshops') || 'Weaving Workshops'}
                 </Link>
@@ -190,7 +190,7 @@ export function Footer({
               <li>
                 <Link
                   href={`/${locale}/weddings`}
-                  className="text-foreground/70 hover:text-foreground"
+                  className="text-muted-foreground hover:text-foreground"
                 >
                   {tr('nav.weddings') || 'Weddings & Events'}
                 </Link>
@@ -198,7 +198,7 @@ export function Footer({
               <li>
                 <Link
                   href={`/${locale}/alpacas`}
-                  className="text-foreground/70 hover:text-foreground"
+                  className="text-muted-foreground hover:text-foreground"
                 >
                   {tr('nav.alpacas')}
                 </Link>
@@ -206,7 +206,7 @@ export function Footer({
               <li>
                 <Link
                   href={`/${locale}/adopt`}
-                  className="text-foreground/70 hover:text-foreground"
+                  className="text-muted-foreground hover:text-foreground"
                 >
                   {tr('footer.adopt') || 'Adopt an Alpaca'}
                 </Link>
@@ -215,7 +215,7 @@ export function Footer({
                 <li>
                   <Link
                     href={`/${locale}/herd-family`}
-                    className="text-foreground/70 hover:text-foreground"
+                    className="text-muted-foreground hover:text-foreground"
                   >
                     {tr('footer.herdFamily') || 'Herd Family'}
                   </Link>
@@ -225,7 +225,7 @@ export function Footer({
                 <li>
                   <Link
                     href={`/${locale}/membership`}
-                    className="text-foreground/70 hover:text-foreground"
+                    className="text-muted-foreground hover:text-foreground"
                   >
                     {tr('footer.membership') || 'Annual Farm Pass'}
                   </Link>
@@ -234,7 +234,7 @@ export function Footer({
               <li>
                 <Link
                   href={`/${locale}/sustainability`}
-                  className="text-foreground/70 hover:text-foreground"
+                  className="text-muted-foreground hover:text-foreground"
                 >
                   {tr('footer.sustainability') || 'Sustainability'}
                 </Link>
@@ -242,7 +242,7 @@ export function Footer({
               <li>
                 <Link
                   href={`/${locale}/journal`}
-                  className="text-foreground/70 hover:text-foreground"
+                  className="text-muted-foreground hover:text-foreground"
                 >
                   {tr('footer.journal') || 'Journal'}
                 </Link>
@@ -250,7 +250,7 @@ export function Footer({
               <li>
                 <Link
                   href={`/${locale}/newsletter/archive`}
-                  className="text-foreground/70 hover:text-foreground"
+                  className="text-muted-foreground hover:text-foreground"
                 >
                   {tr('footer.newsletterArchive') || 'Newsletter Archive'}
                 </Link>
@@ -258,7 +258,7 @@ export function Footer({
               <li>
                 <Link
                   href={`/${locale}/about`}
-                  className="text-foreground/70 hover:text-foreground"
+                  className="text-muted-foreground hover:text-foreground"
                 >
                   {tr('footer.aboutUs')}
                 </Link>
@@ -266,7 +266,7 @@ export function Footer({
               <li>
                 <Link
                   href={`/${locale}/contact`}
-                  className="text-foreground/70 hover:text-foreground"
+                  className="text-muted-foreground hover:text-foreground"
                 >
                   {tr('footer.contact')}
                 </Link>
@@ -281,7 +281,7 @@ export function Footer({
               <li>
                 <Link
                   href={`/${locale}/shop/woven`}
-                  className="text-foreground/70 hover:text-foreground"
+                  className="text-muted-foreground hover:text-foreground"
                 >
                   {tr('footer.wovenCollection')}
                 </Link>
@@ -289,7 +289,7 @@ export function Footer({
               <li>
                 <Link
                   href={`/${locale}/shop/commission`}
-                  className="text-foreground/70 hover:text-foreground"
+                  className="text-muted-foreground hover:text-foreground"
                 >
                   {tr('footer.customCommission')}
                 </Link>
@@ -297,7 +297,7 @@ export function Footer({
               <li>
                 <Link
                   href={`/${locale}/shop/alcaca`}
-                  className="text-foreground/70 hover:text-foreground"
+                  className="text-muted-foreground hover:text-foreground"
                 >
                   {tr('footer.alpacaManure')}
                 </Link>
@@ -305,7 +305,7 @@ export function Footer({
               <li>
                 <Link
                   href={`/${locale}/gifts`}
-                  className="text-foreground/70 hover:text-foreground"
+                  className="text-muted-foreground hover:text-foreground"
                 >
                   {tr('nav.gifts')}
                 </Link>
@@ -313,7 +313,7 @@ export function Footer({
               <li>
                 <Link
                   href={`/${locale}/redeem-voucher`}
-                  className="text-foreground/70 hover:text-foreground"
+                  className="text-muted-foreground hover:text-foreground"
                 >
                   {tr('footer.redeemVoucher') || 'Redeem a Voucher'}
                 </Link>
@@ -321,7 +321,7 @@ export function Footer({
               <li>
                 <Link
                   href={`/${locale}/weaving`}
-                  className="text-foreground/70 hover:text-foreground"
+                  className="text-muted-foreground hover:text-foreground"
                 >
                   {tr('nav.weaving') || 'Weaving'}
                 </Link>
@@ -329,7 +329,7 @@ export function Footer({
               <li>
                 <Link
                   href={`/${locale}/skein`}
-                  className="text-foreground/70 hover:text-foreground"
+                  className="text-muted-foreground hover:text-foreground"
                 >
                   {tr('nav.skein') || 'Sponsor a Skein'}
                 </Link>
@@ -340,7 +340,7 @@ export function Footer({
           {/* Col 4 — Contact */}
           <div>
             <h3 className="font-bold text-foreground mb-4">{tr('footer.contact')}</h3>
-            <ul className="space-y-2 text-sm text-foreground/70">
+            <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
                 <a
                   href={phoneHref}
@@ -373,7 +373,7 @@ export function Footer({
                 </a>
               </li>
               <li>
-                <address className="not-italic text-foreground/70 leading-relaxed">
+                <address className="not-italic text-muted-foreground leading-relaxed">
                   <span className="block">{address.streetAddress}</span>
                   <span className="block">
                     {address.postalCode} {address.addressLocality}
@@ -388,7 +388,7 @@ export function Footer({
         </div>
 
         {/* Secondary utility links — donors, press, sitemap */}
-        <div className="mt-8 pt-6 border-t border-border grid grid-cols-2 md:grid-cols-4 gap-4 text-xs text-foreground/60">
+        <div className="mt-8 pt-6 border-t border-border grid grid-cols-2 md:grid-cols-4 gap-4 text-xs text-muted-foreground">
           <div>
             <p className="font-semibold mb-2">{tr('footer.donors') || 'Donors'}</p>
             <ul className="space-y-1">
@@ -450,7 +450,7 @@ export function Footer({
              Renders only when the tenant has supplied at least one of the three fields.
              Fail-quiet: each sub-block omits independently when unset. */}
         {(touristRegistration || foodHandlingCert || (trustBadges && trustBadges.length > 0)) && (
-          <div className="mt-6 pt-6 border-t border-border text-xs text-foreground/50 space-y-1 text-center">
+          <div className="mt-6 pt-6 border-t border-border text-xs text-muted-foreground space-y-1 text-center">
             {touristRegistration && (
               <p>Turismo Activo: {touristRegistration}</p>
             )}
@@ -479,7 +479,7 @@ export function Footer({
         )}
 
         {/* Spanish-law compliance strip */}
-        <div className="mt-8 pt-8 border-t border-border text-center text-xs text-foreground/60 space-y-2">
+        <div className="mt-8 pt-8 border-t border-border text-center text-xs text-muted-foreground space-y-2">
           <p className="leading-relaxed">{legalSegments.join(' · ')}</p>
           <p className="leading-relaxed">{tr('footer.copyright')}</p>
           <ul className="flex flex-wrap justify-center gap-x-4 gap-y-1">

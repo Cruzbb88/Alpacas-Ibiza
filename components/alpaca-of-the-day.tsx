@@ -83,11 +83,11 @@ export async function AlpacaOfTheDay({ locale }: AlpacaOfTheDayProps) {
             </h2>
 
             {animal.personality && (
-              <p className="text-sm text-foreground/60 italic mb-3">{animal.personality}</p>
+              <p className="text-sm text-muted-foreground italic mb-3">{animal.personality}</p>
             )}
 
             <div className="bg-card border border-border rounded-xl px-4 py-3 mb-5">
-              <p className="text-xs uppercase tracking-wide text-foreground/50 mb-1">
+              <p className="text-xs uppercase tracking-wide text-muted-foreground mb-1">
                 {funFactLabel}
               </p>
               <p className="text-sm text-foreground/80 leading-relaxed">{animal.fun_fact}</p>

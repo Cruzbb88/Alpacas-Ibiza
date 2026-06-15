@@ -1,0 +1,92 @@
+{
+  "page": "exp-corporate",
+  "path": "/en/experiences/corporate-team-building",
+  "console": [
+    "pageerror: Cannot read properties of null (reading 'style')",
+    "pageerror: Cannot read properties of null (reading 'style')"
+  ],
+  "failedReq": [],
+  "status": 200,
+  "title": "Corporate Alpaca Retreats | Team Building – Alpacas Ibiza",
+  "desc": "Unique corporate retreats and team building experiences with alpacas in Ibiza. Stress reduction, communication workshops, and nature connection. Book your corporate event!",
+  "canonical": "https://alpacasibiza.com/en/experiences/corporate-team-building",
+  "robots": null,
+  "hreflang": [
+    "en",
+    "de",
+    "it",
+    "es",
+    "nl",
+    "fr",
+    "x-default"
+  ],
+  "og": {
+    "title": "Corporate Alpaca Retreats | Team Building – Alpacas Ibiza",
+    "image": "https://alpacasibiza.com/og?title=Meet+the+Herd&subtitle=Every+alpaca+has+a+name+and+a+story",
+    "locale": null
+  },
+  "twitter": "summary_large_image",
+  "schemaTypes": [
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "Organization",
+    "WebSite",
+    "SiteNavigationElement",
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "FAQPage"
+  ],
+  "jsonldCount": 6,
+  "h1count": 1,
+  "headings": [
+    "H1:Corporate Retreats & Team Building",
+    "H2:Book Your Visit",
+    "H2:Get a custom quote",
+    "H2:Why Alpacas for Team Building?",
+    "H3:Stress Reduction",
+    "H3:Communication",
+    "H3:Creativity",
+    "H3:Nature Connection",
+    "H2:Ready to Plan Your Event?",
+    "H3:How many people can attend a corporate e",
+    "H3:What is included in a corporate package?",
+    "H3:How far in advance should we book?",
+    "H3:Is transport to the farm included?",
+    "H3:Can we customize the itinerary?",
+    "H2:Coming back often?",
+    "H3:Alpacas Ibiza",
+    "H3:Explore",
+    "H3:Shop",
+    "H3:Contact"
+  ],
+  "imgTotal": 4,
+  "imgMissingAlt": 0,
+  "imgBroken": [],
+  "linkTotal": 79,
+  "linkExternalNoRel": 0,
+  "formFields": 7,
+  "unlabeledFields": 0,
+  "wordCount": 412,
+  "overflowPx": 0,
+  "axe": {
+    "byImpact": {
+      "critical": 0,
+      "serious": 1,
+      "moderate": 0,
+      "minor": 0
+    },
+    "total": 1,
+    "rules": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "n": 26,
+        "help": "Elements must meet minimum color contrast ratio thresholds"
+      }
+    ]
+  }
+}

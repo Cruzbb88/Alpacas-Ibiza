@@ -98,7 +98,7 @@ export function SiteSearch({ locale }: SiteSearchProps) {
         size="icon"
         aria-label={triggerLabel}
         onClick={() => setOpen(true)}
-        className="text-foreground/70 hover:text-foreground"
+        className="text-muted-foreground hover:text-foreground"
       >
         <Search className="h-4 w-4" />
       </Button>

@@ -1,0 +1,109 @@
+{
+  "page": "tours",
+  "path": "/en/tours",
+  "console": [
+    "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+  ],
+  "failedReq": [
+    "500 http://localhost:3000/api/availability"
+  ],
+  "status": 200,
+  "title": "Alpaca Trekking Tours | Alpacas Ibiza – Es Currals",
+  "desc": "Book an alpaca trekking experience at Es Currals, Ibiza's first alpaca farm. Meet the herd, weave on a traditional loom, or enjoy a full farm experience.",
+  "canonical": "https://alpacasibiza.com/en/tours",
+  "robots": null,
+  "hreflang": [
+    "en",
+    "de",
+    "it",
+    "es",
+    "nl",
+    "fr",
+    "x-default"
+  ],
+  "og": {
+    "title": "Alpaca Trekking Tours | Alpacas Ibiza – Es Currals",
+    "image": "https://alpacasibiza.com/og?title=Book+a+Tour&subtitle=Walk+with+alpacas+on+Ibiza+%C2%B7+Es+Currals",
+    "locale": null
+  },
+  "twitter": "summary_large_image",
+  "schemaTypes": [
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "Organization",
+    "WebSite",
+    "SiteNavigationElement",
+    "TouristTrip",
+    "FAQPage",
+    "BreadcrumbList"
+  ],
+  "jsonldCount": 7,
+  "h1count": 1,
+  "headings": [
+    "H1:Visit Alpacas Ibiza",
+    "H3:Operating Hours",
+    "H3:Location",
+    "H3:Pricing",
+    "H3:Special Events & Private Bookings",
+    "H2:Frequently Asked Questions",
+    "H3:How long is a typical tour?",
+    "H3:What languages do you offer?",
+    "H3:Are visits suitable for children?",
+    "H3:What should I wear?",
+    "H3:Is the farm accessible for people with d",
+    "H3:Can we bring food or drinks?",
+    "H3:How do I book a tour?",
+    "H3:What if I need to cancel or reschedule?",
+    "H3:Do you offer private tours or group even",
+    "H3:Is there parking available?",
+    "H2:Book Your Visit",
+    "H3:Reserve Your Visit",
+    "H3:Sold out? Join the waitlist",
+    "H2:What to bring",
+    "H2:Guest Stories",
+    "H2:Coming back often?",
+    "H3:Alpacas Ibiza",
+    "H3:Explore",
+    "H3:Shop"
+  ],
+  "imgTotal": 1,
+  "imgMissingAlt": 0,
+  "imgBroken": [],
+  "linkTotal": 81,
+  "linkExternalNoRel": 0,
+  "formFields": 11,
+  "unlabeledFields": 1,
+  "wordCount": 878,
+  "overflowPx": 0,
+  "axe": {
+    "byImpact": {
+      "critical": 1,
+      "serious": 1,
+      "moderate": 1,
+      "minor": 0
+    },
+    "total": 3,
+    "rules": [
+      {
+        "id": "button-name",
+        "impact": "critical",
+        "n": 1,
+        "help": "Buttons must have discernible text"
+      },
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "n": 41,
+        "help": "Elements must meet minimum color contrast ratio thresholds"
+      },
+      {
+        "id": "heading-order",
+        "impact": "moderate",
+        "n": 1,
+        "help": "Heading levels should only increase by one"
+      }
+    ]
+  }
+}

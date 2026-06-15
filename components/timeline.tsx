@@ -273,7 +273,7 @@ export function Timeline({
             {title}
           </h2>
           {subtitle ? (
-            <p className="text-lg text-foreground/70 max-w-2xl mx-auto">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               {subtitle}
             </p>
           ) : null}

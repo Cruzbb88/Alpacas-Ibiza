@@ -94,7 +94,7 @@ export function HeaderSearch({ locale }: HeaderSearchProps) {
         size="icon"
         aria-label={tr('search.openShortcut')}
         onClick={() => setOpen(true)}
-        className="text-foreground/70 hover:text-foreground"
+        className="text-muted-foreground hover:text-foreground"
       >
         <Search className="h-4 w-4" />
       </Button>

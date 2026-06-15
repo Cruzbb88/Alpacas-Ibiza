@@ -91,7 +91,7 @@ export function WaitlistForm({
         className={`rounded-2xl border border-primary/20 bg-primary/5 p-5 text-center space-y-3 ${className}`}
       >
         <p className="text-sm font-semibold text-primary">{successMsg}</p>
-        <p className="text-xs text-foreground/60">While you wait:</p>
+        <p className="text-xs text-muted-foreground">While you wait:</p>
         <div className="flex flex-wrap gap-2 justify-center">
           <a
             href={`/${locale}/journal`}
@@ -121,7 +121,7 @@ export function WaitlistForm({
   return (
     <div className={`rounded-2xl border border-border bg-background p-5 ${className}`}>
       <h3 className="text-base font-bold text-foreground mb-1">{heading}</h3>
-      <p className="text-xs text-foreground/60 mb-4">{subheading}</p>
+      <p className="text-xs text-muted-foreground mb-4">{subheading}</p>
 
       <form onSubmit={handleSubmit} noValidate>
         {/* Honeypot — hidden from real users, visible to bots */}

@@ -64,7 +64,7 @@ export default async function ContactPage({
   }
 
   return (
-    <main>
+    <>
       <PageBreadcrumbs
         locale={locale}
         homeLabel={translate('nav.home') || 'Home'}
@@ -108,7 +108,7 @@ export default async function ContactPage({
                     <h3 className="font-semibold text-foreground">
                       {translate('contact.location')}
                     </h3>
-                    <p className="text-foreground/70">Ibiza, Spain</p>
+                    <p className="text-muted-foreground">Ibiza, Spain</p>
                   </div>
                 </div>
 
@@ -118,7 +118,7 @@ export default async function ContactPage({
                     <h3 className="font-semibold text-foreground">
                       {translate('contact.phone')}
                     </h3>
-                    <p className="text-foreground/70">
+                    <p className="text-muted-foreground">
                       <a href="tel:+32475586544" className="hover:text-primary transition-colors">
                         +32 475 58 65 44
                       </a>
@@ -132,7 +132,7 @@ export default async function ContactPage({
                     <h3 className="font-semibold text-foreground">
                       {translate('contact.emailLabel')}
                     </h3>
-                    <p className="text-foreground/70">
+                    <p className="text-muted-foreground">
                       <a href="mailto:info@alpacasibiza.com" className="hover:text-primary transition-colors">
                         info@alpacasibiza.com
                       </a>
@@ -146,7 +146,7 @@ export default async function ContactPage({
                     <h3 className="font-semibold text-foreground">
                       {translate('contact.hours')}
                     </h3>
-                    <p className="text-foreground/70">
+                    <p className="text-muted-foreground">
                       {translate('contact.byAppointment')}
                     </p>
                   </div>
@@ -180,7 +180,7 @@ export default async function ContactPage({
               <h3 className="font-semibold text-foreground text-lg">
                 {translate('contact.gettingHere.byCar.title') || 'By car'}
               </h3>
-              <p className="text-sm text-foreground/70 leading-relaxed">
+              <p className="text-sm text-muted-foreground leading-relaxed">
                 {translate('contact.gettingHere.byCar.body') ||
                   'From Ibiza Town: approx. [UNMAPPED] minutes via PM-810. From Santa Eulàlia: approx. [UNMAPPED] minutes. Free parking on-site.'}
               </p>
@@ -192,7 +192,7 @@ export default async function ContactPage({
               <h3 className="font-semibold text-foreground text-lg">
                 {translate('contact.gettingHere.fromAirport.title') || 'From the airport'}
               </h3>
-              <p className="text-sm text-foreground/70 leading-relaxed">
+              <p className="text-sm text-muted-foreground leading-relaxed">
                 {translate('contact.gettingHere.fromAirport.body') ||
                   'Ibiza Airport (IBZ) is approx. [UNMAPPED] km — roughly [UNMAPPED] minutes by car or taxi. Taxis available at the airport rank; no pre-booking required.'}
               </p>
@@ -204,7 +204,7 @@ export default async function ContactPage({
               <h3 className="font-semibold text-foreground text-lg">
                 {translate('contact.gettingHere.transit.title') || 'Public transit'}
               </h3>
-              <p className="text-sm text-foreground/70 leading-relaxed">
+              <p className="text-sm text-muted-foreground leading-relaxed">
                 {translate('contact.gettingHere.transit.body') ||
                   'Nearest bus stop approx. [UNMAPPED] minutes walk. Check ibizabus.com for routes. A car or taxi is recommended for the final stretch.'}
               </p>
@@ -216,7 +216,7 @@ export default async function ContactPage({
               <h3 className="font-semibold text-foreground text-lg">
                 {translate('contact.gettingHere.coordinates.title') || 'Coordinates & backup nav'}
               </h3>
-              <p className="text-sm text-foreground/70 leading-relaxed">
+              <p className="text-sm text-muted-foreground leading-relaxed">
                 {translate('contact.gettingHere.coordinates.body') ||
                   'GPS: 38.9861° N, 1.5228° E. Search «Alpacas Ibiza, San Carlos» in Google Maps or Apple Maps. What3Words: [UNMAPPED — owner confirm].'}
               </p>
@@ -225,7 +225,7 @@ export default async function ContactPage({
           </div>
         </div>
       </section>
-    </main>
+    </>
   )
 }
 

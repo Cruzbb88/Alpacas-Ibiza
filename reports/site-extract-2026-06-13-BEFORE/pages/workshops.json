@@ -1,0 +1,116 @@
+{
+  "page": "workshops",
+  "path": "/en/workshops",
+  "console": [],
+  "failedReq": [],
+  "status": 200,
+  "title": "Weaving + Spinning Workshops with San | Alpacas Ibiza",
+  "desc": "A 2-day hands-on weaving and spinning workshop with San at our Ibiza alpaca farm. Off-season only, on request. You spin the yarn, weave the cloth, and take home the scarf you made.",
+  "canonical": "https://alpacasibiza.com/en/workshops",
+  "robots": "index, follow",
+  "hreflang": [
+    "en",
+    "de",
+    "it",
+    "es",
+    "nl",
+    "fr",
+    "x-default"
+  ],
+  "og": {
+    "title": "Weaving + Spinning Workshops with San | Alpacas Ibiza",
+    "image": "http://localhost:3000/en/workshops/opengraph-image?d03e2714fc6ce06e",
+    "locale": "en"
+  },
+  "twitter": "summary_large_image",
+  "schemaTypes": [
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "Organization",
+    "WebSite",
+    "SiteNavigationElement",
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "Course",
+    "HowTo",
+    "BreadcrumbList"
+  ],
+  "jsonldCount": 8,
+  "h1count": 1,
+  "headings": [
+    "H1:Weaving + Spinning Workshops with San",
+    "H2:What You'll Learn",
+    "H2:Workshop at a Glance",
+    "H3:Duration",
+    "H3:Instructor",
+    "H3:Group Size",
+    "H3:Schedule",
+    "H3:Price",
+    "H3:Takeaway",
+    "H2:About San",
+    "H2:How to Book",
+    "H3:Do I need weaving experience?",
+    "H3:What should I bring?",
+    "H3:What is the cancellation policy?",
+    "H3:Is the wool from your own alpacas?",
+    "H2:Coming back often?",
+    "H3:Alpacas Ibiza",
+    "H3:Explore",
+    "H3:Shop",
+    "H3:Contact"
+  ],
+  "imgTotal": 2,
+  "imgMissingAlt": 0,
+  "imgBroken": [],
+  "linkTotal": 80,
+  "linkExternalNoRel": 0,
+  "formFields": 0,
+  "unlabeledFields": 0,
+  "wordCount": 455,
+  "overflowPx": 0,
+  "axe": {
+    "byImpact": {
+      "critical": 1,
+      "serious": 1,
+      "moderate": 3,
+      "minor": 0
+    },
+    "total": 5,
+    "rules": [
+      {
+        "id": "button-name",
+        "impact": "critical",
+        "n": 1,
+        "help": "Buttons must have discernible text"
+      },
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "n": 20,
+        "help": "Elements must meet minimum color contrast ratio thresholds"
+      },
+      {
+        "id": "landmark-main-is-top-level",
+        "impact": "moderate",
+        "n": 1,
+        "help": "Main landmark should not be contained in another landmark"
+      },
+      {
+        "id": "landmark-no-duplicate-main",
+        "impact": "moderate",
+        "n": 1,
+        "help": "Document should not have more than one main landmark"
+      },
+      {
+        "id": "landmark-unique",
+        "impact": "moderate",
+        "n": 1,
+        "help": "Landmarks should have a unique role or role/label/title (i.e. accessib"
+      }
+    ]
+  }
+}

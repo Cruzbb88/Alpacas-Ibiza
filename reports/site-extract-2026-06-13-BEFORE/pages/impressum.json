@@ -1,0 +1,78 @@
+{
+  "page": "impressum",
+  "path": "/en/impressum",
+  "console": [],
+  "failedReq": [],
+  "status": 200,
+  "title": "Legal notice — Alpacas Ibiza",
+  "desc": "In compliance with Spanish Law 34/2002 on Information Society Services and Electronic Commerce (LSSI-CE) Article 10 and equivalent European disclosure obligations, the following identification information is provided about the operator of this website.",
+  "canonical": "https://alpacasibiza.com/en/impressum",
+  "robots": "index, follow",
+  "hreflang": [
+    "en",
+    "de",
+    "it",
+    "es",
+    "nl",
+    "fr",
+    "x-default"
+  ],
+  "og": {
+    "title": "Legal notice — Alpacas Ibiza",
+    "image": "https://alpacasibiza.com/og",
+    "locale": "en"
+  },
+  "twitter": "summary_large_image",
+  "schemaTypes": [
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "Organization",
+    "WebSite",
+    "SiteNavigationElement",
+    "BreadcrumbList"
+  ],
+  "jsonldCount": 5,
+  "h1count": 1,
+  "headings": [
+    "H1:Legal notice — Alpacas Ibiza",
+    "H2:Legal notice — content pending",
+    "H3:Alpacas Ibiza",
+    "H3:Explore",
+    "H3:Shop",
+    "H3:Contact"
+  ],
+  "imgTotal": 1,
+  "imgMissingAlt": 0,
+  "imgBroken": [],
+  "linkTotal": 78,
+  "linkExternalNoRel": 0,
+  "formFields": 0,
+  "unlabeledFields": 0,
+  "wordCount": 255,
+  "overflowPx": 0,
+  "axe": {
+    "byImpact": {
+      "critical": 1,
+      "serious": 1,
+      "moderate": 0,
+      "minor": 0
+    },
+    "total": 2,
+    "rules": [
+      {
+        "id": "button-name",
+        "impact": "critical",
+        "n": 1,
+        "help": "Buttons must have discernible text"
+      },
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "n": 18,
+        "help": "Elements must meet minimum color contrast ratio thresholds"
+      }
+    ]
+  }
+}

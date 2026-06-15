@@ -94,7 +94,7 @@ export function ReviewTranslateButton({
     <div className={className}>
       {/* Review body: show translated text or original children */}
       {showingTranslation ? (
-        <div className="text-foreground/70 italic leading-relaxed text-sm mb-2">
+        <div className="text-muted-foreground italic leading-relaxed text-sm mb-2">
           &ldquo;{translated}&rdquo;
         </div>
       ) : (
@@ -108,7 +108,7 @@ export function ReviewTranslateButton({
 
       {/* Error message */}
       {error && (
-        <p className="text-xs text-foreground/50 mb-1">{error}</p>
+        <p className="text-xs text-muted-foreground mb-1">{error}</p>
       )}
 
       {/* Translate / Show original button */}
@@ -116,7 +116,7 @@ export function ReviewTranslateButton({
         type="button"
         onClick={onTranslate}
         disabled={isPending}
-        className="inline-flex items-center gap-1 text-xs text-foreground/60 underline hover:text-primary transition-colors disabled:opacity-50 disabled:cursor-wait"
+        className="inline-flex items-center gap-1 text-xs text-muted-foreground underline hover:text-primary transition-colors disabled:opacity-50 disabled:cursor-wait"
         aria-label={showingTranslation ? t('showOriginal') : t('translateAria')}
       >
         {isPending ? (

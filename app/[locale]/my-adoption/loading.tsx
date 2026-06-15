@@ -1,6 +1,6 @@
 export default function Loading() {
   return (
-    <main
+    <div
       style={{
         fontFamily: 'system-ui, sans-serif',
         maxWidth: 720,
@@ -116,6 +116,6 @@ export default function Loading() {
           50% { opacity: .5; }
         }
       `}</style>
-    </main>
+    </div>
   )
 }

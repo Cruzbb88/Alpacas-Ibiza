@@ -1,0 +1,108 @@
+{
+  "page": "weddings",
+  "path": "/en/weddings",
+  "console": [],
+  "failedReq": [],
+  "status": 200,
+  "title": "Alpacas at Your Wedding | Alpacas Ibiza – Bridal Photoshoots & Ceremonies",
+  "desc": "Make your wedding or photoshoot unforgettable with our gentle alpacas. Bridal shoots, ring-bearer ceremonies, engagement portraits, and social events. Contact us for a bespoke quote.",
+  "canonical": "https://alpacasibiza.com/en/weddings",
+  "robots": "index, follow",
+  "hreflang": [
+    "en",
+    "de",
+    "it",
+    "es",
+    "nl",
+    "fr",
+    "x-default"
+  ],
+  "og": {
+    "title": "Alpacas at Your Wedding | Alpacas Ibiza – Bridal Photoshoots & Ceremonies",
+    "image": "http://localhost:3000/en/weddings/opengraph-image?2b61b6b9253b54f2",
+    "locale": "en"
+  },
+  "twitter": "summary_large_image",
+  "schemaTypes": [
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "Organization",
+    "WebSite",
+    "SiteNavigationElement",
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "FAQPage",
+    "Service",
+    "BreadcrumbList"
+  ],
+  "jsonldCount": 8,
+  "h1count": 1,
+  "headings": [
+    "H1:Alpacas at Your Wedding",
+    "H2:What's Included",
+    "H2:Perfect for Every Occasion",
+    "H2:Welfare Comes First",
+    "H2:Plan Your Wedding with Alpacas",
+    "H2:Frequently Asked Questions",
+    "H2:Coming back often?",
+    "H3:[OWNER_INPUT_NEEDED] — Wedding page — co",
+    "H3:Alpacas Ibiza",
+    "H3:Explore",
+    "H3:Shop",
+    "H3:Contact"
+  ],
+  "imgTotal": 2,
+  "imgMissingAlt": 1,
+  "imgBroken": [],
+  "linkTotal": 80,
+  "linkExternalNoRel": 0,
+  "formFields": 0,
+  "unlabeledFields": 0,
+  "wordCount": 518,
+  "overflowPx": 0,
+  "axe": {
+    "byImpact": {
+      "critical": 1,
+      "serious": 1,
+      "moderate": 3,
+      "minor": 0
+    },
+    "total": 5,
+    "rules": [
+      {
+        "id": "button-name",
+        "impact": "critical",
+        "n": 1,
+        "help": "Buttons must have discernible text"
+      },
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "n": 28,
+        "help": "Elements must meet minimum color contrast ratio thresholds"
+      },
+      {
+        "id": "landmark-main-is-top-level",
+        "impact": "moderate",
+        "n": 1,
+        "help": "Main landmark should not be contained in another landmark"
+      },
+      {
+        "id": "landmark-no-duplicate-main",
+        "impact": "moderate",
+        "n": 1,
+        "help": "Document should not have more than one main landmark"
+      },
+      {
+        "id": "landmark-unique",
+        "impact": "moderate",
+        "n": 1,
+        "help": "Landmarks should have a unique role or role/label/title (i.e. accessib"
+      }
+    ]
+  }
+}

@@ -46,7 +46,7 @@ export function ReferralAppliedBanner({ locale }: { locale: Locale }) {
           <p className="text-sm sm:text-base font-bold text-primary">
             {tr('adopt.referral.attributionHeading')}
           </p>
-          <p className="text-xs sm:text-sm text-foreground/70 mt-1">
+          <p className="text-xs sm:text-sm text-muted-foreground mt-1">
             {tr('adopt.referral.attributionBody')}
           </p>
         </div>
@@ -66,7 +66,7 @@ export function ReferralAppliedBanner({ locale }: { locale: Locale }) {
         <p className="text-sm sm:text-base font-bold text-primary">
           {tr('adopt.referral.welcomeFromFriend')}
         </p>
-        <p className="text-xs sm:text-sm text-foreground/70 mt-1">
+        <p className="text-xs sm:text-sm text-muted-foreground mt-1">
           {tr('adopt.referral.codeApplied')}{' '}
           <code className="font-mono font-semibold">{validCoupon}</code>.
         </p>

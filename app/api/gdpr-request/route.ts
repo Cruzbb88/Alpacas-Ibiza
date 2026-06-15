@@ -119,6 +119,23 @@ export async function POST(request: Request) {
     mollieDiscovery = '<p><em>Mollie discovery failed — check dashboard manually.</em></p>'
   }
 
+  // Article 17 erasure for in-house booking PII (now that bookings persist).
+  // Only on a deletion request; nulls guest name/email + stamps deleted_at,
+  // keeping the row for accounting. Fail-quiet — never breaks the acknowledgement.
+  let bookingErasure = ''
+  if (type === 'deletion') {
+    try {
+      const { softDeleteBookingsByEmail } = await import('@/lib/booking/store')
+      const erased = await softDeleteBookingsByEmail(email)
+      bookingErasure = erased > 0
+        ? `<p><strong>In-house bookings erased:</strong> ${erased} record(s) — guest name/email nulled, row kept for accounting (deleted_at stamped).</p>`
+        : '<p><em>No in-house bookings found for this email.</em></p>'
+    } catch (err) {
+      log.warn('booking erasure failed', { err: String(err) })
+      bookingErasure = '<p><em>In-house booking erasure failed — check manually.</em></p>'
+    }
+  }
+
   try {
     await sendEmail({
       to: TO_EMAIL,
@@ -133,6 +150,7 @@ export async function POST(request: Request) {
           <hr />
           <h3 style="color:#556B2F;font-size:14px">Data discovery</h3>
           ${mollieDiscovery}
+          ${bookingErasure}
           <p><em>Stripe / FareHarbor / Resend / GA still require manual lookup — see
           <code>docs/gdpr-deletion-runbook.md</code>.</em></p>
           <hr />

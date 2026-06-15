@@ -65,11 +65,11 @@ export function BookingSection() {
                                     key={idx}
                                     className="bg-background border-2 border-primary/20 rounded-xl p-4 text-center hover:border-primary/40 transition-colors cursor-pointer"
                                 >
-                                    <div className="text-xs text-foreground/50 uppercase tracking-wide mb-1">
+                                    <div className="text-xs text-muted-foreground uppercase tracking-wide mb-1">
                                         {formatted.weekday}
                                     </div>
                                     <div className="text-3xl font-bold text-primary">{formatted.day}</div>
-                                    <div className="text-sm text-foreground/60 uppercase tracking-wide">
+                                    <div className="text-sm text-muted-foreground uppercase tracking-wide">
                                         {formatted.month}
                                     </div>
                                     {slot.capacity <= 5 && (
@@ -81,7 +81,7 @@ export function BookingSection() {
                             )
                         })}
                     </div>
-                    <p className="text-xs text-center text-foreground/50 mb-6">
+                    <p className="text-xs text-center text-muted-foreground mb-6">
                         {tr('bookingSection.updatedNote')}
                     </p>
                 </div>
@@ -89,7 +89,7 @@ export function BookingSection() {
 
             {/* Loading state */}
             {loading && (
-                <div className="text-center py-8 text-foreground/60">
+                <div className="text-center py-8 text-muted-foreground">
                     <div className="animate-pulse">{tr('bookingSection.loading')}</div>
                 </div>
             )}
@@ -106,7 +106,7 @@ export function BookingSection() {
                 <div className="mt-3">
                     <CancellationBadge variant="full" />
                 </div>
-                <p className="mt-2 text-sm text-foreground/60">
+                <p className="mt-2 text-sm text-muted-foreground">
                     {tr('bookingSection.poweredBy')}
                 </p>
 

@@ -104,7 +104,7 @@ export function NewsletterForm({ locale, source = 'footer' }: NewsletterFormProp
           onChange={(e) => setEmail(e.target.value)}
           required
           autoComplete="email"
-          className="flex-1 px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary"
+          className="flex-1 px-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
         />
         <button
           type="submit"
@@ -126,7 +126,7 @@ export function NewsletterForm({ locale, source = 'footer' }: NewsletterFormProp
         disabled={status === 'sending'}
       />
       {!consent && submitAttempted && (
-        <p id="newsletter-consent-help" className="text-xs text-foreground/60">
+        <p id="newsletter-consent-help" className="text-xs text-muted-foreground">
           {translate('legal.marketingConsentRequired')}
         </p>
       )}

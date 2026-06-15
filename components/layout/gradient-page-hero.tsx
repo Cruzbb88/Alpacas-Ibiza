@@ -71,7 +71,7 @@ export function GradientPageHero({
           {title}
         </h1>
         {subtitle && (
-          <p className={`text-lg max-w-2xl mx-auto ${backgroundImage ? 'text-white/85' : 'text-foreground/70'}`}>
+          <p className={`text-lg max-w-2xl mx-auto ${backgroundImage ? 'text-white/85' : 'text-muted-foreground'}`}>
             {subtitle}
           </p>
         )}

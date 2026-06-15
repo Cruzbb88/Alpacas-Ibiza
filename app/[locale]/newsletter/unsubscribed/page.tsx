@@ -40,7 +40,7 @@ export default async function NewsletterUnsubscribedPage({
   const { locale } = await params
 
   return (
-    <main>
+    <>
       <GradientPageHero
         title="You've been unsubscribed"
         subtitle="We'll miss you — but we respect your choice."
@@ -48,11 +48,11 @@ export default async function NewsletterUnsubscribedPage({
 
       <PageSection>
         <div className="max-w-lg mx-auto text-center py-8">
-          <p className="text-foreground/70 mb-6">
+          <p className="text-muted-foreground mb-6">
             Your email address has been removed from our newsletter list. You
             won't receive any further messages from us.
           </p>
-          <p className="text-foreground/70 mb-8">
+          <p className="text-muted-foreground mb-8">
             If you unsubscribed by mistake or change your mind later, you're
             always welcome to{' '}
             <a
@@ -79,6 +79,6 @@ export default async function NewsletterUnsubscribedPage({
           </div>
         </div>
       </PageSection>
-    </main>
+    </>
   )
 }

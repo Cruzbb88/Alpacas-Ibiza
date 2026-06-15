@@ -106,7 +106,7 @@ export default async function GiftsPage({
                         <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
                             {translate('gifts.why.title') || 'Why gift an Alpacas Ibiza visit?'}
                         </h2>
-                        <ul className="text-left max-w-xl mx-auto space-y-3 text-foreground/70">
+                        <ul className="text-left max-w-xl mx-auto space-y-3 text-muted-foreground">
                             <li>
                                 🎁{' '}
                                 {translate('gifts.why.reason1') ||
@@ -223,7 +223,7 @@ export default async function GiftsPage({
                         <h3 className="text-xl font-semibold text-foreground mb-2">
                             {translate('gifts.booking.title') || 'Or buy a tour voucher directly'}
                         </h3>
-                        <p className="text-sm text-foreground/70">
+                        <p className="text-sm text-muted-foreground">
                             {translate('gifts.booking.subtitle') ||
                                 'Skip the wizard and use the calendar embed below.'}
                         </p>
@@ -232,7 +232,7 @@ export default async function GiftsPage({
                         <FareHarborCalendar />
                         <div className="mt-6 text-center">
                             <CancellationBadge variant="full" />
-                            <p className="text-xs text-foreground/50 mt-2">
+                            <p className="text-xs text-muted-foreground mt-2">
                                 {translate('gifts.booking.poweredBy') ||
                                     'Secure gift voucher checkout powered by FareHarbor'}
                             </p>
@@ -244,7 +244,7 @@ export default async function GiftsPage({
             {/* Redeem an existing voucher */}
             <section className="w-full py-10 px-4 bg-background border-t border-border">
                 <div className="max-w-xl mx-auto text-center">
-                    <p className="text-sm text-foreground/70">
+                    <p className="text-sm text-muted-foreground">
                         {translate('gifts.redeemPrompt') || 'Already have a voucher?'}{' '}
                         <Link
                             href={`/${locale}/redeem-voucher`}

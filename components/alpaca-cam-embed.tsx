@@ -62,7 +62,7 @@ export function AlpacaCamEmbed() {
         >
           Live at the farm
         </h2>
-        <p className="text-sm text-foreground/60 text-center mb-6">
+        <p className="text-sm text-muted-foreground text-center mb-6">
           Watch our alpacas in real time — live from Es Currals, Ibiza.
         </p>
         <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>

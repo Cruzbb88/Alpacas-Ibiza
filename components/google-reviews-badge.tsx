@@ -49,7 +49,7 @@ export function GoogleReviewsBadge({ className = '' }: { className?: string }) {
         >
             <span aria-hidden="true" className="text-yellow-500 font-bold">{stars}</span>
             <span className="font-semibold">{data.rating.toFixed(1)}</span>
-            <span className="text-foreground/60">({data.reviewCount} Google reviews)</span>
+            <span className="text-muted-foreground">({data.reviewCount} Google reviews)</span>
         </a>
     )
 }

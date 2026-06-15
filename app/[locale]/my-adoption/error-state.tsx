@@ -18,7 +18,7 @@ export async function PortalErrorState({ locale, reason, message }: Props) {
   }
   const showRequestFreshLink = reason === 'no-token' || reason === 'expired'
   return (
-    <main style={{ fontFamily: 'system-ui, sans-serif', maxWidth: 560, margin: '0 auto', padding: '64px 16px', color: '#27272a', textAlign: 'center' }}>
+    <div style={{ fontFamily: 'system-ui, sans-serif', maxWidth: 560, margin: '0 auto', padding: '64px 16px', color: '#27272a', textAlign: 'center' }}>
       <h1 style={{ fontSize: 24, fontWeight: 600, color: 'hsl(var(--primary))', marginBottom: 12 }}>
         {TITLES[reason]}
       </h1>
@@ -39,6 +39,6 @@ export async function PortalErrorState({ locale, reason, message }: Props) {
           {translate('portal.emailUs')}
         </a>
       </div>
-    </main>
+    </div>
   )
 }

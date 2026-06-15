@@ -43,7 +43,7 @@ export default function Error({
   }, [error])
 
   return (
-    <main className="container mx-auto px-4 py-24 text-center">
+    <div className="container mx-auto px-4 py-24 text-center">
       <span className="text-6xl block mb-6" aria-hidden="true">🦙</span>
       <h1 className="text-4xl font-bold text-foreground mb-4 font-display">
         {tr('error.title')}
@@ -68,6 +68,6 @@ export default function Error({
           {tr('error.errorRef')}: {error.digest}
         </p>
       )}
-    </main>
+    </div>
   )
 }

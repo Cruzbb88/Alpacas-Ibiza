@@ -78,7 +78,7 @@ export default async function JournalPage({
     : allPosts
 
   return (
-    <main>
+    <>
       {/* JSON-LD: LocalBusiness */}
       <script
         type="application/ld+json"
@@ -142,7 +142,7 @@ export default async function JournalPage({
             <h2 className="text-2xl font-bold text-foreground mb-4">
               {translate('journal.emptyTitle') || 'Stories coming soon'}
             </h2>
-            <p className="text-foreground/70 max-w-md mx-auto mb-6">
+            <p className="text-muted-foreground max-w-md mx-auto mb-6">
               {translate('journal.emptyBody') ||
                 'Follow us on Instagram for updates while we get the journal ready.'}
             </p>
@@ -164,7 +164,7 @@ export default async function JournalPage({
             <h2 className="text-xl font-semibold text-foreground mb-2">
               {translate('newsletter.title')}
             </h2>
-            <p className="text-sm text-foreground/70">
+            <p className="text-sm text-muted-foreground">
               {translate('newsletter.subtitle')}
             </p>
           </div>
@@ -181,6 +181,6 @@ export default async function JournalPage({
         }
         variant="banner"
       />
-    </main>
+    </>
   )
 }

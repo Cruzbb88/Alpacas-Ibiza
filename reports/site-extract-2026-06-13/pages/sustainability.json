@@ -1,0 +1,84 @@
+{
+  "page": "sustainability",
+  "path": "/en/sustainability",
+  "console": [],
+  "failedReq": [],
+  "status": 200,
+  "title": "Sustainability | Alpacas Ibiza – Living Lightly on the Land",
+  "desc": "How Es Currals alpaca farm works: animal welfare, natural dyes, traditional Ibiza weaving, and zero-waste practices.",
+  "canonical": "https://alpacasibiza.com/en/sustainability",
+  "robots": "index, follow",
+  "hreflang": [
+    "en",
+    "de",
+    "it",
+    "es",
+    "nl",
+    "fr",
+    "x-default"
+  ],
+  "og": {
+    "title": "Sustainability | Alpacas Ibiza – Living Lightly on the Land",
+    "image": "https://alpacasibiza.com/og?title=Sustainability&subtitle=Eco-conscious+alpaca+farming+on+Ibiza",
+    "locale": "en"
+  },
+  "twitter": "summary_large_image",
+  "schemaTypes": [
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "Organization",
+    "WebSite",
+    "SiteNavigationElement",
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "BreadcrumbList"
+  ],
+  "jsonldCount": 6,
+  "h1count": 1,
+  "headings": [
+    "H1:Sustainability",
+    "H2:Animal Welfare",
+    "H2:Traditional Weaving",
+    "H2:Natural Dyes",
+    "H2:Zero-Waste Approach",
+    "H2:The Land",
+    "H2:Responsible Sourcing",
+    "H2:Animal Welfare",
+    "H3:Owner action required before launch",
+    "H2:Learn more about Es Currals",
+    "H3:Alpacas Ibiza",
+    "H3:Explore",
+    "H3:Shop",
+    "H3:Contact"
+  ],
+  "imgTotal": 2,
+  "imgMissingAlt": 1,
+  "imgBroken": [],
+  "linkTotal": 80,
+  "linkExternalNoRel": 0,
+  "formFields": 0,
+  "unlabeledFields": 0,
+  "wordCount": 729,
+  "overflowPx": 0,
+  "axe": {
+    "byImpact": {
+      "critical": 0,
+      "serious": 1,
+      "moderate": 0,
+      "minor": 0
+    },
+    "total": 1,
+    "rules": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "n": 18,
+        "help": "Elements must meet minimum color contrast ratio thresholds"
+      }
+    ]
+  }
+}

@@ -93,6 +93,51 @@ export async function POST(request: Request) {
   // ── 6. Log all events (no DB yet) ────────────────────────────────────────
   log.info(`Received event: ${event.type} id=${event.id}`)
 
+  // Settle a PAID booking checkout session — shared by the card `completed` path
+  // and the async `async_payment_succeeded` event. Builds the Stripe-specific
+  // refund fn here (keeps the `stripe` client local) and delegates confirm + guest
+  // email + owner alert to the DB-aware orchestrator (dynamic import → webhook's
+  // static graph stays DB-free).
+  async function settleBookingSession(session: Stripe.Checkout.Session): Promise<void> {
+    const bookingId = session.metadata?.booking_id
+    if (!bookingId) return
+    // Prefer the PaymentIntent id (refundable + idempotent); the `cs_…` session
+    // id is only a fallback confirm key — the refund fn below rejects non-`pi_`.
+    const paymentRef =
+      typeof session.payment_intent === 'string' ? session.payment_intent : session.id
+    const { handleBookingPaid } = await import('@/lib/booking/handle-booking-paid')
+    await handleBookingPaid({
+      bookingId,
+      paymentRef,
+      locale: session.metadata?.locale ?? null,
+      refund: async (ref) => {
+        // Refund-exactly-once across all paths (self-service cancel / late webhook).
+        const { claimRefund } = await import('@/lib/booking/store')
+        if (!(await claimRefund(bookingId))) return true // already refunded elsewhere
+        // Refuse a non-PaymentIntent id — refunds.create rejects `cs_…` (review B#1).
+        if (!ref.startsWith('pi_')) {
+          log.error('[booking] no PaymentIntent on session — manual refund needed', {
+            bookingId, sessionId: session.id,
+          })
+          return false
+        }
+        try {
+          // idempotencyKey de-dupes a double refund on retry/race (review A#1).
+          await stripe.refunds.create(
+            { payment_intent: ref },
+            { idempotencyKey: `booking-refund-${bookingId}` },
+          )
+          return true
+        } catch (e) {
+          log.error('[booking] Stripe refund FAILED — manual refund needed', {
+            bookingId, paymentRef: ref, error: e instanceof Error ? e.message : String(e),
+          })
+          return false
+        }
+      },
+    })
+  }
+
   // ── 7. Event dispatch ─────────────────────────────────────────────────────
   try {
     switch (event.type) {
@@ -107,6 +152,44 @@ export async function POST(request: Request) {
           amountTotal:  session.amount_total,
           currency:     session.currency,
         })
+
+        // ── In-house tour booking (mode:'payment' with booking_id metadata) ──
+        // Distinct money-path from Adopt subscriptions: confirm the held seat,
+        // or REFUND if the seat can no longer be honored (cb-006 F2/F5 — expired
+        // hold, re-sold seat, or a 2nd payment on an already-confirmed booking).
+        // Guarded by booking_id so every existing adopt flow is untouched, and
+        // we `break` before the subscription logic. confirm-payment is imported
+        // dynamically so the webhook's static graph stays DB-free until used.
+        const bookingId = session.metadata?.booking_id
+        if (bookingId) {
+          // Async EU methods (SEPA/iDEAL/Bancontact) fire `completed` with
+          // payment_status 'unpaid'/'no_payment_required' and capture later via
+          // `checkout.session.async_payment_succeeded`. Don't confirm yet — but DO
+          // extend the hold so the 20-min cleanup cron can't reap the seat before
+          // the charge clears (spec-011 §C; otherwise SEPA payers get auto-refunded).
+          if (session.payment_status !== 'paid') {
+            const { extendHoldForAsyncPayment } = await import('@/lib/booking/store')
+            const extended = await extendHoldForAsyncPayment(
+              bookingId, new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+            )
+            if (extended) {
+              log.info('[booking] async payment pending — hold extended', {
+                bookingId, paymentStatus: session.payment_status,
+              })
+            } else {
+              // Hold already reaped/confirmed before this event — couldn't extend.
+              // async_payment_succeeded re-extends if still pending, else refunds
+              // (seat re-sold). Logged so the cron-vs-webhook race is visible (F4).
+              log.warn('[booking] async payment pending but hold not extendable', {
+                bookingId, paymentStatus: session.payment_status,
+              })
+            }
+            break
+          }
+          await settleBookingSession(session)
+          break
+        }
+
         // Pure handler covers welcome + discount-codes emails (fail-quiet both).
         // Never throws — webhook always returns 200 to prevent Stripe retry-spam.
         // Unit-tested in lib/payment-handlers.test.ts.
@@ -203,6 +286,42 @@ export async function POST(request: Request) {
             })
           }
         })().catch(() => { /* swallowed — inner try/catch already logged */ })
+        break
+      }
+
+      case 'checkout.session.async_payment_succeeded': {
+        // Async EU method (SEPA/iDEAL/Bancontact) finally captured — settle the
+        // held booking now (spec-011 §C). Booking-only; adopt uses subscriptions.
+        // Extend the hold FIRST: Stripe does NOT guarantee this arrives after
+        // `completed`, so if `completed` was delayed/lost the seat may never have
+        // been extended. Re-extending a still-pending row here prevents an
+        // expired-but-still-held booking from being wrongly refunded despite a
+        // cleared payment (review F2). If the seat was already reaped (status≠
+        // pending) the extend no-ops and settle refunds — correct (seat re-sold).
+        const session = event.data.object
+        const asyncBookingId = session.metadata?.booking_id
+        if (asyncBookingId) {
+          const { extendHoldForAsyncPayment } = await import('@/lib/booking/store')
+          await extendHoldForAsyncPayment(
+            asyncBookingId, new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+          )
+          await settleBookingSession(session)
+        }
+        break
+      }
+
+      case 'checkout.session.async_payment_failed': {
+        // Async charge failed after checkout — release the held seat so it can be
+        // re-sold (capacity restored exactly once by cancelBooking).
+        const session = event.data.object
+        const failedBookingId = session.metadata?.booking_id
+        if (failedBookingId) {
+          const { cancelBooking } = await import('@/lib/booking/store')
+          const r = await cancelBooking(failedBookingId)
+          log.warn('[booking] async payment failed — hold released', {
+            bookingId: failedBookingId, restored: r.restored,
+          })
+        }
         break
       }
 

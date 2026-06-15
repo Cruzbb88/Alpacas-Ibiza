@@ -132,7 +132,7 @@ export function AlpacaPersonalityMatch({ locale, animals, heading, intro }: Matc
         <h2 id="alpaca-match-heading" className="text-2xl font-bold text-foreground mb-2">
           {headingText}
         </h2>
-        <p className="text-sm text-foreground/70">{introText}</p>
+        <p className="text-sm text-muted-foreground">{introText}</p>
       </header>
 
       {/* Progress */}
@@ -152,7 +152,7 @@ export function AlpacaPersonalityMatch({ locale, animals, heading, intro }: Matc
 
       {!showResult && (
         <div>
-          <p className="text-sm font-medium text-foreground/60 mb-3">
+          <p className="text-sm font-medium text-muted-foreground mb-3">
             {translate('adopt.match.questionLabel')} {step + 1} / {QUESTIONS.length}
           </p>
           <h3 className="text-lg font-semibold text-foreground mb-5">
@@ -175,12 +175,12 @@ export function AlpacaPersonalityMatch({ locale, animals, heading, intro }: Matc
 
       {showResult && match && (
         <div className="text-center" aria-live="polite">
-          <p className="text-sm font-medium text-foreground/60 mb-2">
+          <p className="text-sm font-medium text-muted-foreground mb-2">
             {translate('adopt.match.resultLabel')}
           </p>
           <p className="text-3xl font-bold text-primary mb-2">{match.name}</p>
           {match.personality && (
-            <p className="text-sm italic text-foreground/70 mb-4">{match.personality}</p>
+            <p className="text-sm italic text-muted-foreground mb-4">{match.personality}</p>
           )}
           <div className="flex flex-col sm:flex-row gap-3 justify-center mt-4">
             <Link
@@ -199,7 +199,7 @@ export function AlpacaPersonalityMatch({ locale, animals, heading, intro }: Matc
           <button
             type="button"
             onClick={reset}
-            className="mt-6 text-xs text-foreground/60 underline hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 rounded"
+            className="mt-6 text-xs text-muted-foreground underline hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 rounded"
           >
             {translate('adopt.match.retake')}
           </button>
@@ -207,7 +207,7 @@ export function AlpacaPersonalityMatch({ locale, animals, heading, intro }: Matc
       )}
 
       {showResult && !match && (
-        <p className="text-center text-sm text-foreground/70">
+        <p className="text-center text-sm text-muted-foreground">
           {translate('adopt.match.noMatch')}
         </p>
       )}

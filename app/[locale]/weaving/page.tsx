@@ -60,7 +60,7 @@ export default async function WeavingPage({
   const tr = await getTranslations()
 
   return (
-    <main>
+    <>
       <PageBreadcrumbs
         locale={locale}
         homeLabel={tr('nav.home') || 'Home'}
@@ -108,7 +108,7 @@ export default async function WeavingPage({
             {tr('weaving.studioHistoryBody') || '[UNMAPPED — owner to provide studio history and background]'}
           </p>
         ) : (
-          <p className="text-foreground/70 text-sm leading-relaxed">
+          <p className="text-muted-foreground text-sm leading-relaxed">
             {tr('weaving.studioHistoryBody')}
           </p>
         )}
@@ -130,7 +130,7 @@ export default async function WeavingPage({
                   {tr(`weaving.${bodyKey}`)}
                 </p>
               ) : (
-                <p className="text-sm text-foreground/70">
+                <p className="text-sm text-muted-foreground">
                   {tr(`weaving.${bodyKey}`)}
                 </p>
               )}
@@ -164,7 +164,7 @@ export default async function WeavingPage({
             <h3 className="text-lg font-semibold text-foreground mb-2">
               {tr('weaving.crossSellYogaTitle')}
             </h3>
-            <p className="text-sm text-foreground/70 mb-4">
+            <p className="text-sm text-muted-foreground mb-4">
               {tr('weaving.crossSellYogaBody')}
             </p>
             <Link
@@ -178,7 +178,7 @@ export default async function WeavingPage({
             <h3 className="text-lg font-semibold text-foreground mb-2">
               {tr('weaving.crossSellWorkshopsTitle')}
             </h3>
-            <p className="text-sm text-foreground/70 mb-4">
+            <p className="text-sm text-muted-foreground mb-4">
               {tr('weaving.crossSellWorkshopsBody')}
             </p>
             <Link
@@ -203,6 +203,6 @@ export default async function WeavingPage({
           '[UNMAPPED] Finished scarves photo — provide for hero photo slot 3',
         ]}
       />
-    </main>
+    </>
   )
 }

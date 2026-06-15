@@ -64,14 +64,14 @@ export async function AdopterCounter({ total, adopted, heading, className }: Ado
       aria-labelledby="adopter-counter-heading"
       className={`bg-card rounded-2xl border border-border p-6 sm:p-8 ${className ?? ''}`}
     >
-      <h2 id="adopter-counter-heading" className="text-sm font-semibold uppercase tracking-wide text-foreground/60 mb-3">
+      <h2 id="adopter-counter-heading" className="text-sm font-semibold uppercase tracking-wide text-muted-foreground mb-3">
         {headingText}
       </h2>
 
       <div className="flex items-baseline gap-3 mb-4" aria-label={ariaLabel}>
         <span className="text-5xl font-bold text-primary tabular-nums">{safeAdopted}</span>
-        <span className="text-2xl text-foreground/60 tabular-nums">/ {safeTotal}</span>
-        <span className="text-sm text-foreground/60 ml-auto">{pct}%</span>
+        <span className="text-2xl text-muted-foreground tabular-nums">/ {safeTotal}</span>
+        <span className="text-sm text-muted-foreground ml-auto">{pct}%</span>
       </div>
 
       {/* Progress bar — purely visual; the numeric values above are the source of truth */}

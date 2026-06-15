@@ -1,0 +1,90 @@
+{
+  "page": "skein",
+  "path": "/en/skein",
+  "console": [],
+  "failedReq": [],
+  "status": 200,
+  "title": "Name Your Skein | Spring Shearing Sponsorship – Alpacas Ibiza",
+  "desc": "Sponsor an alpaca's spring shearing for €200 and receive their spun wool in autumn. 14 slots per year — one per alpaca.",
+  "canonical": "https://alpacasibiza.com/en/skein",
+  "robots": null,
+  "hreflang": [
+    "en",
+    "de",
+    "it",
+    "es",
+    "nl",
+    "fr",
+    "x-default"
+  ],
+  "og": {
+    "title": "Name Your Skein | Spring Shearing Sponsorship – Alpacas Ibiza",
+    "image": null,
+    "locale": null
+  },
+  "twitter": "summary_large_image",
+  "schemaTypes": [
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "Organization",
+    "WebSite",
+    "SiteNavigationElement",
+    "Product",
+    "FAQPage"
+  ],
+  "jsonldCount": 6,
+  "h1count": 1,
+  "headings": [
+    "H1:Name your skein",
+    "H2:How it works",
+    "H3:Pick your alpaca",
+    "H3:Spring shearing",
+    "H3:Receive your skein",
+    "H2:Pick your alpaca",
+    "H2:Skein sponsorship",
+    "H3:Only 14 slots — one per alpaca",
+    "H2:Questions",
+    "H3:When does the wool ship?",
+    "H3:How much wool will I receive?",
+    "H3:Is the wool dyed?",
+    "H3:Can I give this as a gift?",
+    "H3:Alpacas Ibiza",
+    "H3:Explore",
+    "H3:Shop",
+    "H3:Contact"
+  ],
+  "imgTotal": 15,
+  "imgMissingAlt": 0,
+  "imgBroken": [],
+  "linkTotal": 78,
+  "linkExternalNoRel": 0,
+  "formFields": 3,
+  "unlabeledFields": 0,
+  "wordCount": 371,
+  "overflowPx": 0,
+  "axe": {
+    "byImpact": {
+      "critical": 1,
+      "serious": 1,
+      "moderate": 0,
+      "minor": 0
+    },
+    "total": 2,
+    "rules": [
+      {
+        "id": "button-name",
+        "impact": "critical",
+        "n": 1,
+        "help": "Buttons must have discernible text"
+      },
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "n": 24,
+        "help": "Elements must meet minimum color contrast ratio thresholds"
+      }
+    ]
+  }
+}

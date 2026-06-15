@@ -1,0 +1,120 @@
+{
+  "page": "visit",
+  "path": "/en/visit",
+  "console": [],
+  "failedReq": [],
+  "status": 200,
+  "title": "Plan Your Visit | Alpacas Ibiza – Es Currals Farm Ibiza",
+  "desc": "Everything you need before arriving at Es Currals alpaca farm in northern Ibiza — directions, parking, accessibility, what to bring, and cancellation policy.",
+  "canonical": "https://alpacasibiza.com/en/visit",
+  "robots": null,
+  "hreflang": [
+    "en",
+    "de",
+    "it",
+    "es",
+    "nl",
+    "fr",
+    "x-default"
+  ],
+  "og": {
+    "title": "Plan Your Visit | Alpacas Ibiza – Es Currals Farm Ibiza",
+    "image": "https://alpacasibiza.com/og?title=Our+Story&subtitle=Alpacas+Ibiza+%C2%B7+Es+Currals",
+    "locale": null
+  },
+  "twitter": "summary_large_image",
+  "schemaTypes": [
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "Organization",
+    "WebSite",
+    "SiteNavigationElement",
+    "Place",
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "BreadcrumbList"
+  ],
+  "jsonldCount": 7,
+  "h1count": 1,
+  "headings": [
+    "H1:Planning your visit",
+    "H2:Getting here",
+    "H3:By car",
+    "H3:From the airport",
+    "H3:By bus",
+    "H3:GPS & maps",
+    "H2:Find us on the map",
+    "H2:When you arrive",
+    "H3:Where to park",
+    "H3:Meeting point",
+    "H3:Tour duration",
+    "H3:What to bring",
+    "H2:Accessibility & guests",
+    "H3:Mobility",
+    "H3:Children",
+    "H3:Pets",
+    "H3:Service animals",
+    "H2:Cancellation policy",
+    "H3:Free cancellation",
+    "H3:Bad weather",
+    "H3:Late cancellations",
+    "H2:Photos & filming",
+    "H3:Personal photography",
+    "H3:Commercial use",
+    "H2:Ready to visit?"
+  ],
+  "imgTotal": 2,
+  "imgMissingAlt": 1,
+  "imgBroken": [],
+  "linkTotal": 86,
+  "linkExternalNoRel": 0,
+  "formFields": 0,
+  "unlabeledFields": 0,
+  "wordCount": 600,
+  "overflowPx": 0,
+  "axe": {
+    "byImpact": {
+      "critical": 1,
+      "serious": 1,
+      "moderate": 3,
+      "minor": 0
+    },
+    "total": 5,
+    "rules": [
+      {
+        "id": "button-name",
+        "impact": "critical",
+        "n": 1,
+        "help": "Buttons must have discernible text"
+      },
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "n": 20,
+        "help": "Elements must meet minimum color contrast ratio thresholds"
+      },
+      {
+        "id": "landmark-main-is-top-level",
+        "impact": "moderate",
+        "n": 1,
+        "help": "Main landmark should not be contained in another landmark"
+      },
+      {
+        "id": "landmark-no-duplicate-main",
+        "impact": "moderate",
+        "n": 1,
+        "help": "Document should not have more than one main landmark"
+      },
+      {
+        "id": "landmark-unique",
+        "impact": "moderate",
+        "n": 1,
+        "help": "Landmarks should have a unique role or role/label/title (i.e. accessib"
+      }
+    ]
+  }
+}

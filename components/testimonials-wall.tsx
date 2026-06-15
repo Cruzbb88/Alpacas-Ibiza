@@ -98,7 +98,7 @@ function SourceBadge({ source }: { source: Testimonial['source'] }) {
         : 'text-sky-700'
   return (
     <span
-      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary/40 text-xs text-foreground/70 ${accent}`}
+      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary/40 text-xs text-muted-foreground ${accent}`}
     >
       <span aria-hidden="true">★</span>
       {label}
@@ -229,7 +229,7 @@ function TestimonialFigure({ t }: { t: Testimonial }) {
           <p className="text-sm font-semibold text-foreground truncate">
             {t.author}
           </p>
-          <p className="text-xs text-foreground/50 truncate">
+          <p className="text-xs text-muted-foreground truncate">
             {[t.authorLocation, dateLabel].filter(Boolean).join(' · ')}
           </p>
         </div>
@@ -349,7 +349,7 @@ export function TestimonialsWall({
           </h2>
         )}
         {subtitle && (
-          <p className="text-center text-foreground/70 mb-10 max-w-2xl mx-auto">
+          <p className="text-center text-muted-foreground mb-10 max-w-2xl mx-auto">
             {subtitle}
           </p>
         )}

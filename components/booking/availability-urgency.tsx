@@ -62,7 +62,7 @@ export function AvailabilityUrgency({ className = '' }: { className?: string }) 
                 </span>
             )}
             {totalSlotsThisWeek > 0 && totalSlotsThisWeek <= 30 && (
-                <span className="ml-auto text-xs text-foreground/60">
+                <span className="ml-auto text-xs text-muted-foreground">
                     {totalSlotsThisWeek} spots total this week
                 </span>
             )}

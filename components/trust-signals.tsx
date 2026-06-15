@@ -46,14 +46,14 @@ function TrustItem({
     return (
       <div className="flex flex-col items-center gap-1.5 text-center">
         <Icon className="h-6 w-6 text-primary/80 shrink-0" />
-        <span className="text-xs text-foreground/70 leading-snug">{text}</span>
+        <span className="text-xs text-muted-foreground leading-snug">{text}</span>
       </div>
     )
   }
   return (
     <div className="flex items-center gap-1.5">
       <Icon className="h-4 w-4 text-primary/80 shrink-0" />
-      <span className="text-xs text-foreground/70">{text}</span>
+      <span className="text-xs text-muted-foreground">{text}</span>
     </div>
   )
 }

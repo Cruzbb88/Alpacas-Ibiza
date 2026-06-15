@@ -428,7 +428,7 @@ export default async function AdoptPage({
 
                 {/* Secondary CTA — continuity bridge for visitors who prefer a visit first.
                     Subtle text-link so it doesn't compete with the primary adopt CTAs. */}
-                <p className="text-center text-sm text-foreground/60 mt-6">
+                <p className="text-center text-sm text-muted-foreground mt-6">
                     <a
                         href={`/${locale}/tours`}
                         className="hover:text-accent transition-colors underline underline-offset-2"
@@ -448,7 +448,7 @@ export default async function AdoptPage({
                     <h2 className="text-2xl font-bold text-foreground text-center mb-2">
                         {translate('adopt.embeddedHeading') || 'Pay securely without leaving the page'}
                     </h2>
-                    <p className="text-sm text-foreground/70 text-center mb-8">
+                    <p className="text-sm text-muted-foreground text-center mb-8">
                         {translate('adopt.embeddedSubtext') || 'Card or SEPA — your payment never leaves alpacasibiza.com.'}
                     </p>
                     <EmbeddedCheckout
@@ -497,7 +497,7 @@ export default async function AdoptPage({
                 <h2 className="text-2xl font-bold text-foreground mb-4">
                     {translate('adopt.ctaLabel')}
                 </h2>
-                <p className="text-sm text-foreground/70 mb-8">
+                <p className="text-sm text-muted-foreground mb-8">
                     {translate('adopt.ctaSubtext')}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">

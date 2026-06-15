@@ -124,7 +124,7 @@ export function AdoptThankYou({
         <h1 className="text-2xl font-bold text-foreground">
           {tr('adopt.cancelledHeading')}
         </h1>
-        <p className="mt-4 text-foreground/70">
+        <p className="mt-4 text-muted-foreground">
           {tr('adopt.cancelledFullBody')}
         </p>
         <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
@@ -192,7 +192,7 @@ export function AdoptThankYou({
         {alpacaLine && (
           <p className="text-xl font-semibold text-primary mb-2">{alpacaLine}</p>
         )}
-        <p className="text-lg text-foreground/70 mb-8">{tierCopy}</p>
+        <p className="text-lg text-muted-foreground mb-8">{tierCopy}</p>
 
         {/* Receipt / next-steps timeline */}
         <div className="bg-background rounded-2xl p-8 text-left shadow-sm border border-border mb-8">
@@ -216,7 +216,7 @@ export function AdoptThankYou({
         </div>
 
         {/* Support contacts */}
-        <p className="text-sm text-foreground/60 mb-6">
+        <p className="text-sm text-muted-foreground mb-6">
           {tr('adopt.thankYou.needHelpPrefix')}{' '}
           <a
             href={`mailto:${contactEmail}`}
@@ -277,7 +277,7 @@ export function AdoptThankYou({
             >
               {tr('adopt.thankYou.calendarDownload')}
             </a>
-            <p className="mt-2 text-xs text-foreground/50">
+            <p className="mt-2 text-xs text-muted-foreground">
               {tr('adopt.thankYou.calendarHint')}
             </p>
           </div>
@@ -293,7 +293,7 @@ export function AdoptThankYou({
 
         {/* Certificate recovery — shown below the main CTAs so donors who
             misplaced a prior certificate can self-serve without contacting support. */}
-        <p className="mt-6 text-xs text-foreground/50">
+        <p className="mt-6 text-xs text-muted-foreground">
           {tr('adopt.thankYou.lostCertPrefix')}{' '}
           <Link
             href={`/${locale}/recover-certificate`}

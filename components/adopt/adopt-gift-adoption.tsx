@@ -147,7 +147,7 @@ export function AdoptGiftAdoption({ locale, heading }: AdoptGiftAdoptionProps) {
           <span aria-hidden="true" className="text-xl">🎁</span>
           <div>
             <p className="font-semibold text-foreground text-sm sm:text-base">{headingText}</p>
-            <p className="text-xs text-foreground/60 mt-0.5">
+            <p className="text-xs text-muted-foreground mt-0.5">
               {isGift
                 ? translate('adopt.gift.activeBadge',{ name: giftName || 'recipient' })
                 : translate('adopt.gift.expandHint')}
@@ -163,11 +163,11 @@ export function AdoptGiftAdoption({ locale, heading }: AdoptGiftAdoptionProps) {
       </summary>
 
       <div className="px-5 pb-5 pt-1 space-y-4">
-        <p className="text-sm text-foreground/70">{subheading}</p>
+        <p className="text-sm text-muted-foreground">{subheading}</p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <label className="block">
-            <span className="block text-xs font-semibold uppercase tracking-wide text-foreground/60 mb-1">
+            <span className="block text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">
               {translate('adopt.gift.nameLabel')}
               <span aria-hidden="true" className="text-primary"> *</span>
             </span>
@@ -183,7 +183,7 @@ export function AdoptGiftAdoption({ locale, heading }: AdoptGiftAdoptionProps) {
           </label>
 
           <label className="block">
-            <span className="block text-xs font-semibold uppercase tracking-wide text-foreground/60 mb-1">
+            <span className="block text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">
               {translate('adopt.gift.emailLabel')}
             </span>
             <input
@@ -209,7 +209,7 @@ export function AdoptGiftAdoption({ locale, heading }: AdoptGiftAdoptionProps) {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <label className="block sm:col-span-2">
-            <span className="block text-xs font-semibold uppercase tracking-wide text-foreground/60 mb-1">
+            <span className="block text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">
               {translate('adopt.gift.deliverLabel')}
             </span>
             <input
@@ -219,7 +219,7 @@ export function AdoptGiftAdoption({ locale, heading }: AdoptGiftAdoptionProps) {
               onChange={(e) => updateParam('gift_deliver', e.target.value)}
               className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
             />
-            <span className="block text-xs text-foreground/60 mt-1">
+            <span className="block text-xs text-muted-foreground mt-1">
               {translate('adopt.gift.deliverHint')}
             </span>
           </label>
@@ -227,13 +227,13 @@ export function AdoptGiftAdoption({ locale, heading }: AdoptGiftAdoptionProps) {
 
         {isGift && (
           <div className="flex items-center justify-between pt-2">
-            <p className="text-xs text-foreground/60" role="status" aria-live="polite">
+            <p className="text-xs text-muted-foreground" role="status" aria-live="polite">
               {translate('adopt.gift.confirmation')}
             </p>
             <button
               type="button"
               onClick={resetGift}
-              className="text-xs text-foreground/60 hover:text-foreground underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 rounded"
+              className="text-xs text-muted-foreground hover:text-foreground underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 rounded"
             >
               {translate('adopt.gift.reset')}
             </button>

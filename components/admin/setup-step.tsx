@@ -118,17 +118,17 @@ export function SetupStep({
 
       <div className="space-y-2 pl-10">
         <div>
-          <span className="text-xs font-semibold uppercase tracking-wide text-foreground/50">What this does</span>
+          <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">What this does</span>
           <p className="mt-0.5 text-sm text-foreground/80">{whatItDoes}</p>
         </div>
 
         <div>
-          <span className="text-xs font-semibold uppercase tracking-wide text-foreground/50">How to get it</span>
+          <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">How to get it</span>
           <div className="mt-0.5 text-sm text-foreground/80">{howToGet}</div>
         </div>
 
         <div>
-          <span className="text-xs font-semibold uppercase tracking-wide text-foreground/50">Where to paste</span>
+          <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Where to paste</span>
           <div className="mt-0.5 text-sm text-foreground/80">{whereToPaste}</div>
         </div>
 

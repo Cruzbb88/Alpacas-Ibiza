@@ -215,7 +215,7 @@ export default async function ExperiencesIndexPage({
   }))
 
   return (
-    <main>
+    <>
       <PageBreadcrumbs
         locale={locale}
         homeLabel={translate('nav.home') || 'Home'}
@@ -243,6 +243,6 @@ export default async function ExperiencesIndexPage({
           rows={rows}
         />
       </PageSection>
-    </main>
+    </>
   )
 }

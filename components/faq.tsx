@@ -225,7 +225,7 @@ export function FAQ({
           {title}
         </h2>
         {subtitle && (
-          <p className="text-foreground/70">{subtitle}</p>
+          <p className="text-muted-foreground">{subtitle}</p>
         )}
       </div>
       {accordion}

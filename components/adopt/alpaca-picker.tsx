@@ -76,7 +76,7 @@ export function AlpacaPicker({
       <h2 className="text-2xl font-bold text-foreground text-center mb-2">
         {heading}
       </h2>
-      <p className="text-sm text-foreground/70 text-center mb-8">
+      <p className="text-sm text-muted-foreground text-center mb-8">
         {subheading}
       </p>
 

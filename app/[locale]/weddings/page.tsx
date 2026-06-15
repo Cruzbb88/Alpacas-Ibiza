@@ -77,7 +77,7 @@ export default async function WeddingsPage({ params }: { params: Promise<{ local
     ]
 
     return (
-        <main>
+        <>
             {/* JSON-LD: LocalBusiness + FAQPage */}
             {schemas.map((schema, i) => (
                 <script
@@ -127,7 +127,7 @@ export default async function WeddingsPage({ params }: { params: Promise<{ local
                     <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-3 text-center">
                         {translate('weddings.includedTitle')}
                     </h2>
-                    <p className="text-center text-foreground/60 mb-10 text-sm">
+                    <p className="text-center text-muted-foreground mb-10 text-sm">
                         {translate('weddings.includedSubtitle')}
                     </p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -136,7 +136,7 @@ export default async function WeddingsPage({ params }: { params: Promise<{ local
                                 key={item.key}
                                 className="bg-card rounded-lg border border-border p-6"
                             >
-                                <p className="text-xs font-semibold uppercase tracking-wide text-foreground/50 mb-1">
+                                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">
                                     {item.label}
                                 </p>
                                 <p className="text-foreground/80 font-medium">
@@ -176,21 +176,21 @@ export default async function WeddingsPage({ params }: { params: Promise<{ local
                     <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6">
                         {translate('weddings.welfareTitle')}
                     </h2>
-                    <p className="text-foreground/70 text-base leading-relaxed mb-8">
+                    <p className="text-muted-foreground text-base leading-relaxed mb-8">
                         {translate('weddings.welfareText')}
                     </p>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
                         <div className="bg-card border border-border rounded-lg p-5">
                             <p className="font-semibold text-foreground mb-1">{translate('weddings.welfare.gentle')}</p>
-                            <p className="text-xs text-foreground/60">{translate('weddings.welfare.gentleDesc')}</p>
+                            <p className="text-xs text-muted-foreground">{translate('weddings.welfare.gentleDesc')}</p>
                         </div>
                         <div className="bg-card border border-border rounded-lg p-5">
                             <p className="font-semibold text-foreground mb-1">{translate('weddings.welfare.supervised')}</p>
-                            <p className="text-xs text-foreground/60">{translate('weddings.welfare.supervisedDesc')}</p>
+                            <p className="text-xs text-muted-foreground">{translate('weddings.welfare.supervisedDesc')}</p>
                         </div>
                         <div className="bg-card border border-border rounded-lg p-5">
                             <p className="font-semibold text-foreground mb-1">{translate('weddings.welfare.allergy')}</p>
-                            <p className="text-xs text-foreground/60">{translate('weddings.welfare.allergyDesc')}</p>
+                            <p className="text-xs text-muted-foreground">{translate('weddings.welfare.allergyDesc')}</p>
                         </div>
                     </div>
                 </div>
@@ -202,7 +202,7 @@ export default async function WeddingsPage({ params }: { params: Promise<{ local
                     <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
                         {translate('weddings.bookingTitle')}
                     </h2>
-                    <p className="text-foreground/70 mb-10">
+                    <p className="text-muted-foreground mb-10">
                         {translate('weddings.bookingText')}
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -251,7 +251,7 @@ export default async function WeddingsPage({ params }: { params: Promise<{ local
                                         ▾
                                     </span>
                                 </summary>
-                                <p className="px-6 pb-5 text-foreground/70 text-sm leading-relaxed">
+                                <p className="px-6 pb-5 text-muted-foreground text-sm leading-relaxed">
                                     {item.answer}
                                 </p>
                             </details>
@@ -283,6 +283,6 @@ export default async function WeddingsPage({ params }: { params: Promise<{ local
                     </div>
                 </section>
             )}
-        </main>
+        </>
     )
 }

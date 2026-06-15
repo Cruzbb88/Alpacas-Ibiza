@@ -101,7 +101,7 @@ export function AdoptTierCard({
       <p
         className={
           'text-xs font-semibold uppercase tracking-wide mb-2 ' +
-          (isYearly ? 'text-primary' : 'text-foreground/50')
+          (isYearly ? 'text-primary' : 'text-muted-foreground')
         }
       >
         {tierName}
@@ -109,7 +109,7 @@ export function AdoptTierCard({
 
       <p className="text-4xl font-bold text-foreground mb-1 tabular-nums">{priceLabel}</p>
 
-      <p className="text-sm text-foreground/60 mb-6">{sub}</p>
+      <p className="text-sm text-muted-foreground mb-6">{sub}</p>
 
       <AdoptCheckoutLink
         href={checkoutUrl}

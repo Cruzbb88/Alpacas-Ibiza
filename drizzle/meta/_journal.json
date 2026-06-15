@@ -1,0 +1,34 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1781505338929,
+      "tag": "0000_inhouse_booking",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1781530618773,
+      "tag": "0001_booking_idempotency_gdpr",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1781531786473,
+      "tag": "0002_booking_post_comms",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1781542805823,
+      "tag": "0003_booking_refund_claim",
+      "breakpoints": true
+    }
+  ]
+}

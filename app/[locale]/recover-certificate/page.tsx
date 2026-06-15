@@ -38,10 +38,10 @@ export default async function RecoverCertificatePage({
   const successMessage = tr('recoverCertificate.successMessage')
 
   return (
-    <main className="min-h-[60vh] py-20 px-4">
+    <div className="min-h-[60vh] py-20 px-4">
       <div className="max-w-xl mx-auto">
         <h1 className="text-3xl font-bold text-foreground mb-3">{title}</h1>
-        <p className="text-foreground/70 mb-6">{subhead}</p>
+        <p className="text-muted-foreground mb-6">{subhead}</p>
 
         {/* Client component owns the form interaction + fetch */}
         <RecoverCertificateForm
@@ -50,6 +50,6 @@ export default async function RecoverCertificatePage({
           successMessage={successMessage}
         />
       </div>
-    </main>
+    </div>
   )
 }

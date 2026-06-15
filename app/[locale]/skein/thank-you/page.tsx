@@ -38,7 +38,7 @@ export default async function SkeinThankYouPage({
   const giftRecipientName = typeof sp.gift_name === 'string' ? sp.gift_name : null
 
   return (
-    <main
+    <div
       style={{
         fontFamily: 'system-ui, sans-serif',
         maxWidth: 560,
@@ -138,6 +138,6 @@ export default async function SkeinThankYouPage({
           Back to the farm &rarr;
         </Link>
       </div>
-    </main>
+    </div>
   )
 }

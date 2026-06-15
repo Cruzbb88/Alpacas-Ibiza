@@ -104,6 +104,12 @@ export default async function ToursPage({ params }: { params: Promise<{ locale: 
     },
   ]
 
+  // The Book CTA: in-house picker when the engine is on, else the FareHarbor
+  // embed (current live behavior). One switch makes the in-house engine a true
+  // drop-in for the existing booking button.
+  const bookingHref =
+    process.env.BOOKING_ENGINE === 'inhouse' ? `/${locale}/tours/book` : FAREHARBOR_BOOKING_URL
+
   return (
     <>
       {/* JSON-LD Structured Data */}
@@ -126,7 +132,7 @@ export default async function ToursPage({ params }: { params: Promise<{ locale: 
         eyebrow={`From €${TOUR_BASE_PRICE_EUR} per person`}
         cta={{
           label: translate('tours.heroCta'),
-          href: FAREHARBOR_BOOKING_URL,
+          href: bookingHref,
         }}
       />
 
@@ -144,10 +150,10 @@ export default async function ToursPage({ params }: { params: Promise<{ locale: 
               <h3 className="text-xl font-semibold text-foreground mb-2">
                 {translate('tours.planVisit.hours.title')}
               </h3>
-              <p className="text-foreground/70 mb-3">
+              <p className="text-muted-foreground mb-3">
                 {translate('tours.planVisit.hours.description')}
               </p>
-              <ul className="text-sm text-foreground/70 space-y-1">
+              <ul className="text-sm text-muted-foreground space-y-1">
                 <li>{translate('tours.planVisit.hours.summer')}</li>
                 <li>{translate('tours.planVisit.hours.winter')}</li>
                 <li>{translate('tours.planVisit.hours.contact')}</li>
@@ -159,10 +165,10 @@ export default async function ToursPage({ params }: { params: Promise<{ locale: 
               <h3 className="text-xl font-semibold text-foreground mb-2">
                 {translate('tours.planVisit.location.title')}
               </h3>
-              <p className="text-foreground/70 mb-3">
+              <p className="text-muted-foreground mb-3">
                 {translate('tours.planVisit.location.description')}
               </p>
-              <p className="text-sm text-foreground/70">
+              <p className="text-sm text-muted-foreground">
                 {translate('tours.planVisit.location.details')}
               </p>
             </Card>
@@ -172,10 +178,10 @@ export default async function ToursPage({ params }: { params: Promise<{ locale: 
               <h3 className="text-xl font-semibold text-foreground mb-2">
                 {translate('tours.planVisit.pricing.title')}
               </h3>
-              <p className="text-foreground/70 mb-3">
+              <p className="text-muted-foreground mb-3">
                 {translate('tours.planVisit.pricing.starting')}
               </p>
-              <p className="text-sm text-foreground/70">
+              <p className="text-sm text-muted-foreground">
                 {translate('tours.planVisit.pricing.custom')}
               </p>
             </Card>
@@ -185,7 +191,7 @@ export default async function ToursPage({ params }: { params: Promise<{ locale: 
             <h3 className="text-xl font-semibold text-foreground mb-2">
               {translate('tours.planVisit.specialEvents.title')}
             </h3>
-            <p className="text-foreground/70 mb-6 max-w-2xl mx-auto">
+            <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
               {translate('tours.planVisit.specialEvents.description')}
             </p>
             <Button
@@ -232,7 +238,7 @@ export default async function ToursPage({ params }: { params: Promise<{ locale: 
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
               {translate('tours.bookingSection.title')}
             </h2>
-            <p className="text-foreground/70 max-w-2xl mx-auto mb-3">
+            <p className="text-muted-foreground max-w-2xl mx-auto mb-3">
               {translate('tours.bookingSection.subtitle')}
             </p>
             {/* Real FareHarbor price at the point of decision (competitor scan:
@@ -245,7 +251,7 @@ export default async function ToursPage({ params }: { params: Promise<{ locale: 
           {/* FareHarbor Integration */}
           <div className="p-6 md:p-8 border border-border bg-background rounded-lg shadow-sm">
             <h3 className="text-2xl font-semibold mb-2 text-center">{translate('tours.bookingSection.cardTitle')}</h3>
-            <p className="text-foreground/70 mb-4 text-center max-w-md mx-auto">
+            <p className="text-muted-foreground mb-4 text-center max-w-md mx-auto">
               {translate('tours.bookingSection.cardSubtitle')}
             </p>
             <div className="flex justify-center mb-4">
@@ -259,7 +265,7 @@ export default async function ToursPage({ params }: { params: Promise<{ locale: 
             <FareHarborCalendar />
             <div className="mt-6 text-center">
               <a
-                href={FAREHARBOR_BOOKING_URL}
+                href={bookingHref}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-sm font-medium text-primary underline hover:no-underline"
@@ -269,14 +275,14 @@ export default async function ToursPage({ params }: { params: Promise<{ locale: 
               <div className="mt-3">
                 <CancellationBadge variant="full" />
               </div>
-              <p className="text-xs text-foreground/50 mt-2">
+              <p className="text-xs text-muted-foreground mt-2">
                 {translate('tours.bookingSection.poweredBy')}
               </p>
             </div>
           </div>
 
           <div className="mt-8 p-6 bg-accent/10 border border-accent/20 rounded-lg">
-            <p className="text-sm text-foreground/70">
+            <p className="text-sm text-muted-foreground">
               <strong className="text-foreground">{translate('tours.bookingSection.questions')}</strong> {translate('tours.bookingSection.questionsText')}
             </p>
           </div>
@@ -318,7 +324,7 @@ export default async function ToursPage({ params }: { params: Promise<{ locale: 
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
               {translate('guestStories.title')}
             </h2>
-            <p className="text-foreground/70">
+            <p className="text-muted-foreground">
               {translate('guestStories.subtitle')}
             </p>
           </div>

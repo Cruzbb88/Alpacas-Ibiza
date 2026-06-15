@@ -45,7 +45,7 @@ export function SectionHeading({
       {subtitle && (
         <p
           className={cn(
-            'text-foreground/70',
+            'text-muted-foreground',
             isCenter && 'max-w-2xl mx-auto',
           )}
         >

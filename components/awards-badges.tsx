@@ -46,7 +46,7 @@ export function AwardsBadges({ title, category, className = '' }: AwardsBadgesPr
     >
       <div className="max-w-7xl mx-auto px-4">
         {title && (
-          <p className="text-center text-sm uppercase tracking-wider text-foreground/60 mb-4">
+          <p className="text-center text-sm uppercase tracking-wider text-muted-foreground mb-4">
             {title}
           </p>
         )}

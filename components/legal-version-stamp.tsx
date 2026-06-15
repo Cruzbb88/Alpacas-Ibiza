@@ -32,15 +32,15 @@ export async function LegalVersionStamp({ meta, locale }: LegalVersionStampProps
 
   return (
     <div
-      className="max-w-4xl mx-auto px-4 mt-4 mb-2 flex flex-wrap items-center gap-3 text-sm text-foreground/60"
+      className="max-w-4xl mx-auto px-4 mt-4 mb-2 flex flex-wrap items-center gap-3 text-sm text-muted-foreground"
       aria-label={`${lastUpdatedLabel}: ${formattedDate}`}
     >
       <span>
-        <span className="font-medium text-foreground/70">{lastUpdatedLabel}:</span>{' '}
+        <span className="font-medium text-muted-foreground">{lastUpdatedLabel}:</span>{' '}
         {formattedDate}
       </span>
       <span
-        className="inline-flex items-center rounded-full border border-foreground/20 bg-foreground/5 px-2.5 py-0.5 text-xs font-medium text-foreground/60"
+        className="inline-flex items-center rounded-full border border-foreground/20 bg-foreground/5 px-2.5 py-0.5 text-xs font-medium text-muted-foreground"
         title={meta.latestChange}
         aria-describedby={meta.latestChange ? `legal-stamp-changelog-${meta.slug}` : undefined}
       >

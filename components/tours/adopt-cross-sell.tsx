@@ -59,12 +59,12 @@ export async function AdoptCrossSell({ locale, photoSrc }: AdoptCrossSellProps) 
                             {heading}
                         </h2>
 
-                        <p className="text-foreground/70 text-base leading-relaxed">
+                        <p className="text-muted-foreground text-base leading-relaxed">
                             {body}
                         </p>
 
                         {/* Practical price signal */}
-                        <p className="text-sm text-foreground/60">
+                        <p className="text-sm text-muted-foreground">
                             <span className="font-semibold text-primary">
                                 &euro;{ADOPT_PRICE_MONTHLY_EUR}/mo
                             </span>

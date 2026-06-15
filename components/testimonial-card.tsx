@@ -50,7 +50,7 @@ function SourceBadge({ source }: { source: NonNullable<TestimonialCardProps['sou
     },
     google: {
       label: 'Google',
-      color: 'text-foreground/50',
+      color: 'text-muted-foreground',
       icon: (
         <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
@@ -147,7 +147,7 @@ export function TestimonialCard({
             sourceLang={lang ?? undefined}
             className="mb-3"
           >
-            <blockquote className="text-foreground/70 italic leading-relaxed text-sm mb-2">
+            <blockquote className="text-muted-foreground italic leading-relaxed text-sm mb-2">
               &ldquo;{body}&rdquo;
             </blockquote>
           </ReviewTranslateButton>
@@ -159,7 +159,7 @@ export function TestimonialCard({
           <Avatar url={avatarUrl} author={author} />
           <div className="min-w-0">
             <p className="text-sm font-semibold text-foreground truncate">{author}</p>
-            {date && <p className="text-xs text-foreground/50">{date}</p>}
+            {date && <p className="text-xs text-muted-foreground">{date}</p>}
           </div>
         </div>
         {source && <SourceBadge source={source} />}

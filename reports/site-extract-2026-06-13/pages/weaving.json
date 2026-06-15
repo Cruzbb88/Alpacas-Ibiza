@@ -1,0 +1,80 @@
+{
+  "page": "weaving",
+  "path": "/en/weaving",
+  "console": [],
+  "failedReq": [],
+  "status": 200,
+  "title": "Wishfulfilling Weaving | Alpacas Ibiza — Handwoven Scarves from Es Currals",
+  "desc": "Handwoven scarves made from our alpaca herd's fleece on a traditional wooden loom at Es Currals, Ibiza. Studio by San of Wishfulfilling Weaving.",
+  "canonical": "https://alpacasibiza.com/en/weaving",
+  "robots": "index, follow",
+  "hreflang": [
+    "en",
+    "de",
+    "it",
+    "es",
+    "nl",
+    "fr",
+    "x-default"
+  ],
+  "og": {
+    "title": "Wishfulfilling Weaving | Alpacas Ibiza — Handwoven Scarves from Es Currals",
+    "image": "https://alpacasibiza.com/og?title=Wishfulfilling+Weaving&subtitle=Handwoven+scarves+from+our+herd%27s+fleece+%C2%B7+Es+Currals",
+    "locale": "en"
+  },
+  "twitter": "summary_large_image",
+  "schemaTypes": [
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "Organization",
+    "WebSite",
+    "SiteNavigationElement",
+    "BreadcrumbList"
+  ],
+  "jsonldCount": 5,
+  "h1count": 1,
+  "headings": [
+    "H1:Wishfulfilling Weaving — Studio at Es Cu",
+    "H2:The studio",
+    "H2:From fleece to finished cloth",
+    "H3:Shearing",
+    "H3:Washing",
+    "H3:Spinning",
+    "H3:Weaving",
+    "H3:Alpaca Yoga",
+    "H3:Weaving Workshops",
+    "H3:Owner action required before launch",
+    "H3:Alpacas Ibiza",
+    "H3:Explore",
+    "H3:Shop",
+    "H3:Contact"
+  ],
+  "imgTotal": 5,
+  "imgMissingAlt": 1,
+  "imgBroken": [],
+  "linkTotal": 81,
+  "linkExternalNoRel": 0,
+  "formFields": 0,
+  "unlabeledFields": 0,
+  "wordCount": 395,
+  "overflowPx": 0,
+  "axe": {
+    "byImpact": {
+      "critical": 0,
+      "serious": 1,
+      "moderate": 0,
+      "minor": 0
+    },
+    "total": 1,
+    "rules": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "n": 19,
+        "help": "Elements must meet minimum color contrast ratio thresholds"
+      }
+    ]
+  }
+}

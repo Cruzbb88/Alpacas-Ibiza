@@ -1,0 +1,91 @@
+{
+  "page": "privacy",
+  "path": "/en/privacy",
+  "console": [],
+  "failedReq": [],
+  "status": 200,
+  "title": "Privacy Policy",
+  "desc": "Es Currals Alpacas Ibiza is the very first alpaca farm in Ibiza and is located in the rural north of the island, on an authentic finca in a beautiful natural setting. Here is also the beating heart of Wishfulfilling Weaving, the artisanal weaving studio where, using mainly alpaca wool exclusive scarves are woven by hand on a traditional wooden loom.",
+  "canonical": "https://alpacasibiza.com/en/privacy",
+  "robots": null,
+  "hreflang": [
+    "en",
+    "de",
+    "it",
+    "es",
+    "nl",
+    "fr",
+    "x-default"
+  ],
+  "og": {
+    "title": "Privacy Policy",
+    "image": "https://alpacasibiza.com/og",
+    "locale": "en"
+  },
+  "twitter": "summary_large_image",
+  "schemaTypes": [
+    [
+      "LocalBusiness",
+      "TouristAttraction"
+    ],
+    "Organization",
+    "WebSite",
+    "SiteNavigationElement"
+  ],
+  "jsonldCount": 4,
+  "h1count": 2,
+  "headings": [
+    "H1:Privacy Policy",
+    "H1:Privacy Policy",
+    "H2:1. About this document",
+    "H2:2. Who we are",
+    "H2:3. What data we collect",
+    "H3:Contact and enquiry forms",
+    "H3:Tour and experience bookings (FareHarbor",
+    "H3:Adopt-a-Paca and skein sponsorship (Stri",
+    "H3:Analytics (only with your consent)",
+    "H3:Technical data",
+    "H2:4. Lawful basis (GDPR Article 6)",
+    "H2:5. Sub-processors",
+    "H2:6. Data retention",
+    "H2:7. Your rights (GDPR Articles 15–22)",
+    "H2:8. Cookies",
+    "H2:9. Contact for privacy matters",
+    "H3:Alpacas Ibiza",
+    "H3:Explore",
+    "H3:Shop",
+    "H3:Contact"
+  ],
+  "imgTotal": 1,
+  "imgMissingAlt": 0,
+  "imgBroken": [],
+  "linkTotal": 92,
+  "linkExternalNoRel": 0,
+  "formFields": 0,
+  "unlabeledFields": 0,
+  "wordCount": 1059,
+  "overflowPx": 0,
+  "axe": {
+    "byImpact": {
+      "critical": 1,
+      "serious": 1,
+      "moderate": 0,
+      "minor": 0
+    },
+    "total": 2,
+    "rules": [
+      {
+        "id": "button-name",
+        "impact": "critical",
+        "n": 1,
+        "help": "Buttons must have discernible text"
+      },
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "n": 18,
+        "help": "Elements must meet minimum color contrast ratio thresholds"
+      }
+    ]
+  }
+}

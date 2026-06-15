@@ -61,7 +61,7 @@ export default function RedeemVoucherPage() {
           <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
             Redeem your voucher
           </h1>
-          <p className="text-lg text-foreground/70 max-w-xl mx-auto">
+          <p className="text-lg text-muted-foreground max-w-xl mx-auto">
             Received an alpaca adoption voucher as a gift? Enter your code below to get started.
           </p>
         </div>
@@ -75,7 +75,7 @@ export default function RedeemVoucherPage() {
               <div className="text-center space-y-4">
                 <div className="text-5xl">🦙</div>
                 <h2 className="text-xl font-bold text-foreground">Voucher accepted!</h2>
-                <p className="text-sm text-foreground/70">
+                <p className="text-sm text-muted-foreground">
                   Check your email for next steps on completing your adoption and adding it to your
                   account. Welcome to the herd!
                 </p>
@@ -88,7 +88,7 @@ export default function RedeemVoucherPage() {
                   </Link>
                   <Link
                     href={`/${locale}/contact`}
-                    className="text-xs text-foreground/60 underline hover:text-primary transition-colors"
+                    className="text-xs text-muted-foreground underline hover:text-primary transition-colors"
                   >
                     Questions? Contact us
                   </Link>
@@ -99,7 +99,7 @@ export default function RedeemVoucherPage() {
                 <div>
                   <label
                     htmlFor="voucher-code"
-                    className="block text-xs font-semibold uppercase tracking-wide text-foreground/60 mb-1"
+                    className="block text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1"
                   >
                     Voucher code
                   </label>
@@ -118,7 +118,7 @@ export default function RedeemVoucherPage() {
 
                 {/* Anti-enumeration: both invalid and error show a soft message */}
                 {(status === 'invalid' || status === 'error') && (
-                  <p className="text-sm text-foreground/70 bg-primary/5 border border-primary/10 rounded-lg px-4 py-3">
+                  <p className="text-sm text-muted-foreground bg-primary/5 border border-primary/10 rounded-lg px-4 py-3">
                     We couldn&apos;t verify that code. Please double-check it and try again, or
                     contact us at{' '}
                     <a
@@ -148,7 +148,7 @@ export default function RedeemVoucherPage() {
       <section className="w-full py-10 px-4 bg-primary/5">
         <div className="max-w-3xl mx-auto text-center">
           <h3 className="text-lg font-bold text-foreground mb-2">Need help?</h3>
-          <p className="text-sm text-foreground/70">
+          <p className="text-sm text-muted-foreground">
             Your voucher code was included in the gift email you received. If you can&apos;t find
             it, contact us at{' '}
             <a

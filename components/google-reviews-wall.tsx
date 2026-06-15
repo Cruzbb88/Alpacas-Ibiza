@@ -67,14 +67,14 @@ export async function GoogleReviewsWall({
                 >
                     {heading}
                 </h2>
-                <p className="text-sm text-foreground/70">
+                <p className="text-sm text-muted-foreground">
                     <span aria-hidden="true" className="text-yellow-500 font-bold">
                         {'★'.repeat(filledStars)}{'☆'.repeat(5 - filledStars)}
                     </span>
                     <span className="ml-2 font-semibold text-foreground">
                         {data.rating.toFixed(1)} / 5
                     </span>
-                    <span className="text-foreground/60">
+                    <span className="text-muted-foreground">
                         {' '}· Based on {data.reviewCount} Google reviews
                     </span>
                 </p>
@@ -100,7 +100,7 @@ export async function GoogleReviewsWall({
                                     <p className="font-semibold text-sm text-foreground">
                                         {review.author}
                                     </p>
-                                    <p className="text-xs text-foreground/60">
+                                    <p className="text-xs text-muted-foreground">
                                         {review.relativeTime}
                                     </p>
                                 </div>

@@ -172,7 +172,7 @@ export function Hero({
             {trustSignals!.map((signal, i) => (
               <li
                 key={`${signal}-${i}`}
-                className="text-sm text-foreground/70 inline-flex items-center gap-2"
+                className="text-sm text-muted-foreground inline-flex items-center gap-2"
               >
                 <span>{signal}</span>
                 {i < trustSignals!.length - 1 && (
